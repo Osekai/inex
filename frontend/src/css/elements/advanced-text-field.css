@@ -1,0 +1,63 @@
+advanced-text-field {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--col-l3);
+    border-radius: 10px;
+
+    --w-e-textarea-bg-color: var(--col-l2);
+    --w-e-textarea-color: #eee;
+    --w-e-textarea-border-color: var(--col-l2);
+    --w-e-textarea-slight-border-color: var(--col-l1);
+    --w-e-textarea-slight-color: var(--col-l5);
+    --w-e-textarea-slight-bg-color: var(--col-l4);
+    --w-e-textarea-selected-border-color: #B4D5FF;
+    --w-e-textarea-handler-bg-color: hsl(var(--accent-1));
+
+    --w-e-toolbar-color: #fff;
+    --w-e-toolbar-bg-color: var(--col-l1);
+    --w-e-toolbar-active-color: #fff;
+    --w-e-toolbar-active-bg-color: var(--col-l4);
+    --w-e-toolbar-disabled-color: var(--col-text-l3);
+    --w-e-toolbar-border-color: var(--col-l3);
+
+    --w-e-modal-button-bg-color: var(--col-l3);
+    --w-e-modal-button-border-color: var(--col-l2);
+}
+
+advanced-text-field .toolbar {
+    margin: 10px;
+    margin-bottom: 0px;
+    padding-right: calc(13px * 2); /*  good enough */
+}
+
+advanced-text-field #w-e-textarea-1, .w-e-text-placeholder {
+    padding: 8px 20px;
+}
+
+.w-e-text-placeholder {
+    position: absolute;
+    left: 0;
+}
+
+advanced-text-field .w-e-text-container {
+    background-color: transparent;
+    color: var(--col-text-l1)
+}
+
+.w-e-toolbar {
+    border-radius: 8px;
+    background-color: var(--col-l2);
+}
+
+.w-e-bar-item button {
+    border-radius: 8px;
+}
+
+.w-e-menu-tooltip-v5 {
+    font-family: inherit;
+}
+
+advanced-text-field button {
+    font-family: inherit;
+}

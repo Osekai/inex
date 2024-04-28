@@ -1,0 +1,15 @@
+.tag-pill {
+    padding: 4px 10px;
+    background-color: var(--col-l4);
+    display: inline-block;
+    border-radius: 90px;
+    font-size: 18px;
+    color: #fffd;
+    font-weight: 400;
+}
+
+.tag-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}

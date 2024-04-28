@@ -1,0 +1,44 @@
+.panel {
+    padding: 20px;
+    background-color: var(--col-l1);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.panel > h1:first-child, .panel .panel-header h1 {
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.panel > .divider:not(.basic) {
+    margin-top: 11px;
+    margin-bottom: 18px;
+    margin-left: -1px;
+    height: 5px;
+    width: 70px;
+    border-radius: 90px;
+    background: var(--gradient);
+}
+
+.panel > .divider:not(.basic):before {
+    content: "";
+    position: absolute;
+    width: calc(100% - 35px - 80px);
+    margin-left: 80px;
+    height: 3px;
+    margin-top: 1px;
+    background-color: var(--col-d2);
+}
+.panel-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.panel-header-left {
+    margin-left: auto;
+}
+

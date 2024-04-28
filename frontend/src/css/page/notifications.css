@@ -1,0 +1,64 @@
+.notification {
+    margin: 10px;
+    margin-top: 0px;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: stretch;
+    min-height: 70px;
+}
+
+.notification-dismiss {
+    align-items: center;
+    padding: 5px;
+    display: flex;
+    margin-left: 5px;
+    border-radius: calc(var(--border-radius));
+}
+.notification-dismiss:hover {
+    background-color: var(--col-l1);
+}
+.notification:first-child {
+    margin-top: 10px;
+}
+
+.notification-inner {
+    color: inherit;
+    padding: 15px;
+    background-color: var(--col-l3);
+    border-radius: var(--border-radius);
+    position: relative;
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+}
+
+.notification-inner > div {
+    margin-left: auto;
+    max-width: 80%;
+    text-align: right;
+    z-index: 5;
+    font-size: 18px;
+}
+
+.notification-inner > svg {
+    height: 30px;
+    width: 30px;
+    z-index: 2;
+    mix-blend-mode: overlay;
+}
+
+.notification-inner .bg-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 150px;
+    object-fit: cover;
+
+    mask-image: linear-gradient(to right, #0005, #0002, #0001, #0000);
+}
+
+.notification.new .notification-inner {
+    background-color: var(--col-l5d);
+}

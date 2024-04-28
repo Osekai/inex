@@ -1,0 +1,13 @@
+.input {
+    background-color: var(--col-d1);
+    width: 100%;
+}
+
+.input:hover {
+    background-color: var(--col-d2);
+}
+
+.input:focus {
+    background-color: var(--col-l2);
+    outline: 2px solid var(--col-l4);
+}

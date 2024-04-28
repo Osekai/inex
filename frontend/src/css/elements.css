@@ -1,0 +1,65 @@
+@import url("./elements/advanced-text-field.css");
+@import url("./elements/image-drag-area.css");
+@import url("./elements/warning.css");
+@import url("./external/wangeditor.css");
+@import url("./ui/overlay.css");
+@import url("./ui/toasts.css");
+
+a {
+    color: var(--col-text-l25);
+    text-decoration: none;
+    cursor: pointer;
+}
+left {
+    margin-left: auto;
+}
+
+*[data-lucide], .lucide {
+    aspect-ratio: 1/1;
+}
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.jsdropdown-clickoff-layer {
+    pointer-events: all;
+    z-index: 10;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom :0px;
+    right: 0px;
+    opacity: 0;
+    animation: fade-in 0.3s ease;
+    animation-fill-mode: both;
+    background: linear-gradient(to bottom, #0005, #0000, #0000);
+}
+
+.jsdropdown-button-active, .jsdropdown-open {
+    z-index: 10990;
+}
+
+button {
+    font-family: inherit;
+    font-size: inherit;
+    background-color: transparent;
+    color: inherit;
+    display: block;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+
+*:hover, *:active {
+    outline: none;
+}
+
+*:focus-visible {
+    outline: 4px solid #41fff9;
+}

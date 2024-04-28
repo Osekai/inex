@@ -1,0 +1,37 @@
+{
+  "minimum-stability": "dev",
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "bramus/router",
+        "version": "1.6.1",
+        "dist": {
+          "url": "https://github.com/anthera-art/router/archive/refs/heads/master.zip",
+          "type": "zip"
+        },
+        "source": {
+          "url": "https://github.com/anthera-art/router",
+          "type": "git",
+          "reference": "master"
+        },
+        "autoload": {
+          "classmap": [
+            "src/"
+          ]
+        }
+      }
+    }
+  ],
+  "require": {
+    "bramus/router": "~1.6",
+    "ezyang/htmlpurifier": "^4.16",
+    "enqueue/simple-client": "^0.10.0@dev",
+    "enqueue/fs": "^0.10.0@dev",
+    "queue-interop/queue-interop": "^0.8.1",
+    "enqueue/amqp-bunny": "^0.10.0@dev",
+    "enqueue/pheanstalk": "^0.10.0@dev",
+    "ext-curl": "*",
+    "ext-gd": "*"
+  }
+}

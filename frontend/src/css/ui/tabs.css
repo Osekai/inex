@@ -1,0 +1,53 @@
+
+.toolbar {
+    height: var(--header-toolbar-height);
+    align-items: center;
+    display: flex;
+    position: sticky;
+    z-index: 9;
+}
+
+.toolbar p, .toolbar button {
+    cursor: pointer;
+    font-size: 18px;
+    padding: 15px 12px;
+    opacity: 0.7;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.toolbar p:after, .toolbar button:after {
+    content: "";
+    position: absolute;
+    bottom: 2px;
+    border-radius: 4px;
+    width: calc(100% - 30px);
+    height: 0;
+    transition: height 0.4s ease, bottom 0.4s ease;
+    background: var(--gradient);
+    left: 15px;
+}
+
+.toolbar p svg, .toolbar button svg {
+    height: 28px;
+    width: 28px;
+    stroke-width: 1px;
+}
+.toolbar p.otab-button-active svg, .toolbar button.otab-button-active svg {
+    stroke-width: 2px;
+}
+.toolbar p.otab-button-active, .toolbar button.otab-button-active {
+    font-weight: 700;
+    opacity: 1;
+}
+.toolbar p.otab-button-active:after, .toolbar button.otab-button-active:after {
+    height: 5px;
+    bottom: 0;
+}
+
+@media (max-width: 800px) {
+    .toolbar {
+        position: relative;
+    }
+}

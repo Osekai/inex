@@ -1,0 +1,9 @@
+vendor
+config.php
+composer.lock
+node_modules
+dist
+cert
+frontend/configuration/
+frontend/configuration/*
+frontend/rev.txt

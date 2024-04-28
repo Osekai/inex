@@ -1,0 +1,25 @@
+.checkbox {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    margin: 0 !important;
+    padding: 0px !important;
+    width: 26px;
+    height: 26px;
+    background-color: var(--col-l4);
+    border-radius: 4px;
+    position: relative;
+}
+
+.checkbox:hover {
+    background-color: var(--col-l3);
+}
+
+.checkbox:checked:after {
+    content: url("data:image/svg+xml,%3Csvg width='15' height='13' viewBox='0 0 15 13' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 7.72222L6.08696 12L14 1' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E%0A");
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 6px;
+    left: 6px;
+}

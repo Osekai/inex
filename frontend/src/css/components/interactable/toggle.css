@@ -1,0 +1,47 @@
+.toggle {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    margin: 0 !important;
+    padding: 0px !important;
+    width: 46px;
+    min-width: 46px;
+    height: 26px;
+    background-color: var(--col-l4);
+    border-radius: 90px;
+    position: relative;
+    transition: outline 0.2s ease, background 0.2s ease;
+    outline: 2px solid #FF3939;
+    background: #FF393966;
+}
+
+.toggle:hover {
+    background: #FF393999;
+}
+
+.toggle:after {
+    border-radius: 90px;
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 6px;
+    left: 6px;
+    background-color: var(--col-l95);
+    opacity: 0.5;
+    transition: left 0.2s ease;
+}
+
+.toggle:checked {
+    outline: 2px solid #39FFA0;
+    background: #39FFA066;
+}
+
+.toggle:checked:after {
+    left: calc(46px - 14px - 6px);
+    opacity: 1;
+}
+
+.toggle:checked:hover {
+    background: #39FFA099;
+}

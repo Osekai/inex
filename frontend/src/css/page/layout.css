@@ -1,0 +1,116 @@
+@import url("navbar.css");
+@import url("footer.css");
+body {
+    --page-width: 1500px;
+    overflow-x: hidden;
+}
+
+
+.content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.footer {
+    margin-top: auto;
+}
+.page-container-inner {
+    min-width: 0;
+    max-width: var(--page-width);
+    padding: 0px 15px;
+    margin: 20px auto;
+    padding-bottom: 5px;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: sticky;
+    top: -1px;
+    z-index: 1;
+}
+.toolbar.is-pinned:after {
+    content: "";
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    z-index: -1;
+    height: var(--header-toolbar-height);
+    background-color: var(--col-base);
+}
+.toolbar-right {
+    margin-left: auto;
+}
+.page-container-inner-split {
+    display: flex;
+    align-items: flex-start;
+}
+.page-container-inner-left {
+    flex: 1;
+    max-width: 100%;
+    overflow: hidden;
+}
+.page-container-inner-right {
+    min-width: 300px;
+    max-width: 520px;
+    width: 100%;
+    margin-left: 20px;
+}
+
+
+
+.button-toolbar {
+    display: flex;
+}
+
+.button-toolbar > div {
+    display: flex;
+    gap: 10px;
+}
+pre {
+    max-height: 300px;
+    max-width: calc(100% - 30px);
+    text-wrap: wrap;
+    overflow-x: scroll;
+    padding: 15px;
+    background-color: var(--col-d0);
+    border-radius: var(--border-radius);
+}
+
+@media only screen and (max-width: 900px) {
+    .page-container-inner-split {
+        flex-direction: column-reverse;
+    }
+    .page-container-inner-right {
+        max-width: 9999px;
+        width: 100%;
+    }
+
+    .page-container-inner-right {
+        max-width: 100%;
+        margin-left: 0px;
+    }
+    .author-left {
+        display: grid !important;
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        gap: 10px;
+    }
+    .author-left > img {
+        grid-column: 1; /* Starts at first column */
+        grid-row: 1; /* Starts at second row */
+    }
+    .author-left .texts {
+        grid-column: 2; /* Starts at second column */
+        grid-row: 1; /* Starts at second row */
+    }
+    .author-left input {
+        grid-column: span 2;
+        grid-row: 2;
+    }
+    .author-left .input {
+        margin-left: auto;
+    }
+}

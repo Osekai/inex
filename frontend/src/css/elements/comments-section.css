@@ -1,0 +1,112 @@
+.comment.toplevel {
+    margin-top: 15px;
+}
+.comment-inner {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.comment-inner > a > img {
+    height: 42px;
+    width: 42px;
+    margin-right: 5px;
+    border-radius: 10px;
+}
+
+.comment-inner > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 5px;
+    padding-top: 2px;
+}
+
+.comment-children {
+    position: relative;
+    margin-left: 20px;
+}
+.comment-children:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -20px;
+    border-right: 5px;
+
+    width: 1px;
+    height: calc(100% - 20px);
+    background-color: var(--col-l5);
+}
+.comment-children .comment-input {
+    margin-bottom: 8px;
+}
+
+.comment-top {
+    display: flex;
+    align-items: flex-start;
+}
+
+.comment-top-right {
+    margin-left: auto;
+}
+
+.comment-top-left {
+    display: flex;
+    align-items: flex-end;
+}
+
+.comment-top-left a {
+    font-size: 21px;
+    font-weight: 600;
+}
+.comment-top-left small {
+    font-size: 15px;
+    margin-left: 5px;
+    font-weight: 400;
+    margin-bottom: 3px;
+}
+.comment-toolbar {
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.comment-toolbar-button {
+    display: flex;
+    align-items: center;
+    opacity: 0.8;
+}
+.comment-toolbar-button:hover {
+    opacity: 0.9;
+    cursor: pointer;
+}
+.comment-toolbar-button svg {
+    height: 18px;
+    width: 18px;
+    margin-right: 3px;
+}
+
+.comment-input {
+    display: flex;
+    align-items: stretch;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+.comment-input .input {
+    border-radius: 0px;
+    margin-right: 2px;
+}
+.comment-input .button {
+    display: flex;
+    align-items: center;
+    border-radius: 0px;
+    padding: 14px;
+    background-color: var(--col-l5);
+}
+.comment-input .button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.comment-input textarea {
+    flex: 1;
+}

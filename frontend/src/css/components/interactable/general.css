@@ -1,0 +1,51 @@
+.button, .input, .dropdown {
+    padding: 12px 12px;
+    background-color: var(--col-l25);
+    font-size: 16px;
+    border-radius: var(--border-radius);
+    display: flex;
+    font-family: inherit;
+    border: 0px solid transparent;
+    color: inherit;
+    user-select: none;
+    transition: all 0.1s ease;
+    outline: 0px solid #0000;
+    box-sizing: border-box;
+
+    cursor: pointer;
+}
+
+.input.lighter {
+    background-color: var(--col-l2);
+
+}
+.input.lighter:hover {
+    background-color: var(--col-l3);
+
+}
+
+.button.big, .input.big, .dropdown.big {
+    font-size: 18px;
+    padding: 14px 14px;
+}
+
+.button.small, .input.small, .dropdown.small {
+    font-size: 13px;
+    padding: 8px 8px;
+}
+
+.toggle-text {
+    display: flex;
+    align-items: center;
+    user-select: none;
+}
+
+.toggle-text p, .toggle-text label {
+    font-size: 14px;
+    padding-left: 8px;
+}
+
+
+.input-with-text > p {
+    margin-bottom: 8px;
+}

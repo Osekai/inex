@@ -1,0 +1,56 @@
+
+.spinner {
+    --spinner-size: 6;
+    --ring-size: 25;
+    font-size: calc(var(--spinner-size) * 1em);
+    width: 0.6em;
+    height: 0.6em;
+    border-radius: 50%;
+}
+
+.spinner-small {
+    width: 0.3em;
+    height: 0.3em;
+    --ring-size: 20;
+}
+
+.spinner .line1,
+.spinner .line2,
+.spinner .line3 {
+    fill: none;
+    stroke: hsl(var(--accent-1));
+    stroke-width: var(--ring-size);
+    stroke-linecap: round;
+    transform-origin: 50% 50%;
+    transform: rotate3d(0, 0, 1, 0deg);
+    animation: 2156ms spinner-arc ease-in-out infinite, 1829ms spinner-rotate linear infinite;
+}
+
+.spinner .line2 {
+    stroke: hsl(var(--accent-2));
+    animation-delay: -0.1s;
+}
+
+.spinner .line3 {
+    stroke: hsl(var(--accent-3));
+    animation-delay: -0.2s;
+}
+
+
+@keyframes spinner-rotate {
+    to {
+        transform: rotate3d(0, 0, 1, 360deg);
+    }
+}
+
+@keyframes spinner-arc {
+    from {
+        stroke-dasharray: 0 150;
+        stroke-dashoffset: 0;
+    }
+
+    to {
+        stroke-dasharray: 40 150;
+        stroke-dashoffset: -140;
+    }
+}

@@ -1,0 +1,26 @@
+input-waiter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+input-waiter .loader {
+    display: none;
+}
+input-waiter .check {
+    display: none;
+}
+
+input-waiter .loader, input-waiter .check {
+    position: absolute;
+    right: 8px;
+    align-items: center;
+}
+
+input-waiter.saving .loader {
+    display: flex;
+}
+
+input-waiter.saved .check {
+    display: flex;
+}

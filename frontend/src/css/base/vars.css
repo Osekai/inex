@@ -1,0 +1,102 @@
+body {
+    --accent-1: var(--hue), 50%, 60.4%;
+    --accent-2: var(--hue), 50%, 70.3%;
+    --accent-3: var(--hue), 50%, 80.4%;
+    --sat: 1;
+
+    --base-sat: 20%;
+    --val: 0.9;
+
+    --hue: 220;
+}
+body, .col-reset, .warning {
+    --col-vd: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(5% * var(--val))); /* Background */
+
+    --col-base: hsl(var(--hue), calc(var(--base-sat) * var(--sat)), calc(13% * var(--val))) !important; /* Background */
+    --col-d0: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(10% * var(--val))); /* Background */
+    --col-d1: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(13% * var(--val))); /* Background */
+    --col-d2: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(14% * var(--val))); /* Background */
+    --col-l1: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(17% * var(--val))); /* Panel & some buttons */
+    --col-l2: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(21% * var(--val))); /* Panel 2 */
+    --col-l25: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),  calc(23% * var(--val))); /* Panel 2 */
+    --col-l3: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(26% * var(--val))); /* unused */
+    --col-l4: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(31% * var(--val))); /* Light buttons */
+    --col-l5: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(38% * var(--val)));
+    --col-l6: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(42% * var(--val)));
+    --col-l7: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(60% * var(--val)));
+
+    --col-l90: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),  calc(90% * var(--val)));
+    --col-l95: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),  calc(95% * var(--val)));
+    --col-l98: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),  calc(98% * var(--val)));
+
+    --col-text-l1: hsl(var(--hue), calc(17% * var(--sat)), 95%);
+    --col-text-l2: hsl(var(--hue), calc(17% * var(--sat)), 80%);
+    --col-text-l25: hsl(var(--hue), calc(30% * var(--sat)), 70%);
+    --col-text-l3: hsl(var(--hue), calc(17% * var(--sat)), 48%);
+    --col-text-d3: hsl(var(--hue), calc(17% * var(--sat)), 10%);
+
+
+    --gradient-base: hsl(var(--accent-1)) 0%, hsl(var(--accent-2)) 46.35%, hsl(var(--accent-3)) 100%;
+
+    --gradient: linear-gradient(45deg, hsl(var(--accent-1)) 0%, hsl(var(--accent-2)) 46.35%, hsl(var(--accent-3)) 100%);
+    --gradient_95: linear-gradient(45deg, hsla(var(--accent-1), 0.75) 0%, hsla(var(--accent-2), 0.75) 46.35%, hsla(var(--accent-3), 0.95) 100%);
+    --gradient_90: linear-gradient(45deg, hsla(var(--accent-1), 0.75) 0%, hsla(var(--accent-2), 0.75) 46.35%, hsla(var(--accent-3), 0.90) 100%);
+    --gradient_75: linear-gradient(45deg, hsla(var(--accent-1), 0.75) 0%, hsla(var(--accent-2), 0.75) 46.35%, hsla(var(--accent-3), 0.75) 100%);
+    --gradient_50: linear-gradient(45deg, hsla(var(--accent-1), 0.5) 0%, hsla(var(--accent-2), 0.5) 46.35%, hsla(var(--accent-3), 0.5) 100%);
+    --gradient_25: linear-gradient(45deg, hsla(var(--accent-1), 0.25) 0%, hsla(var(--accent-2), 0.25) 46.35%, hsla(var(--accent-3), 0.25) 100%);
+
+    --border-radius: 10px;
+
+    background-color: var(--col-base) !important;
+}
+body.theme-light {
+    --base-sat: 10% !important;
+    --sat: 2;
+}
+body.theme-light, body.theme-light .col-reset {
+    --col-base: hsl(var(--hue), calc(var(--base-sat) * var(--sat) * 2), calc(100% * var(--val))) !important; /* Background */
+    --col-d0: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),       calc(90% * var(--val))); /* Background */
+    --col-d1: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),       calc(96% * var(--val))); /* Background */
+    --col-d2: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),       calc(99% * var(--val))); /* Background */
+    --col-l1: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),       calc(96% * var(--val))); /* Panel & some buttons */
+    --col-l2: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),       calc(93% * var(--val))); /* Panel 2 */
+    --col-l25: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),      calc(90% * var(--val))); /* Panel 2 */
+    --col-l3: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),       calc(88% * var(--val))); /* unused */
+    --col-l4: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),       calc(82% * var(--val))); /* Light buttons */
+    --col-l5: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),       calc(80% * var(--val)));
+    --col-l6: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),       calc(60% * var(--val)));
+    --col-l7: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),       calc(40% * var(--val)));
+
+    --col-l90: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),      calc(90% * var(--val)));
+    --col-l95: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),      calc(95% * var(--val)));
+    --col-l98: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),      calc(98% * var(--val)));
+
+    --col-text-l1: hsl(var(--hue), calc(5% * var(--sat)), 15%);
+    --col-text-l2: hsl(var(--hue), calc(5% * var(--sat)), 15%);
+    --col-text-l25: hsl(var(--hue), calc(5% * var(--sat)), 15%);
+    --col-text-l3: hsl(var(--hue), calc(5% * var(--sat)), 15%);
+    --col-text-d3: hsl(var(--hue), calc(5% * var(--sat)), 15%);
+}
+
+.navbar-left svg *, .footer-inner img * {
+    fill: var(--col-text-l1);
+}
+
+.rating-safe {
+    --rating-colour: 140.5, 85.6%, 53.7%;
+}
+.rating-suggestive {
+    --rating-colour: 57.6, 85.6%, 53.7%;
+}
+.rating-mature {
+    --rating-colour: 28.8, 85.6%, 53.7%;
+}
+.rating-explicit {
+    --rating-colour: 0, 85.6%, 53.7%;
+}
+
+.warning {
+    --val: 2;
+    --sat: 2 !important;
+    --hue: 0 !important;
+}
