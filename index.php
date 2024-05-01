@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 0); // just read the terminal silly
+
 $time = microtime();
 $time = explode(' ', $time);
 $time = $time[1] + $time[0];
