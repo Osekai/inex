@@ -36,6 +36,7 @@
     "dragonmantank/cron-expression": "^3.0@dev",
     "amphp/parallel": "2.x-dev",
     "amphp/amp": "3.x-dev",
-    "ext-pcntl": "*"
+    "ext-pcntl": "*",
+    "robmorgan/phinx": "0.x-dev"
   }
 }
