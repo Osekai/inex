@@ -20,17 +20,17 @@ final class Base extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('Sessions');
+        $table = $this->table('System_Sessions');
         $table->addColumn('Key', 'string', ["precision" => 64])
             ->addColumn('User_ID', 'integer')
             ->create();
 
-        $table = $this->table('User_Settings');
+        $table = $this->table('System_Users_Settings');
         $table->addColumn('User_ID', 'integer')
             ->addColumn('Settings', 'text', ["limit" => MysqlAdapter::TEXT_LONG])
             ->create();
 
-        $table = $this->table('Word_Blacklist');
+        $table = $this->table('System_Blacklist_Words');
         $table->addColumn('Settings', 'string', ["precision" => 64])
             ->create();
     }

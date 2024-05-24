@@ -16,7 +16,7 @@ namespace Database {
         {
             if ($_COOKIE["session"] != null || $this->key != null) {
                 $this->key = $_COOKIE["session"];
-                $userid = Database\Connection::execSelect("SELECT * FROM `Sessions` WHERE `Key` = ?", "s", [$this->key]);
+                $userid = Database\Connection::execSelect("SELECT * FROM `System_Sessions` WHERE `Key` = ?", "s", [$this->key]);
                 if (count($userid) > 0) {
                     $userid = $userid[0]["User_ID"];
                 } else {
@@ -51,7 +51,7 @@ namespace Database {
         public static function Login($user_id)
         {
             $session_key = self::generateRandomString(64);
-            Database\Connection::execOperation("INSERT INTO `Sessions` (`Key`, `User_ID`) VALUES (?, ?) ", "si", [$session_key, $user_id]);
+            Database\Connection::execOperation("INSERT INTO `System_Sessions` (`Key`, `User_ID`) VALUES (?, ?) ", "si", [$session_key, $user_id]);
             setcookie("session", $session_key, strtotime("2038-01-19 03:14:07"));
         }
         public static function LoginRedirect($rd = false) {
