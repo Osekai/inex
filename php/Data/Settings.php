@@ -21,7 +21,7 @@ namespace Data {
                 return self::$settings[$id];
             }
 
-            $resp = Database\Connection::execSelect("SELECT * FROM UserSettings WHERE UserID = ?", "i", [$id]);
+            $resp = Database\Connection::execSelect("SELECT * FROM UserSettings WHERE User_ID = ?", "i", [$id]);
             if (count($resp) > 0) {
                 self::$settings[$id] = json_decode($resp[0]["Settings"], true);
                 return json_decode($resp[0]["Settings"], true);
@@ -34,7 +34,7 @@ namespace Data {
 
             $oldsettings[$key] = $value;
 
-            Database\Connection::execOperation('UPDATE UserSettings SET Settings = ? WHERE UserID = ?', "si", [json_encode($oldsettings), Database\Session::UserData()['ID']]);
+            Database\Connection::execOperation('UPDATE UserSettings SET Settings = ? WHERE User_ID = ?', "si", [json_encode($oldsettings), Database\Session::UserData()['ID']]);
             return new Response(true);
         }
         public static function GetSetting($settingname, $default) {

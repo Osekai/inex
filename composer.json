@@ -32,6 +32,10 @@
     "enqueue/amqp-bunny": "^0.10.0@dev",
     "enqueue/pheanstalk": "^0.10.0@dev",
     "ext-curl": "*",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "dragonmantank/cron-expression": "^3.0@dev",
+    "amphp/parallel": "2.x-dev",
+    "amphp/amp": "3.x-dev",
+    "ext-pcntl": "*"
   }
 }
