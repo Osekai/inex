@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Phinx\Db\Adapter\MysqlAdapter;
 use Phinx\Migration\AbstractMigration;
 
-final class Base extends AbstractMigration
+final class System extends AbstractMigration
 {
     /**
      * Change Method.
@@ -29,6 +29,14 @@ final class Base extends AbstractMigration
         $table->addColumn('User_ID', 'integer')
             ->addColumn('Settings', 'text', ['limit' => MysqlAdapter::TEXT_LONG])
             ->create();
+
+
+        $table = $this->table('System_Users', ['id' => false, 'primary_key' => ['User_ID']]);
+        $table->addColumn('User_ID', 'integer')
+            ->addColumn('Name', 'string', ['precision' => 27])
+            ->addColumn('Joined_Date', 'datetime')
+            ->create();
+
 
         $table = $this->table('System_Blacklist_Words', ['id' => false, 'primary_key' => ['Word']]);
         $table->addColumn('Word', 'string', ['limit' => 64])
