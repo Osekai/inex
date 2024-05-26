@@ -19,7 +19,7 @@ final class RankingsUsers extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('Rankings_Users');
+        $table = $this->table('Rankings_Users', ['id' => false, 'primary_key' => ['ID']]);
         $table
             ->addColumn('ID',                   'integer', ["precision" => 11])
             ->addColumn('Accuracy_Catch',       'decimal', ['precision' => 5, 'scale' => 2])
