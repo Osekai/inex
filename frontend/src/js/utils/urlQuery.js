@@ -46,4 +46,41 @@ function removeParam(key) {
     }
 }
 
-export { insertParam, getParam, removeParam };
+function getSections(is) {
+    var sections = window.location.pathname.split("/");
+    var inputSections = is.split("/");
+
+    var resp = {};
+
+
+    for(var x = 0; x < inputSections.length; x++) {
+        var inputSection = inputSections[x];
+        var section = sections[x];
+
+        if(inputSection.startsWith("{")) {
+            resp[inputSection.slice(1, -1)] = section;
+        } else if(inputSection !== section) {
+            return null;
+        }
+    }
+    return resp;
+}
+
+function setSections(is) {
+    var sections = window.location.pathname.split("/");
+    var inputSections = is.split("/");
+
+
+    for(var x = 0; x < inputSections.length; x++) {
+        var inputSection = inputSections[x];
+        var section = sections[x];
+
+        if(inputSection.startsWith("{")) {
+            sections[x] = encodeURIComponent(is[inputSection.slice(1, -1)]);
+        }
+    }
+    window.history.pushState({ url: sections.join("/") }, null, sections.join("/"));
+
+}
+
+export { insertParam, getParam, removeParam, getSections, setSections };

@@ -1412,7 +1412,7 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
     </schema>
     <schema id="516" parent="1" name="inex">
       <Current>1</Current>
-      <LastIntrospectionLocalTimestamp>2024-05-24.21:04:12</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2024-05-27.15:07:57</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_bin</CollationName>
     </schema>
     <schema id="517" parent="1" name="test">
@@ -1469,119 +1469,788 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
     <user id="534" parent="1" name="&apos;&apos;">
       <Host>localhost</Host>
     </user>
-    <table id="535" parent="516" name="Sessions">
+    <table id="535" parent="516" name="Badges_Data">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </table>
-    <table id="536" parent="516" name="User_Settings">
+    <table id="536" parent="516" name="Badges_Users">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </table>
-    <table id="537" parent="516" name="Word_Blacklist">
+    <table id="537" parent="516" name="Beatmaps_Data">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </table>
-    <table id="538" parent="516" name="phinxlog">
+    <table id="538" parent="516" name="Beatmaps_Packs">
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </table>
-    <column id="539" parent="535" name="id">
-      <AutoIncrement>1</AutoIncrement>
-      <DasType>int(11) unsigned|0s</DasType>
+    <table id="539" parent="516" name="Common_Comments">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="540" parent="516" name="Common_Countries">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="541" parent="516" name="Common_Mods">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="542" parent="516" name="Common_Votes">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="543" parent="516" name="Medals_Beatmaps">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="544" parent="516" name="Medals_Configuration">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="545" parent="516" name="Medals_Data">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="546" parent="516" name="Medals_Favourites">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="547" parent="516" name="Medals_Solutions_Mods">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="548" parent="516" name="Rankings_Script_History">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="549" parent="516" name="Rankings_Users">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="550" parent="516" name="System_Blacklist_Words">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="551" parent="516" name="System_Sessions">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="552" parent="516" name="System_Users">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="553" parent="516" name="System_Users_Settings">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <table id="554" parent="516" name="phinxlog">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_unicode_ci</CollationName>
+    </table>
+    <column id="555" parent="535" name="ID">
+      <DasType>int(8)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="540" parent="535" name="Key">
-      <DasType>varchar(64)|0s</DasType>
+    <column id="556" parent="535" name="Name">
+      <DasType>varchar(100)|0s</DasType>
+      <NotNull>1</NotNull>
       <Position>2</Position>
     </column>
-    <column id="541" parent="535" name="User_ID">
-      <DasType>int(11)|0s</DasType>
+    <column id="557" parent="535" name="Image_URL">
+      <DasType>varchar(100)|0s</DasType>
       <Position>3</Position>
     </column>
-    <index id="542" parent="535" name="PRIMARY">
-      <ColNames>id</ColNames>
+    <index id="558" parent="535" name="PRIMARY">
+      <ColNames>ID
+Name</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="543" parent="535" name="PRIMARY">
+    <key id="559" parent="535" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="544" parent="536" name="id">
-      <AutoIncrement>1</AutoIncrement>
-      <DasType>int(11) unsigned|0s</DasType>
+    <column id="560" parent="536" name="Badge_ID">
+      <DasType>int(8)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="545" parent="536" name="User_ID">
+    <column id="561" parent="536" name="User_ID">
+      <DasType>int(11)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="562" parent="536" name="Description">
+      <DasType>varchar(2000)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="563" parent="536" name="Date_Awarded">
+      <DasType>datetime|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <index id="564" parent="536" name="PRIMARY">
+      <ColNames>Badge_ID
+User_ID</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="565" parent="536" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="566" parent="537" name="Beatmap_ID">
+      <DasType>int(10)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="567" parent="537" name="Beatmapset_ID">
+      <DasType>int(10)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="568" parent="537" name="Mapper_ID">
+      <DasType>int(11)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="569" parent="537" name="Gamemode">
+      <DasType>varchar(5)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="570" parent="537" name="Song_Title">
+      <DasType>varchar(80)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="571" parent="537" name="Song_Artist">
+      <DasType>varchar(80)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="572" parent="537" name="Mapper_Name">
+      <DasType>varchar(27)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="573" parent="537" name="Difficulty_Rating">
+      <DasType>double|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="574" parent="537" name="Difficulty_Name">
+      <DasType>varchar(80)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="575" parent="537" name="Download_Unavailable">
+      <DasType>int(1)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <index id="576" parent="537" name="PRIMARY">
+      <ColNames>Beatmap_ID</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="577" parent="537" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="578" parent="538" name="Beatmapset_ID">
+      <DasType>int(10)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="579" parent="538" name="Pack_ID">
+      <DasType>varchar(10)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <index id="580" parent="538" name="PRIMARY">
+      <ColNames>Beatmapset_ID
+Pack_ID</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="581" parent="538" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="582" parent="539" name="ID">
+      <DasType>int(8)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="583" parent="539" name="Target_ID">
       <DasType>int(11)|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="546" parent="536" name="Settings">
+    <column id="584" parent="539" name="Target_Table">
+      <DasType>varchar(40)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="585" parent="539" name="User_ID">
+      <DasType>int(11)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="586" parent="539" name="Parent_Comment_ID">
+      <DasType>int(8)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="587" parent="539" name="Text">
+      <DasType>text|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="588" parent="539" name="Date">
+      <DasType>datetime|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="589" parent="539" name="Is_Pinned">
+      <DasType>int(1)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <index id="590" parent="539" name="PRIMARY">
+      <ColNames>ID</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="591" parent="539" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="592" parent="540" name="Country_Code">
+      <DasType>varchar(11)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="593" parent="540" name="Name">
+      <DasType>varchar(100)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <index id="594" parent="540" name="PRIMARY">
+      <ColNames>Country_Code</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="595" parent="540" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="596" parent="541" name="ID">
+      <DasType>varchar(2)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="597" parent="541" name="Name">
+      <DasType>varchar(50)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <index id="598" parent="541" name="PRIMARY">
+      <ColNames>Name
+ID</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="599" parent="541" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="600" parent="542" name="Target_ID">
+      <DasType>int(11)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="601" parent="542" name="Target_Table">
+      <DasType>varchar(50)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="602" parent="542" name="User_ID">
+      <DasType>int(11)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <index id="603" parent="542" name="PRIMARY">
+      <ColNames>Target_ID
+Target_Table
+User_ID</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="604" parent="542" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="605" parent="543" name="ID">
+      <DasType>int(8)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="606" parent="543" name="Medal_ID">
+      <DasType>int(4)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="607" parent="543" name="Beatmap_ID">
+      <DasType>int(11)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="608" parent="543" name="Beatmap_Submitted_User_ID">
+      <DasType>int(11)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="609" parent="543" name="Beatmap_Submitted_Date">
+      <DasType>datetime|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="610" parent="543" name="Note">
+      <DasType>varchar(2000)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="611" parent="543" name="Note_Submitted_User_ID">
+      <DasType>int(11)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="612" parent="543" name="Note_Submitted_Date">
+      <DasType>datetime|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <index id="613" parent="543" name="PRIMARY">
+      <ColNames>ID</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="614" parent="543" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="615" parent="544" name="Medal_ID">
+      <DasType>int(4)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="616" parent="544" name="Video_URL">
+      <DasType>varchar(200)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="617" parent="544" name="First_Achieved_Date">
+      <DasType>datetime|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="618" parent="544" name="First_Achieved_User_ID">
+      <DasType>int(11)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="619" parent="544" name="Is_Solution_Found">
+      <DasType>int(1)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="620" parent="544" name="Is_Lazer">
+      <DasType>int(1)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="621" parent="544" name="Is_Restricted">
+      <DasType>int(1)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="622" parent="544" name="Solution">
+      <DasType>varchar(2000)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="623" parent="544" name="Date_Released">
+      <DasType>datetime|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <index id="624" parent="544" name="PRIMARY">
+      <ColNames>Medal_ID</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="625" parent="544" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="626" parent="545" name="Medal_ID">
+      <DasType>int(4)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="627" parent="545" name="Name">
+      <DasType>varchar(50)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="628" parent="545" name="Link">
+      <DasType>varchar(70)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="629" parent="545" name="Description">
+      <DasType>varchar(500)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="630" parent="545" name="Gamemode">
+      <DasType>varchar(8)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="631" parent="545" name="Grouping">
+      <DasType>varchar(30)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="632" parent="545" name="Instructions">
+      <DasType>varchar(500)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="633" parent="545" name="Ordering">
+      <DasType>int(2)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="634" parent="545" name="Frequency">
+      <DasType>float|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="635" parent="545" name="Count_Achieved_By">
+      <DasType>int(10)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <index id="636" parent="545" name="PRIMARY">
+      <ColNames>Medal_ID</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="637" parent="545" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="638" parent="546" name="User_ID">
+      <DasType>int(11)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="639" parent="546" name="Medal_ID">
+      <DasType>int(4)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <index id="640" parent="546" name="PRIMARY">
+      <ColNames>Medal_ID
+User_ID</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="641" parent="546" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="642" parent="547" name="Medal_ID">
+      <DasType>int(11)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="643" parent="547" name="Mod">
+      <DasType>varchar(4)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <index id="644" parent="547" name="PRIMARY">
+      <ColNames>Medal_ID
+Mod</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="645" parent="547" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="646" parent="548" name="ID">
+      <DasType>int(8)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="647" parent="548" name="Type">
+      <DasType>varchar(30)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="648" parent="548" name="Time">
+      <DasType>timestamp|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="649" parent="548" name="Count_Current">
+      <DasType>int(11)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="650" parent="548" name="Count_Total">
+      <DasType>int(11)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="651" parent="548" name="Elapsed_Seconds">
+      <DasType>int(20)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="652" parent="548" name="Elapsed_Last_Update">
+      <DasType>timestamp|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <index id="653" parent="548" name="PRIMARY">
+      <ColNames>ID</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="654" parent="548" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="655" parent="549" name="ID">
+      <DasType>int(11)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="656" parent="549" name="Accuracy_Catch">
+      <DasType>decimal(5,2 digit)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="657" parent="549" name="Accuracy_Mania">
+      <DasType>decimal(5,2 digit)|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <column id="658" parent="549" name="Accuracy_Standard">
+      <DasType>decimal(5,2 digit)|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <column id="659" parent="549" name="Accuracy_Stdev">
+      <DasType>decimal(5,2 digit)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <column id="660" parent="549" name="Accuracy_Taiko">
+      <DasType>decimal(5,2 digit)|0s</DasType>
+      <Position>6</Position>
+    </column>
+    <column id="661" parent="549" name="Count_Badges">
+      <DasType>int(4)|0s</DasType>
+      <Position>7</Position>
+    </column>
+    <column id="662" parent="549" name="Count_Maps_Loved">
+      <DasType>int(4)|0s</DasType>
+      <Position>8</Position>
+    </column>
+    <column id="663" parent="549" name="Count_Maps_Ranked">
+      <DasType>int(4)|0s</DasType>
+      <Position>9</Position>
+    </column>
+    <column id="664" parent="549" name="Count_Medals">
+      <DasType>int(4)|0s</DasType>
+      <Position>10</Position>
+    </column>
+    <column id="665" parent="549" name="Count_Replays_Watched">
+      <DasType>int(10)|0s</DasType>
+      <Position>11</Position>
+    </column>
+    <column id="666" parent="549" name="Count_Subscribers">
+      <DasType>int(7)|0s</DasType>
+      <Position>12</Position>
+    </column>
+    <column id="667" parent="549" name="Country_Code">
+      <DasType>varchar(3)|0s</DasType>
+      <Position>13</Position>
+    </column>
+    <column id="668" parent="549" name="Is_Restricted">
+      <DasType>int(1)|0s</DasType>
+      <Position>14</Position>
+    </column>
+    <column id="669" parent="549" name="Level_Catch">
+      <DasType>int(3)|0s</DasType>
+      <Position>15</Position>
+    </column>
+    <column id="670" parent="549" name="Level_Mania">
+      <DasType>int(3)|0s</DasType>
+      <Position>16</Position>
+    </column>
+    <column id="671" parent="549" name="Level_Standard">
+      <DasType>int(3)|0s</DasType>
+      <Position>17</Position>
+    </column>
+    <column id="672" parent="549" name="Level_Stdev">
+      <DasType>int(3)|0s</DasType>
+      <Position>18</Position>
+    </column>
+    <column id="673" parent="549" name="Level_Taiko">
+      <DasType>int(3)|0s</DasType>
+      <Position>19</Position>
+    </column>
+    <column id="674" parent="549" name="Name">
+      <DasType>varchar(27)|0s</DasType>
+      <Position>20</Position>
+    </column>
+    <column id="675" parent="549" name="PP_Catch">
+      <DasType>decimal(8,2 digit)|0s</DasType>
+      <Position>21</Position>
+    </column>
+    <column id="676" parent="549" name="PP_Mania">
+      <DasType>decimal(8,2 digit)|0s</DasType>
+      <Position>22</Position>
+    </column>
+    <column id="677" parent="549" name="PP_Standard">
+      <DasType>decimal(8,2 digit)|0s</DasType>
+      <Position>23</Position>
+    </column>
+    <column id="678" parent="549" name="PP_Stdev">
+      <DasType>decimal(8,2 digit)|0s</DasType>
+      <Position>24</Position>
+    </column>
+    <column id="679" parent="549" name="PP_Taiko">
+      <DasType>decimal(8,2 digit)|0s</DasType>
+      <Position>25</Position>
+    </column>
+    <column id="680" parent="549" name="PP_Total">
+      <DasType>decimal(8,2 digit)|0s</DasType>
+      <Position>26</Position>
+    </column>
+    <column id="681" parent="549" name="Rank_Global_Catch">
+      <DasType>int(20)|0s</DasType>
+      <Position>27</Position>
+    </column>
+    <column id="682" parent="549" name="Rank_Global_Mania">
+      <DasType>int(20)|0s</DasType>
+      <Position>28</Position>
+    </column>
+    <column id="683" parent="549" name="Rank_Global_Standard">
+      <DasType>int(20)|0s</DasType>
+      <Position>29</Position>
+    </column>
+    <column id="684" parent="549" name="Rank_Global_Taiko">
+      <DasType>int(20)|0s</DasType>
+      <Position>30</Position>
+    </column>
+    <column id="685" parent="549" name="Rarest_Medal_Achieved">
+      <DasType>datetime|0s</DasType>
+      <Position>31</Position>
+    </column>
+    <column id="686" parent="549" name="Rarest_Medal_ID">
+      <DasType>int(4)|0s</DasType>
+      <Position>32</Position>
+    </column>
+    <index id="687" parent="549" name="PRIMARY">
+      <ColNames>ID</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="688" parent="549" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="689" parent="550" name="Word">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <index id="690" parent="550" name="PRIMARY">
+      <ColNames>Word</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="691" parent="550" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="692" parent="551" name="Key">
+      <DasType>varchar(64)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="693" parent="551" name="User_ID">
+      <DasType>int(11)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <index id="694" parent="551" name="PRIMARY">
+      <ColNames>Key</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="695" parent="551" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="696" parent="552" name="User_ID">
+      <DasType>int(11)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="697" parent="552" name="Name">
+      <DasType>varchar(27)|0s</DasType>
+      <Position>2</Position>
+    </column>
+    <column id="698" parent="552" name="Joined_Date">
+      <DasType>datetime|0s</DasType>
+      <Position>3</Position>
+    </column>
+    <index id="699" parent="552" name="PRIMARY">
+      <ColNames>User_ID</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="700" parent="552" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="701" parent="553" name="User_ID">
+      <DasType>int(11)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="702" parent="553" name="Settings">
       <DasType>longtext|0s</DasType>
-      <Position>3</Position>
-    </column>
-    <index id="547" parent="536" name="PRIMARY">
-      <ColNames>id</ColNames>
-      <Type>btree</Type>
-      <Unique>1</Unique>
-    </index>
-    <key id="548" parent="536" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
-    </key>
-    <column id="549" parent="537" name="id">
-      <AutoIncrement>1</AutoIncrement>
-      <DasType>int(11) unsigned|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-    </column>
-    <column id="550" parent="537" name="Settings">
-      <DasType>varchar(64)|0s</DasType>
       <Position>2</Position>
     </column>
-    <index id="551" parent="537" name="PRIMARY">
-      <ColNames>id</ColNames>
+    <index id="703" parent="553" name="PRIMARY">
+      <ColNames>User_ID</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="552" parent="537" name="PRIMARY">
+    <key id="704" parent="553" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="553" parent="538" name="version">
+    <column id="705" parent="554" name="version">
       <DasType>bigint(20)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="554" parent="538" name="migration_name">
+    <column id="706" parent="554" name="migration_name">
       <DasType>varchar(100)|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="555" parent="538" name="start_time">
+    <column id="707" parent="554" name="start_time">
       <DasType>timestamp|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="556" parent="538" name="end_time">
+    <column id="708" parent="554" name="end_time">
       <DasType>timestamp|0s</DasType>
       <Position>4</Position>
     </column>
-    <column id="557" parent="538" name="breakpoint">
+    <column id="709" parent="554" name="breakpoint">
       <DasType>tinyint(1)|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <index id="558" parent="538" name="PRIMARY">
+    <index id="710" parent="554" name="PRIMARY">
       <ColNames>version</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="559" parent="538" name="PRIMARY">
+    <key id="711" parent="554" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>

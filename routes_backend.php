@@ -55,3 +55,9 @@ $router->post("/api/usersettings/set", function () {
         echo Data\Settings::ApiSet($_POST['key'], $value)->ReturnJson();
     }
 });
+
+
+
+$router->all("/api/medals/get_all", function () {
+    echo \Data\Medals::GetAll()->ReturnJson();
+});
