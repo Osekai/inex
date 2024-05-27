@@ -55,7 +55,7 @@ final class Medals extends AbstractMigration
             ->addColumn('Instructions', 'string', ['precision' => 500])
             ->addColumn('Ordering', 'integer', ["precision" => 2])
             ->addColumn('Frequency', 'float')
-            ->addColumn('Count_Achieved_By', 'integer', ["precision" => 1])
+            ->addColumn('Count_Achieved_By', 'integer', ["precision" => 10])
             ->create();
 
         $table = $this->table('Medals_Favourites', ['id' => false, 'primary_key' => ['Medal_ID', "User_ID"]]);

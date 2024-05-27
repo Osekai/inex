@@ -37,7 +37,7 @@ final class Common extends AbstractMigration
             ->addColumn('Name', 'string', ["precision" => 100])
             ->create();
 
-        $table = $this->table('Common_Mods', ['id' => false, 'primary_key' => ['Country_Code']]);
+        $table = $this->table('Common_Mods', ['id' => false, 'primary_key' => ['Name', 'ID']]);
         $table
             ->addColumn('ID', 'string', ["precision" => 2])
             ->addColumn('Name', 'string', ["precision" => 50])

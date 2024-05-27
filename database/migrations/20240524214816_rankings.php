@@ -54,5 +54,18 @@ final class Rankings extends AbstractMigration
             ->addColumn('Rarest_Medal_Achieved','datetime',[])
             ->addColumn('Rarest_Medal_ID',      'integer', ["precision" => 4])
             ->create();
+
+
+        $table = $this->table('Rankings_Script_History', ['id' => false, 'primary_key' => ['ID']]);
+        $table
+            ->addColumn('ID', 'integer', ["precision" => 8])
+            ->addColumn('Type', 'string', ['precision' => 30])
+            ->addColumn('Time', 'timestamp')
+            ->addColumn('Count_Current', 'integer', ["precision" => 11])
+            ->addColumn('Count_Total', 'integer', ["precision" => 11])
+            ->addColumn('Elapsed_Seconds', 'integer', ["precision" => 20])
+            ->addColumn('Elapsed_Last_Update', 'timestamp')
+            ->create();
+
     }
 }

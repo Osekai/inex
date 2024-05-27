@@ -19,7 +19,7 @@ final class Beatmaps extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('Beatmaps_data', ['id' => false, 'primary_key' => ['Beatmap_ID']]);
+        $table = $this->table('Beatmaps_Data', ['id' => false, 'primary_key' => ['Beatmap_ID']]);
         $table
             ->addColumn('Beatmap_ID', 'integer', ["precision" => 10])
             ->addColumn('Beatmapset_ID', 'integer', ["precision" => 10])
@@ -33,7 +33,7 @@ final class Beatmaps extends AbstractMigration
             ->addColumn('Download_Unavailable', 'integer', ['precision' => 1])
             ->create();
 
-        $table = $this->table('Beatmaps_Packs', ['id' => false, 'primary_key' => ['Medal_ID', "Mod"]]);
+        $table = $this->table('Beatmaps_Packs', ['id' => false, 'primary_key' => ['Beatmapset_ID', "Pack_ID"]]);
         $table
             ->addColumn('Beatmapset_ID', 'integer', ["precision" => 10])
             ->addColumn('Pack_ID', 'string', ["precision" => 10])

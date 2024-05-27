@@ -1,7 +1,8 @@
 # setup
 ### MAKE SURE TO SETUP YOUR `config.php` FIRST
 ## commands:
-`vendor/bin/phinx -e production`
+`php vendor/bin/phinx -e production`
+`php vendor/bin/phinx seed:run -e production`
 that's it
 
 
