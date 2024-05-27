@@ -16,9 +16,10 @@ function GetMedalFromUrl() {
  */
 function SetMedal(inputMedal, setUrl = false) {
     var name = "";
+    inputMedal = inputMedal.replace("_", " ");
     for (var medal of medalData) {
         if (medal.Name == inputMedal) {
-            inputMedal = medal.ID
+            inputMedal = medal.Medal_ID
             name = medal.Name;
         }
         if (medal.ID == inputMedal) {
@@ -39,7 +40,7 @@ async function LoadMedal() {
 }
 
 async function Load() {
-    medalData = await DoRequest("GET", "/api/medals/get_all"); 
+    medalData = (await DoRequest("GET", "/api/medals/get_all"))['content'];
     console.log(medalData);
     GetMedalFromUrl();
 }
