@@ -14,6 +14,7 @@
             <h1 id="medal_name">Medal Name</h1>
             <h2 id="medal_description">Medal Hint</h2>
             <h3 id="medal_instructions">Medal Subhint</h3>
+            <div class="button cta" id="medal-edit-button">Open Editor</div>
         </div>
 
         <div class="panel">
@@ -30,4 +31,8 @@
             <div class="divider"></div>
         </div>
     </div>
+</div>
+
+<div class="medals__unsaved hidden" id="unsaved-medals">
+    nope
 </div>

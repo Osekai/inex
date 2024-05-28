@@ -7,6 +7,7 @@ export class MedalData {
      * @type {null}
      */
     static Medals: Medal[] = null;
+    static CurrentMedal: Medal;
 
     static async GetMedals() {
         if (this.Medals == null) {

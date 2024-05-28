@@ -14,16 +14,16 @@ const lazyLoadOptions = {
     to_webp: true,
 
     callback_enter: element => {
-        logEvent("ENTERED", element);
+        //logEvent("ENTERED", element);
     },
     callback_load: element => {
-        logEvent("LOADED", element);
+        //logEvent("LOADED", element);
     },
     callback_set: element => {
-        logEvent("SET", element);
+        //logEvent("SET", element);
     },
     callback_error: element => {
-        logEvent("ERROR", element);
+        //logEvent("ERROR", element);
         element.src = element.getAttribute("data-src")
     }
 };

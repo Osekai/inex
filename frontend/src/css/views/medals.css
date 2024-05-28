@@ -39,3 +39,19 @@
 .medals__page .main {
     flex: 2;
 }
+
+.medals__unsaved {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: calc(100% - 20px);
+    border-radius: 200px;
+    margin: 10px;
+    text-align: center;
+    padding: 12px;
+    background: #b23737;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    border: 2px solid #f00;
+}

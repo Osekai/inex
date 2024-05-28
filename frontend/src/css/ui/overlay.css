@@ -11,3 +11,35 @@
     background-color: hsla(var(--hue), calc(25% * var(--sat)), 10%, 0.8);
     backdrop-filter: blur(5px) saturate(2);
 }
+
+.overlay > .panel {
+    width: 800px;
+    max-width: 90vw;
+}
+.overlay > .panel > .inputs {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+}
+.overlay > .panel > .inputs > .row {
+    width: 100%;
+    display: flex;
+    justify-content: stretch;
+    gap: 20px;
+    align-items: center;
+}
+.overlay > .panel > .inputs > .row > * {
+    flex: 1;
+}
+.overlay > .panel > .inputs textarea {
+    min-height: 200px;
+}
+.overlay > .panel > .button-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-top: 20px;
+    width: 100%;
+}

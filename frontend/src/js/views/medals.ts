@@ -1,3 +1,6 @@
+import {MedalsUI} from "./medals/MedalsUI";
+
+export * from "./medals/MedalsAdmin";
 import {getSections, setSections} from "../utils/urlQuery";
 import {DoRequest} from "../utils/requests";
 import {MedalUtils} from "./medals/MedalUtils";
@@ -26,24 +29,14 @@ function SetMedal(inputMedal: string | number, setUrl = false) {
     if (setUrl) {
         setSections(`/medals/{medal}`, {"medal": currentMedal.Name})
     }
-    LoadMedal(currentMedal);
+    MedalData.CurrentMedal = currentMedal;
+    MedalsUI.LoadMedal(currentMedal);
 }
 
 /**
  * @param medal : Medal
  * @function
  */
-function LoadMedal(medal: Medal) {
-    console.log(medal);
-
-    (<HTMLImageElement>document.getElementById("medal_image")).src = medal.Link;
-
-    document.getElementById("medal_name").innerText = medal.Name;
-    document.getElementById("medal_description").innerText = medal.Description;
-    document.getElementById("medal_instructions").innerHTML = medal.Instructions; // instructions have <i> sometimes
-
-    document.getElementById("medal_solution").innerHTML = medal.Solution;
-}
 
 function LoadSidebar() {
     var sidebar = document.getElementById("sidebar");
