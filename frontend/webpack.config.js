@@ -2,7 +2,6 @@ const path = require('path');
 const fs = require('fs');
 const postcssCustomMedia = require('postcss-custom-media');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const srcPath = './src';
 const node_modules = "./node_modules";
@@ -33,6 +32,11 @@ function GenerateConfig() {
         },
         module: {
             rules: [
+                {
+                    test: /\.tsx?$/,
+                    use: 'ts-loader',
+                    exclude: /node_modules/,
+                },
                 {
                     test: /\.css$/,
                     use: [
@@ -65,6 +69,9 @@ function GenerateConfig() {
                 },
             ]
         },
+        resolve: {
+            extensions: ['.tsx', '.ts', '.js'],
+        },
         optimization: {
             nodeEnv: 'production',
             flagIncludedChunks: true,
@@ -83,9 +90,6 @@ function GenerateConfig() {
     if (process.env["ANTHERA_PRODUCTION"] !== "true") {
         console.log("\x1b[41mCompiling in Development Mode\x1b[0m");
         delete(config.optimization);
-        config.plugins.push(
-            new BundleAnalyzerPlugin()
-        )
     }
 
     return config;
@@ -96,7 +100,7 @@ function getEntryPoints() {
     const entryPoints = {};
 
     // Read entry point from /src/index.js
-    entryPoints['index'] = path.resolve(srcPath, 'index.js');
+    entryPoints['index'] = path.resolve(srcPath, 'index.ts');
     entryPoints['404'] = path.resolve(srcPath, '404.js');
 
     // Read all .js files in the /src/views directory
@@ -104,9 +108,9 @@ function getEntryPoints() {
     if (fs.existsSync(viewsPath)) {
         const viewFiles = fs.readdirSync(viewsPath);
         viewFiles.forEach((file) => {
-            if (file.endsWith('.js')) {
-                const fileName = path.basename(file, '.js');
-                entryPoints[fileName] = path.resolve(viewsPath, file);
+            if (file.endsWith('.ts')) {
+                const distName = path.basename(file).replace(".ts", "");
+                entryPoints[distName] = path.resolve(viewsPath, file);
             }
         });
     }

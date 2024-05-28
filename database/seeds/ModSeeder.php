@@ -54,6 +54,7 @@ class ModSeeder extends AbstractSeed
         }
 
         $posts = $this->table('Common_Mods');
+        $posts->truncate();
         $posts->insert($data)
             ->saveData();
     }

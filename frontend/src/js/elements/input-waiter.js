@@ -1,7 +1,6 @@
-import {GetSetting, removeItemAll, SetSettings} from "../../index.js";
 import {cloneAttributes, Div, LucideIcon} from "../utils/dom";
 import '../../css/elements/input-waiter.css'
-class InputWaiter extends HTMLElement {
+export default class InputWaiter extends HTMLElement {
     constructor() {
         super();
     }
@@ -81,5 +80,3 @@ class InputWaiter extends HTMLElement {
 }
 
 customElements.define("input-waiter", InputWaiter);
-
-export default {InputWaiter};

@@ -1,11 +1,14 @@
 import {createLazyLoadInstance} from "./js/utils/lazyload";
 
+// @ts-ignore
 window.loader = createLazyLoadInstance();
 
 import './style.css'
+// @ts-ignore
 export * from './js/external.js';
 export * from './js/utils/usersettings.js';
 export * from './js/ui/easyselector.js';
+// @ts-ignore
 export * from './js/ui/dropdown.js';
 export * from './js/ui/overlay.js';
 export * from './js/ui/toasts.js';
@@ -20,7 +23,7 @@ const simpleicons = [siDiscord, siTwitter, siTwitch, siPatreon, siGithub, siYout
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'
 
-var aCreateIcons = null;
+var aCreateIcons: () => void = null;
 
 
 import("lucide").then(({createIcons, icons}) => {
@@ -84,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
     var config = {
         childList: true, subtree: true
     };
-    var callback = function (mutationsList) {
+    var callback = function () {
         if (aCreateIcons != null) aCreateIcons();
         for (var element of document.querySelectorAll("[tooltip]")) {
             var text = element.getAttribute("tooltip");
@@ -93,12 +96,14 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             element.removeAttribute("tooltip");
         }
+        // @ts-ignore
+        window.loader.update();
     };
     callback();
     var observer = new MutationObserver(callback);
     observer.observe(targetNode, config);
 
-
+    // @ts-ignore
     window.loader.update();
 })
 

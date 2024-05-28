@@ -270,6 +270,7 @@ class CountrySeeder extends AbstractSeed
         }
 
         $posts = $this->table('Common_Countries');
+        $posts->truncate();
         $posts->insert($data)
             ->saveData();
     }

@@ -1,6 +1,5 @@
 import '../../css/elements/pagination-el.css'
 
-import {removeItemAll} from "../../index.js";
 import {Button, Div, Text} from "../utils/dom";
 import {getParam, insertParam} from "../utils/urlQuery";
 

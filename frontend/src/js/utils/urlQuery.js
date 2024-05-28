@@ -66,7 +66,7 @@ function getSections(is) {
     return resp;
 }
 
-function setSections(is) {
+function setSections(is, p) {
     var sections = window.location.pathname.split("/");
     var inputSections = is.split("/");
 
@@ -76,7 +76,7 @@ function setSections(is) {
         var section = sections[x];
 
         if(inputSection.startsWith("{")) {
-            sections[x] = encodeURIComponent(is[inputSection.slice(1, -1)]);
+            sections[x] = encodeURIComponent(p[inputSection.slice(1, -1)]);
         }
     }
     window.history.pushState({ url: sections.join("/") }, null, sections.join("/"));
