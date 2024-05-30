@@ -3,6 +3,7 @@ import {Checkbox, Div, Input, InputText, InputTextarea, Text} from "../../utils/
 import {MedalData} from "./MedalData";
 import {MedalsUI} from "./MedalsUI";
 import {removeItemAll} from "../../utils/array";
+import {DoRequest} from "../../utils/requests";
 
 console.log("medals admin");
 
@@ -105,8 +106,9 @@ function OpenEditor() {
         ShowUnsavedOverlay();
     }
 
-    var SaveChanges = () => {
+    var SaveChanges = async () => {
         SetChanges();
+        await DoRequest("POST", `/api/medals/save/${medal.Medal_ID}`, medal);
         removeItemAll(currentUnsavedMedals, medal.Name);
         overlay.overlay.remove();
         ShowUnsavedOverlay();

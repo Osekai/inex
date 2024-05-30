@@ -61,3 +61,8 @@ $router->post("/api/usersettings/set", function () {
 $router->all("/api/medals/get_all", function () {
     echo \Data\Medals::GetAll()->ReturnJson();
 });
+
+
+$router->all("/api/medals/save/{id}", function ($id) {
+    echo \Data\Medals::Save($id, $_REQUEST)->ReturnJson();
+});

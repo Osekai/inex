@@ -14,4 +14,10 @@ class Medals
         LEFT JOIN Medals_Configuration ON Medals_Data.Medal_ID = Medals_Configuration.Medal_ID
         ", "medals", 60));
     }
+
+    public static function Save($id, $data)
+    {
+        print_r($data);
+        return new Response(true, "Success"); // to make the frontend happy.
+    }
 }
