@@ -13,4 +13,5 @@ const DATABASE_USERNAME = "root";
 const DATABASE_PASSWORD = "password";
 const DATABASE_HOSTNAME = "localhost";
 
-
+// Caching
+const USE_MEMCACHE = false;
