@@ -20,5 +20,14 @@ namespace Database {
             }
             return self::$db->connection;
         }
+
+        public static function get($key) {
+            if(!USE_MEMCACHE) return false;
+            return self::getConnection()->get("inex-" . $key);
+        }
+        public static function set($key, $value, $expiration = 0) {
+            if(!USE_MEMCACHE) return false;
+            return self::getConnection()->set("inex-" . $key, $value, $expiration);
+        }
     }
 }

@@ -41,7 +41,7 @@ namespace Database {
                 $cache = false;
                 if ($cacheKey != "") $cache = true;
                 if ($cache == true) {
-                    $resp = Database\Memcache::getConnection()->get($cacheKey);
+                    $resp = Database\Memcache::get($cacheKey);
                     if ($resp != false) return json_decode($resp, true);
                 }
             }
@@ -65,7 +65,7 @@ namespace Database {
             }
             if (isset($hits)) {
                 if ($cache == true) {
-                    Database\Memcache::getConnection()->set($cacheKey, json_encode($hits), $cacheLength);
+                    Database\Memcache::set($cacheKey, json_encode($hits), $cacheLength);
                 }
                 return $hits;
             } else {
@@ -83,7 +83,7 @@ namespace Database {
             $cache = false;
             if($cacheKey != "") $cache = true;
             if($cache == true) {
-                $resp = Database\Memcache::getConnection()->get($cacheKey);
+                $resp = Database\Memcache::get($cacheKey);
                 if($resp != false) return json_decode($resp, true);
             }
             $oQuery = self::getConnection()->query($strQuery);
@@ -91,7 +91,7 @@ namespace Database {
                 $hits[] = $val;
             }
             if ($cache == true) {
-                Database\Memcache::getConnection()->set($cacheKey, json_encode($hits), $cacheLength);
+                Database\Memcache::set($cacheKey, json_encode($hits), $cacheLength);
             }
             return $hits;
         }
