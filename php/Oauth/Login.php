@@ -58,9 +58,9 @@ namespace Oauth {
 
         public static function FrontendLogin()
         {
-            $token = oauth\Login::GetAccessToken($_GET['code']);
+            $token = Oauth\Login::GetAccessToken($_GET['code']);
 
-            $userdata = oauth\Login::GetUserData($token);
+            $userdata = Oauth\Login::GetUserData($token);
 
             Database\Session::Login($userdata['id']);
             General::Redirect("/home");
