@@ -1,3 +1,6 @@
+import {hexToHSL} from "../utils/colour";
+import {lerpTowards, vector2} from "./lerp";
+
 class GradientBlock {
     putCross(ctx, p) {
         for (const [i, point] of p.entries()) {
@@ -81,18 +84,18 @@ class GradientBlock {
         return c;
     }
 
-    points = [ ]; // these are the starting points for drawing the gradient
+    points = []; // these are the starting points for drawing the gradient
 
 
     // base points be like:
     // [{ x: "50%", y: "50%", c: "#ff66aa" }, ...]
     // and what we want:
-    
+
     constructor(canv, base_points_x) {
         var base_points = JSON.parse(JSON.stringify(base_points_x)); // ? i love javascript
 
         base_points.forEach(point => {
-            if(!point.c.includes("#")) point.c = "#" + point.c
+            if (!point.c.includes("#")) point.c = "#" + point.c
             point.x = parseFloat(point.x) * canv.width / 100;
             point.y = parseFloat(point.y) * canv.height / 100; // Using canvas width for y as well
             point.c = point.c.toUpperCase();
@@ -127,5 +130,122 @@ class GradientBlock {
 }
 
 window.GradientBlock = GradientBlock;
+class GradientBlockAnimated {
+    ctx;
+    points;
+    canvas;
 
-export { GradientBlock };
+    constructor(canvas, p) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext("2d");
+        this.points = p;
+
+        for (let point of this.points) {
+            point.x = parseInt(point.x.replace("%", ""));
+            point.y = parseInt(point.y.replace("%", ""));
+            point.colour = hexToHSL(point.c);
+            point.velocity = { x: 0, y: 0 }; // Initialize velocity
+            point.endpoint = [Math.random() * 100, Math.random() * 100];
+            point.easing = 0.01; // Easing factor for velocity
+        }
+
+        console.log(this.points);
+
+        setInterval(() => {
+            for (let point of this.points) {
+                // Update endpoint using easing function
+                point.endpoint = [
+                    Math.min(Math.random() * 100, 100),
+                    Math.min(Math.random() * 100, 100)
+                ];
+
+            }
+        }, 2500)
+
+        this.draw();
+    }
+
+
+    draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        const sigma = 220.6; // Sigma parameter for Gaussian distribution
+
+        console.log(this.canvas.width )
+        console.log(this.canvas.height)
+
+        for (let point of this.points) {
+
+            // Calculate distance to endpoint
+            const dx = point.endpoint[0] - point.x;
+            const dy = point.endpoint[1] - point.y;
+
+            // Update velocity using easing function
+            point.velocity = {
+                x: lerp(point.velocity.x, dx * point.easing, 0.0004),
+                y: lerp(point.velocity.y, dy * point.easing, 0.0004)
+            };
+
+            // Update position based on velocity
+            point.x += point.velocity.x;
+            point.y += point.velocity.y;
+
+
+            const x = (this.canvas.width / 100) * point.x;
+            const y = (this.canvas.height / 100) * point.y;
+
+            console.log([point.x, point.y]);
+
+
+            var x_distance = 50 - point.x;
+            var y_distance = 50 - point.y;
+
+            const gradient = this.ctx.createRadialGradient(x, y, 0, x + (x_distance), y + (y_distance), 100);
+
+            const stops = 50;
+
+            var stopsl = [];
+
+            for (let i = 0; i <= stops; i++) {
+                const position = i / stops;
+                const distance = position * 90; // Max distance is the outer radius
+                let opacity = Math.exp(-Math.pow(distance, 2) / (2 * Math.pow(sigma, 1.9)));
+                opacity = opacity * (1 - position);
+
+                const color = `hsla(${point.colour[0]}, ${point.colour[1]}%, ${point.colour[2]}%, ${opacity})`;
+                gradient.addColorStop(position, color);
+            }
+
+            console.log(stopsl);
+
+            this.ctx.fillStyle = gradient;
+
+            const rectWidth = 660;
+            const rectHeight = 660;
+            this.ctx.fillRect(x - (rectWidth / 2), y - (rectHeight / 2), rectWidth, rectHeight);
+        }
+
+        const self = this;
+
+
+        window.requestAnimationFrame(function () {
+            self.draw();
+        });
+    }
+}
+
+// Linear interpolation function
+function lerp(start, end, t) {
+    return start * (1 - t) + end * t;
+}
+
+// Modified linear interpolation function with maximum speed and distance threshold
+function smoothMove(current, target, maxSpeed) {
+    const maxDistance = maxSpeed;
+    const distance = target - current;
+    const sign = Math.sign(distance);
+    const speed = Math.min(Math.abs(distance), maxSpeed);
+    return current + sign * speed;
+}
+
+
+export {GradientBlock, GradientBlockAnimated};
