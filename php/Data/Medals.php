@@ -17,7 +17,10 @@ class Medals
 
     public static function Save($id, $data)
     {
-        print_r($data);
-        return new Response(true, "Success"); // to make the frontend happy.
+        return new Response(true, "Success", Connection::execOperation("
+        UPDATE medals_configuration
+        SET Solution = ?, Is_Solution_Found = ?, Video_URL = ?, Is_Lazer = ?, Is_Restricted = ?, Date_Released = ?, First_Achieved_Date = ?, First_Achieved_User_ID = ?
+        WHERE Medal_ID = ?
+        ", "sisiissii", [$data['Solution'], $data['Is_Solution_Found'], $data['Video_URL'], $data['Is_Lazer'], $data['Is_Restricted'], $data['Date_Released'], $Data['First_Achieved_Date'], $Data['First_Achieved_User_ID'], $_Data['Medal_ID']]));
     }
 }
