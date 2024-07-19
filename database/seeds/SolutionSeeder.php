@@ -23,9 +23,11 @@ class SolutionSeeder extends AbstractSeed
         $mods_data = [];
 
         foreach ($api as $medal) {
-            if($medal['Date'] == "0000-00-00 00:00:00") $medal['Date'] = null;
+            if(str_contains($medal['Date'], "0000")) $medal['Date'] = null;
             if($medal['FirstAchievedDate'] != null && str_contains($medal['FirstAchievedDate'], "0000")) $medal['FirstAchievedDate'] = null;
             if($medal['FirstAchievedBy'] == 0) $medal['FirstAchievedBy'] = null;
+
+
             if($medal['Video'] == "") $medal['Video'] = null;
             if($medal['Locked'] == null) $medal['Locked'] = 0;
 
