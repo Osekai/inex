@@ -21,7 +21,7 @@ final class Common extends AbstractMigration
     {
         $table = $this->table('Common_Comments', ['id' => false, 'primary_key' => ['ID']]);
         $table
-            ->addColumn('ID', 'integer', ["precision" => 8])
+            ->addColumn('ID', 'integer', ["precision" => 8, 'null' => false])
             ->addColumn('Target_ID', 'integer', ["precision" => 11])
             ->addColumn('Target_Table', 'string', ['precision' => 40])
             ->addColumn('User_ID', 'integer', ["precision" => 11])
@@ -33,21 +33,21 @@ final class Common extends AbstractMigration
 
         $table = $this->table('Common_Countries', ['id' => false, 'primary_key' => ['Country_Code']]);
         $table
-            ->addColumn('Country_Code', 'string', ["precision" => 11])
-            ->addColumn('Name', 'string', ["precision" => 100])
+            ->addColumn('Country_Code', 'string', ["precision" => 11, 'null' => false])
+            ->addColumn('Name', 'string', ["precision" => 100, 'null' => false])
             ->create();
 
         $table = $this->table('Common_Mods', ['id' => false, 'primary_key' => ['Name', 'ID']]);
         $table
-            ->addColumn('ID', 'string', ["precision" => 2])
-            ->addColumn('Name', 'string', ["precision" => 50])
+            ->addColumn('ID', 'string', ["precision" => 2, 'null' => false])
+            ->addColumn('Name', 'string', ["precision" => 50, 'null' => false])
             ->create();
 
         $table = $this->table('Common_Votes', ['id' => false, 'primary_key' => ['Target_ID', 'Target_Table', 'User_ID']]);
         $table
-            ->addColumn('Target_ID', 'integer', ["precision" => 11])
-            ->addColumn('Target_Table', 'string', ["precision" => 50])
-            ->addColumn('User_ID', 'integer', ["precision" => 11])
+            ->addColumn('Target_ID', 'integer', ["precision" => 11, 'null' => false])
+            ->addColumn('Target_Table', 'string', ["precision" => 50, 'null' => false])
+            ->addColumn('User_ID', 'integer', ["precision" => 11, 'null' => false])
             ->create();
     }
 }

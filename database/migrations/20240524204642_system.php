@@ -21,25 +21,25 @@ final class System extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('System_Sessions', ['id' => false, 'primary_key' => ['Key']]);
-        $table->addColumn('Key', 'string', ['limit' => 64])
+        $table->addColumn('Key', 'string', ['limit' => 64, 'null' => false])
             ->addColumn('User_ID', 'integer')
             ->create();
 
         $table = $this->table('System_Users_Settings', ['id' => false, 'primary_key' => ['User_ID']]);
-        $table->addColumn('User_ID', 'integer')
+        $table->addColumn('User_ID', 'integer', ['null' => false])
             ->addColumn('Settings', 'text', ['limit' => MysqlAdapter::TEXT_LONG])
             ->create();
 
 
         $table = $this->table('System_Users', ['id' => false, 'primary_key' => ['User_ID']]);
-        $table->addColumn('User_ID', 'integer')
+        $table->addColumn('User_ID', 'integer', ['null' => false])
             ->addColumn('Name', 'string', ['precision' => 27])
             ->addColumn('Joined_Date', 'datetime')
             ->create();
 
 
         $table = $this->table('System_Blacklist_Words', ['id' => false, 'primary_key' => ['Word']]);
-        $table->addColumn('Word', 'string', ['limit' => 64])
+        $table->addColumn('Word', 'string', ['limit' => 64, 'null' => false])
             ->create();
     }
 }

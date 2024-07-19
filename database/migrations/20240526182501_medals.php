@@ -21,7 +21,7 @@ final class Medals extends AbstractMigration
     {
         $table = $this->table('Medals_Beatmaps', ['id' => false, 'primary_key' => ['ID']]);
         $table
-            ->addColumn('ID', 'integer', ["precision" => 8])
+            ->addColumn('ID', 'integer', ["precision" => 8, 'null' => false])
             ->addColumn('Medal_ID', 'integer', ["precision" => 4])
             ->addColumn('Beatmap_ID', 'integer', ["precision" => 11])
             ->addColumn('Beatmap_Submitted_User_ID', 'integer', ['precision' => 11])
@@ -33,7 +33,7 @@ final class Medals extends AbstractMigration
 
         $table = $this->table('Medals_Configuration', ['id' => false, 'primary_key' => ['Medal_ID']]);
         $table
-            ->addColumn('Medal_ID', 'integer', ["precision" => 4])
+            ->addColumn('Medal_ID', 'integer', ["precision" => 4, 'null' => false])
             ->addColumn('Video_URL', 'string', ['precision' => 200])
             ->addColumn('First_Achieved_Date', 'datetime')
             ->addColumn('First_Achieved_User_ID', 'integer', ["precision" => 11])
@@ -46,7 +46,7 @@ final class Medals extends AbstractMigration
 
         $table = $this->table('Medals_Data', ['id' => false, 'primary_key' => ['Medal_ID']]);
         $table
-            ->addColumn('Medal_ID', 'integer', ["precision" => 4])
+            ->addColumn('Medal_ID', 'integer', ["precision" => 4, 'null' => false])
             ->addColumn('Name', 'string', ['precision' => 50])
             ->addColumn('Link', 'string', ['precision' => 70])
             ->addColumn('Description', 'string', ['precision' => 500])
@@ -60,14 +60,14 @@ final class Medals extends AbstractMigration
 
         $table = $this->table('Medals_Favourites', ['id' => false, 'primary_key' => ['Medal_ID', "User_ID"]]);
         $table
-            ->addColumn('User_ID', 'integer', ["precision" => 11])
-            ->addColumn('Medal_ID', 'integer', ["precision" => 4])
+            ->addColumn('User_ID', 'integer', ["precision" => 11, 'null' => false])
+            ->addColumn('Medal_ID', 'integer', ["precision" => 4, 'null' => false])
             ->create();
 
         $table = $this->table('Medals_Solutions_Mods', ['id' => false, 'primary_key' => ['Medal_ID', "Mod"]]);
         $table
-            ->addColumn('Medal_ID', 'integer', ["precision" => 11])
-            ->addColumn('Mod', 'string', ["precision" => 4])
+            ->addColumn('Medal_ID', 'integer', ["precision" => 11, 'null' => false])
+            ->addColumn('Mod', 'string', ["precision" => 4, 'null' => false])
             ->create();
     }
 }

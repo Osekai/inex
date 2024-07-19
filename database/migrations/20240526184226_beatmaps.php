@@ -21,12 +21,12 @@ final class Beatmaps extends AbstractMigration
     {
         $table = $this->table('Beatmaps_Data', ['id' => false, 'primary_key' => ['Beatmap_ID']]);
         $table
-            ->addColumn('Beatmap_ID', 'integer', ["precision" => 10])
-            ->addColumn('Beatmapset_ID', 'integer', ["precision" => 10])
-            ->addColumn('Mapper_ID', 'integer', ["precision" => 11])
+            ->addColumn('Beatmap_ID', 'integer', ["precision" => 10, 'null' => false])
+            ->addColumn('Beatmapset_ID', 'integer', ["precision" => 10, 'null' => false])
+            ->addColumn('Mapper_ID', 'integer', ["precision" => 11, 'null' => false])
             ->addColumn('Gamemode', 'string', ['precision' => 5])
-            ->addColumn('Song_Title', 'string', ['precision' => 80])
-            ->addColumn('Song_Artist', 'string', ['precision' => 80])
+            ->addColumn('Song_Title', 'string', ['precision' => 80, 'null' => false])
+            ->addColumn('Song_Artist', 'string', ['precision' => 80, 'null' => false])
             ->addColumn('Mapper_Name', 'string', ['precision' => 27])
             ->addColumn('Difficulty_Rating', 'double')
             ->addColumn('Difficulty_Name', 'string', ['precision' => 80])
@@ -35,8 +35,8 @@ final class Beatmaps extends AbstractMigration
 
         $table = $this->table('Beatmaps_Packs', ['id' => false, 'primary_key' => ['Beatmapset_ID', "Pack_ID"]]);
         $table
-            ->addColumn('Beatmapset_ID', 'integer', ["precision" => 10])
-            ->addColumn('Pack_ID', 'string', ["precision" => 10])
+            ->addColumn('Beatmapset_ID', 'integer', ["precision" => 10, 'null' => false])
+            ->addColumn('Pack_ID', 'string', ["precision" => 10, 'null' => false])
             ->create();
     }
 }

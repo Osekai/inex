@@ -21,16 +21,16 @@ final class Badges extends AbstractMigration
     {
         $table = $this->table('Badges_Data', ['id' => false, 'primary_key' => ['ID', 'Name']]);
         $table
-            ->addColumn('ID', 'integer', ["precision" => 8])
-            ->addColumn('Name', 'string', ['precision' => 100])
-            ->addColumn('Image_URL', 'string', ['precision' => 100])
+            ->addColumn('ID', 'integer', ["precision" => 8, 'null' => false])
+            ->addColumn('Name', 'string', ['precision' => 100, 'null' => false])
+            ->addColumn('Image_URL', 'string', ['precision' => 100, 'null' => false])
             ->create();
 
 
         $table = $this->table('Badges_Users', ['id' => false, 'primary_key' => ['Badge_ID', 'User_ID']]);
         $table
-            ->addColumn('Badge_ID', 'integer', ["precision" => 8])
-            ->addColumn('User_ID', 'integer', ["precision" => 11])
+            ->addColumn('Badge_ID', 'integer', ["precision" => 8, 'null' => false])
+            ->addColumn('User_ID', 'integer', ["precision" => 11, 'null' => false])
             ->addColumn('Description', 'string', ['precision' => 2000])
             ->addColumn('Date_Awarded', 'datetime')
             ->create();

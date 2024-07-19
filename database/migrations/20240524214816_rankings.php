@@ -21,7 +21,7 @@ final class Rankings extends AbstractMigration
     {
         $table = $this->table('Rankings_Users', ['id' => false, 'primary_key' => ['ID']]);
         $table
-            ->addColumn('ID',                   'integer', ["precision" => 11])
+            ->addColumn('ID',                   'integer', ["precision" => 11, 'null' => false])
             ->addColumn('Accuracy_Catch',       'decimal', ['precision' => 5, 'scale' => 2])
             ->addColumn('Accuracy_Mania',       'decimal', ['precision' => 5, 'scale' => 2])
             ->addColumn('Accuracy_Standard',    'decimal', ['precision' => 5, 'scale' => 2])
@@ -58,7 +58,7 @@ final class Rankings extends AbstractMigration
 
         $table = $this->table('Rankings_Script_History', ['id' => false, 'primary_key' => ['ID']]);
         $table
-            ->addColumn('ID', 'integer', ["precision" => 8])
+            ->addColumn('ID', 'integer', ["precision" => 8, 'null' => false])
             ->addColumn('Type', 'string', ['precision' => 30])
             ->addColumn('Time', 'timestamp')
             ->addColumn('Count_Current', 'integer', ["precision" => 11])
