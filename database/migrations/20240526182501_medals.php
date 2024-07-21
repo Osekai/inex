@@ -19,14 +19,14 @@ final class Medals extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('Medals_Beatmaps', ['id' => false, 'primary_key' => ['ID']]);
+        $table = $this->table('Medals_Beatmaps', ['id' => false, 'primary_key' => ['ID'], 'collation' => 'utf8mb4_general_ci']);
         $table
             ->addColumn('ID', 'integer', ["precision" => 8, 'null' => false])
             ->addColumn('Medal_ID', 'integer', ["precision" => 4])
             ->addColumn('Beatmap_ID', 'integer', ["precision" => 11])
             ->addColumn('Beatmap_Submitted_User_ID', 'integer', ['precision' => 11])
             ->addColumn('Beatmap_Submitted_Date', 'datetime')
-            ->addColumn('Note', 'string', ['precision' => 2000, 'collation' => 'utf8mb4_general_ci'])
+            ->addColumn('Note', 'string', ['precision' => 2000])
             ->addColumn('Note_Submitted_User_ID', 'integer', ['precision' => 11])
             ->addColumn('Note_Submitted_Date', 'datetime')
             ->create();
@@ -40,7 +40,7 @@ final class Medals extends AbstractMigration
             ->addColumn('Is_Solution_Found', 'integer', ["precision" => 1])
             ->addColumn('Is_Lazer', 'integer', ["precision" => 1])
             ->addColumn('Is_Restricted', 'integer', ["precision" => 1])
-            ->addColumn('Solution', 'string', ['precision' => 2000, 'collation' => 'utf8mb4_general_ci'])
+            ->addColumn('Solution', 'string', ['precision' => 2000])
             ->addColumn('Date_Released', 'datetime')
             ->create();
 

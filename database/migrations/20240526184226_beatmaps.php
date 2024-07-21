@@ -19,14 +19,14 @@ final class Beatmaps extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('Beatmaps_Data', ['id' => false, 'primary_key' => ['Beatmap_ID']]);
+        $table = $this->table('Beatmaps_Data', ['id' => false, 'primary_key' => ['Beatmap_ID'], 'collation' => 'utf8mb4_general_ci']);
         $table
             ->addColumn('Beatmap_ID', 'integer', ["precision" => 10, 'null' => false])
             ->addColumn('Beatmapset_ID', 'integer', ["precision" => 10, 'null' => false])
             ->addColumn('Mapper_ID', 'integer', ["precision" => 11, 'null' => false])
             ->addColumn('Gamemode', 'string', ['precision' => 5])
-            ->addColumn('Song_Title', 'string', ['precision' => 80, 'null' => false, 'collation' => 'utf8mb4_general_ci'])
-            ->addColumn('Song_Artist', 'string', ['precision' => 80, 'null' => false, 'collation' => 'utf8mb4_general_ci'])
+            ->addColumn('Song_Title', 'string', ['precision' => 80, 'null' => false])
+            ->addColumn('Song_Artist', 'string', ['precision' => 80, 'null' => false])
             ->addColumn('Mapper_Name', 'string', ['precision' => 27])
             ->addColumn('Difficulty_Rating', 'double')
             ->addColumn('Difficulty_Name', 'string', ['precision' => 80])
