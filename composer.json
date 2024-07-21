@@ -37,6 +37,8 @@
     "amphp/parallel": "2.x-dev",
     "amphp/amp": "3.x-dev",
     "ext-pcntl": "*",
-    "robmorgan/phinx": "0.x-dev"
+    "robmorgan/phinx": "0.x-dev",
+    "guzzlehttp/guzzle": "^7.0",
+    "guzzlehttp/promises": "2.0.x-dev"
   }
 }

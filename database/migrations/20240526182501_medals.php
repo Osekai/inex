@@ -26,7 +26,7 @@ final class Medals extends AbstractMigration
             ->addColumn('Beatmap_ID', 'integer', ["precision" => 11])
             ->addColumn('Beatmap_Submitted_User_ID', 'integer', ['precision' => 11])
             ->addColumn('Beatmap_Submitted_Date', 'datetime')
-            ->addColumn('Note', 'string', ['precision' => 2000])
+            ->addColumn('Note', 'string', ['precision' => 2000, 'collation' => 'utf8mb4_general_ci'])
             ->addColumn('Note_Submitted_User_ID', 'integer', ['precision' => 11])
             ->addColumn('Note_Submitted_Date', 'datetime')
             ->create();
@@ -40,7 +40,7 @@ final class Medals extends AbstractMigration
             ->addColumn('Is_Solution_Found', 'integer', ["precision" => 1])
             ->addColumn('Is_Lazer', 'integer', ["precision" => 1])
             ->addColumn('Is_Restricted', 'integer', ["precision" => 1])
-            ->addColumn('Solution', 'string', ['precision' => 2000])
+            ->addColumn('Solution', 'string', ['precision' => 2000, 'collation' => 'utf8mb4_general_ci'])
             ->addColumn('Date_Released', 'datetime')
             ->create();
 
