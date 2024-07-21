@@ -16,7 +16,7 @@ return
             'user' => DATABASE_USERNAME,
             'pass' => DATABASE_PASSWORD,
             'port' => '3306',
-            'charset' => 'utf8',
+            'charset' => 'utf8mb4',
         ]
     ],
     'version_order' => 'creation'
