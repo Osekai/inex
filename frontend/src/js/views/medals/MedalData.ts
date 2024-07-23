@@ -4,33 +4,6 @@ import {Medal} from "./Medal";
 interface MedalCollection {
     [key: number]: Medal
 }
-
-
-export class IterableMedalCollection implements MedalCollection {
-    [key: number]: Medal;
-
-    constructor(medals: Medal[]) {
-        medals.forEach((medal, index) => {
-            this[index] = medal;
-        });
-    }
-
-    [Symbol.iterator]() {
-        let index = 0;
-        const medals = this;
-
-        return {
-            next(): IteratorResult<Medal> {
-                if (index in medals) {
-                    return { value: medals[index++], done: false };
-                } else {
-                    return { value: undefined, done: true };
-                }
-            }
-        };
-    }
-}
-
 export class MedalData {
     /**
      *
