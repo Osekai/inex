@@ -15,6 +15,14 @@ class Medals
         ", "medals", 60));
     }
 
+    static function GetBeatmaps($medal_id): Response {
+        return new Response(true, "Success", Connection::execSelect("
+        SELECT * FROM Medals_Beatmaps 
+        LEFT JOIN Beatmaps_Data ON Medals_Beatmaps.Beatmap_ID = Beatmaps_Data.Beatmap_ID
+        WHERE Medals_Beatmaps.Medal_ID = ?
+        ", "i", [$medal_id], "medals_beatmaps_" . $medal_id, 60));
+    }
+
     public static function Save($id, $data)
     {
         return new Response(true, "Success", Connection::execOperation("

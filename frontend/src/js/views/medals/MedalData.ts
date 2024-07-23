@@ -1,17 +1,52 @@
 import {DoRequest} from "../../utils/requests";
 import {Medal} from "./Medal";
 
+interface MedalCollection {
+    [key: number]: Medal
+}
+
+
+export class IterableMedalCollection implements MedalCollection {
+    [key: number]: Medal;
+
+    constructor(medals: Medal[]) {
+        medals.forEach((medal, index) => {
+            this[index] = medal;
+        });
+    }
+
+    [Symbol.iterator]() {
+        let index = 0;
+        const medals = this;
+
+        return {
+            next(): IteratorResult<Medal> {
+                if (index in medals) {
+                    return { value: medals[index++], done: false };
+                } else {
+                    return { value: undefined, done: true };
+                }
+            }
+        };
+    }
+}
+
 export class MedalData {
     /**
      *
      * @type {null}
      */
-    static Medals: Medal[] = null;
-    static CurrentMedal: Medal;
+    static Medals: MedalCollection = null;
+    static CurrentMedal: number;
 
     static async GetMedals() {
         if (this.Medals == null) {
-            this.Medals = (await DoRequest("GET", "/api/medals/get_all"))['content'];
+            var MedalsTmp = (await DoRequest("GET", "/api/medals/get_all"))['content'];
+            this.Medals = {};
+            for(var medal of MedalsTmp) {
+                this.Medals[medal.Medal_ID] = medal;
+            }
+            console.log(this.Medals);
         }
         return this.Medals;
     }
@@ -21,4 +56,18 @@ export class MedalData {
         return this.Medals;
     }
 
+    static LoadExtra(medal: Medal, callbacks: any) {
+        var index = 0;
+        var i = 0;
+
+        if(index == 0) {
+            console.log("could not find match for " + medal.Name);
+        }
+        DoRequest("POST", `/api/medals/${medal.Medal_ID}/beatmaps`, medal).then((data) => {
+            var content = data['content'];
+            this.Medals[content[0].Medal_ID].Beatmaps = content;
+            if(this.CurrentMedal == medal.Medal_ID) callbacks['beatmaps'](this.Medals[this.CurrentMedal]);
+        });
+        DoRequest("POST", `/api/medals/${medal.Medal_ID}/beatmaps`, medal);
+    }
 }

@@ -21,7 +21,7 @@ function ShowUnsavedOverlay() {
 
 function OpenEditor() {
     console.log("gm");
-    var medal = MedalData.CurrentMedal;
+    var medal = MedalData.GetMedalsSync()[MedalData.CurrentMedal];
     var panel = Div("div", "panel");
     var overlay = new Overlay(panel);
 
@@ -87,14 +87,7 @@ function OpenEditor() {
             medal[input] = inputs[input].value();
         }
 
-        for (var gmedal of MedalData.Medals) {
-            if (gmedal.Medal_ID == medal.Medal_ID) {
-                gmedal = medal;
-                console.log("Saved medal locally");
-                console.log(gmedal);
-                MedalsUI.LoadMedal(gmedal);
-            }
-        }
+        MedalData.Medals[medal.Medal_ID] = medal;
     }
 
 
@@ -108,7 +101,7 @@ function OpenEditor() {
 
     var SaveChanges = async () => {
         SetChanges();
-        await DoRequest("POST", `/api/medals/save/${medal.Medal_ID}`, medal);
+        await DoRequest("POST", `/api/medals/${medal.Medal_ID}/save`, medal);
         removeItemAll(currentUnsavedMedals, medal.Name);
         overlay.overlay.remove();
         ShowUnsavedOverlay();

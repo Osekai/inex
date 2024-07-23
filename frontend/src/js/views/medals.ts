@@ -29,7 +29,7 @@ function SetMedal(inputMedal: string | number, setUrl = false) {
     if (setUrl) {
         setSections(`/medals/{medal}`, {"medal": currentMedal.Name})
     }
-    MedalData.CurrentMedal = currentMedal;
+    MedalData.CurrentMedal = currentMedal.Medal_ID;
     MedalsUI.LoadMedal(currentMedal);
 }
 
@@ -41,7 +41,7 @@ function SetMedal(inputMedal: string | number, setUrl = false) {
 function LoadSidebar() {
     var sidebar = document.getElementById("sidebar");
 
-    for (let medal of MedalData.GetMedalsSync()) {
+    for (let medal of Object.values(MedalData.GetMedalsSync())) {
         let medalButton = Div("button", "medals__medal-button");
         medalButton.append(Image(medal.Link, "", true))
         medalButton.setAttribute("tooltip", medal.Name)

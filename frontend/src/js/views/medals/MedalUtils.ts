@@ -3,7 +3,7 @@ import {Medal} from "./Medal";
 
 export class MedalUtils {
     static GetMedalFromName(name : string|number, looping = false): Medal {
-        for (let medal of MedalData.GetMedalsSync()) {
+        for (let medal of Object.values(MedalData.GetMedalsSync())) {
             if (medal.Name === name) {
                 return medal;
             }
@@ -12,7 +12,7 @@ export class MedalUtils {
     }
 
     static GetMedalFromID(id : string|number, looping = false): Medal {
-        for (let medal of MedalData.GetMedalsSync()) {
+        for (let medal of Object.values(MedalData.GetMedalsSync())) {
             if (medal.Medal_ID === id) {
                 return medal;
             }
