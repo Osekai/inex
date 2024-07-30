@@ -30,17 +30,15 @@ export class MedalData {
     }
 
     static LoadExtra(medal: Medal, callbacks: any) {
-        var index = 0;
-        var i = 0;
-
-        if(index == 0) {
-            console.log("could not find match for " + medal.Name);
-        }
         DoRequest("POST", `/api/medals/${medal.Medal_ID}/beatmaps`, medal).then((data) => {
             var content = data['content'];
             this.Medals[content[0].Medal_ID].Beatmaps = content;
             if(this.CurrentMedal == medal.Medal_ID) callbacks['beatmaps'](this.Medals[this.CurrentMedal]);
         });
-        DoRequest("POST", `/api/medals/${medal.Medal_ID}/beatmaps`, medal);
+        //DoRequest("POST", `/api/medals/${medal.Medal_ID}/what`, medal).then((data) => {
+        //    var content = data['content'];
+        //    this.Medals[content[0].Medal_ID].Whatever = content;
+        //    if(this.CurrentMedal == medal.Medal_ID) callbacks['beatmaps'](this.Medals[this.CurrentMedal]);
+        //});
     }
 }

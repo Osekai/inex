@@ -22,7 +22,6 @@
     animation: fadein 0s ease;
     opacity: 1;
     display: flex;
-    margin-bottom: var(--toolbar-height);
 }
 
 .divider {

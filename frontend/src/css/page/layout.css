@@ -6,14 +6,21 @@ body {
 }
 
 
+
 .content {
     display: flex;
+    flex: 0 0 auto;
     flex-direction: column;
+    flex: 1;
+}
+
+.page-container {
     height: 100%;
 }
 
 .footer {
     margin-top: auto;
+    height: var(--navbar-height);
 }
 .page-container-inner {
     min-width: 0;

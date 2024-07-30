@@ -1,5 +1,8 @@
+
 .medals__page {
-    padding: 30px;
+    height: 100%;
+    max-height: calc(100vh - var(--navbar-height) - var(--navbar-height));
+    display: flex;
 }
 .medals__medal-grid {
     display: grid;
@@ -34,7 +37,6 @@
 .medals__page .sidebar {
     flex: 1;
     overflow-y: scroll;
-    max-height: 80vh;
 }
 .medals__page .main {
     flex: 2;

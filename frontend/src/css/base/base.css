@@ -5,15 +5,15 @@
     margin: 0px;
     box-sizing: border-box;
 }
+html {
+    height: 100%;
+}
 body {
     font-family: "Author", sans-serif;
     color: var(--col-text-l1);
     background-color: var(--col-base);
-    min-height: 100vh;
-    max-height: 100vh; /* I HATE TIPPY */
-    /* elaboration: if this isn't set tippy sends the tooltip into purgatory out of the viewport */
-    /* so for whatever fucking absurd reason we have to do this, i love web dev! i love web dev! i */
-    height: 0; /* now it's just getting ridiculous */
+    min-height: 100%;
+    display: flex;
 }
 
 [aria-hidden="true"] { visibility: hidden; }

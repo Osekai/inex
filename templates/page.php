@@ -1,14 +1,19 @@
+<?php
+
+use Database\Session;
+
+?>
 <div class="mobile-toolbar mobile">
     <a href="/home"><i data-lucide="home"></i></a>
     <a href="/explore"><i data-lucide="book-image"></i></a>
-    <a href="/@<?= \Database\Session::UserData()['Tag'] ?>"><i data-lucide="user"></i></a>
+    <a href="/@<?= Session::UserData()['Tag'] ?>"><i data-lucide="user"></i></a>
     <a href="/settings"><i data-lucide="cog"></i></a>
 </div>
 <div class="navbar">
     <a class="skip-link" href='#main'>Skip to content</a>
     <div class="navbar-upper">
         <div class="navbar-left">
-            Osekai INEX
+            <img src="/public/img/branding/logo_monochrome.svg">
         </div>
         <div class="navbar-right">
             <?php
@@ -46,9 +51,10 @@
     </div>
 </div>
 <div class="page-container" id="main">
-
     <?= $page; ?>
 </div>
-
-<small>Rendered in {TIME} / <?= ApplicationVersion::get() ?> / Application
-    Revision <?= ApplicationVersion::revision() ?></small>
+<div class="footer">
+    <warning>All new content added by users will be deleted when this site is periodically synchronized with the live website.</warning>
+    <small>Rendered in {TIME} / Application
+        Revision <?= ApplicationVersion::revision() ?></small>
+</div>
