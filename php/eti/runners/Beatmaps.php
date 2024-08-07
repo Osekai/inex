@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-use Phinx\Seed\AbstractSeed;
+namespace eti\runners;
+
+use eti\AbstractRunner;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
 
-class BeatmapSeeder extends AbstractSeed
+
+class Beatmaps extends AbstractRunner
 {
     /**
      * Run Method.
@@ -18,7 +21,8 @@ class BeatmapSeeder extends AbstractSeed
      */
     public function run(): void
     {
-        function removeDuplicates($array, $key) {
+        function removeDuplicates($array, $key)
+        {
             $temp_array = [];
             $key_array = [];
 
@@ -31,7 +35,8 @@ class BeatmapSeeder extends AbstractSeed
             return $temp_array;
         }
 
-        function detectUnsupportedCharacters($string) {
+        function detectUnsupportedCharacters($string)
+        {
             // Define a pattern for unsupported characters (anything outside basic multilingual plane)
             $pattern = '/[\x{10000}-\x{10FFFF}]/u'; // Unicode characters outside the BMP
 
@@ -58,7 +63,7 @@ class BeatmapSeeder extends AbstractSeed
         $done = 0;
 
         foreach ($api as $medal) {
-            if(!($medal['PackID'] == null || $medal['PackID'] == "")) continue;
+            if (!($medal['PackID'] == null || $medal['PackID'] == "")) continue;
             $promises[] = $client->postAsync('https://osekai.net/medals/api/beatmaps.php', [
                 'form_params' => [
                     'strSearch' => $medal['Name']

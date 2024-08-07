@@ -6,11 +6,22 @@ $time = explode(' ', $time);
 $time = $time[1] + $time[0];
 $start = $time;
 
-ob_start();
+
 
 
 include("autoload.php");
 require __DIR__ . '/vendor/autoload.php';
+
+if(php_sapi_name() == "cli") {
+    if($argv[1] == "eti") {
+        include("php/eti/run.php");
+    } else {
+        echo "Use command 'eti' to migrate from ECLIPSE database\n";
+    }
+    exit;
+} else {
+    ob_start();
+}
 
 $router = new \Bramus\Router\Router();
 include("error.php");

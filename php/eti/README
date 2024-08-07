@@ -1,0 +1,2 @@
+This folder manages migrations from Eclipse to INEX. You connect your legacy database using the config settings,
+and then you can migrate from it - you'll need to use a separate database for this.

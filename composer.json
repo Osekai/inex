@@ -39,6 +39,7 @@
     "ext-pcntl": "*",
     "robmorgan/phinx": "0.x-dev",
     "guzzlehttp/guzzle": "^7.0",
-    "guzzlehttp/promises": "2.0.x-dev"
+    "guzzlehttp/promises": "2.0.x-dev",
+    "ext-mysqli": "*"
   }
 }

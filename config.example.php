@@ -13,5 +13,10 @@ const DATABASE_USERNAME = "root";
 const DATABASE_PASSWORD = "password";
 const DATABASE_HOSTNAME = "localhost";
 
+const ETI_DATABASE_NAME = "osekai";
+const ETI_DATABASE_USERNAME = "root";
+const ETI_DATABASE_PASSWORD = "password";
+const ETI_DATABASE_HOSTNAME = "localhost";
+
 // Caching
 const USE_MEMCACHE = false;

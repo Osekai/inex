@@ -1,10 +1,14 @@
 # setup
 ### MAKE SURE TO SETUP YOUR `config.php` FIRST
-## commands:
+
+## db setup:
 `php vendor/bin/phinx migrate`
 `php vendor/bin/phinx seed:run`
-that's it
 
+## eclipse to inex
+`php index.php eti all`
+
+make sure that your config.php has valid settings for eclipse adapter
 
 # new migration
 `vendor/bin/phinx create Base`
