@@ -4,6 +4,7 @@ namespace Data;
 
 use API\Response;
 use Database\Connection;
+use Database\Memcache;
 
 class Medals
 {
@@ -25,10 +26,15 @@ class Medals
 
     public static function Save($id, $data)
     {
+        if($data['Date_Released'] == "") $data['Date_Released'] = null;
+        if($data['First_Achieved_Date'] == "") $data['First_Achieved_Date'] = null;
+
+        Memcache::remove("medals");
+
         return new Response(true, "Success", Connection::execOperation("
-        UPDATE medals_configuration
+        UPDATE Medals_Configuration
         SET Solution = ?, Is_Solution_Found = ?, Video_URL = ?, Is_Lazer = ?, Is_Restricted = ?, Date_Released = ?, First_Achieved_Date = ?, First_Achieved_User_ID = ?
         WHERE Medal_ID = ?
-        ", "sisiissii", [$data['Solution'], $data['Is_Solution_Found'], $data['Video_URL'], $data['Is_Lazer'], $data['Is_Restricted'], $data['Date_Released'], $Data['First_Achieved_Date'], $Data['First_Achieved_User_ID'], $_Data['Medal_ID']]));
+        ", "sisiissii", [$data['Solution'], $data['Is_Solution_Found'], $data['Video_URL'], $data['Is_Lazer'], $data['Is_Restricted'], $data['Date_Released'], $data['First_Achieved_Date'], $data['First_Achieved_User_ID'], $data['Medal_ID']]));
     }
 }

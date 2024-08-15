@@ -1,3 +1,6 @@
+// @ts-nocheck
+// note: typescript is great for giving me classes and interfaces etc.... but i despise the checking it does
+
 import {MedalsUI} from "./medals/MedalsUI";
 
 export * from "./medals/MedalsAdmin";
@@ -5,10 +8,11 @@ import {getSections, setSections} from "../utils/urlQuery";
 import {DoRequest} from "../utils/requests";
 import {MedalUtils} from "./medals/MedalUtils";
 import {MedalData} from "./medals/MedalData";
-import {Div, Image} from "../utils/dom";
+import {Div, Image, Text} from "../utils/dom";
 
 import "../../css/views/medals.css";
 import {Medal} from "./medals/Medal";
+import {Misc} from "../utils/misc";
 
 function GetMedalFromUrl() {
     SetMedal((<any>getSections(`/medals/{medal}`))['medal']);
@@ -41,17 +45,51 @@ function SetMedal(inputMedal: string | number, setUrl = false) {
 function LoadSidebar() {
     var sidebar = document.getElementById("sidebar");
 
-    for (let medal of Object.values(MedalData.GetMedalsSync())) {
-        let medalButton = Div("button", "medals__medal-button");
-        medalButton.append(Image(medal.Link, "", true))
-        medalButton.setAttribute("tooltip", medal.Name)
-        sidebar.append(medalButton);
+    var categorized: {} = {};
 
-        medalButton.addEventListener("click", () => {
-            console.log(medal);
-            SetMedal(medal['Medal_ID'], true);
-        })
+    for(var cat of Misc.Medals.GroupingOrdering) {
+        categorized[cat] = [];
     }
+
+    for(let medal of Object.values(MedalData.GetMedalsSync())) {
+        if(typeof(categorized[medal.Grouping as keyof typeof categorized]) == "undefined") {
+            // @ts-ignore
+            categorized[medal.Grouping] = [];
+        }
+
+        // @ts-ignore
+        categorized[medal.Grouping].push(medal);
+    }
+
+    console.log(categorized);
+
+
+
+    for(var category in categorized) {
+        var categorydiv = Div("div", "medals__medal-section");
+        var header = Text("h1", category);
+        var grid = Div("div", "medals__medal-grid");
+
+        for (let medal of categorized[category]) {
+            let medalButton = Div("button", "medals__medal-button");
+            medalButton.append(Image(medal.Link, "", true))
+            medalButton.setAttribute("tooltip", medal.Name)
+
+            medalButton.addEventListener("click", () => {
+                console.log(medal);
+                SetMedal(medal['Medal_ID'], true);
+            })
+
+            grid.appendChild(medalButton);
+        }
+
+        categorydiv.appendChild(header);
+        categorydiv.appendChild(grid);
+        sidebar.append(categorydiv);
+
+    }
+
+
 }
 
 async function Load() {

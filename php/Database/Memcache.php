@@ -29,5 +29,9 @@ namespace Database {
             if(!USE_MEMCACHE) return false;
             return self::getConnection()->set("inex-" . $key, $value, $expiration);
         }
+        public static function remove($key) {
+            if(!USE_MEMCACHE) return false;
+            return self::getConnection()->delete("inex-" . $key);
+        }
     }
 }

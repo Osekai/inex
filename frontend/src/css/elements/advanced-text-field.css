@@ -1,3 +1,19 @@
+advanced-code-field{
+    width: 100%;
+    background: #fff;
+    color: #333;
+    border-radius: 8px;
+    min-height: 80px;
+    overflow: hidden;
+}
+.cm-editor {
+    border-radius: 8px;
+    overflow: hidden;
+}
+.cm-editor, .cm-scroller, .cm-content {
+    min-height: 80px !important;;
+}
+
 advanced-text-field {
     width: 100%;
     display: flex;

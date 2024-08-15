@@ -16,7 +16,7 @@ body {
     display: flex;
 }
 
-[aria-hidden="true"] { visibility: hidden; }
+/*[aria-hidden="true"] { visibility: hidden; }*/
 
 .skip-link {
     position: absolute;

@@ -149,8 +149,6 @@ class GradientBlockAnimated {
             point.easing = 0.01; // Easing factor for velocity
         }
 
-        console.log(this.points);
-
         setInterval(() => {
             for (let point of this.points) {
                 // Update endpoint using easing function
@@ -170,8 +168,6 @@ class GradientBlockAnimated {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         const sigma = 220.6; // Sigma parameter for Gaussian distribution
 
-        console.log(this.canvas.width )
-        console.log(this.canvas.height)
 
         for (let point of this.points) {
 
@@ -193,8 +189,6 @@ class GradientBlockAnimated {
             const x = (this.canvas.width / 100) * point.x;
             const y = (this.canvas.height / 100) * point.y;
 
-            console.log([point.x, point.y]);
-
 
             var x_distance = 50 - point.x;
             var y_distance = 50 - point.y;
@@ -214,8 +208,6 @@ class GradientBlockAnimated {
                 const color = `hsla(${point.colour[0]}, ${point.colour[1]}%, ${point.colour[2]}%, ${opacity})`;
                 gradient.addColorStop(position, color);
             }
-
-            console.log(stopsl);
 
             this.ctx.fillStyle = gradient;
 

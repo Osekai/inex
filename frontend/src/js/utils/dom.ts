@@ -1,5 +1,3 @@
-import {createElement} from 'lucide';
-
 export function BlurAll() {
     var tmp = document.createElement("input");
     document.body.appendChild(tmp);
@@ -82,11 +80,12 @@ export function Input(text: string, type = "", content = "") {
         "value": content,
         type: type
     });
-    if(type == "date") {
+    if (type == "date") {
         input.valueAsDate = new Date(content);
     }
     return input;
 }
+
 export function InputText(text: string, type = "", content = "") {
     var header = Text("h3", text);
     var input = Input(text, type, content);
@@ -101,13 +100,23 @@ export function InputText(text: string, type = "", content = "") {
         }
     };
 }
+
 export function InputTextarea(text: string, type = "", content = "") {
     var header = Text("h3", text);
-    var input = Object.assign(document.createElement("textarea"), {
-        "className": "input " + type,
-        "placeholder": text,
-        "value": content
-    });
+    var input : HTMLElement = null;
+    if (type == "code") {
+        input = document.createElement("advanced-code-field");
+        input.addEventListener("finishevent", () => {
+            // @ts-ignore
+            input.setValue(content);
+        })
+    } else {
+        input = Object.assign(document.createElement("textarea"), {
+            "className": "input " + type,
+            "placeholder": text,
+            "value": content
+        });
+    }
 
     var container = Div();
     container.appendChild(header);
@@ -115,6 +124,11 @@ export function InputTextarea(text: string, type = "", content = "") {
     return {
         element: container,
         value: () => {
+            if(type == "code") {
+                // @ts-ignore
+                return input.getValue();
+            }
+            // @ts-ignore
             return input.value
         }
     };
@@ -139,7 +153,7 @@ export function Checkbox(text: string, value: boolean | number) {
     return {
         element: outer,
         value: () => {
-            if(input.value == true || input.value == false) return input.value;
+            if (input.value == true || input.value == false) return input.value;
             return input.value == 1;
         }
     };

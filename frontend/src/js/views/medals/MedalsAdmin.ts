@@ -32,7 +32,7 @@ function OpenEditor() {
 
 
     var inputs: any = {};
-    inputs["Solution"] = InputTextarea("Solution", "text", medal.Solution);
+    inputs["Solution"] = InputTextarea("Solution", "code", medal.Solution);
     inputs["Date_Released"] = InputText("Date Released", "date", medal.Date_Released);
 
     inputs["Video_URL"] = InputText("Video URL", "text", medal.Video_URL);
@@ -86,8 +86,9 @@ function OpenEditor() {
             // @ts-ignore
             medal[input] = inputs[input].value();
         }
-
         MedalData.Medals[medal.Medal_ID] = medal;
+
+        MedalsUI.LoadMedal(medal);
     }
 
 

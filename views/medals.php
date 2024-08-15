@@ -1,9 +1,7 @@
 <div class="medals__page">
     <div class="sidebar">
-        <div class="panel">
-            <div class="medals__medal-grid" id="sidebar">
+        <div class="panel" id="sidebar">
 
-            </div>
         </div>
     </div>
     <div class="main">
