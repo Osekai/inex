@@ -69,3 +69,7 @@ $router->all("/api/medals/{id}/beatmaps", function ($id) {
 $router->all("/api/medals/{id}/save", function ($id) {
     echo \Data\Medals::Save($id, $_REQUEST)->ReturnJson();
 });
+
+$router->all("/api/beatmaps/{id}/save", function ($id) {
+    echo \Data\Beatmaps::SaveBeatmap($id)->ReturnJson();
+});
