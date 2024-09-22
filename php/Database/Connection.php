@@ -8,10 +8,10 @@ namespace Database {
 
 
 
-        public static function getConnection(): \mysqli
+        public static function getConnection($host = DATABASE_HOSTNAME, $username = DATABASE_USERNAME, $password = DATABASE_PASSWORD, $database = DATABASE_NAME): \mysqli
         {
             if (self::$db == null) {
-                self::$db = new BaseConnection();
+                self::$db = new BaseConnection($host, $username, $password, $database);
             }
             return self::$db->connection;
         }

@@ -2,6 +2,7 @@
 
 namespace eti;
 
+use Database\BaseConnection;
 use Database\Connection;
 use Phinx\Config\Config;
 use Phinx\Db\Adapter\AdapterFactory;
@@ -17,7 +18,7 @@ $runners = [];
 
 
 
-$eclipse = new Connection(ETI_DATABASE_HOSTNAME, ETI_DATABASE_USERNAME, ETI_DATABASE_PASSWORD, ETI_DATABASE_NAME);
+$eclipse = new BaseConnection(ETI_DATABASE_HOSTNAME, ETI_DATABASE_USERNAME, ETI_DATABASE_PASSWORD, ETI_DATABASE_NAME);
 
 function AddRunner($name, $runner)
 {
@@ -26,6 +27,8 @@ function AddRunner($name, $runner)
 }
 
 AddRunner("beatmaps", new runners\Beatmaps());
+AddRunner("comments", new runners\Comments());
+AddRunner("votes", new runners\Votes());
 
 
 if (count($argv) < 3) {
@@ -42,9 +45,11 @@ if (count($argv) < 3) {
 
         if ($run) {
             echo "Running " . $runner['name'] . "\n";
+            $args = array_slice($argv, 3);
+
             $runner['class']->setAdapter($adapter);
             $runner['class']->eclipse_db = $eclipse;
-            $runner['class']->run();
+            $runner['class']->etirun($args);
         }
     }
 }

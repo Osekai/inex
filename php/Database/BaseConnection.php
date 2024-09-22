@@ -9,7 +9,7 @@ class BaseConnection
 {
     public $connection;
 
-    public function __construct($host = DATABASE_HOSTNAME, $username = DATABASE_USERNAME, $password = DATABASE_PASSWORD, $database = DATABASE_NAME)
+    public function __construct($host, $username, $password, $database)
     {
         $this->connection = new mysqli($host, $username, $password, $database);
         $this->connection->set_charset("utf8mb4"); // to fix emojis in comments
@@ -29,8 +29,8 @@ class BaseConnection
         }
 
         $cacheKey .= "t" . $cacheLength;
+        $cache = false;
         if ($cacheLength != 0) {
-            $cache = false;
             if ($cacheKey != "") $cache = true;
             if ($cache == true) {
                 $resp = Database\Memcache::get($cacheKey);
