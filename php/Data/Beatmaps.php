@@ -2,44 +2,50 @@
 
 namespace Data;
 
-use API\Response;
+
+use API\Osu\Beatmap;
 use Database\Connection;
-use Database\Memcache;
-use API\Osu\Beatmaps;
-use API\Osu\Beatmapsets;
 
 class Beatmaps
 {
-    public static function SaveMedalSolution($medal_id, $beatmap_id) {
-        SaveBeatmap($beatmap_id);
-        SaveMedalRelation($medal_id, $beatmap_id);
-    }
+    public static function GetBeatmap($beatmap_id, $get_db = true)
+    {
+        if ($get_db) {
+            $db = Connection::execSelect("SELECT * FROM Beatmaps_Data WHERE Beatmap_ID = ?", "i", [$beatmap_id]);
 
-    public static function SaveBeatmap($beatmap_id) {
-        echo "test1";
-        $Beatmap = New Beatmap();
-        $Beatmapset = New Beatmapset();
-
-        $Data_Beatmap = $Beatmap->GetBeatmap($beatmap_id);
-        $Data_Betmapset = $Beatmapset->GetBeatmapset($Data_Beatmap['beatmapset_id']);
-
-        return new Response(true, "Success", Connection::execOperation("
-        REPLACE INTO beatmaps_data (Beatmap_ID, Beatmapset_ID, Mapper_ID, Gamemode, Song_Title, Song_Artist, Mapper_Name, Difficulty_Rating, Difficulty_Name, Download_Unavailable)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ", "iiissssdsi", [$beatmap_id, $Data_Beatmap['beatmapset_id'], $Data_Beatmapset['user_id'], $Data_Beatmap['mode'], $Data_Beatmapset['title'], $Data_Beatmapset['creator'], $Data_Beatmap['difficulty_rating'], $Data_Beatmap['version'], $Data_Beatmapset['availability.download_disabled']]));
-    }
-
-    public static function SaveMedalRelation($medal_id, $beatmap_id) {
-        if(Database\Session::LoggedIn()) {
-            $user_id = Database\Session::UserData()['ID'];
-        } else {
-            return [];
+            if (count($db) > 0) {
+                return $db[0];
+            }
         }
 
-        return new Response(true, "Success", Connection::execOperation("
-        INSERT INTO medals_beatmaps (Medal_ID, Beatmap_ID, Beatmap_Submitted_User_ID, Beatmap_Submitted_Date)
-        VALUES (?, ?, ?, CURDATE())
-        WHERE NOT EXISTS (SELECT 1 FROM medals_beatmaps WHERE Medal_ID = ? AND Beatmap_ID = ?
-        ", "iiiii", [$medal_id, $beatmap_id, $user_id, $medal_id, $beatmap_id]));
+        $data = Beatmap::GetBeatmap($beatmap_id);
+
+        if($data['mode'] == "fruits") $data['mode'] = "catch";
+
+        $normalized_data = [
+            "Beatmap_ID" => $data['id'],
+            "Beatmapset_ID" => $data['beatmapset_id'],
+            "Mapper_ID" => $data['user_id'],
+            "Gamemode" => $data['mode'],
+            "Song_Title" => $data['beatmapset']['title'],
+            "Song_Artist" => $data['beatmapset']['artist'],
+            "Mapper_Name" => $data['beatmapset']['creator'],
+            "Difficulty_Rating" => $data['difficulty_rating'],
+            "Difficulty_Name" => $data['version'],
+            "Download_Unavailable" => 0, // this is never used in ui i dont know why we store this
+            "Status" => $data['beatmapset']['status']
+        ];
+
+        return $normalized_data;
+    }
+
+    public static function StoreBeatmap($beatmap_info)
+    {
+        Connection::execOperation("REPLACE INTO Beatmaps_Data (
+                           Beatmap_ID, Beatmapset_ID, Mapper_ID, Gamemode,
+                           Song_Title, Song_Artist, Mapper_Name, Difficulty_Rating,
+                           Difficulty_Name, Download_Unavailable, Status
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", "iiissssdsis", array_values($beatmap_info)
+        );
     }
 }

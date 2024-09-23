@@ -17,7 +17,7 @@ var themes = {
     },
     "error": {
         "hue": "0",
-        "icon": "warning",
+        "icon": "circle-alert",
         "time": -1
     },
     "success": {

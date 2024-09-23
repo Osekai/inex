@@ -32,6 +32,7 @@ export class MedalData {
     static LoadExtra(medal: Medal, callbacks: any) {
         DoRequest("POST", `/api/medals/${medal.Medal_ID}/beatmaps`, medal).then((data) => {
             var content = data['content'];
+            if(typeof(content[0]) != "undefined")
             this.Medals[content[0].Medal_ID].Beatmaps = content;
             if(this.CurrentMedal == medal.Medal_ID) callbacks['beatmaps'](this.Medals[this.CurrentMedal]);
         });
