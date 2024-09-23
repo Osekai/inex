@@ -64,12 +64,10 @@ $router->all("/api/medals/get_all", function () {
 $router->all("/api/medals/{id}/beatmaps", function ($id) {
     echo \Data\Medals::GetBeatmaps($id)->ReturnJson();
 });
-
-
 $router->all("/api/medals/{id}/save", function ($id) {
     echo \Data\Medals::Save($id, $_REQUEST)->ReturnJson();
 });
-
-$router->all("/api/beatmaps/{id}/save", function ($id) {
-    echo \Data\Beatmaps::SaveBeatmap($id)->ReturnJson();
+$router->all("/api/comments/post", function ($id) {
+    echo \Data\Comments::Post($_POST['id'], $_POST['table'], $_POST['text'])->ReturnJson();
 });
+

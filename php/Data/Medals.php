@@ -37,4 +37,15 @@ class Medals
         WHERE Medal_ID = ?
         ", "sisiissii", [$data['Solution'], $data['Is_Solution_Found'], $data['Video_URL'], $data['Is_Lazer'], $data['Is_Restricted'], $data['Date_Released'], $data['First_Achieved_Date'], $data['First_Achieved_User_ID'], $data['Medal_ID']]));
     }
+
+    public static function Get(mixed $id)
+    {
+        $medal = Connection::execSelect("
+        SELECT *, Medals_Data.Medal_ID as Medal_ID FROM Medals_Data 
+        LEFT JOIN Medals_Configuration ON Medals_Data.Medal_ID = Medals_Configuration.Medal_ID
+        WHERE Medals_Data.Medal_ID = ?
+        ", "i", $id, "medals_".$id, 60);
+        if(count($medal) == 0) return null;
+        return $medal[1];
+    }
 }
