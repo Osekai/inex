@@ -51,6 +51,8 @@ body, .col-reset, .warning {
 
     background-color: var(--col-base) !important;
 }
+
+
 body.theme-light {
     --base-sat: 10% !important;
     --sat: 2;
