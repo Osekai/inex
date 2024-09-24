@@ -27,7 +27,6 @@ var aCreateIcons: () => void = null;
 
 
 import("lucide").then(({createIcons, icons}) => {
-    console.log(icons);
     aCreateIcons = function () {
         createIcons({
             icons
@@ -39,7 +38,6 @@ import("lucide").then(({createIcons, icons}) => {
 
         for (let element of document.querySelectorAll("[simple-icon]")) {
             for (var icon of simpleicons) {
-                console.log(icon);
                 if (icon.slug.toLowerCase() === element.getAttribute("simple-icon")) {
                     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
                     svg.setAttribute("viewBox", "0 0 24 24"); // Set viewBox attribute for SVG sizing

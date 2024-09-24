@@ -20,6 +20,8 @@ function GetMedalFromUrl() {
     SetMedal((<any>getSections(`/medals/{medal}`))['medal']);
 }
 
+
+
 /**
  * Sets medal based on input
  * @param inputMedal : string/number Medal name OR Medal ID (ID preferred)
@@ -29,9 +31,9 @@ function SetMedal(inputMedal: string | number, setUrl = false) {
     if (typeof (inputMedal) !== "number") {
         inputMedal = decodeURI(inputMedal.replace("_", " "));
     }
-    console.log(inputMedal);
+
     var currentMedal = MedalUtils.GetMedalFromName(inputMedal); // will check ID afterward in case
-    console.log(currentMedal);
+
     if (setUrl) {
         setSections(`/medals/{medal}`, {"medal": currentMedal.Name})
     }
@@ -70,8 +72,6 @@ function LoadSidebar() {
         categorized[medal.Grouping].push(medal);
     }
 
-    console.log(categorized);
-
 
 
     for(var category in categorized) {
@@ -87,7 +87,6 @@ function LoadSidebar() {
             medalButton.setAttribute("medal-button-id", medal.Medal_ID);
 
             medalButton.addEventListener("click", () => {
-                console.log(medal);
                 SetMedal(medal['Medal_ID'], true);
             })
 
@@ -105,7 +104,6 @@ function LoadSidebar() {
 
 async function Load() {
     await MedalData.GetMedals()
-    console.log(MedalData.GetMedalsSync());
     LoadSidebar();
     GetMedalFromUrl();
 

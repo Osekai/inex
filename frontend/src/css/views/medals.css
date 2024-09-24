@@ -48,14 +48,35 @@
 }
 
 .medals__page .sidebar {
+
+    padding: 40px;
     flex: 2;
     overflow-y: scroll;
 }
 .medals__page .main {
+    margin: 20px;
     padding: 20px;
+    margin-left: 0px;
     flex: 5.4;
     display: flex;
     overflow-y: scroll;
+    border-radius: 16px;
+
+    --col: color-mix(in srgb, var(--col-sat-1) 40%, transparent);
+    --col-trans: color-mix(in srgb, var(--col-sat-1) 0%, transparent);
+
+
+
+    background:
+            radial-gradient(53.34% 95.55% at 82.05% 70.78%, var(--col) 0%, var(--col-trans) 100%),
+            radial-gradient(106.54% 106.54% at 95.06% 100%, var(--col) 0%, var(--col-trans) 120%),
+            linear-gradient(to bottom, var(--col-l2), var(--col-d0)); /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+
+
+}
+.medals__page .main .panel {
+    background: color-mix(in srgb, var(--col-d1) 20%, transparent);
+    border: 1px solid #fff1;
 }
 
 .medals__page .main-left {

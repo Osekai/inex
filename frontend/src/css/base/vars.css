@@ -4,25 +4,25 @@ body {
     --accent-3: var(--hue), 50%, 80.4%;
     --sat: 1;
 
-    --base-sat: 20%;
+    --base-sat: 17%;
     --val: 0.9;
 
-    --hue: 220;
+    --hue: 216;
 }
 body, .col-reset, .warning {
     --col-vd: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(5% * var(--val))); /* Background */
 
-    --col-base: hsl(var(--hue), calc(var(--base-sat) * var(--sat)), calc(13% * var(--val))) !important; /* Background */
-    --col-d0: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(10% * var(--val))); /* Background */
-    --col-d1: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(13% * var(--val))); /* Background */
-    --col-d2: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(14% * var(--val))); /* Background */
-    --col-l1: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(17% * var(--val))); /* Panel & some buttons */
-    --col-l2: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(21% * var(--val))); /* Panel 2 */
-    --col-l25: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),  calc(23% * var(--val))); /* Panel 2 */
-    --col-l3: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(26% * var(--val))); /* unused */
-    --col-l4: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(31% * var(--val))); /* Light buttons */
-    --col-l5: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(38% * var(--val)));
-    --col-l6: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(42% * var(--val)));
+    --col-base: hsl(var(--hue), calc(var(--base-sat) * var(--sat)), calc(9% * var(--val))) !important; /* Background */
+    --col-d0: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(4% * var(--val))); /* Background */
+    --col-d1: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(8% * var(--val))); /* Background */
+    --col-d2: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(10% * var(--val))); /* Background */
+    --col-l1: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(13% * var(--val))); /* Panel & some buttons */
+    --col-l2: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(12% * var(--val))); /* Panel 2 */
+    --col-l25: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),  calc(18% * var(--val))); /* Panel 2 */
+    --col-l3: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(16% * var(--val))); /* unused */
+    --col-l4: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(20% * var(--val))); /* Light buttons */
+    --col-l5: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(24% * var(--val)));
+    --col-l6: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(28% * var(--val)));
     --col-l7: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),   calc(60% * var(--val)));
 
     --col-l90: hsl(var(--hue), calc(var(--base-sat) * var(--sat)),  calc(90% * var(--val)));
@@ -34,6 +34,8 @@ body, .col-reset, .warning {
     --col-text-l25: hsl(var(--hue), calc(30% * var(--sat)), 70%);
     --col-text-l3: hsl(var(--hue), calc(17% * var(--sat)), 48%);
     --col-text-d3: hsl(var(--hue), calc(17% * var(--sat)), 10%);
+
+    --col-sat-1: hsl(var(--hue), calc(50% * var(--sat)),  calc(50% * var(--val)));
 
 
     --gradient-base: hsl(var(--accent-1)) 0%, hsl(var(--accent-2)) 46.35%, hsl(var(--accent-3)) 100%;

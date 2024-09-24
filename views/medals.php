@@ -1,10 +1,10 @@
 <div class="medals__page">
     <div class="sidebar">
-        <div class="panel" id="sidebar">
+        <div id="sidebar">
 
         </div>
     </div>
-    <div class="main">
+    <div class="main col-reset" style="--hue: 327" id="main-col">
         <div class="main-left">
             <div class="panel">
                 <h1>Info</h1>

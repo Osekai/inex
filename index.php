@@ -13,10 +13,10 @@ include("autoload.php");
 require __DIR__ . '/vendor/autoload.php';
 
 if(php_sapi_name() == "cli") {
-    if($argv[1] == "eti") {
-        include("php/eti/run.php");
+    if($argv[1] == "task") {
+        include("php/Tasks/run.php");
     } else {
-        echo "Use command 'eti' to migrate from ECLIPSE database\n";
+        echo "Use command 'task' to run tasks\n";
     }
     exit;
 } else {
