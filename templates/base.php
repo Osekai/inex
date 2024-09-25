@@ -26,6 +26,10 @@ if (Site::$base_loaded == false) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="/frontend/dist/<?= $name ?>.css?<?= ApplicationVersion::revision() ?>">
     <link rel="stylesheet" href="/frontend/dist/index.css?<?= ApplicationVersion::revision() ?>">
     <link rel="stylesheet" href="/frontend/dist/<?= $name ?>.css?<?= ApplicationVersion::revision() ?>">

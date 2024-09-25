@@ -1,5 +1,9 @@
 import {IsJsonString} from "./json";
-
+function isNumeric(str) {
+    if (typeof str != "string") return false // we only process strings!
+    return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+        !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+}
 async function DoRequest(method, url, data = null, headers = {}) {
     if (url == null) {
         url = method;
@@ -25,7 +29,7 @@ async function DoRequest(method, url, data = null, headers = {}) {
                     }
 
                     // Check if the value is a non-numeric string
-                    if (isNaN(v)) {
+                    if (!isNumeric(v)) {
                         return v;  // Return the string as is
                     }
 

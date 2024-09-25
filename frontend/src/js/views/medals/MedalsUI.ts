@@ -2,6 +2,7 @@ import {Medal} from "./Medal";
 import {MedalData} from "./MedalData";
 import {Div, Text} from "../../utils/dom";
 import {getAverageRGB, rgbToHsl} from "../../utils/colour";
+import {marked} from "marked";
 
 
 
@@ -79,7 +80,9 @@ export class MedalsUI {
         document.getElementById("medal_description").innerText = medal.Description;
         document.getElementById("medal_instructions").innerHTML = medal.Instructions; // instructions have <i> sometimes
 
-        document.getElementById("medal_solution").innerHTML = medal.Solution;
+
+        // @ts-ignore
+        document.getElementById("medal_solution").innerHTML = marked.parse(medal.Solution.replace(/\n/g, "<br />"));
     }
 
 }

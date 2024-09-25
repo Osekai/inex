@@ -50,7 +50,8 @@
 
 .button.cta, .pill-button.cta {
     background-color: transparent;
-    background: var(--gradient);
+    transition: background 1s ease;
+    background: var(--col-sat-1);
     color: var(--topcol);
     font-weight: 500;
 }
@@ -71,11 +72,11 @@
     background-color: var(--col-l3);
     border-radius: 90px;
     height: 37px;
-    padding: 0px 20px;
+    padding: 2px 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 16px;
 }
 .pill-button:hover {
     background: var(--col-l5);
@@ -99,4 +100,15 @@
 .pill-button-square {
     padding: 0px;
     width: 37px;
+}
+
+
+.polish {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    z-index: 299999999;
+    mix-blend-mode: hard-light;
+    opacity: 0.4;
 }

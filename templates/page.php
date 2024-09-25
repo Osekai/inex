@@ -13,7 +13,14 @@ use Database\Session;
     <a class="skip-link" href='#main'>Skip to content</a>
     <div class="navbar-upper">
         <div class="navbar-left">
-            <img src="/public/img/branding/logo_monochrome.svg">
+            <img src="/public/img/branding/icon_monochrome.svg">
+            <div class="navbar-links">
+                <a href="https://osekai.net/home">home</a>
+                <a href="/medals">medals</a>
+                <a href="https://osekai.net/rankings">ranking</a>
+                <a href="https://osekai.net/profiles">profiles</a>
+                <a href="https://osekai.net/snapshots">snapshots</a>
+            </div>
         </div>
         <div class="navbar-right">
             <?php
@@ -53,8 +60,7 @@ use Database\Session;
 <div class="page-container" id="main">
     <?= $page; ?>
 </div>
-<div class="footer">
-    <warning>All new content added by users will be deleted when this site is periodically synchronized with the live website.</warning>
+<div class="footer hidden">
     <small>Rendered in {TIME} / Application
         Revision <?= ApplicationVersion::revision() ?></small>
 </div>

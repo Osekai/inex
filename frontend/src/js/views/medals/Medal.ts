@@ -1,4 +1,11 @@
 export class Medal {
+    constructor(medal: any) {
+        for(var x in medal) {
+            // @ts-ignore
+            this[x] = medal[x];
+        }
+    }
+
     Medal_ID : number;
     Name : string;
     Link : string;
@@ -18,4 +25,9 @@ export class Medal {
     Solution : string;
     Date_Released : string;
     Beatmaps: unknown;
+
+    GetGamemode() {
+        if (this.Gamemode === "fruits") return "catch";
+        return this.Gamemode ?? "all";
+    }
 }

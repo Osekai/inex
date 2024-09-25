@@ -14,10 +14,17 @@ export class MedalData {
 
     static async GetMedals() {
         if (this.Medals == null) {
-            var MedalsTmp = (await DoRequest("GET", "/api/medals/get_all"))['content'];
+            var MedalsTmp = [];
+            // @ts-ignore
+            if(typeof(medals_preload) !== "undefined") {
+                // @ts-ignore
+                MedalsTmp = medals_preload['content'];
+            } else {
+                MedalsTmp = (await DoRequest("GET", "/api/medals/get_all"))['content'];
+            }
             this.Medals = {};
             for(var medal of MedalsTmp) {
-                this.Medals[medal.Medal_ID] = medal;
+                this.Medals[medal.Medal_ID] = new Medal(medal);
             }
             console.log(this.Medals);
         }
