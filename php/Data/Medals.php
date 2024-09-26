@@ -31,10 +31,10 @@ class Medals
     FROM Medals_Beatmaps 
     LEFT JOIN Beatmaps_Data ON Medals_Beatmaps.Beatmap_ID = Beatmaps_Data.Beatmap_ID
     LEFT JOIN Common_Votes ON Common_Votes.Target_Table = 'Medals_Beatmaps' AND Common_Votes.Target_ID = Medals_Beatmaps.ID
-    WHERE Medals_Beatmaps.Medal_ID = ? " . ($single == null ? "" : "AND Medals_Beatmaps.Beatmap_ID = ? ") . " GROUP BY Medals_Beatmaps.Beatmap_ID", $vars, $inp, "medals_beatmaps_" . $medal_id, $cache));
+    WHERE Medals_Beatmaps.Medal_ID = ? " . ($single == null ? "" : "AND Medals_Beatmaps.Beatmap_ID = ? ") . " GROUP BY Medals_Beatmaps.Beatmap_ID  ORDER BY VoteCount DESC", $vars, $inp, "medals_beatmaps_" . $medal_id, $cache));
     }
     static function WipeBeatmapCache($medal_id) {
-        Memcache::remove("medals_beatmaps_" . $medal_id);
+        Memcache::remove("medals_beatmap2s_" . $medal_id);
     }
 
 

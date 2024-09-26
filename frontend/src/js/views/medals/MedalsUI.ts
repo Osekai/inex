@@ -3,6 +3,7 @@ import {MedalData} from "./MedalData";
 import {Div, Text} from "../../utils/dom";
 import {getAverageRGB, rgbToHsl} from "../../utils/colour";
 import {marked} from "marked";
+import CommentsSection from "../../elements/comments-section";
 
 
 
@@ -68,6 +69,7 @@ export class MedalsUI {
         MedalData.LoadExtra(medal, {
             "beatmaps": this.LoadBeatmaps
         });
+        (<CommentsSection>document.getElementById("comments")).loadComments(medal.Medal_ID);
 
         if(scrollTo) {
             document.querySelector("[medal-button-id='"+medal.Medal_ID+"']").scrollIntoView({

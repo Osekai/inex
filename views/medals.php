@@ -56,7 +56,7 @@
                 <div class="panel">
                     <h1>Comments</h1>
                     <div class="divider"></div>
-                    <comments-section ref="Medals_Data" section="334"></comments-section>
+                    <comments-section section="Medals_Data" ref="334" id="comments"></comments-section>
                 </div>
             </div>
         </div>

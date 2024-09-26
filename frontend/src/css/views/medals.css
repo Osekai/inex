@@ -105,7 +105,9 @@
     padding: 20px;
     overflow-y: scroll;
     max-height: 100%;
+    align-items: flex-start;
 }
+
 
 .medals__page .main .bg {
     content: "";
@@ -138,6 +140,10 @@
 
 .medals__page .main-right {
     flex: 2;
+
+    flex-grow: 2;
+    flex-shrink: 1; /* Prevent shrinking if necessary */
+    flex-basis: 0; /* Adjust this to control initial size */
 }
 .medals__unsaved {
     position: absolute;

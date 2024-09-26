@@ -1,9 +1,9 @@
 import '../../css/elements/comments-section.css'
 
 import {DoRequest} from "../utils/requests";
-import {Div, Text, Image, Button, LucideIcon} from "../utils/dom";
+import {Button, Div, LucideIcon, Text, Image} from "../utils/dom";
 import {timeAgo} from "../utils/timeago";
-import {Modal, ModalButton, ModalIcon} from "../ui/overlay";
+import bbCodeParser from 'js-bbcode-parser';
 
 class CommentsSection extends HTMLElement {
 
@@ -61,47 +61,103 @@ class CommentsSection extends HTMLElement {
     }
 
     createComment(comment, toplevel = true) {
+        console.log(comment);
+
+
+        var commentOuter = Div("div", "comment-" + (toplevel ? "outer" : "reply"));
+
         const outerContainer = Div("div", "comment");
 
-        outerContainer.appendChild(Text("p", comment.Text))
+        var commentContainer = Div("div", "comment-inner");
+        var replyContainer = Div("div", "comment-replies");
 
 
-        //replyButton.addEventListener("click", () => {
-        //    console.log("hii hello :333")
-        //    var donew = true;
-        //    if (this.replyPanel != null) {
-        //        if (this.replyPanel.parent === comment.id) {
-        //            donew = false;
-        //        }
-        //        this.replyPanel.remove();
-        //        this.replyPanel = null;
-        //    }
-        //    if (donew) {
-        //        this.replyPanel = this.commentBar(comment.id);
-        //        this.replyPanel.parent = comment.id;
-        //        commentChildren.prepend(this.replyPanel);
-        //    }
-        //})
 
-        return outerContainer;
+
+
+
+
+
+        var name = Div("div", "name");
+        name.appendChild(Image("https://a.ppy.sh/" + comment.User_ID));
+        name.appendChild(Text("h1", comment.User_ID));
+        name.appendChild(Text("h3", timeAgo.format(new Date(comment.Date))));
+
+        var content = Div("div", "content");
+        content.innerHTML = bbCodeParser.parse(comment.Text);
+
+        outerContainer.appendChild(name);
+        outerContainer.appendChild(content);
+
+        var toolbar = Div("div", "toolbar");
+
+
+
+        var upvote = Text("button", "0");
+        upvote.prepend(LucideIcon("thumbs-up"));
+        var reply = Text("button", "Reply");
+        reply.prepend(LucideIcon("reply"));
+        toolbar.appendChild(upvote);
+        toolbar.appendChild(reply);
+
+
+        if (toplevel && comment.Replies>0) {
+            var viewReplies = Div("button", "view-replies");
+            viewReplies.innerText = comment.Replies + " Replies";
+            viewReplies.prepend(LucideIcon("chevron-down"));
+            toolbar.appendChild(viewReplies);
+            viewReplies.classList.add("right");
+        }
+
+
+
+
+        outerContainer.appendChild(toolbar);
+        outerContainer.appendChild(replyContainer);
+
+        let loaded = false;
+
+        if (toplevel && comment.Replies>0) {
+            viewReplies.addEventListener("click", async () => {
+                if(!loaded) {
+                    var replies = (await DoRequest("POST", `/api/comments/${this.section}/${this.ref}/get`, {
+                        "ParentID": comment.ID
+                    }))["content"];
+                    for (let reply of replies) {
+                        replyContainer.appendChild(this.createComment(reply, false))
+                    }
+                    loaded = true;
+                }
+                commentOuter.classList.toggle("replies-opened");
+            })
+        }
+
+        commentOuter.appendChild(outerContainer);
+        return commentOuter;
+    }
+
+    async loadComments(ref) {
+        this.ref = ref;
+        console.log("letsa go");
+        this.listElement.innerHTML = loader;
+        const data = (await DoRequest("POST", `/api/comments/${this.section}/${ref}/get`))["content"];
+        this.listElement.innerHTML = "";
+        for (let comment of data) {
+            this.listElement.appendChild(this.createComment(comment));
+        }
     }
 
     async load() {
-        if (this.getAttribute("section") == null) {
-            this.innerHTML = "<warning>No section ID specified! Please contact support</warning>";
-        }
-
         this.appendChild(this.commentBar());
 
         this.section = this.getAttribute("section");
         this.ref = this.getAttribute("ref");
-        const data = (await DoRequest("POST", `/api/comments/${this.ref}/${this.section}/get`))["content"];
-        console.log(data);
+
+        if (this.getAttribute("autoload")) {
+            this.loadComments(this.ref);
+        }
 
         this.listElement = Div();
-        for (let comment of data) {
-            this.listElement.appendChild(this.createComment(comment));
-        }
 
         this.appendChild(this.listElement);
     }
@@ -129,4 +185,4 @@ class CommentsSection extends HTMLElement {
 
 customElements.define("comments-section", CommentsSection);
 
-export default {CommentsSection};
+export default CommentsSection;
