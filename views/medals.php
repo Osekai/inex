@@ -1,7 +1,7 @@
 <script>
     const medals_preload = <?= json_encode(\Data\Medals::GetAll()) ?>;
 </script>
-<div class="medals__page">
+<div class="medals__page home" id="medal-page">
     <div class="sidebar">
         <div id="sidebar">
 
@@ -11,6 +11,9 @@
         <div class="bg"></div>
         <div class="scrollable">
             <div class="main-left">
+                <div class="mobile medal__info-toolbar">
+                    <button id="back" class="button pill-button"><i data-lucide="chevron-left"></i> Back</button>
+                </div>
                 <div class="panel medal__info">
                     <div class="medal__info-upper">
                         <img id="medal_image" src="https://assets.ppy.sh/medals/web/taiko-hits-30000.png">

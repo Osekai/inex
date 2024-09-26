@@ -22,6 +22,10 @@ export class MedalsUI {
         top.appendChild(top_top);
         top.appendChild(top_bottom);
 
+        console.log(beatmap);
+        (<HTMLAnchorElement>top).href = `https://osu.ppy.sh/b/${beatmap.Beatmap_ID}`;
+        (<HTMLAnchorElement>top).target = "_blank";
+
         top_top.appendChild(Text("h3", beatmap.Song_Artist));
         top_bottom.appendChild(Text("h1", beatmap.Song_Title));
 
@@ -58,11 +62,17 @@ export class MedalsUI {
         }
     }
 
-    static LoadMedal(medal: Medal) {
+    static LoadMedal(medal: Medal, scrollTo = false) {
         MedalData.LoadExtra(medal, {
             "beatmaps": this.LoadBeatmaps
         });
 
+        if(scrollTo) {
+            document.querySelector("[medal-button-id='"+medal.Medal_ID+"']").scrollIntoView({
+                "behavior": "smooth",
+                "block": "center"
+            });
+        }
 
         medal.Link = medal.Link.replace("https://assets.ppy.sh/medals/web/", "/assets/osu/web/");
         var img : HTMLImageElement = <HTMLImageElement>document.getElementById("medal_image");

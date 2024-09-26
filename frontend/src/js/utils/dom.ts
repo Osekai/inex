@@ -27,7 +27,7 @@ export function Div(type = "div", className = "") {
 
 export function AntheraIcon(icon: string) {
     var i = Object.assign(document.createElement("i"));
-    i.setAttribute("anthera-icon", icon);
+    i.classList.add(icon);
     return i;
 }
 

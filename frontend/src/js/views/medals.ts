@@ -16,8 +16,15 @@ import {MedalsSidebar} from "./medals/ui/MedalsSidebar";
 import {Currency} from "lucide";
 
 function GetMedalFromUrl() {
-    SetMedal((<any>getSections(`/medals/{medal}`))['medal']);
+    SetMedal((<any>getSections(`/medals/{medal}`))['medal'], false, true);
 }
+document.getElementById("back").addEventListener("click", () => {
+    SetMedal("", true);
+});
+
+window.addEventListener("popstate", () => {
+    GetMedalFromUrl();
+})
 
 
 
@@ -25,8 +32,17 @@ function GetMedalFromUrl() {
  * Sets medal based on input
  * @param inputMedal : string/number Medal name OR Medal ID (ID preferred)
  * @param setUrl : boolean Should we update the URL? this manages history, too.
+ * @param scrollTo
  */
-export function SetMedal(inputMedal: string | number, setUrl = false) {
+export function SetMedal(inputMedal: string | number, setUrl = false, scrollTo = false) {
+    if(inputMedal == null || inputMedal == "") {
+        document.getElementById("medal-page").classList.add("home");
+        setSections("/medals/{medal}", {"medal": ""});
+        return;
+    } else {
+        console.log(inputMedal);
+        document.getElementById("medal-page").classList.remove("home");
+    }
     if (typeof (inputMedal) !== "number") {
         inputMedal = decodeURI(inputMedal.replace("_", " "));
     }
@@ -39,7 +55,7 @@ export function SetMedal(inputMedal: string | number, setUrl = false) {
         setSections(`/medals/{medal}`, {"medal": currentMedal.Name})
     }
     MedalData.CurrentMedal = currentMedal.Medal_ID;
-    MedalsUI.LoadMedal(currentMedal);
+    MedalsUI.LoadMedal(currentMedal,scrollTo);
     for(var button of document.querySelectorAll("[medal-button-id]")) {
         // @ts-ignore
         if(button.getAttribute("medal-button-id") == currentMedal.Medal_ID) {

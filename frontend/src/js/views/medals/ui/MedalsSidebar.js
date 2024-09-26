@@ -4,6 +4,7 @@ import {Medal} from "../Medal";
 import {MedalData} from "../MedalData";
 import {MedalsUI} from "../MedalsUI";
 import {SetMedal} from "../../medals";
+import {GamemodeToName} from "../../../utils/gamemode";
 
 export class MedalsSidebar {
     categorized = {};
@@ -32,9 +33,9 @@ export class MedalsSidebar {
     }
     RenderGamemode(gamemode, name) {
         var gamemodecategorydiv = Div("div", "medals__medal-gamemodesection");
-        var modeheader = Text("h2", name);
+        var modeheader = Text("h2", GamemodeToName(name));
 
-        modeheader.prepend(AntheraIcon("osu"));
+        modeheader.prepend(AntheraIcon("icon-gamemode-" + name));
 
         gamemodecategorydiv.appendChild(modeheader);
         for (let ordering of gamemode) {
@@ -43,8 +44,16 @@ export class MedalsSidebar {
             gamemodecategorydiv.appendChild(this.RenderMedalGrid(ordering));
         }
 
+        gamemodecategorydiv.classList.add("gamemode-"+name);
+        gamemodecategorydiv.classList.add("col-reset");
+
+
+        gamemodecategorydiv.style.animationDelay = this.offset + "s";
+        this.offset += 0.01;
+
         return gamemodecategorydiv;
     }
+    offset = 0;
     RenderSection(category, name) {
         var categorydiv = Div("div", "medals__medal-section");
         var header = Text("h1", name);
@@ -54,6 +63,7 @@ export class MedalsSidebar {
 
             categorydiv.appendChild(this.RenderGamemode(category[mode], mode));
         }
+
         return categorydiv;
     }
     LoadSidebar() {

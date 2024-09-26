@@ -1,5 +1,5 @@
-@custom-media --mobile (max-width: 600px);
-@custom-media --desktop (min-width: 601px);
+@custom-media --mobile (max-width: 800px);
+@custom-media --desktop (min-width: 801px);
 
 
 @custom-media --mobile-tablet (max-width: 800px);
@@ -9,6 +9,7 @@
 @import url("./css/components/components.css");
 @import url("./css/page/layout.css");
 @import url("./css/elements.css");
+@import url("./fonts/iconfont/icons.css");
 
 @keyframes fadein {
     0% {

@@ -3,12 +3,7 @@
 use Database\Session;
 
 ?>
-<div class="mobile-toolbar mobile">
-    <a href="/home"><i data-lucide="home"></i></a>
-    <a href="/explore"><i data-lucide="book-image"></i></a>
-    <a href="/@<?= Session::UserData()['Tag'] ?>"><i data-lucide="user"></i></a>
-    <a href="/settings"><i data-lucide="cog"></i></a>
-</div>
+
 <div class="navbar">
     <a class="skip-link" href='#main'>Skip to content</a>
     <div class="navbar-upper">

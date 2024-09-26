@@ -63,6 +63,7 @@ function getSections(is) {
             return null;
         }
     }
+    if(typeof(resp) == "undefined") return null;
     return resp;
 }
 

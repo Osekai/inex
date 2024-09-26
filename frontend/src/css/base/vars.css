@@ -37,6 +37,8 @@ body, .col-reset, .warning {
 
     --col-sat-1: hsl(var(--hue), calc(50% * var(--sat)),  calc(50% * var(--val)));
 
+    --col-sat-2: hsl(var(--hue), calc(100% * var(--sat)),  calc(80% * var(--val)));
+
 
     --gradient-base: hsl(var(--accent-1)) 0%, hsl(var(--accent-2)) 46.35%, hsl(var(--accent-3)) 100%;
 
@@ -103,4 +105,17 @@ body.theme-light, body.theme-light .col-reset {
     --val: 2;
     --sat: 2 !important;
     --hue: 0 !important;
+}
+
+.gamemode-osu {
+    --hue: 333;
+}
+.gamemode-taiko {
+    --hue: 157;
+}
+.gamemode-catch {
+    --hue: 200;
+}
+.gamemode-mania {
+    --hue: 277;
 }
