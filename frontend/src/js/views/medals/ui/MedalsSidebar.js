@@ -73,7 +73,7 @@ export class MedalsSidebar {
         var grid = Div("div", "medals__medal-grid");
         for (let medal of medals) {
             let medalButton = Div("button", "medals__medal-button");
-            medalButton.append(Image(medal.Link, "", true))
+            medalButton.append(Image("/assets/osu/web/" + medal.Link, "", true))
             medalButton.setAttribute("tooltip", medal.Name)
 
             medalButton.setAttribute("medal-button-id", medal.Medal_ID);

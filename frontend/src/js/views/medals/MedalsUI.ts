@@ -76,9 +76,8 @@ export class MedalsUI {
             });
         }
 
-        medal.Link = medal.Link.replace("https://assets.ppy.sh/medals/web/", "/assets/osu/web/");
         var img : HTMLImageElement = <HTMLImageElement>document.getElementById("medal_image");
-        img.src = medal.Link;
+        img.src = "/assets/osu/web/" + medal.Link;
         img.onload = () => {
             var rgb = getAverageRGB(img);
             var hsl = rgbToHsl(rgb.r,rgb.g,rgb.b);
