@@ -26,8 +26,16 @@ export class Medal {
     Date_Released : string;
     Beatmaps: unknown;
 
+    MedalButton: HTMLAnchorElement;
+
     GetGamemode() {
         if (this.Gamemode === "fruits") return "catch";
         return this.Gamemode ?? "all";
+    }
+    GetButton() {
+        if(this.MedalButton == null) {
+            this.MedalButton = document.querySelector("[medal-button-id='"+this.Medal_ID+"']");
+        }
+        return this.MedalButton;
     }
 }

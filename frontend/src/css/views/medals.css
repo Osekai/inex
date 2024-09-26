@@ -13,10 +13,14 @@
 }
 .medals__medal-section {
     width: 100%;
-    margin-bottom: 40px;
+    padding-top: 10px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
 }
 .medals__medal-section h1 {
     font-weight: 400;
+    font-size: 22px;
+    margin-left: 20px;
 }
 .medals__medal-gamemodesection {
     padding: 20px;
@@ -29,6 +33,8 @@
     animation: slide 0.4s ease;
     animation-fill-mode: both;
 }
+
+
 .medals__medal-gamemodesection > h2 {
     font-size: 22px;
     margin-bottom: 6px;
@@ -338,4 +344,14 @@
         transform: translateX(100%);
         opacity: 0;
     }
+}
+.sidebar__no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.sidebar__no-results img {
+    height: 250px;
+    margin: 40px 0px;
 }

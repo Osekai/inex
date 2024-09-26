@@ -6,6 +6,10 @@ import {MedalsUI} from "../MedalsUI";
 import {SetMedal} from "../../medals";
 import {GamemodeToName} from "../../../utils/gamemode";
 
+String.prototype.includes_nl = function(text) {
+    return this.toLowerCase().includes(text.toLowerCase());
+}
+
 export class MedalsSidebar {
     categorized = {};
     InitializeCategory(full, cat) {
@@ -13,6 +17,58 @@ export class MedalsSidebar {
     }
 
 
+    Search(text) {
+        var exact = false;
+        if(text.startsWith("\"") && text.endsWith("\"")) {
+            exact = true;
+            text = text.substring(1, text.length-1);
+        }
+        text = text.replace('"', '');
+        for (let medal of Object.values(MedalData.GetMedalsSync())) {
+            console.log(medal);
+            var show = false;
+            if(medal.Name.includes_nl(text)) {
+                show = true;
+            }
+            if(!exact) {
+                if(medal.Description.includes_nl(text)) {
+                    show = true;
+                }
+                if(medal.Instructions != null && medal.Instructions.includes_nl(text)) {
+                    show = true;
+                }
+            }
+
+            if(show) {
+                medal.Button.classList.remove("hidden");
+                medal.Button.classList.add("visible");
+            } else {
+                medal.Button.classList.add("hidden");
+                medal.Button.classList.remove("visible");
+            }
+        }
+
+        function checkSection(classname) {
+            for(var sect of document.querySelectorAll(classname)) {
+                if(sect.querySelectorAll(".visible").length === 0) {
+                    sect.classList.add("hidden");
+                } else {
+                    sect.classList.remove("hidden");
+                }
+            }
+        }
+        checkSection(".medals__medal-grid");
+        checkSection(".medals__medal-gamemodesection");
+        checkSection(".medals__medal-section");
+
+
+        if(document.getElementById("sidebar").querySelectorAll(".visible").length === 0) {
+            document.getElementById("no-results").classList.remove("hidden");
+        } else {
+            document.getElementById("no-results").classList.add("hidden");
+        }
+
+    }
     RenderMedalGrid(medals) {
         var grid = Div("div", "medals__medal-grid");
         for (let medal of medals) {
@@ -27,7 +83,11 @@ export class MedalsSidebar {
                 SetMedal(medal.Medal_ID, true);
             })
 
+            medalButton.classList.add("visible");
+
             grid.appendChild(medalButton);
+
+            medal.Button = medalButton;
         }
         return grid;
     }
@@ -95,6 +155,11 @@ export class MedalsSidebar {
             sidebar.append(this.RenderSection(this.categorized[category], category));
         }
 
+        var searchbar = document.getElementById("medal_search");
+        searchbar.addEventListener("keyup", () => {
+            this.Search(searchbar.value);
+        })
+        this.Search(searchbar.value);
 
     }
 }

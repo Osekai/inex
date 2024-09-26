@@ -3,8 +3,14 @@
 </script>
 <div class="medals__page home" id="medal-page">
     <div class="sidebar">
+        <input type="text" class="input" placeholder="search" id="medal_search">
+        <br>
         <div id="sidebar">
 
+        </div>
+        <div id="no-results" class="sidebar__no-results hidden">
+            <img src="/public/img/no_results.png">
+            <h1>Can't find that medal!</h1>
         </div>
     </div>
     <div class="main col-reset" id="main-col">
@@ -49,6 +55,7 @@
                 <div class="panel">
                     <h1>Comments</h1>
                     <div class="divider"></div>
+                    <comments-section ref="Medals_Data" section="334"></comments-section>
                 </div>
             </div>
         </div>

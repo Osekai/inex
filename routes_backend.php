@@ -28,8 +28,8 @@ if (!function_exists('json_validate')) {
     }
 }
 
-$router->all("/api/comments/{section}/get", function ($section) {
-    echo json_encode(Data\Comments::Get($section));
+$router->all("/api/comments/{ref}/{section}/get", function ($ref, $section) {
+    echo Data\Comments::Get($section, $ref, $_POST['ParentID'])->ReturnJson();
 });
 
 $router->all("/api/comments/{section}/send", function ($section) {

@@ -22,7 +22,9 @@ class Comments extends AbstractRunner
 
         $newComments = [];
         foreach($comments as $comment) {
+
             $newComments[] = [
+                "ID" => $comment['ID'],
                 "Target_ID" => $comment[$type["column"]],
                 "Target_Table" => $type['target_table'],
                 "User_ID" => $comment['UserID'],

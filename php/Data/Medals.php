@@ -97,8 +97,8 @@ class Medals
         SELECT *, Medals_Data.Medal_ID as Medal_ID FROM Medals_Data 
         LEFT JOIN Medals_Configuration ON Medals_Data.Medal_ID = Medals_Configuration.Medal_ID
         WHERE Medals_Data.Medal_ID = ?
-        ", "i", $id, "medals_".$id, 60);
+        ", "i", [$id], "medals_".$id, 60);
         if(count($medal) == 0) return null;
-        return $medal[1];
+        return $medal[0];
     }
 }
