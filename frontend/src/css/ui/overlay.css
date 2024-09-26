@@ -1,4 +1,11 @@
+@keyframes open {
+    0% {
+        opacity: 0;
+        transform: scale(1.1);
+    }
+}
 .overlay {
+    animation: open 0.2s ease;
     position: fixed;
     top: 0;
     left: 0;
@@ -10,6 +17,13 @@
     z-index: 50000;
     background-color: hsla(var(--hue), calc(25% * var(--sat)), 10%, 0.8);
     backdrop-filter: blur(5px) saturate(2);
+
+    transition: opacity 0.2s ease;
+}
+
+.overlay-close {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .overlay > .panel {

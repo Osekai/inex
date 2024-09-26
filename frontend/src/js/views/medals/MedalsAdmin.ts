@@ -24,6 +24,7 @@ function OpenEditor() {
     var medal = MedalData.GetMedalsSync()[MedalData.CurrentMedal];
     var panel = Div("div", "panel");
     var overlay = new Overlay(panel);
+    overlay.allowclickoff = false;
 
     var inputContainer = Div("div", "inputs");
 

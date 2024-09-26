@@ -5,7 +5,7 @@ import {getSections, setSections} from "../utils/urlQuery";
 import {DoRequest} from "../utils/requests";
 import {MedalUtils} from "./medals/MedalUtils";
 import {MedalData} from "./medals/MedalData";
-import {AntheraIcon, Div, Image, Input, LucideIcon, Text} from "../utils/dom";
+import {AntheraIcon, Button, Div, Image, Input, LucideIcon, Text} from "../utils/dom";
 
 import "../../css/views/medals.css";
 import {Medal} from "./medals/Medal";
@@ -77,12 +77,13 @@ async function Load() {
         document.getElementById("medal_beatmaps_add").addEventListener("click", () => {
             var panel = Div("div", "panel");
             var overlay = new Overlay(panel)
+            overlay.allowclickoff = false;
 
             panel.appendChild(Text("h1", "Add beatmap"));
             var input = Input("Beatmap URL", "text")
             var note = Input("Note (optional)", "text")
-            var done = Div("button", "button cta");
-            done.innerText = "Add";
+            var done = Button("Add", "button cta");
+            var cancel = Button("Nevermind", "button");
 
             done.addEventListener("click", async () => {
                 var resp = await DoRequest("POST", "/api/medals/" + MedalUtils.GetCurrentMedal().Medal_ID + "/beatmap/add", {
@@ -90,17 +91,21 @@ async function Load() {
                     "note": note.value
                 })
                 if(resp.success == true) {
-                    overlay.overlay.remove();
+                    overlay.remove();
                     PushToast({"theme": "success", content: "Added beatmap!"});
                     MedalsUI.AddBeatmap(resp.content);
                 } else {
                     PushToast({"theme": "error", content: resp.message});
                 }
             })
+            cancel.addEventListener("click", () => {
+                overlay.remove();
+            })
 
             panel.appendChild(input);
             panel.appendChild(note);
             panel.appendChild(done);
+            panel.appendChild(cancel);
         })
     }
 }

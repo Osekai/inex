@@ -63,6 +63,8 @@ export class MedalsUI {
     }
 
     static LoadMedal(medal: Medal, scrollTo = false) {
+        // @ts-ignore
+        document.getElementById("medal_beatmaps").innerHTML = loader;
         MedalData.LoadExtra(medal, {
             "beatmaps": this.LoadBeatmaps
         });

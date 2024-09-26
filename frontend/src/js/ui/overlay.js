@@ -2,6 +2,7 @@ import {Button, Div, LucideIcon, Text} from "../utils/dom";
 
 export class Overlay {
     overlay = null;
+    allowclickoff = true;
     constructor(element, hpos = "center", vpos = "center") {
         this.overlay = document.createElement("div");
         this.overlay.classList.add("overlay")
@@ -9,6 +10,17 @@ export class Overlay {
         this.overlay.classList.add("vpos-"+vpos)
         this.overlay.appendChild(element);
         document.body.appendChild(this.overlay);
+
+        this.overlay.addEventListener("click", (e) => {
+            console.log(e);
+            if(e.target == this.overlay && this.allowclickoff) this.overlay.remove();
+        })
+    }
+    remove() {
+        this.overlay.classList.add("overlay-close");
+        setTimeout(() => {
+            this.overlay.remove();
+        }, 500)
     }
 }
 

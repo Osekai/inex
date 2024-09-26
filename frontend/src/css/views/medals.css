@@ -87,6 +87,11 @@
     flex: 2;
     overflow-y: scroll;
 }
+.medals__page .sidebar input {
+    position: sticky;
+    top: 0;
+    z-index: 9;
+}
 .medals__page .main {
     margin: 20px;
     margin-left: 0px;
