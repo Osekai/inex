@@ -54,7 +54,7 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
         }
 
         $query = "
-SELECT Common_Comments.*, COUNT(Children.ID) as Replies,  COUNT(DISTINCT Common_Votes.User_ID) AS VoteCount" .
+SELECT Common_Comments.*, COUNT(DISTINCT Children.ID) as Replies,  COUNT(DISTINCT Common_Votes.User_ID) AS VoteCount" .
             (Session::LoggedIn() ? ", (SELECT COUNT(Common_Votes.User_ID) 
  FROM Common_Votes 
  WHERE Common_Votes.User_ID = ? 
