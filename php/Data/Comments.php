@@ -67,7 +67,7 @@ SELECT Common_Comments.*, COUNT(Children.ID) as Replies,  COUNT(DISTINCT Common_
  AND Common_Comments.Target_Table = ? " . ($single == null ? "" : "AND Common_Comments.Text = ? ") .
  "AND Common_Comments.Parent_Comment_ID " . ($parent == null ? "IS NULL" : "= ?") . " 
  GROUP BY Common_Comments.ID 
- ORDER BY Is_Pinned, VoteCount, Replies DESC";
+ ORDER BY Is_Pinned, VoteCount DESC, Replies DESC";
 
         return new Response(true, "ok", Connection::execSelect($query, $types, $values));
     }
