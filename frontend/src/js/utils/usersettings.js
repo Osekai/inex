@@ -24,7 +24,10 @@ async function SetSettings(key, value, local = false) {
 
 function GetSetting(key, defaultValue, local) {
     if(!loggedIn && local == false) return defaultValue;
+
+
     if(local) {
+        console.log(localStorage.getItem(key));
         if(localStorage.getItem(key) == null) return defaultValue;
         return localStorage.getItem(key);
     }

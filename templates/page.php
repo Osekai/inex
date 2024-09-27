@@ -10,7 +10,7 @@ use Database\Session;
         <div class="navbar-left">
             <img src="/public/img/branding/icon_monochrome.svg">
             <div class="navbar-links">
-                <a href="https://osekai.net/home">home</a>
+                <a href="/home">home</a>
                 <a href="/medals">medals</a>
                 <a href="https://osekai.net/rankings">ranking</a>
                 <a href="https://osekai.net/profiles">profiles</a>

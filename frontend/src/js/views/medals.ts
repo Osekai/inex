@@ -14,6 +14,7 @@ import {Overlay} from "../ui/overlay";
 import {PushToast} from "../ui/toasts";
 import {MedalsSidebar} from "./medals/ui/MedalsSidebar";
 import {Currency} from "lucide";
+import {GetSetting} from "../utils/usersettings";
 
 function GetMedalFromUrl() {
     SetMedal((<any>getSections(`/medals/{medal}`))['medal'], false, true);
@@ -37,6 +38,7 @@ window.addEventListener("popstate", () => {
 export function SetMedal(inputMedal: string | number, setUrl = false, scrollTo = false) {
     if(inputMedal == null || inputMedal == "") {
         document.getElementById("medal-page").classList.add("home");
+        if((<any>getSections(`/medals/{medal}`))['medal'] != null)
         setSections("/medals/{medal}", {"medal": ""});
         return;
     } else {
@@ -107,9 +109,20 @@ async function Load() {
             panel.appendChild(done);
             panel.appendChild(cancel);
         })
+    } else {
+        document.getElementById("medal_beatmaps_add").classList.add("disabled");
     }
 }
 
 Load().then(r => {
     console.log("load complete")
 });
+
+var filterbutton = document.getElementById("filter-button");
+filterbutton.addEventListener("click", () => {
+    if(MedalData.ObtainedFilterActive()) {
+        MedalData.SetObtainedFilterActive(false);
+    } else {
+        MedalData.SetObtainedFilterActive(true);
+    }
+})

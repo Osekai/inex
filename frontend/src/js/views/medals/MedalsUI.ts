@@ -4,6 +4,9 @@ import {Div, Text} from "../../utils/dom";
 import {getAverageRGB, rgbToHsl} from "../../utils/colour";
 import {marked} from "marked";
 import CommentsSection from "../../elements/comments-section";
+import {GetSetting} from "../../utils/usersettings";
+import {DoRequest} from "../../utils/requests";
+import {timeAgo} from "../../utils/timeago";
 
 
 
@@ -23,7 +26,6 @@ export class MedalsUI {
         top.appendChild(top_top);
         top.appendChild(top_bottom);
 
-        console.log(beatmap);
         (<HTMLAnchorElement>top).href = `https://osu.ppy.sh/b/${beatmap.Beatmap_ID}`;
         (<HTMLAnchorElement>top).target = "_blank";
 
@@ -37,15 +39,29 @@ export class MedalsUI {
 
         var bottom = Div("div", "bottom");
 
-        bottom.appendChild(Text("h4", "submission date"));
+        var submissiondate = Text("h4", timeAgo.format(new Date(beatmap.Beatmap_Submitted_Date)));
+        bottom.appendChild(submissiondate);
+        submissiondate.setAttribute("tooltip", beatmap.Beatmap_Submitted_Date);
 
         var votebutton = Div("div", "pill-button")
         bottom.appendChild(votebutton);
         votebutton.classList.add("vote-button")
         votebutton.innerText = beatmap.VoteCount;
 
-        votebutton.addEventListener("click", () => {
+        if(beatmap.HasVoted === 1) votebutton.classList.add("active");
 
+        votebutton.addEventListener("click", async () => {
+            votebutton.classList.add("loading");
+            var data = await DoRequest("POST", "/api/vote/Medals_Beatmaps/" + beatmap.ID)
+            if(data.message === "vote_add") {
+                votebutton.classList.add("active");
+                beatmap.VoteCount++;
+            } else if(data.message === "vote_remove") {
+                votebutton.classList.remove("active");
+                beatmap.VoteCount--;
+            }
+            votebutton.innerText = beatmap.VoteCount;
+            votebutton.classList.remove("loading");
         })
 
         outer.appendChild(bottom);
@@ -60,6 +76,17 @@ export class MedalsUI {
         // @ts-ignore
         for (var beatmap of medal.Beatmaps) {
             MedalsUI.AddBeatmap(beatmap);
+        }
+    }
+    static CheckObtainedFilter() {
+        // @ts-ignore
+        if(!loggedIn) return;
+        if(MedalData.ObtainedFilterActive()) {
+            document.getElementById("medal-page").classList.add("filter-obtained");
+            document.getElementById("filter-button").classList.add("active");
+        } else {
+            document.getElementById("medal-page").classList.remove("filter-obtained");
+            document.getElementById("filter-button").classList.remove("active");
         }
     }
 
@@ -99,3 +126,5 @@ export class MedalsUI {
     }
 
 }
+
+MedalsUI.CheckObtainedFilter();

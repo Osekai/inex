@@ -17,6 +17,7 @@ class CommentsSection extends HTMLElement {
 
     listElement = null;
 
+    lastCommentBar = null;
     commentBar(replyingTo = null) {
         // note! : please pass in as Comment object and not ID!
         const outer = new Div("div", "comment-input");
@@ -29,7 +30,7 @@ class CommentsSection extends HTMLElement {
 
             input.classList.add("input");
             input.classList.add("lighter");
-            input.setAttribute("placeholder", "Leave a comment");
+            input.setAttribute("placeholder", "Leave a " + (replyingTo == null ? "comment" :  "reply"));
 
 
             button.addEventListener("click", async () => {
@@ -39,37 +40,41 @@ class CommentsSection extends HTMLElement {
                 };
                 if (replyingTo != null) data.replyingTo = replyingTo;
 
-                console.log(data);
 
-                const commentJson = await DoRequest("POST", `/api/comments/${this.section}/send`, data);
-                console.log(commentJson);
-                const comment = this.createComment(commentJson["content"]);
+                const commentJson = await DoRequest("POST", `/api/comments/${this.section}/${this.ref}/send`, data);
+
+                const comment = this.createComment(commentJson["content"], false);
                 if (replyingTo == null) {
                     // we're toplevel, don't want to replace
                     this.listElement.prepend(comment);
                 } else {
+                    this.lastCommentBar = null;
                     outer.replaceWith(comment);
                 }
                 // i don't know which one of these work so take them all :)
                 input.innerHTML = ""
                 input.innerText = ""
                 input.value = ""
-                console.log(":)");
             })
+
+
+            if(replyingTo != null) {
+                if(this.lastCommentBar != null) this.lastCommentBar.remove();
+                this.lastCommentBar = outer;
+            }
         }
         return outer;
     }
 
     createComment(comment, toplevel = true) {
-        console.log(comment);
-
-
         var commentOuter = Div("div", "comment-" + (toplevel ? "outer" : "reply"));
 
         const outerContainer = Div("div", "comment");
 
         var commentContainer = Div("div", "comment-inner");
         var replyContainer = Div("div", "comment-replies");
+
+        var replyInputContainer = Div("div", "comment-reply-input");
 
 
 
@@ -93,13 +98,45 @@ class CommentsSection extends HTMLElement {
 
 
 
-        var upvote = Text("button", "0");
+        var upvote = Text("button", "");
         upvote.prepend(LucideIcon("thumbs-up"));
+        toolbar.appendChild(upvote);
+
+        var upvote_count = Text("p", comment.VoteCount);
+        upvote.appendChild(upvote_count);
+
+        if(comment.HasVoted === 1) upvote.classList.add("active");
+
+
         var reply = Text("button", "Reply");
         reply.prepend(LucideIcon("reply"));
-        toolbar.appendChild(upvote);
         toolbar.appendChild(reply);
 
+        if(loggedIn) {
+            upvote.addEventListener("click", async () => {
+                upvote.classList.add("loading");
+                var data = await DoRequest("POST", "/api/vote/Common_Comments/" + comment.ID)
+                if(data.message === "vote_add") {
+                    upvote.classList.add("active");
+                    comment.VoteCount++;
+                } else if(data.message === "vote_remove") {
+                    upvote.classList.remove("active");
+                    comment.VoteCount--;
+                }
+                upvote_count.innerText = comment.VoteCount;
+                upvote.classList.remove("loading");
+            })
+
+
+            reply.addEventListener("click", () => {
+                replyContainer.prepend(this.commentBar(comment));
+                commentOuter.classList.add("replies-opened");
+            })
+        }
+        if(!loggedIn) {
+            upvote.classList.add("disabled");
+            reply.classList.add("disabled");
+        }
 
         if (toplevel && comment.Replies>0) {
             var viewReplies = Div("button", "view-replies");
@@ -113,6 +150,7 @@ class CommentsSection extends HTMLElement {
 
 
         outerContainer.appendChild(toolbar);
+        outerContainer.appendChild(replyInputContainer);
         outerContainer.appendChild(replyContainer);
 
         let loaded = false;
@@ -127,8 +165,10 @@ class CommentsSection extends HTMLElement {
                         replyContainer.appendChild(this.createComment(reply, false))
                     }
                     loaded = true;
+                    commentOuter.classList.add("replies-opened");
+                } else {
+                    commentOuter.classList.toggle("replies-opened");
                 }
-                commentOuter.classList.toggle("replies-opened");
             })
         }
 
@@ -136,9 +176,10 @@ class CommentsSection extends HTMLElement {
         return commentOuter;
     }
 
+
+
     async loadComments(ref) {
         this.ref = ref;
-        console.log("letsa go");
         this.listElement.innerHTML = loader;
         const data = (await DoRequest("POST", `/api/comments/${this.section}/${ref}/get`))["content"];
         this.listElement.innerHTML = "";

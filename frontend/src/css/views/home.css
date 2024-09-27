@@ -1,0 +1,32 @@
+.home-welcome {
+    padding: 90px 50px;
+    border-radius: var(--border-radius);
+    background-image: url("../../../../public/img/inex-banner.png");
+    background-position: center;
+    background-size: cover;
+}
+.home-welcome img {
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.home-panel {
+    padding: 30px 50px;
+    margin-top: 20px;
+    background: var(--col-l4);
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    color: inherit;
+    transition: all 0.2s ease;
+    border-left: 0px solid var(--col-sat-1);
+}
+.home-panel:hover {
+    border-left: 15px solid var(--col-sat-2);
+    padding-left: 35px;
+
+}
+.home-panel h1 {
+    font-weight: 400;
+}

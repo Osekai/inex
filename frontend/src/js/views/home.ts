@@ -1,4 +1,6 @@
 import {GradientBlock, GradientBlockAnimated} from "../graphics/gradient-block.js";
+import "../../css/views/home.css";
+/*
 
 var gradientblock = new GradientBlockAnimated(document.getElementById("testcanvas"), [
     {
@@ -16,4 +18,4 @@ var gradientblock = new GradientBlockAnimated(document.getElementById("testcanva
         "y": "100%",
         "c": "#66aaff",
     }
-])
+])*/

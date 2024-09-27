@@ -1,5 +1,8 @@
 import {DoRequest} from "../../utils/requests";
 import {Medal} from "./Medal";
+import {GetSetting, SetSettings} from "../../utils/usersettings";
+import {MedalsUI} from "./MedalsUI";
+import {parseBoolean} from "../../utils/boolean";
 
 interface MedalCollection {
     [key: number]: Medal
@@ -25,6 +28,11 @@ export class MedalData {
             this.Medals = {};
             for(var medal of MedalsTmp) {
                 this.Medals[medal.Medal_ID] = new Medal(medal);
+                this.Medals[medal.Medal_ID].Obtained = false;
+                // @ts-ignore
+                if (loggedIn && userData.user_achievements.some(usermedal => usermedal.achievement_id == medal.Medal_ID)) {
+                    this.Medals[medal.Medal_ID].Obtained = true;
+                }
             }
             console.log(this.Medals);
         }
@@ -48,5 +56,18 @@ export class MedalData {
         //    this.Medals[content[0].Medal_ID].Whatever = content;
         //    if(this.CurrentMedal == medal.Medal_ID) callbacks['beatmaps'](this.Medals[this.CurrentMedal]);
         //});
+    }
+
+    static ObtainedFilterActive() {
+        // @ts-ignore
+        if(!loggedIn) return;
+        return parseBoolean(GetSetting("medals.hide_obtained", false, true));
+    }
+
+    static SetObtainedFilterActive(b: boolean) {
+        // @ts-ignore
+        if(!loggedIn) return;
+        SetSettings("medals.hide_obtained", b, true);
+        MedalsUI.CheckObtainedFilter()
     }
 }

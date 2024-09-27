@@ -25,7 +25,6 @@ export class MedalsSidebar {
         }
         text = text.replace('"', '');
         for (let medal of Object.values(MedalData.GetMedalsSync())) {
-            console.log(medal);
             var show = false;
             if(medal.Name.includes_nl(text)) {
                 show = true;
@@ -84,6 +83,8 @@ export class MedalsSidebar {
             })
 
             medalButton.classList.add("visible");
+
+            if(medal.Obtained) medalButton.classList.add("obtained");
 
             grid.appendChild(medalButton);
 

@@ -68,6 +68,8 @@ function getSections(is) {
 }
 
 function setSections(is, p) {
+    console.log("writing to history", is, p);
+    console.trace();
     var sections = window.location.pathname.split("/");
     var inputSections = is.split("/");
 

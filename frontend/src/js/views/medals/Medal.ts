@@ -1,4 +1,5 @@
 export class Medal {
+    Obtained: boolean;
     constructor(medal: any) {
         for(var x in medal) {
             // @ts-ignore

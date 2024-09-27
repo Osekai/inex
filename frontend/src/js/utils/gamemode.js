@@ -5,7 +5,7 @@ export function GamemodeToName(gamemode) {
         "mania": "Mania",
         "catch": "Catch",
         "fruits": "Catch",
-        "all": "Any Mode"
+        "all": "All Mode"
     }
     return names[gamemode];
 }

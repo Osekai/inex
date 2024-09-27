@@ -15,6 +15,14 @@
     cursor: pointer;
 }
 
+.active.button {
+    background-color: var(--col-l90) !important;
+    color: var(--col-l25);
+}
+.button.square {
+    padding: 12px !important;
+}
+
 .input.lighter {
     background-color: var(--col-l2);
 

@@ -3,8 +3,20 @@
 </script>
 <div class="medals__page home" id="medal-page">
     <div class="sidebar">
-        <input type="text" class="input" placeholder="search" id="medal_search">
-        <br>
+        <div class="sidebar-toolbar">
+            <input type="text" class="input" placeholder="search" id="medal_search">
+            <?php
+            if (\Database\Session::LoggedIn()) {
+                ?>
+                <button class="button square" tooltip="Filter Achieved" id="filter-button"><i data-lucide="filter"></i>
+                </button>
+            <?php } else { ?>
+                    <a tooltip="Log in to use Filter" href="/login">
+                <button class="button square disabled" tooltip="Log in to use this feature" id="filter-button"><i data-lucide="filter"></i>
+                </button>
+                    </a>
+            <?php } ?>
+        </div>
 
         <div id="no-results" class="sidebar__no-results hidden">
             <img src="/public/img/no_results.png">
@@ -30,7 +42,8 @@
                                 <h2 id="medal_description">This is all very heavily WIP</h2>
                                 <h3 id="medal_instructions">Select a medal on your left :3</h3>
                             </div>
-                            <div class="button pill-button pill-button-square" id="medal-edit-button" tooltip="Edit Medal"><i
+                            <div class="button pill-button pill-button-square" id="medal-edit-button"
+                                 tooltip="Edit Medal"><i
                                         data-lucide="pencil"></i></div>
                         </div>
                     </div>

@@ -54,6 +54,10 @@ comments-section {
     margin-top: 6px;
     font-size: 16px;
 }
+.comment .content,
+.comment .content p {
+    font-weight: 300 !important;
+}
 
 .comment .content img {
     max-width: 60%;
@@ -66,6 +70,7 @@ comments-section {
     display: flex;
     align-items: center;
     margin-left: -8px;
+    margin-right: -8px;
 }
 .comment .toolbar > * {
     display: flex;
@@ -80,6 +85,7 @@ comments-section {
     margin-left: -3px;
     border-radius: 900px;
 }
+
 
 .comment .toolbar > .view-replies {
     padding-left: 5px;
@@ -125,4 +131,12 @@ comments-section {
 
 .comment-input textarea {
     flex: 1;
+}
+
+.comment .toolbar > *.active {
+    background: #fff1;
+    opacity: 1;
+}
+.comment .toolbar > *.active svg {
+    fill: white;
 }

@@ -32,14 +32,16 @@ $router->all("/api/comments/{ref}/{section}/get", function ($ref, $section) {
     echo Data\Comments::Get($section, $ref, $_POST['ParentID'])->ReturnJson();
 });
 
-$router->all("/api/comments/{section}/send", function ($section) {
+$router->all("/api/comments/{ref}/{section}/send", function ($ref, $section) {
     if (!requireLogin()) return;
     $replyingTo = null;
     if (isset($_REQUEST['replyingTo'])) {
         $replyingTo = $_REQUEST['replyingTo'];
     }
-    echo json_encode(Data\Comments::Send($section, $_REQUEST['content'], $replyingTo));
+    echo json_encode(Data\Comments::Post($section, $ref, $_REQUEST['content'], $replyingTo));
 });
+
+
 
 $router->all("/api/comment/{id}/delete", function ($id) {
     if (requireLogin())
@@ -74,4 +76,7 @@ $router->all("/api/medals/{id}/save", function ($id) {
 });
 $router->all("/api/comments/post", function ($id) {
     echo \Data\Comments::Post($_POST['id'], $_POST['table'], $_POST['text'])->ReturnJson();
+});
+$router->all("/api/vote/{target}/{id}", function ($target, $id) {
+    echo \Data\Votes::Vote($target, $id)->ReturnJson();
 });
