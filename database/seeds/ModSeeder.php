@@ -16,41 +16,25 @@ class ModSeeder extends AbstractSeed
      */
     public function run(): void
     {
-        $mods = [
-            "NF" => "No Fail",
-            "EZ" => "Easy",
-            "HD" => "Hidden",
-            "HR" => "Hard Rock",
-            "SD" => "Sudden Death",
-            "DT" => "Double Time",
-            "RX" => "Relax",
-            "HT" => "Half Time",
-            "NC" => "Nightcore",
-            "FL" => "Flashlight",
-            "AT" => "Autoplay",
-            "SO" => "Spun Out",
-            "AP" => "Autopilot",
-            "PF" => "Perfect",
-            "1K" => "1 Key",
-            "2K" => "2 Keys",
-            "3K" => "3 Keys",
-            "4K" => "4 Keys",
-            "5K" => "5 Keys",
-            "6K" => "6 Keys",
-            "7K" => "7 Keys",
-            "8K" => "8 Keys",
-            "9K" => "9 Keys",
-            "FI" => "Fade In",
-            "CO" => "Co-Op",
-        ];
-
         $data = [];
 
-        foreach($mods as $key => $value) {
-            $data[] = [
-                "ID" => $key,
-                "Name" => $value
-            ];
+        $rulesets = json_decode(file_get_contents("https://raw.githubusercontent.com/ppy/osu-web/659347f10f12f83d6b0d8d27400692b471b51e3c/database/mods.json"), true);
+
+        foreach($rulesets as $ruleset) {
+            $ruleset_name = $ruleset['Name'];
+            foreach($ruleset['Mods'] as $mod) {
+                print_r($mod);
+                echo $mod['Type'];
+                $type = strtolower($mod['Type']);
+                $type = str_replace(" ", "", $type);
+                $data[] = [
+                    "ID" => $mod['Acronym'],
+                    "Name" => $mod['Name'],
+                    "Type" => $type,
+                    "Description" => $mod['Description'],
+                    "Gamemode" => $ruleset_name
+                ];
+            }
         }
 
         $posts = $this->table('Common_Mods');

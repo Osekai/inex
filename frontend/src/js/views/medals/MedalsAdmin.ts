@@ -48,10 +48,18 @@ function OpenEditor() {
     inputContainer.appendChild(inputs['Solution'].element);
 
 
+    inputs["Mods"] = InputText("Mods", "text", medal.Mods);
+
+
     var otherInfo = Div("div", "row");
     otherInfo.appendChild(inputs['Video_URL'].element);
-    otherInfo.appendChild(inputs['Is_Lazer'].element);
-    otherInfo.appendChild(inputs['Is_Restricted'].element);
+    otherInfo.appendChild(inputs['Mods'].element);
+
+    var toggles = Div();
+    otherInfo.appendChild(toggles);
+    toggles.appendChild(inputs['Is_Lazer'].element);
+    toggles.appendChild(inputs['Is_Restricted'].element);
+    inputs['Is_Restricted'].element.style.marginTop = "10px";
 
     var basicInfo = Div("div", "row");
     basicInfo.appendChild(inputs["Date_Released"].element);
@@ -59,7 +67,9 @@ function OpenEditor() {
     basicInfo.appendChild(inputs["First_Achieved_User_ID"].element);
 
 
+    //inputContainer.appendChild(Text("h2", "Basic Info"));
     inputContainer.appendChild(otherInfo);
+    //inputContainer.appendChild(Text("h2", "Extra Info"));
     inputContainer.appendChild(basicInfo);
 
     panel.appendChild(inputContainer);

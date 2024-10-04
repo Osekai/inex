@@ -1,16 +1,12 @@
 import {Medal} from "./Medal";
 import {MedalData} from "./MedalData";
-import {Div, Text} from "../../utils/dom";
+import {AntheraIcon, Div, Text} from "../../utils/dom";
 import {getAverageRGB, rgbToHsl} from "../../utils/colour";
 import {marked} from "marked";
 import CommentsSection from "../../elements/comments-section";
-import {GetSetting} from "../../utils/usersettings";
 import {DoRequest} from "../../utils/requests";
 import {timeAgo} from "../../utils/timeago";
-
-
-
-
+import {GetMod} from "../../utils/osu/mods";
 
 
 export class MedalsUI {
@@ -48,15 +44,15 @@ export class MedalsUI {
         votebutton.classList.add("vote-button")
         votebutton.innerText = beatmap.VoteCount;
 
-        if(beatmap.HasVoted === 1) votebutton.classList.add("active");
+        if (beatmap.HasVoted === 1) votebutton.classList.add("active");
 
         votebutton.addEventListener("click", async () => {
             votebutton.classList.add("loading");
             var data = await DoRequest("POST", "/api/vote/Medals_Beatmaps/" + beatmap.ID)
-            if(data.message === "vote_add") {
+            if (data.message === "vote_add") {
                 votebutton.classList.add("active");
                 beatmap.VoteCount++;
-            } else if(data.message === "vote_remove") {
+            } else if (data.message === "vote_remove") {
                 votebutton.classList.remove("active");
                 beatmap.VoteCount--;
             }
@@ -66,22 +62,36 @@ export class MedalsUI {
 
         outer.appendChild(bottom);
 
-        outer.style.setProperty("--bg", "url(\"https://assets.ppy.sh/beatmaps/"+ beatmap.Beatmapset_ID +"/covers/cover.jpg\")")
+        outer.style.setProperty("--bg", "url(\"https://assets.ppy.sh/beatmaps/" + beatmap.Beatmapset_ID + "/covers/cover.jpg\")")
 
         beatmapGrid.appendChild(outer);
     }
+
     static LoadBeatmaps(medal: Medal) {
         var beatmapGrid = document.getElementById("medal_beatmaps");
         beatmapGrid.innerHTML = "";
+
+        if (medal.Is_Restricted == 1) {
+            document.getElementById("medal_beatmaps_add").classList.add("hidden");
+        } else {
+            document.getElementById("medal_beatmaps_add").classList.add("remove");
+        }
         // @ts-ignore
         for (var beatmap of medal.Beatmaps) {
             MedalsUI.AddBeatmap(beatmap);
         }
+        // @ts-ignore
+        if (medal.Beatmaps.length < 3) {
+            beatmapGrid.classList.add("large");
+        } else {
+            beatmapGrid.classList.remove("large");
+        }
     }
+
     static CheckObtainedFilter() {
         // @ts-ignore
-        if(!loggedIn) return;
-        if(MedalData.ObtainedFilterActive()) {
+        if (!loggedIn) return;
+        if (MedalData.ObtainedFilterActive()) {
             document.getElementById("medal-page").classList.add("filter-obtained");
             document.getElementById("filter-button").classList.add("active");
         } else {
@@ -98,22 +108,22 @@ export class MedalsUI {
         });
         (<CommentsSection>document.getElementById("comments")).loadComments(medal.Medal_ID);
 
-        if(scrollTo) {
-            document.querySelector("[medal-button-id='"+medal.Medal_ID+"']").scrollIntoView({
+        if (scrollTo) {
+            document.querySelector("[medal-button-id='" + medal.Medal_ID + "']").scrollIntoView({
                 "behavior": "smooth",
                 "block": "center"
             });
         }
 
-        var img : HTMLImageElement = <HTMLImageElement>document.getElementById("medal_image");
+        var img: HTMLImageElement = <HTMLImageElement>document.getElementById("medal_image");
         img.src = "/assets/osu/web/" + medal.Link;
         img.onload = () => {
             var rgb = getAverageRGB(img);
-            var hsl = rgbToHsl(rgb.r,rgb.g,rgb.b);
+            var hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
             // @ts-ignore
-            document.getElementById("main-col").style.setProperty("--hue", hsl[0]*360);
+            document.getElementById("main-col").style.setProperty("--hue", hsl[0] * 360);
             // @ts-ignore
-            document.getElementById("main-col").style.setProperty("--sat", hsl[1]*3);
+            document.getElementById("main-col").style.setProperty("--sat", hsl[1] * 3);
         };
 
         document.getElementById("medal_name").innerText = medal.Name;
@@ -123,6 +133,24 @@ export class MedalsUI {
 
         // @ts-ignore
         document.getElementById("medal_solution").innerHTML = marked.parse(medal.Solution.replace(/\n/g, "<br />"));
+
+        var mods = document.getElementById("mods");
+        mods.classList.add("hidden");
+        mods.innerHTML = "";
+        for(var mod of medal.Mods.split(",")) {
+            mods.classList.remove("hidden");
+            var modinfo = GetMod(mod);
+
+            var pill = Div("div", "mod-pill");
+            pill.classList.add(modinfo.Type)
+            var icon = AntheraIcon("mod-" + mod);
+
+            pill.appendChild(icon);
+            pill.appendChild(Text("p", mod));
+            pill.setAttribute("tooltip", modinfo.Name);
+
+            mods.appendChild(pill);
+        }
     }
 
 }

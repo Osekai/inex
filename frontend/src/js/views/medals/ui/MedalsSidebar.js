@@ -4,7 +4,7 @@ import {Medal} from "../Medal";
 import {MedalData} from "../MedalData";
 import {MedalsUI} from "../MedalsUI";
 import {SetMedal} from "../../medals";
-import {GamemodeToName} from "../../../utils/gamemode";
+import {GamemodeToName} from "../../../utils/osu/gamemode";
 
 String.prototype.includes_nl = function(text) {
     return this.toLowerCase().includes(text.toLowerCase());

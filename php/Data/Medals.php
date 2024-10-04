@@ -12,9 +12,11 @@ class Medals
     static function GetAll(): Response
     {
         return new Response(true, "Success", Connection::execSimpleSelect("
-        SELECT *, Medals_Data.Medal_ID as Medal_ID FROM Medals_Data 
+        SELECT *, Medals_Data.Medal_ID as Medal_ID, GROUP_CONCAT(Medals_Solutions_Mods.Mod SEPARATOR ',') as Mods FROM Medals_Data 
         LEFT JOIN Medals_Configuration ON Medals_Data.Medal_ID = Medals_Configuration.Medal_ID
-        ", "medals", 60));
+        LEFT JOIN Medals_Solutions_Mods ON Medals_Solutions_Mods.Medal_ID = Medals_Data.Medal_ID
+        GROUP BY Medals_Data.Medal_ID
+        "));
     }
 
     static function AddBeatmap($link, $medal, $note = null): Response
@@ -90,7 +92,7 @@ class Medals
  WHERE Common_Votes.User_ID = ? 
  AND Common_Votes.Target_Table = 'Medals_Beatmaps' 
  AND Common_Votes.Target_ID = Medals_Beatmaps.ID) AS HasVoted " : "") .
-            "FROM Medals_Beatmaps 
+            " FROM Medals_Beatmaps 
     LEFT JOIN Beatmaps_Data ON Medals_Beatmaps.Beatmap_ID = Beatmaps_Data.Beatmap_ID
     LEFT JOIN Common_Votes ON Common_Votes.Target_Table = 'Medals_Beatmaps' AND Common_Votes.Target_ID = Medals_Beatmaps.ID
     WHERE Medals_Beatmaps.Medal_ID = ? " . ($single == null ? "" : "AND Medals_Beatmaps.Beatmap_ID = ? ") . " GROUP BY Medals_Beatmaps.Beatmap_ID  ORDER BY VoteCount DESC", $vars, $inp));
@@ -107,6 +109,14 @@ class Medals
         if ($data['First_Achieved_Date'] == "") $data['First_Achieved_Date'] = null;
 
         Memcache::remove("medals");
+
+        $mods = explode(",", $data['Mods']);
+
+        Connection::execOperation("DELETE FROM Medals_Solutions_Mods WHERE Medal_ID = ?", "i", [$data['Medal_ID']]);
+        foreach($mods as $mod) {
+            Connection::execOperation("INSERT INTO Medals_Solutions_Mods (Medal_ID, `Mod`) VALUES (?, ?)", "is", [$data['Medal_ID'], $mod]);
+
+        }
 
         return new Response(true, "Success", Connection::execOperation("
         UPDATE Medals_Configuration

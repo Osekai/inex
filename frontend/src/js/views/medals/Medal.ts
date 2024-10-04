@@ -26,6 +26,7 @@ export class Medal {
     Solution : string;
     Date_Released : string;
     Beatmaps: unknown;
+    Mods: string;
 
     MedalButton: HTMLAnchorElement;
 

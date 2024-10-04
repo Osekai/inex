@@ -38,7 +38,6 @@ export function SimpleIcon(icon: string) {
 }
 
 export function LucideIcon(icon: string) {
-    console.log("Setting icon to " + icon);
     var i = Object.assign(document.createElement("i"));
 
     i.setAttribute("data-lucide", icon);

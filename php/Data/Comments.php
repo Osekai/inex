@@ -54,20 +54,27 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
         }
 
         $query = "
-SELECT Common_Comments.*, COUNT(DISTINCT Children.ID) as Replies,  COUNT(DISTINCT Common_Votes.User_ID) AS VoteCount" .
-            (Session::LoggedIn() ? ", (SELECT COUNT(Common_Votes.User_ID) 
- FROM Common_Votes 
- WHERE Common_Votes.User_ID = ? 
- AND Common_Votes.Target_Table = 'Common_Comments' 
- AND Common_Votes.Target_ID = Common_Comments.ID) AS HasVoted " : "") .
-            "FROM Common_Comments 
- LEFT JOIN Common_Comments AS Children ON Children.Parent_Comment_ID = Common_Comments.ID
- LEFT JOIN Common_Votes ON Common_Votes.Target_Table = 'Common_Comments' AND Common_Votes.Target_ID = Common_Comments.ID
- WHERE Common_Comments.Target_ID = ? 
- AND Common_Comments.Target_Table = ? " . ($single == null ? "" : "AND Common_Comments.Text = ? ") .
- "AND Common_Comments.Parent_Comment_ID " . ($parent == null ? "IS NULL" : "= ?") . " 
- GROUP BY Common_Comments.ID 
- ORDER BY Is_Pinned, VoteCount DESC, Replies DESC";
+SELECT Common_Comments.*, 
+    COUNT(DISTINCT Children.ID) as Replies,  
+    COUNT(DISTINCT Common_Votes.User_ID) AS VoteCount " .
+            (Session::LoggedIn() ? ", 
+    (SELECT COUNT(Common_Votes.User_ID) 
+    FROM Common_Votes 
+    WHERE Common_Votes.User_ID = ? 
+    AND Common_Votes.Target_Table = 'Common_Comments' 
+    AND Common_Votes.Target_ID = Common_Comments.ID) AS HasVoted " : "") .
+            " FROM Common_Comments 
+LEFT JOIN Common_Comments AS Children ON Children.Parent_Comment_ID = Common_Comments.ID
+LEFT JOIN Common_Votes ON Common_Votes.Target_Table = 'Common_Comments' 
+AND Common_Votes.Target_ID = Common_Comments.ID
+WHERE Common_Comments.Target_ID = ? 
+AND Common_Comments.Target_Table = ? " .
+            ($single == null ? "" : "AND Common_Comments.Text = ? ") .
+            "AND Common_Comments.Parent_Comment_ID " .
+            ($parent == null ? "IS NULL" : "= ?") . " 
+GROUP BY Common_Comments.ID 
+ORDER BY Is_Pinned, VoteCount DESC, Replies DESC";
+
 
         return new Response(true, "ok", Connection::execSelect($query, $types, $values));
     }

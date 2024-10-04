@@ -180,6 +180,9 @@
     grid-gap: 16px;
     grid-template-columns: 1fr 1fr;
 }
+#medal_beatmaps.large {
+    grid-template-columns: 1fr;
+}
 .beatmap {
     border-radius: 12px;
     overflow: hidden;
@@ -187,6 +190,12 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    background-position: center !important;
+    background-size: cover !important;
+}
+#medal_beatmaps.large .beatmap {
+    background: linear-gradient(to bottom, #fff0 20%, color-mix(in srgb, var(--col-d2) 80%, transparent) 70%), var(--bg);
+
 }
 .beatmap:has(.top:hover) {
     filter: brightness(1.2);
@@ -200,6 +209,9 @@
     justify-content: center;
 }
 
+#medal_beatmaps.large .beatmap .top {
+    padding-top: 140px;
+}
 
 
 .beatmap .top > div,
@@ -276,7 +288,6 @@
     font-style: italic;
     opacity: 0.6;
 }
-
 .medal__info-upper {
     position: relative;
     overflow: hidden;
@@ -310,19 +321,54 @@
     font-weight: 300;
     margin-bottom: 4px;
 }
-.medal__info-solution div {
+/*.medal__info-solution div {
     display: flex;
     flex-direction: column;
     gap: 6px;
     font-size: 17px !important;
     font-weight: 400;
     line-height: 1.2;
-}
+}*/
 .medal__info-solution p {
     font-size: 18px;
 }
 .medal__info-solution div i {
     font-weight: 300;
+}
+
+
+#mods {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+}
+.mod-pill {
+    display: flex;
+    background: #fff;
+    border-radius: 90px;
+    padding: 2px 11px;
+    margin-right: 5px;
+    font-weight: 900;
+    color: #000d;
+}
+.mod-pill.difficultyreduction {
+    background: #A8FD56;
+}
+.mod-pill.difficultyincrease {
+    background: #FE6465;
+}
+.mod-pill.conversion {
+    background: #8C65FF;
+}
+.mod-pill.fun {
+    background: #FE65AB;
+}
+.mod-pill.automation {
+    background: #65CCFF;
+}
+
+.mod-pill p {
+    font-size: 17px;
 }
 
 @media (max-width: 1100px) {
