@@ -35,9 +35,16 @@ export class MedalsUI {
 
         var bottom = Div("div", "bottom");
 
-        var submissiondate = Text("h4", timeAgo.format(new Date(beatmap.Beatmap_Submitted_Date)));
-        bottom.appendChild(submissiondate);
-        submissiondate.setAttribute("tooltip", beatmap.Beatmap_Submitted_Date);
+        //var submissiondate = Text("h4", timeAgo.format(new Date(beatmap.Beatmap_Submitted_Date)));
+        //bottom.appendChild(submissiondate);
+        //submissiondate.setAttribute("tooltip", beatmap.Beatmap_Submitted_Date);
+
+        var note = Text("h4", beatmap.Note);
+        bottom.appendChild(note);
+
+        note.addEventListener("click", () => {
+            note.classList.toggle("expanded");
+        })
 
         var votebutton = Div("div", "pill-button")
         bottom.appendChild(votebutton);
@@ -74,7 +81,7 @@ export class MedalsUI {
         if (medal.Is_Restricted == 1) {
             document.getElementById("medal_beatmaps_add").classList.add("hidden");
         } else {
-            document.getElementById("medal_beatmaps_add").classList.add("remove");
+            document.getElementById("medal_beatmaps_add").classList.remove("remove");
         }
         // @ts-ignore
         for (var beatmap of medal.Beatmaps) {

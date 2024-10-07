@@ -225,6 +225,10 @@
 
 }
 
+.beatmap .vote-button {
+    padding: 3px 16px;
+    background: var(--col-l5);
+}
 .beatmap .vote-button:before {
     content: "+";
 }
@@ -249,7 +253,20 @@
 }
 .beatmap .bottom h4 {
     font-weight: 400;
-    font-size: 14px;
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+    text-overflow: ellipsis;
+    padding-right: 8px;
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+    user-select: none;
+    cursor: pointer;
+}
+.beatmap .bottom h4.expanded {
+    white-space: inherit;
 }
 .medal__info {
     padding: 0px;
