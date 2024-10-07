@@ -29,6 +29,7 @@ function AddRunner($name, $runner)
 AddRunner("eti_beatmaps", new Runners\Beatmaps());
 AddRunner("eti_comments", new Runners\Comments());
 AddRunner("eti_votes", new Runners\Votes());
+AddRunner("eti_members", new Runners\Members());
 
 AddRunner("medalimages", new Runners\MedalImages());
 

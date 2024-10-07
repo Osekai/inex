@@ -55,6 +55,7 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
 
         $query = "
 SELECT Common_Comments.*, 
+System_Users.Name AS Username,
     COUNT(DISTINCT Children.ID) as Replies,  
     COUNT(DISTINCT Common_Votes.User_ID) AS VoteCount " .
             (Session::LoggedIn() ? ", 
@@ -65,6 +66,7 @@ SELECT Common_Comments.*,
     AND Common_Votes.Target_ID = Common_Comments.ID) AS HasVoted " : "") .
             " FROM Common_Comments 
 LEFT JOIN Common_Comments AS Children ON Children.Parent_Comment_ID = Common_Comments.ID
+LEFT JOIN System_Users ON System_Users.User_ID = Common_Comments.User_ID
 LEFT JOIN Common_Votes ON Common_Votes.Target_Table = 'Common_Comments' 
 AND Common_Votes.Target_ID = Common_Comments.ID
 WHERE Common_Comments.Target_ID = ? 

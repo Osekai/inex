@@ -85,7 +85,7 @@ class CommentsSection extends HTMLElement {
 
         var name = Div("div", "name");
         name.appendChild(Image("https://a.ppy.sh/" + comment.User_ID));
-        name.appendChild(Text("h1", comment.User_ID));
+        name.appendChild(Text("h1", comment.Username));
         name.appendChild(Text("h3", timeAgo.format(new Date(comment.Date))));
 
         var content = Div("div", "content");

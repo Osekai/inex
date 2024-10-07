@@ -1,6 +1,6 @@
 import {Medal} from "./Medal";
 import {MedalData} from "./MedalData";
-import {AntheraIcon, Div, Text} from "../../utils/dom";
+import {AntheraIcon, Div, LucideIcon, Text} from "../../utils/dom";
 import {getAverageRGB, rgbToHsl} from "../../utils/colour";
 import {marked} from "marked";
 import CommentsSection from "../../elements/comments-section";
@@ -66,6 +66,12 @@ export class MedalsUI {
             votebutton.innerText = beatmap.VoteCount;
             votebutton.classList.remove("loading");
         })
+
+        var extrabutton = Div("div", "pill-button")
+        bottom.appendChild(extrabutton);
+        bottom.classList.add("square")
+        extrabutton.appendChild(LucideIcon("ellipsis"));
+
 
         outer.appendChild(bottom);
 

@@ -95,7 +95,7 @@ class Medals
             " FROM Medals_Beatmaps 
     LEFT JOIN Beatmaps_Data ON Medals_Beatmaps.Beatmap_ID = Beatmaps_Data.Beatmap_ID
     LEFT JOIN Common_Votes ON Common_Votes.Target_Table = 'Medals_Beatmaps' AND Common_Votes.Target_ID = Medals_Beatmaps.ID
-    WHERE Medals_Beatmaps.Medal_ID = ? " . ($single == null ? "" : "AND Medals_Beatmaps.Beatmap_ID = ? ") . " GROUP BY Medals_Beatmaps.Beatmap_ID  ORDER BY VoteCount DESC", $vars, $inp));
+    WHERE Medals_Beatmaps.Medal_ID = ? " . ($single == null ? "" : "AND Medals_Beatmaps.Beatmap_ID = ? ") . " GROUP BY Medals_Beatmaps.Beatmap_ID  ORDER BY VoteCount DESC, Medals_Beatmaps.ID", $vars, $inp));
     }
 
     static function AddNote($id, $note)

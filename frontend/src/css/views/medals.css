@@ -218,6 +218,9 @@
 .beatmap .bottom {
     display: flex;
     align-items: center;
+}
+.beatmap .top > div {
+
     justify-content: space-between;
 }
 .beatmap .top > div > *:last-child {
@@ -225,9 +228,16 @@
 
 }
 
-.beatmap .vote-button {
+.beatmap .pill-button {
     padding: 3px 16px;
     background: var(--col-l5);
+}
+.beatmap .pill-button:last-child {
+    background: var(--col-d1);
+    padding: 3px 8px;
+    display: flex;
+    align-content: center;
+    margin-left: 5px;
 }
 .beatmap .vote-button:before {
     content: "+";
@@ -252,6 +262,7 @@
     font-size: 17px;
 }
 .beatmap .bottom h4 {
+    margin-right: auto;
     font-weight: 400;
     font-size: 15px;
     white-space: nowrap;
