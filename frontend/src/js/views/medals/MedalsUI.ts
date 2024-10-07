@@ -149,19 +149,21 @@ export class MedalsUI {
         var mods = document.getElementById("mods");
         mods.classList.add("hidden");
         mods.innerHTML = "";
-        for(var mod of medal.Mods.split(",")) {
-            mods.classList.remove("hidden");
-            var modinfo = GetMod(mod);
+        if(medal.Mods !== null) {
+            for (var mod of medal.Mods.split(",")) {
+                mods.classList.remove("hidden");
+                var modinfo = GetMod(mod);
 
-            var pill = Div("div", "mod-pill");
-            pill.classList.add(modinfo.Type)
-            var icon = AntheraIcon("mod-" + mod);
+                var pill = Div("div", "mod-pill");
+                pill.classList.add(modinfo.Type)
+                var icon = AntheraIcon("mod-" + mod);
 
-            pill.appendChild(icon);
-            pill.appendChild(Text("p", mod));
-            pill.setAttribute("tooltip", modinfo.Name);
+                pill.appendChild(icon);
+                pill.appendChild(Text("p", mod));
+                pill.setAttribute("tooltip", modinfo.Name);
 
-            mods.appendChild(pill);
+                mods.appendChild(pill);
+            }
         }
     }
 
