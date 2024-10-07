@@ -83,12 +83,6 @@ export class MedalsUI {
     static LoadBeatmaps(medal: Medal) {
         var beatmapGrid = document.getElementById("medal_beatmaps");
         beatmapGrid.innerHTML = "";
-
-        if (medal.Is_Restricted == 1) {
-            document.getElementById("medal_beatmaps_add").classList.add("hidden");
-        } else {
-            document.getElementById("medal_beatmaps_add").classList.remove("remove");
-        }
         // @ts-ignore
         for (var beatmap of medal.Beatmaps) {
             MedalsUI.AddBeatmap(beatmap);
@@ -116,6 +110,11 @@ export class MedalsUI {
     static LoadMedal(medal: Medal, scrollTo = false) {
         // @ts-ignore
         document.getElementById("medal_beatmaps").innerHTML = loader;
+        if (medal.Is_Restricted == 1) {
+            document.getElementById("medal_beatmaps_add").classList.add("hidden");
+        } else {
+            document.getElementById("medal_beatmaps_add").classList.remove("hidden");
+        }
         MedalData.LoadExtra(medal, {
             "beatmaps": this.LoadBeatmaps
         });
