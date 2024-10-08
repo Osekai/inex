@@ -65,7 +65,7 @@ namespace Oauth {
             $member = Database\Connection::execSelect("SELECT * FROM System_Users WHERE User_ID = ?", "i", [$userdata['id']]);
             if(count($member) == 0) {
                 Database\Connection::execOperation("INSERT INTO `System_Users` (`User_ID`, `Name`, `Joined_Date`)
-VALUES ('5', '5', now());", "is", [$userdata['id'], $userdata['username']]);
+VALUES (?, ?, now());", "is", [$userdata['id'], $userdata['username']]);
             }
 
             Database\Session::Login($userdata['id']);
