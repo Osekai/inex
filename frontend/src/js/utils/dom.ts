@@ -188,4 +188,10 @@ export function cloneAttributes(source: any, target: any) {
     })
 }
 
+export function RoleBadge(role: any) {
+    var div = Div("div", "role-badge");
+    div.appendChild(Text("p", role.Name_Short));
+    div.style.setProperty("--colour", role.Colour);
+    return div;
+}
 

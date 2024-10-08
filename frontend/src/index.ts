@@ -22,6 +22,7 @@ const simpleicons = [siDiscord, siTwitter, siTwitch, siPatreon, siGithub, siYout
 
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'
+import {RoleBadge} from "./js/utils/dom";
 
 var aCreateIcons: () => void = null;
 
@@ -105,3 +106,11 @@ document.addEventListener("DOMContentLoaded", () => {
     window.loader.update();
 })
 
+// @ts-ignore
+if(loggedIn) {
+    // @ts-ignore
+    var roles = userData.Roles;
+    for(var role of roles) {
+        document.getElementById("roles").appendChild(RoleBadge(role));
+    }
+}

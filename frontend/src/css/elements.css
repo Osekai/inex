@@ -4,6 +4,7 @@
 @import url("./external/wangeditor.css");
 @import url("./ui/overlay.css");
 @import url("./ui/toasts.css");
+@import url("./ui/role-badge.css");
 
 a {
     color: var(--col-text-l25);

@@ -42,9 +42,13 @@
                                 <h2 id="medal_description">This is all very heavily WIP</h2>
                                 <h3 id="medal_instructions">Select a medal on your left :3</h3>
                             </div>
+                            <?php
+                            if(\Data\OsekaiUsers::HasPermission("medal.edit", false)) {
+                            ?>
                             <div class="button pill-button pill-button-square" id="medal-edit-button"
                                  tooltip="Edit Medal"><i
                                         data-lucide="pencil"></i></div>
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="medal__info-solution">

@@ -1,6 +1,5 @@
 import {MedalsUI} from "./medals/MedalsUI";
 
-export * from "./medals/MedalsAdmin";
 import {getSections, setSections} from "../utils/urlQuery";
 import {DoRequest} from "../utils/requests";
 import {MedalUtils} from "./medals/MedalUtils";
@@ -15,6 +14,13 @@ import {PushToast} from "../ui/toasts";
 import {MedalsSidebar} from "./medals/ui/MedalsSidebar";
 import {Currency} from "lucide";
 import {GetSetting} from "../utils/usersettings";
+import {Initialize} from "./medals/MedalsAdmin";
+import {PermissionChecker} from "../utils/permissionChecker";
+
+if(PermissionChecker("medal.edit", false)) {
+    console.log("You have edit permissions");
+    Initialize();
+}
 
 function GetMedalFromUrl() {
     SetMedal((<any>getSections(`/medals/{medal}`))['medal'], false, true);

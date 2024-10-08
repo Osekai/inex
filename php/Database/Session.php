@@ -23,10 +23,7 @@ namespace Database {
                     setcookie("session", "", -1);
                 }
 
-                $this->userdata = \Caching::Layer("user_" . $userid, function() use ($userid) {
-                    return API\Osu\User::GetUser($userid, true);
-                }, 6000);
-
+                $this->userdata = Data\OsekaiUsers::GetUser($userid, true);
                 $this->settings = Data\Settings::Get($userid);
             }
         }

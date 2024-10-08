@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="inex@localhost" uuid="77b7f497-4054-4a58-88a7-48f11221f630">
+    <data-source source="LOCAL" name="inex2@localhost" uuid="e7cd4ea3-de6a-4c5b-bb06-2f69fd3f1a6d">
       <driver-ref>mariadb</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mariadb://localhost:3306/inex</jdbc-url>
+      <jdbc-url>jdbc:mariadb://localhost:3306/inex2</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

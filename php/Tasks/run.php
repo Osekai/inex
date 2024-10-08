@@ -31,6 +31,8 @@ AddRunner("eti_comments", new Runners\Comments());
 AddRunner("eti_votes", new Runners\Votes());
 AddRunner("eti_members", new Runners\Members());
 
+AddRunner("eti_roleassignments", new Runners\RoleAssignments());
+
 AddRunner("medalimages", new Runners\MedalImages());
 
 

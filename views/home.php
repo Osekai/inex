@@ -11,6 +11,10 @@
     <a class="home-panel eclipse" href="https://osekai.net">
         <h1>Back to Eclipse</h1>
     </a>
+
+    <?php
+    \Data\OsekaiUsers::GetUser(10379965, true);
+    ?>
 </div>
 <!--<div class="page-container-inner">
     <div class="panel home-panel">

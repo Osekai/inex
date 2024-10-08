@@ -34,9 +34,11 @@ use Database\Session;
                             <div>
                                 <h1>
                                     <?= Database\Session::UserData()['username'] ?>
+                                    <div id="roles"></div>
                                 </h1>
                             </div>
                         </div>
+                        <a href="/logout" class="navbar-pfp-dropdown-item"><i data-lucide="log-out"></i>Log Out</a>
                     </div>
                 </div>
                 <?php

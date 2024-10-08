@@ -128,6 +128,8 @@ function OpenEditor() {
 
 }
 
-document.getElementById("medal-edit-button").addEventListener("click", OpenEditor);
+function Initialize() {
+    document.getElementById("medal-edit-button").addEventListener("click", OpenEditor);
+}
 
-export {OpenEditor} // note: export is unused but if we don't have it the file wont be included
+export {Initialize} // note: export is unused but if we don't have it the file wont be included
