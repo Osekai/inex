@@ -1,4 +1,5 @@
 export function PermissionChecker(permission, dflt = false, _permissions = null) {
+    if(!loggedIn) return dflt;
     if(_permissions == null) _permissions = userData.Permissions;
     if(_permissions == null) return dflt;
     const parts = permission.split(".");
