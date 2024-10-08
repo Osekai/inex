@@ -48,4 +48,5 @@ $router->get('/oauth', function () {
 });
 $router->get('/logout', function () {
     \Database\Session::Logout();
+    General::Redirect("/");
 });
