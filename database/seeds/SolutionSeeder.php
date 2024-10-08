@@ -16,11 +16,14 @@ class SolutionSeeder extends AbstractSeed
      */
     public function run(): void
     {
+        return;
+
         // pulls solutions from osekai (please run scripts for the actual medal data!)
         $api = json_decode(file_get_contents("https://osekai.net/medals/api/medals.php"), true);
 
         $data = [];
         $mods_data = [];
+        $packs_data = [];
 
         foreach ($api as $medal) {
             if($medal['Date'] != null && str_contains($medal['Date'], "0000")) $medal['Date'] = null;
@@ -54,6 +57,23 @@ class SolutionSeeder extends AbstractSeed
                     ];
                 }
             }
+
+            $packids = $medal['PackID'];
+            if($packids != null) {
+                $packids = explode(',', $packids);
+
+                $gamemodes = ["osu", "taiko", "mania", "catch"]; // ??
+                $x = 0;
+                foreach($packids as $packid) {
+                    if($packid == "" || $packid == 0) continue;
+                    $packs_data[] = [
+                        "Medal_ID" => $medal['MedalID'],
+                        "Pack_ID" => $packid,
+                        "Gamemode" => $gamemodes[$x]
+                    ];
+                    $x++;
+                }
+            }
         }
 
         $posts = $this->table('Medals_Configuration');
@@ -64,6 +84,11 @@ class SolutionSeeder extends AbstractSeed
         $posts = $this->table('Medals_Solutions_Mods');
         $posts->truncate();
         $posts->insert($mods_data)
+            ->saveData();
+
+        $posts = $this->table('Medals_Solutions_Beatmaps_Packs');
+        $posts->truncate();
+        $posts->insert($packs_data)
             ->saveData();
     }
 }

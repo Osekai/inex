@@ -1,5 +1,25 @@
+<?php
+$medals = \Data\Medals::GetAll();
+
+$cur_medal = null;
+if(isset($args[0])) {
+    foreach($medals->content as $medal) {
+        if($medal['Name'] == $args[0]) {
+            $cur_medal = $medal;
+        }
+    }
+}
+if($cur_medal == null) {
+    \Site\Embed::$title = "Osekai INEX / Medals";
+    \Site\Embed::$description = "osu! medal solutions";
+} else {
+    \Site\Embed::$title = "Osekai Medals / " . $cur_medal['Name'];
+    \Site\Embed::$description = Sanitize::HTML($cur_medal['Description']);
+    \Site\Embed::SetImage("/assets/osu/web/" . $cur_medal['Link']);
+}
+?>
 <script>
-    const medals_preload = <?= json_encode(\Data\Medals::GetAll()) ?>;
+    const medals_preload = <?= json_encode($medals) ?>;
 </script>
 <div class="medals__page home" id="medal-page">
     <div class="sidebar">

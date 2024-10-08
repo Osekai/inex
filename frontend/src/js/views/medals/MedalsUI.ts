@@ -5,15 +5,13 @@ import {getAverageRGB, rgbToHsl} from "../../utils/colour";
 import {marked} from "marked";
 import CommentsSection from "../../elements/comments-section";
 import {DoRequest} from "../../utils/requests";
-import {timeAgo} from "../../utils/timeago";
 import {GetMod} from "../../utils/osu/mods";
+import {TimeTransform_MM_SS} from "../../utils/time";
 
 
 export class MedalsUI {
     // @ts-ignore
     static AddBeatmap(beatmap) {
-        var beatmapGrid = document.getElementById("medal_beatmaps");
-
         var outer = Div("div", "beatmap");
 
         var top = Div("a", "top");
@@ -77,15 +75,54 @@ export class MedalsUI {
 
         outer.style.setProperty("--bg", "url(\"https://assets.ppy.sh/beatmaps/" + beatmap.Beatmapset_ID + "/covers/cover.jpg\")")
 
-        beatmapGrid.appendChild(outer);
+        return outer;
+    }
+
+    static AddPack(pack: any) {
+        var packDiv = Div("div", "gamemode-" + pack.Gamemode);
+        packDiv.classList.add("pack");
+        packDiv.classList.add("col-reset");
+
+        packDiv.appendChild(AntheraIcon("icon-gamemode-" + pack.Gamemode))
+        var packDiv_main = Div("div", "main");
+        var packDiv_left = Div("div", "left");
+        var packDiv_right = Div("div", "right");
+        packDiv_main.appendChild(packDiv_left);
+        packDiv_main.appendChild(packDiv_right);
+        packDiv.appendChild(packDiv_main);
+
+
+        packDiv_left.appendChild(Text("h1", pack.Name))
+        var info = Div();
+        packDiv_left.appendChild(info);
+        info.appendChild(Text("h3", pack.Maps_Count + " maps"))
+        info.appendChild(Text("p", TimeTransform_MM_SS(pack.Maps_Length)))
+
+        var downloadButton: HTMLAnchorElement = <HTMLAnchorElement>Div("a");
+        var visitButton: HTMLAnchorElement = <HTMLAnchorElement>Div("a");
+
+        downloadButton.appendChild(LucideIcon("download"))
+        visitButton.appendChild(LucideIcon("external-link"))
+
+        downloadButton.href = pack.Link;
+        visitButton.href = "https://osu.ppy.sh/beatmaps/packs/" + pack.Pack_ID;
+
+        packDiv_right.appendChild(downloadButton);
+        packDiv_right.appendChild(visitButton);
+
+        return packDiv;
     }
 
     static LoadBeatmaps(medal: Medal) {
         var beatmapGrid = document.getElementById("medal_beatmaps");
         beatmapGrid.innerHTML = "";
+        var beatmapGrid = document.getElementById("medal_beatmaps");
         // @ts-ignore
         for (var beatmap of medal.Beatmaps) {
-            MedalsUI.AddBeatmap(beatmap);
+            if (medal.BeatmapsType == "beatmaps")
+                beatmapGrid.appendChild(MedalsUI.AddBeatmap(beatmap));
+            if (medal.BeatmapsType == "packs")
+                beatmapGrid.appendChild(MedalsUI.AddPack(beatmap));
         }
         // @ts-ignore
         if (medal.Beatmaps.length < 3) {
@@ -143,13 +180,17 @@ export class MedalsUI {
         document.getElementById("medal_instructions").innerHTML = medal.Instructions; // instructions have <i> sometimes
 
 
-        // @ts-ignore
-        document.getElementById("medal_solution").innerHTML = marked.parse(medal.Solution.replace(/\n/g, "<br />"));
-
+        if(medal.Solution !== null) {
+            // @ts-ignore
+            document.getElementById("medal_solution").innerHTML = marked.parse(medal.Solution.replace(/\n/g, "<br />"));
+        } else {
+            document.getElementById("medal_solution").innerHTML = "Unknown";
+        }
         var mods = document.getElementById("mods");
         mods.classList.add("hidden");
         mods.innerHTML = "";
-        if(medal.Mods !== null) {
+        console.log(medal);
+        if (medal.Mods !== null) {
             for (var mod of medal.Mods.split(",")) {
                 mods.classList.remove("hidden");
                 var modinfo = GetMod(mod);

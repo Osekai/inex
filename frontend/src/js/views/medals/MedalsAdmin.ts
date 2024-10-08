@@ -1,5 +1,5 @@
 import {Overlay} from "../../ui/overlay";
-import {Checkbox, Div, Input, InputText, InputTextarea, Text} from "../../utils/dom";
+import {Checkbox, Div, InputText, InputTextarea, Text} from "../../utils/dom";
 import {MedalData} from "./MedalData";
 import {MedalsUI} from "./MedalsUI";
 import {removeItemAll} from "../../utils/array";
@@ -11,7 +11,7 @@ var currentUnsavedMedals: string[] = [];
 
 function ShowUnsavedOverlay() {
     var container = document.getElementById("unsaved-medals");
-    if(currentUnsavedMedals.length == 0) {
+    if (currentUnsavedMedals.length == 0) {
         container.classList.add("hidden");
     } else {
         container.classList.remove("hidden");
@@ -45,6 +45,24 @@ function OpenEditor() {
     inputs["First_Achieved_Date"] = InputText("First Achieved", "date", medal.First_Achieved_Date);
     inputs["First_Achieved_User_ID"] = InputText("First Achieved By", "number", <string><unknown>medal.First_Achieved_User_ID);
 
+
+    var packs = medal.Beatmaps;
+
+    var addGamemodeInput = (gamemode: string) => {
+        var packId = "";
+        // @ts-ignore
+        for(var pack of medal.Beatmaps) {
+            if(pack.Gamemode == gamemode) {
+                packId = pack.Pack_ID;
+            }
+        }
+        inputs["Pack_" + gamemode] = InputText("Pack " + gamemode, "text", packId)
+    }
+    addGamemodeInput("osu");
+    addGamemodeInput("taiko");
+    addGamemodeInput("catch");
+    addGamemodeInput("mania");
+
     inputContainer.appendChild(inputs['Solution'].element);
 
 
@@ -67,10 +85,21 @@ function OpenEditor() {
     basicInfo.appendChild(inputs["First_Achieved_User_ID"].element);
 
 
+    var packData = Div("div", "row");
+    packData.appendChild(inputs["Pack_osu"].element);
+    packData.appendChild(inputs["Pack_taiko"].element);
+    packData.appendChild(inputs["Pack_catch"].element);
+    packData.appendChild(inputs["Pack_mania"].element);
+
+
     //inputContainer.appendChild(Text("h2", "Basic Info"));
     inputContainer.appendChild(otherInfo);
     //inputContainer.appendChild(Text("h2", "Extra Info"));
     inputContainer.appendChild(basicInfo);
+
+
+    inputContainer.appendChild(Text("h2", "Packs"));
+    inputContainer.appendChild(packData);
 
     panel.appendChild(inputContainer);
 
@@ -113,7 +142,13 @@ function OpenEditor() {
 
     var SaveChanges = async () => {
         SetChanges();
+
+        var loadOverlay = new Overlay(Text("p", "If this is taking a while, you've probably added a new beatmap pack. This could take 1-5 minutes!"));
+
         await DoRequest("POST", `/api/medals/${medal.Medal_ID}/save`, medal);
+
+        loadOverlay.overlay.remove();
+
         removeItemAll(currentUnsavedMedals, medal.Name);
         overlay.overlay.remove();
         ShowUnsavedOverlay();

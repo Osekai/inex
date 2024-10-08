@@ -80,4 +80,10 @@ ORDER BY Is_Pinned, VoteCount DESC, Replies DESC";
 
         return new Response(true, "ok", Connection::execSelect($query, $types, $values));
     }
+
+    public static function Report($id)
+    {
+        $comment = Comments::GetOne($id);
+        return new Response(true, "ok");
+    }
 }

@@ -34,6 +34,7 @@ AddRunner("eti_members", new Runners\Members());
 AddRunner("eti_roleassignments", new Runners\RoleAssignments());
 
 AddRunner("medalimages", new Runners\MedalImages());
+AddRunner("beatmappacks", new Runners\BeatmapPacks());
 
 
 if (count($argv) < 3) {

@@ -105,7 +105,7 @@
     background: var(--col-l4);
 }
 
-.medals__page .main {
+.medals__page > .main {
     margin: 20px;
     margin-left: 0px;
     flex: 5.4;
@@ -466,4 +466,60 @@
 .filter-obtained .medals__medal-button.obtained {
     opacity: 0.5;
     filter: grayscale(1);
+}
+
+#medal_beatmaps .pack {
+    padding: 16px;
+    border-radius: 16px;
+    display: flex;
+
+    --sat: 1 !important;
+
+    background: linear-gradient(-200deg,
+    color-mix(in srgb, var(--col-sat-2) 20%, transparent),
+    color-mix(in srgb, var(--col-sat-1) 5%, transparent) 70%) !important;
+
+
+    align-items: center;
+}
+#medal_beatmaps .pack > i {
+    font-size: 30px;
+    margin-right: 15px;
+}
+#medal_beatmaps .pack > div {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: space-between;
+}
+#medal_beatmaps .pack .main .right {
+    display: flex;
+    margin-left: AUTO;
+}
+#medal_beatmaps .pack .main .right a {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 40px;
+}
+#medal_beatmaps .pack .main .right a svg {
+    height: 20px;
+}
+#medal_beatmaps .pack .main .right a:hover {
+    background: var(--col-l5);
+}
+#medal_beatmaps .pack .main .left h1 {
+    font-size: 17px;
+    font-weight: 400;
+    margin-bottom: 6px;
+}
+#medal_beatmaps .pack .main .left > div {
+    display: flex;
+    align-items: center;
+}
+#medal_beatmaps .pack .main .left > div * {
+    font-size: 17px;
+    margin-right: 10px;
 }

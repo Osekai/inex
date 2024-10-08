@@ -71,6 +71,7 @@ class BaseConnection
      */
     public function execSimpleSelect($strQuery, $cacheKey = "", $cacheLength = 0): array
     {
+        $hits = [];
         $cache = false;
         if ($cacheKey != "") $cache = true;
         if ($cache == true) {

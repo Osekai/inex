@@ -6,15 +6,17 @@ use API\Response;
 use Database\Connection;
 use Database\Memcache;
 use Database\Session;
+use Tasks\Runners\BeatmapPacks;
 
 class Medals
 {
     static function GetAll(): Response
     {
         return new Response(true, "Success", Connection::execSimpleSelect("
-        SELECT *, Medals_Data.Medal_ID as Medal_ID, GROUP_CONCAT(Medals_Solutions_Mods.Mod SEPARATOR ',') as Mods FROM Medals_Data 
+        SELECT Medals_Data.*, Medals_Configuration.*, GROUP_CONCAT(Medals_Solutions_Mods.Mod SEPARATOR ',') as Mods, GROUP_CONCAT(Medals_Solutions_Beatmaps_Packs.Pack_ID SEPARATOR ',') as Packs FROM Medals_Data 
         LEFT JOIN Medals_Configuration ON Medals_Data.Medal_ID = Medals_Configuration.Medal_ID
         LEFT JOIN Medals_Solutions_Mods ON Medals_Solutions_Mods.Medal_ID = Medals_Data.Medal_ID
+        LEFT JOIN Medals_Solutions_Beatmaps_Packs ON Medals_Solutions_Beatmaps_Packs.Medal_ID = Medals_Data.Medal_ID
         GROUP BY Medals_Data.Medal_ID
         "));
     }
@@ -83,9 +85,9 @@ class Medals
         }
         if (Session::LoggedIn()) {
             $vars = "i" . $vars;
-            array_unshift($inp , Session::UserData()['id']);
+            array_unshift($inp, Session::UserData()['id']);
         }
-        return new Response(true, "Success", Connection::execSelect("
+        return new Response(true, "beatmaps", Connection::execSelect("
     SELECT Medals_Beatmaps.*, Beatmaps_Data.*, COUNT(Common_Votes.User_ID) AS VoteCount"
             . (Session::LoggedIn() ? ", (SELECT COUNT(Common_Votes.User_ID) 
  FROM Common_Votes 
@@ -105,6 +107,10 @@ class Medals
 
     public static function Save($id, $data)
     {
+        foreach ($data as $key => $value) {
+            if ($value === "null") $data[$key] = null;
+        }
+
         if ($data['Date_Released'] == "") $data['Date_Released'] = null;
         if ($data['First_Achieved_Date'] == "") $data['First_Achieved_Date'] = null;
 
@@ -113,10 +119,48 @@ class Medals
         $mods = explode(",", $data['Mods']);
 
         Connection::execOperation("DELETE FROM Medals_Solutions_Mods WHERE Medal_ID = ?", "i", [$data['Medal_ID']]);
-        foreach($mods as $mod) {
-            Connection::execOperation("INSERT INTO Medals_Solutions_Mods (Medal_ID, `Mod`) VALUES (?, ?)", "is", [$data['Medal_ID'], $mod]);
-
+        if($data['Mods'] != null) {
+            foreach ($mods as $mod) {
+                Connection::execOperation("INSERT INTO Medals_Solutions_Mods (Medal_ID, `Mod`) VALUES (?, ?)", "is", [$data['Medal_ID'], $mod]);
+            }
         }
+
+        ///
+        $newlyAdded = 0;
+
+        $oldPacks = Connection::execSelect("SELECT * FROM Medals_Solutions_Beatmaps_Packs WHERE Medal_ID = ?", "i", [$data['Medal_ID']]);
+        $newPackIds = [];
+
+        if ($data['Pack_osu'] !== null) $newPackIds["osu"] = $data['Pack_osu'];
+        if ($data['Pack_taiko'] !== null) $newPackIds["taiko"] = $data['Pack_taiko'];
+        if ($data['Pack_catch'] !== null) $newPackIds["catch"] = $data['Pack_catch'];
+        if ($data['Pack_mania'] !== null) $newPackIds["mania"] = $data['Pack_mania'];
+
+        $alreadyAdded = [];
+// Iterate through old packs and compare against values of $newPackIds
+        for ($x = 0; $x < count($oldPacks); $x++) {
+            // Compare Pack_ID with values of $newPackIds, which contains the new pack IDs
+            if (!in_array($oldPacks[$x]['Pack_ID'], $newPackIds)) {
+                // If the old Pack_ID isn't in $newPackIds, delete it from the database
+                Connection::execOperation("DELETE FROM Medals_Solutions_Beatmaps_Packs WHERE Medal_ID = ? AND Pack_ID = ?", "is", [$data['Medal_ID'], $oldPacks[$x]['Pack_ID']]);
+            } else {
+                // If it is, add it to the list of already added packs
+                $alreadyAdded[] = $oldPacks[$x]['Pack_ID'];
+            }
+        }
+
+// Add new packs that are not in $alreadyAdded
+        foreach ($newPackIds as $key => $value) {
+            if (!in_array($value, $alreadyAdded)) {
+                $newlyAdded++;
+                Connection::execOperation("INSERT INTO Medals_Solutions_Beatmaps_Packs (Medal_ID, Pack_ID, Gamemode) VALUES (?, ?, ?)", "iss", [$data['Medal_ID'], $value, $key]);
+            }
+        }
+
+        $bpu = (new BeatmapPacks());
+        $bpu->log = false;
+        $bpu->etirun([]);
+        ///
 
         return new Response(true, "Success", Connection::execOperation("
         UPDATE Medals_Configuration
@@ -130,5 +174,10 @@ class Medals
         $comment = Connection::execSelect("SELECT * FROM Medals_Beatmaps WHERE ID = ?", "i", [$id]);
         if (count($comment) > 0) return $comment[0];
         return null;
+    }
+
+    public static function GetPacks($id)
+    {
+        return new Response(true, "packs", Connection::execSelect("SELECT * FROM Medals_Solutions_Beatmaps_Packs WHERE Medal_ID = ?", "i", [$id]));
     }
 }

@@ -1,5 +1,6 @@
 export class Medal {
     Obtained: boolean;
+    BeatmapsType: string;
     constructor(medal: any) {
         for(var x in medal) {
             // @ts-ignore
@@ -27,6 +28,7 @@ export class Medal {
     Date_Released : string;
     Beatmaps: unknown;
     Mods: string;
+    Packs: string;
 
     MedalButton: HTMLAnchorElement;
 

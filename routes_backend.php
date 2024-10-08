@@ -43,9 +43,10 @@ $router->all("/api/comments/{ref}/{section}/send", function ($ref, $section) {
 
 
 
-$router->all("/api/comment/{id}/delete", function ($id) {
+
+$router->all("/api/comment/{id}/report", function ($id) {
     if (requireLogin())
-        echo json_encode(Data\Comments::Delete($id));
+        echo (Data\Comments::Report($id))->ReturnJson();
 });
 
 $router->post("/api/usersettings/set", function () {
@@ -66,12 +67,19 @@ $router->all("/api/medals/get_all", function () {
 $router->all("/api/medals/{id}/beatmaps", function ($id) {
     echo \Data\Medals::GetBeatmaps($id)->ReturnJson();
 });
+$router->all("/api/medals/{id}/packs", function ($id) {
+    echo \Data\Medals::GetPacks($id)->ReturnJson();
+});
 
 $router->all("/api/medals/{id}/beatmap/add", function ($id) {
     echo \Data\Medals::AddBeatmap($_POST['url'], $id, $_POST['note'])->ReturnJson();
 });
 $router->all("/api/medals/{id}/save", function ($id) {
-    //echo \Data\Medals::Save($id, $_REQUEST)->ReturnJson();
+    if(!\Data\OsekaiUsers::HasPermission("medal.edit", false)) {
+        echo "no perms";
+        exit;
+    }
+    echo \Data\Medals::Save($id, $_REQUEST)->ReturnJson();
 });
 $router->all("/api/comments/post", function ($id) {
     echo \Data\Comments::Post($_POST['id'], $_POST['table'], $_POST['text'])->ReturnJson();

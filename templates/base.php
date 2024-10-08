@@ -49,8 +49,73 @@ if (Site::$base_loaded == false) {
         <?php
     }
     ?>
-
     <meta name="darkreader-lock">
+
+    <?php
+    \Site\Embed::AddTags(Site\Embed::$title);
+    ?>
+
+
+    <meta property="og:title" content="<?= Site\Embed::$title ?>"/>
+    <meta property="og:description" content="<?= Site\Embed::$description ?>"/>
+
+    <?php
+    if (\Site\Embed::$article['published_time'] != "") {
+        ?>
+        <meta name="author" content="<?= Site\Embed::$article["author"] ?>">
+        <meta property="og:type" content="article">
+        <meta property="og:article:published_time" content="<?= Site\Embed::$article["published_time"] ?>"/>
+        <meta property="og:article:author" content="<?= Site\Embed::$article["author"] ?>"/>
+        <meta property="og:article:section" content="<?= Site\Embed::$article["section"] ?>"/>
+        <meta property="og:article:tag" content="<?= Site\Embed::$article["tags"] ?>"/>
+        <meta property="og:author:username" content="<?= Site\Embed::$article["author"] ?>"/>
+        <?php
+    }
+    ?>
+
+    <title><?= Site\Embed::$title ?></title>
+
+    <meta property="og:tags" content="<?= Site\Embed::$article["tags"] ?>"/>
+    <meta property="og:locale" content="en_GB"/>
+    <meta property="og:site_name" content="Osekai"/>
+
+
+    <meta name="description" content="<?= Site\Embed::$title ?>">
+    <meta name="keywords" content="<?= Site\Embed::$tags ?>">
+    <meta name="description" content="<?= Site\Embed::$description ?>">
+
+
+    <meta name="twitter:site" content="Osekai">
+    <meta name="twitter:title" content="<?= Site\Embed::$title ?>">
+    <meta name="twitter:description" content="<?= Site\Embed::$description ?>">
+    <?php
+    if (\Site\Embed::$large_image) {
+        ?>
+        <meta name="twitter:card" content="summary_large_image">
+        <?php
+    } else {
+        ?>
+        <meta name="twitter:card" content="summary">
+        <?php
+    }
+    if (\Site\Embed::$image != null) {
+        if (\Site\Embed::$image_width != null) {
+            ?>
+            <meta property="og:image:width" content="<?= \Site\Embed::$image_width ?>"/>
+            <meta property="og:image:height" content="<?= \Site\Embed::$image_height ?>"/>
+            <?php
+        }
+        ?>
+        <meta property="og:image" content="<?= Site\Embed::$image ?>"/>
+        <meta property="og:image:alt" content="<?= Site\Embed::$image_alt ?>"/>
+        <meta name="twitter:image:src"
+              content="<?= Site\Embed::$image_banner == null ? Site\Embed::$image : Site\Embed::$image_banner ?>">
+        <?php
+    }
+    ?>
+
+    <meta property="og:type" content="object"/>
+    <meta property="og:url" content="<?= Sanitize::HTML($_SERVER['REQUEST_URI']); ?>"/>
 </head>
 
 <body>

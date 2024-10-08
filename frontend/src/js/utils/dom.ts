@@ -95,6 +95,7 @@ export function InputText(text: string, type = "", content = "") {
     return {
         element: container,
         value: () => {
+            if(input.value == "") return null;
             return input.value
         }
     };
