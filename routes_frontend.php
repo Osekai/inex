@@ -46,3 +46,6 @@ $router->get('/login', function () {
 $router->get('/oauth', function () {
     Oauth\Login::FrontendLogin();
 });
+$router->get('/logout', function () {
+    \Database\Session::Logout();
+});

@@ -70,5 +70,10 @@ namespace Database {
             }
             return self::$session->userdata;
         }
+
+        public static function Logout()
+        {
+            setcookie("session", null, strtotime("2018-01-19 03:14:07"));
+        }
     }
 }
