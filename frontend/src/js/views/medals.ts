@@ -23,7 +23,8 @@ if(PermissionChecker("medal.edit", false)) {
 }
 
 function GetMedalFromUrl() {
-    SetMedal((<any>getSections(`/medals/{medal}`))['medal'], false, true);
+
+    SetMedal(decodeURIComponent((<any>getSections(`/medals/{medal}`))['medal']), false, true);
 }
 document.getElementById("back").addEventListener("click", () => {
     SetMedal("", true);
