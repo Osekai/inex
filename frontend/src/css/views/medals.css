@@ -106,12 +106,22 @@
 }
 
 .medals__page > .main {
-    margin: 20px;
-    margin-left: 0px;
     flex: 5.4;
-    border-radius: 16px;
     position: relative;
     background: transparent;
+    overflow-y: scroll;
+}
+.medals__page > .main .main-inner {
+    margin: 20px;
+    margin-left: 0;
+    min-height: calc(100vh - var(--navbar-height));
+    position: relative;
+}
+.medals__page > .main .main-footer {
+    padding-top: 15px;
+    padding-right: 40px;
+    padding-left: 20px;
+    padding-bottom: 25px;
 }
 .medals__page .main .scrollable {
     display: flex;
@@ -121,7 +131,12 @@
     align-items: flex-start;
 }
 
-
+.medals__page .main .bg-outer {
+    position: absolute;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+}
 .medals__page .main .bg {
     content: "";
     --col: #fff6;
@@ -132,14 +147,14 @@
     transition: background 1s ease;
     background: var(--col-sat-1);
     mask-image:
-            radial-gradient(53.34% 95.55% at 82.05% 70.78%, var(--col) 0%, var(--col-trans) 100%),
+            radial-gradient(53.34% 95.55% at 82.05% 90.78%, var(--col) 0%, var(--col-trans) 100%),
             radial-gradient(106.54% 106.54% at 95.06% 100%, var(--col) 0%, var(--col-trans) 120%);
-    position: absolute;
+    position: sticky;
     pointer-events: none;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    min-height: calc(100vh - var(--navbar-height));
+    border-radius: 16px;
 }
 .medals__page .main .panel {
     background: color-mix(in srgb, var(--col-d1) 20%, transparent);
@@ -328,7 +343,7 @@
     content: "";
     --col: #fff6;
     --col-trans: #fff0;
-    border-radius: 16px;
+    border-radius: var(--border-radius);
 
 
     transition: background 1s ease;
@@ -406,6 +421,9 @@
     .medals__page .main-left {
         margin-right: 0px;
     }
+    .main-right {
+        width: 100%;
+    }
 }
 @media (min-width: 800px) {
     /*desktop*/
@@ -426,7 +444,7 @@
         transition: all 0.5s ease;
     }
     .medals__page .main {
-        margin: 20px;
+        margin: 0px;
 
 
         transform: translateX(0px);
@@ -444,6 +462,9 @@
     .medals__page.home .main {
         transform: translateX(100%);
         opacity: 0;
+    }
+    .medals__page > .main .main-inner {
+        margin: 0px;
     }
 }
 .sidebar__no-results {

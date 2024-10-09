@@ -49,11 +49,15 @@ export class MedalData {
         DoRequest("POST", `/api/medals/${medal.Medal_ID}/` + (medal.Packs == null ? "beatmaps" : "packs"), medal).then((data) => {
             var content = data['content'];
             console.log(data);
-            this.Medals[content[0].Medal_ID].BeatmapsType = data['message'];
-            if (typeof (content[0]) != "undefined") {
-                this.Medals[content[0].Medal_ID].Beatmaps = content;
+            if (content.length != 0) {
+                this.Medals[content[0].Medal_ID].BeatmapsType = data['message'];
+                if (typeof (content[0]) != "undefined") {
+                    this.Medals[content[0].Medal_ID].Beatmaps = content;
+                }
+                if (this.CurrentMedal == medal.Medal_ID) callbacks['beatmaps'](this.Medals[this.CurrentMedal]);
+            } else {
+                callbacks['beatmaps'](this.Medals[this.CurrentMedal]); // :/
             }
-            if (this.CurrentMedal == medal.Medal_ID) callbacks['beatmaps'](this.Medals[this.CurrentMedal]);
         });
         //DoRequest("POST", `/api/medals/${medal.Medal_ID}/what`, medal).then((data) => {
         //    var content = data['content'];

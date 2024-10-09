@@ -1,8 +1,8 @@
 @font-face {
     font-family: "icons";
-    src: url("./icons.eot?84f46284dc48434af48e38e49a37c2a2#iefix") format("embedded-opentype"),
-url("./icons.woff2?84f46284dc48434af48e38e49a37c2a2") format("woff2"),
-url("./icons.woff?84f46284dc48434af48e38e49a37c2a2") format("woff");
+    src: url("./icons.eot?242a911e3c9a8fbdcf2d984c69d472ef#iefix") format("embedded-opentype"),
+url("./icons.woff2?242a911e3c9a8fbdcf2d984c69d472ef") format("woff2"),
+url("./icons.woff?242a911e3c9a8fbdcf2d984c69d472ef") format("woff");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -16,21 +16,33 @@ i[class^="icon-"]:before, i[class*=" icon-"]:before {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-logo-osekai:before {
+.icon-tp-twitter:before {
     content: "\f101";
 }
-.icon-gamemode-taiko:before {
+.icon-tp-discord:before {
     content: "\f102";
 }
-.icon-gamemode-osu:before {
+.icon-tp-bluesky:before {
     content: "\f103";
 }
-.icon-gamemode-mania:before {
+.icon-omh:before {
     content: "\f104";
 }
-.icon-gamemode-catch:before {
+.icon-logo-osekai:before {
     content: "\f105";
 }
-.icon-gamemode-all:before {
+.icon-gamemode-taiko:before {
     content: "\f106";
+}
+.icon-gamemode-osu:before {
+    content: "\f107";
+}
+.icon-gamemode-mania:before {
+    content: "\f108";
+}
+.icon-gamemode-catch:before {
+    content: "\f109";
+}
+.icon-gamemode-all:before {
+    content: "\f10a";
 }

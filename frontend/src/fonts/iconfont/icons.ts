@@ -1,4 +1,8 @@
 export type IconsId =
+  | "tp-twitter"
+  | "tp-discord"
+  | "tp-bluesky"
+  | "omh"
   | "logo-osekai"
   | "gamemode-taiko"
   | "gamemode-osu"
@@ -7,6 +11,10 @@ export type IconsId =
   | "gamemode-all";
 
 export type IconsKey =
+  | "TpTwitter"
+  | "TpDiscord"
+  | "TpBluesky"
+  | "Omh"
   | "LogoOsekai"
   | "GamemodeTaiko"
   | "GamemodeOsu"
@@ -15,6 +23,10 @@ export type IconsKey =
   | "GamemodeAll";
 
 export enum Icons {
+  TpTwitter = "tp-twitter",
+  TpDiscord = "tp-discord",
+  TpBluesky = "tp-bluesky",
+  Omh = "omh",
   LogoOsekai = "logo-osekai",
   GamemodeTaiko = "gamemode-taiko",
   GamemodeOsu = "gamemode-osu",
@@ -24,10 +36,14 @@ export enum Icons {
 }
 
 export const ICONS_CODEPOINTS: { [key in Icons]: string } = {
-  [Icons.LogoOsekai]: "61697",
-  [Icons.GamemodeTaiko]: "61698",
-  [Icons.GamemodeOsu]: "61699",
-  [Icons.GamemodeMania]: "61700",
-  [Icons.GamemodeCatch]: "61701",
-  [Icons.GamemodeAll]: "61702",
+  [Icons.TpTwitter]: "61697",
+  [Icons.TpDiscord]: "61698",
+  [Icons.TpBluesky]: "61699",
+  [Icons.Omh]: "61700",
+  [Icons.LogoOsekai]: "61701",
+  [Icons.GamemodeTaiko]: "61702",
+  [Icons.GamemodeOsu]: "61703",
+  [Icons.GamemodeMania]: "61704",
+  [Icons.GamemodeCatch]: "61705",
+  [Icons.GamemodeAll]: "61706",
 };

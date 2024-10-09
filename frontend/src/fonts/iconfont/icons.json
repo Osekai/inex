@@ -1,8 +1,12 @@
 {
-    "logo-osekai": 61697,
-    "gamemode-taiko": 61698,
-    "gamemode-osu": 61699,
-    "gamemode-mania": 61700,
-    "gamemode-catch": 61701,
-    "gamemode-all": 61702
+    "tp-twitter": 61697,
+    "tp-discord": 61698,
+    "tp-bluesky": 61699,
+    "omh": 61700,
+    "logo-osekai": 61701,
+    "gamemode-taiko": 61702,
+    "gamemode-osu": 61703,
+    "gamemode-mania": 61704,
+    "gamemode-catch": 61705,
+    "gamemode-all": 61706
 }
