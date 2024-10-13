@@ -17,6 +17,8 @@ import {GetSetting} from "../utils/usersettings";
 import {Initialize} from "./medals/MedalsAdmin";
 import {PermissionChecker} from "../utils/permissionChecker";
 
+export * from "./medals/SolutionElements.js";
+
 if(PermissionChecker("medal.edit", false)) {
     console.log("You have edit permissions");
     Initialize();

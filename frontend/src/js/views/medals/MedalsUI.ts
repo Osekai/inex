@@ -257,7 +257,7 @@ export class MedalsUI {
 
         if(medal.Solution !== null) {
             // @ts-ignore
-            document.getElementById("medal_solution").innerHTML = marked.parse(medal.Solution.replace(/\n/g, "<br />"));
+            document.getElementById("medal_solution").innerHTML = marked.parse(medal.Solution);
         } else {
             document.getElementById("medal_solution").innerHTML = "Unknown";
         }

@@ -1,0 +1,66 @@
+star-rating {
+    display: inline-block;
+    margin-left: 2px;
+}
+star-rating > div {
+    margin-bottom: -52px;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    position: relative;
+    padding: 0px 5px;
+}
+star-rating > div svg {
+    stroke-width: 3px;
+    height: 16px;
+    width: 16px;
+    border-radius: 12px;
+    margin-right: 2px;
+}
+
+star-rating > div:after {
+    border-radius: 20px;
+    background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--background) 20%, transparent),
+    color-mix(in srgb, var(--background) 70%, transparent)
+    );
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: calc(100% + 2px);
+    bottom: -1px;
+    left: 0;
+    z-index: -1;
+}
+
+.solution-note {
+    margin-top: 3px;
+    margin-bottom: 6px;
+    padding: 4px 0px;
+    padding-left: 10px;
+    font-size: 15px;
+    display: flex;
+    position: relative;
+}
+.solution-note svg {
+    min-height: 20px;
+    min-width: 20px;
+    max-height: 20px;
+    max-width: 20px;
+    margin-right: 6px;
+}
+.solution-note:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    border-radius: 0px;
+    height: 100%;
+    background: #fff6;
+    border-radius: 12px;
+}
+stable-difference.solution-note:before {
+    background: #dd4a68;
+}

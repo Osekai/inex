@@ -13,7 +13,16 @@ advanced-code-field{
 .cm-editor, .cm-scroller, .cm-content {
     min-height: 80px !important;;
 }
-
+.cm-selectionLayer {
+    z-index: 2 !important;
+}
+.cm-selectionBackground {
+    z-index: 92 !important;
+    background: white !important;
+    opacity: 0.3;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+}
 advanced-text-field {
     width: 100%;
     display: flex;
