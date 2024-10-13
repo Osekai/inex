@@ -2,6 +2,7 @@ export class Medal {
     Obtained: boolean;
     BeatmapsType: string;
     constructor(medal: any) {
+        this.Beatmaps = [];
         for(var x in medal) {
             // @ts-ignore
             this[x] = medal[x];
