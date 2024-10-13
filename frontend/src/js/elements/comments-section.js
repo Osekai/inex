@@ -18,7 +18,7 @@ class CommentsSection extends HTMLElement {
     listElement = null;
 
     lastCommentBar = null;
-    commentBar(replyingTo = null) {
+    commentBar(replyingTo = null, hideParents = null) {
         // note! : please pass in as Comment object and not ID!
         const outer = new Div("div", "comment-input");
         if (loggedIn) {
@@ -58,9 +58,13 @@ class CommentsSection extends HTMLElement {
                 input.value = ""
             })
 
+            outer.hideParents = hideParents;
 
             if(replyingTo != null) {
-                if(this.lastCommentBar != null) this.lastCommentBar.remove();
+                if(this.lastCommentBar != null) {
+                    this.lastCommentBar.hideParents();
+                    this.lastCommentBar.remove();
+                }
                 this.lastCommentBar = outer;
             }
         }
@@ -78,7 +82,16 @@ class CommentsSection extends HTMLElement {
         var replyInputContainer = Div("div", "comment-reply-input");
 
 
-
+        var recalcReplyHeight = () => {
+            var height = 0;
+            for(var child of replyContainer.children) {
+                let childHeight = child.getBoundingClientRect().height;
+                console.log(`Child height: ${childHeight}`);
+                height += childHeight;
+            }
+            console.log(`Total height: ${height}`);
+            replyContainer.style.setProperty("--reply-height", height + "px");
+        }
 
 
 
@@ -109,6 +122,8 @@ class CommentsSection extends HTMLElement {
         if(comment.HasVoted === 1) upvote.classList.add("active");
 
 
+        var replies_opened = false;
+
         var reply = Text("button", "Reply");
         reply.prepend(LucideIcon("reply"));
         toolbar.appendChild(reply);
@@ -130,8 +145,21 @@ class CommentsSection extends HTMLElement {
 
 
             reply.addEventListener("click", () => {
-                replyContainer.prepend(this.commentBar(comment));
-                commentOuter.classList.add("replies-opened");
+                if(replyContainer.querySelector(".comment-input") == null) {
+                    replyContainer.prepend(this.commentBar(comment, () => {
+                        if(replies_opened === false) {
+                            commentOuter.classList.remove("replies-opened")
+                        }
+                    }));
+                    commentOuter.classList.add("replies-opened");
+                    recalcReplyHeight();
+                } else {
+                    if(replies_opened === false) {
+                        commentOuter.classList.remove("replies-opened")
+                    }
+                    replyContainer.querySelector(".comment-input").remove();
+                    recalcReplyHeight();
+                }
             })
         }
         if(!loggedIn) {
@@ -154,18 +182,17 @@ class CommentsSection extends HTMLElement {
         outerContainer.appendChild(replyInputContainer);
         outerContainer.appendChild(replyContainer);
 
-        let loaded = false;
-
         if (toplevel && comment.Replies>0) {
             viewReplies.addEventListener("click", async () => {
-                if(!loaded) {
+                if(!replies_opened) {
                     var replies = (await DoRequest("POST", `/api/comments/${this.section}/${this.ref}/get`, {
                         "ParentID": comment.ID
                     }))["content"];
                     for (let reply of replies) {
                         replyContainer.appendChild(this.createComment(reply, false))
                     }
-                    loaded = true;
+                    replies_opened = true;
+                    recalcReplyHeight();
                     commentOuter.classList.add("replies-opened");
                 } else {
                     commentOuter.classList.toggle("replies-opened");

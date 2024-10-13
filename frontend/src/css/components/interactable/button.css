@@ -10,23 +10,22 @@
 }
 
 .button {
-    padding: 12px 31px;
+    padding: 12px 18px;
 }
 
 .icon-button {
-    padding: 12px 25px;
+    padding: 10px 10px;
     align-items: center;
 }
 
 .icon-button i {
-    height: 22px;
-    width: 22px;
+    font-size: 22px;
     margin-right: 8px;
 }
 .icon-button svg {
-    margin-right: 8px;
-    height: 22px;
-    width: 22px;
+    margin-right: 18px;
+    height: 25px !important;
+    width: 25px !important;
 }
 
 .button.big {

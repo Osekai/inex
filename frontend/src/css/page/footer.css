@@ -87,3 +87,21 @@
         flex-direction: column;
     }
 }
+@media (max-width: 600px) {
+    .footer-inner > div{
+        flex-direction: column;
+        margin-bottom: 20px;
+        align-items: flex-start;
+    }
+    .footer-inner {
+        align-items: flex-start;
+        margin-left: 0px;
+        text-align: left;
+    }
+    .footer-inner .footer-bottom {
+        align-items: flex-start;
+    }
+    .footer-inner .footer-bottom .footer-right {
+        margin-top: 20px    ;
+    }
+}

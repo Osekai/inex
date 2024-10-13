@@ -7,6 +7,8 @@ use Database\Connection;
 use Database\Memcache;
 use Database\Session;
 use Tasks\Runners\BeatmapPacks;
+use Woeler\DiscordPhp\Message\DiscordEmbedMessage;
+use Woeler\DiscordPhp\Webhook\DiscordWebhook;
 
 class Medals
 {
@@ -119,7 +121,7 @@ class Medals
         $mods = explode(",", $data['Mods']);
 
         Connection::execOperation("DELETE FROM Medals_Solutions_Mods WHERE Medal_ID = ?", "i", [$data['Medal_ID']]);
-        if($data['Mods'] != null) {
+        if ($data['Mods'] != null) {
             foreach ($mods as $mod) {
                 Connection::execOperation("INSERT INTO Medals_Solutions_Mods (Medal_ID, `Mod`) VALUES (?, ?)", "is", [$data['Medal_ID'], $mod]);
             }
@@ -169,15 +171,39 @@ class Medals
         ", "sisiissii", [$data['Solution'], $data['Is_Solution_Found'], $data['Video_URL'], $data['Is_Lazer'], $data['Is_Restricted'], $data['Date_Released'], $data['First_Achieved_Date'], $data['First_Achieved_User_ID'], $data['Medal_ID']]));
     }
 
+    public static function GetPacks($id)
+    {
+        return new Response(true, "packs", Connection::execSelect("SELECT * FROM Medals_Solutions_Beatmaps_Packs WHERE Medal_ID = ?", "i", [$id]));
+    }
+
+    public static function ReportBeatmap($id, $data)
+    {
+        $beatmapInfo = self::GetOneBeatmap($id);
+        $beatmapInfo = self::GetBeatmaps($beatmapInfo['Medal_ID'], $beatmapInfo['Beatmap_ID'])->content[0];
+        $medalInfo = self::Get($beatmapInfo['Medal_ID']);
+
+
+        $message = (new DiscordEmbedMessage())
+            ->setColor(0xff66aa)
+            ->setContent('Report from ' . $data['reporter_name'])
+            ->setAvatar('https://a.ppy.sh/' . $data['reporter_id'])
+            ->setUsername('BEATMAP')
+            ->setTitle($beatmapInfo['Song_Title'] . ' - ' . $beatmapInfo['Song_Artist'] . ' (by ' . $beatmapInfo['Mapper_Name'] . ') [' . $beatmapInfo['Difficulty_Name'] . '}')
+            ->setDescription($data['reason'])
+            ->setUrl(URL . "/medals/" . urlencode($medalInfo['Name']))
+            ->setFooterText($medalInfo['Name'])
+            ->setFooterIcon(URL . "/assets/osu/web/" . $medalInfo['Link']);
+
+        $webhook = new DiscordWebhook(MOD_WEBHOOK);
+        $messageData = $webhook->send($message);
+
+        return new Response(true, "ok");
+    }
+
     public static function GetOneBeatmap($id)
     {
         $comment = Connection::execSelect("SELECT * FROM Medals_Beatmaps WHERE ID = ?", "i", [$id]);
         if (count($comment) > 0) return $comment[0];
         return null;
-    }
-
-    public static function GetPacks($id)
-    {
-        return new Response(true, "packs", Connection::execSelect("SELECT * FROM Medals_Solutions_Beatmaps_Packs WHERE Medal_ID = ?", "i", [$id]));
     }
 }

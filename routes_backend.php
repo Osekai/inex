@@ -67,6 +67,11 @@ $router->all("/api/medals/get_all", function () {
 $router->all("/api/medals/{id}/beatmaps", function ($id) {
     echo \Data\Medals::GetBeatmaps($id)->ReturnJson();
 });
+
+$router->all("/api/medals/beatmaps/report/{id}", function ($id) {
+    echo \Data\Medals::ReportBeatmap($id, $_POST)->ReturnJson();
+});
+
 $router->all("/api/medals/{id}/packs", function ($id) {
     echo \Data\Medals::GetPacks($id)->ReturnJson();
 });

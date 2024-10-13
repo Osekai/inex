@@ -4,13 +4,16 @@ comments-section {
 
 
 .comment-outer {
-    margin-top: 20px;
+    margin-top: 25px;
 }
 .comment-outer.replies-opened {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 .comment-outer .comment-replies {
-    display: none;
+    opacity: 0;
+    max-height: 0px;
+    pointer-events: none;
+    transition: all 0.2s ease;
 }
 @keyframes open {
     0% {
@@ -19,8 +22,10 @@ comments-section {
     }
 }
 .comment-outer.replies-opened .comment-replies {
-    display: inherit;
+    max-height: var(--reply-height);
+    opacity: 1;
     animation: open 0.3s ease;
+    pointer-events: all;
 }
 .comment-reply {
     padding-top: 8px;
@@ -134,6 +139,7 @@ comments-section {
 
 .comment-input textarea {
     flex: 1;
+    min-height: 44px;
 }
 
 .comment .toolbar > *.active {

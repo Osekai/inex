@@ -59,7 +59,7 @@ if ($cur_medal == null) {
                     </div>
                     <div class="panel medal__info">
                         <div class="medal__info-upper">
-                            <img id="medal_image" src="https://assets.ppy.sh/medals/web/taiko-hits-30000.png">
+                            <img id="medal_image" src="http://0.0.0.0:8000/public/img/branding/icon_monochrome.svg">
                             <div class="medal__info-text">
                                 <div>
                                     <h1 id="medal_name">Welcome to Osekai Inex!</h1>

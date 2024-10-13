@@ -1,17 +1,20 @@
 import {Medal} from "./Medal";
 import {MedalData} from "./MedalData";
-import {AntheraIcon, Div, LucideIcon, Text} from "../../utils/dom";
+import {AntheraIcon, Button, Div, LucideIcon, Text, TextArea} from "../../utils/dom";
 import {getAverageRGB, rgbToHsl} from "../../utils/colour";
 import {marked} from "marked";
 import CommentsSection from "../../elements/comments-section";
 import {DoRequest} from "../../utils/requests";
 import {GetMod} from "../../utils/osu/mods";
 import {TimeTransform_MM_SS} from "../../utils/time";
+import {createDropdown} from "../../ui/ultra-dropdown";
+import {Modal, ModalButton, ModalIcon, Overlay} from "../../ui/overlay";
+import {PushToast} from "../../ui/toasts";
 
 
 export class MedalsUI {
     // @ts-ignore
-    static AddBeatmap(beatmap) {
+    static AddBeatmap(beatmap, grid) {
         var outer = Div("div", "beatmap");
 
         var top = Div("a", "top");
@@ -36,6 +39,7 @@ export class MedalsUI {
         //var submissiondate = Text("h4", timeAgo.format(new Date(beatmap.Beatmap_Submitted_Date)));
         //bottom.appendChild(submissiondate);
         //submissiondate.setAttribute("tooltip", beatmap.Beatmap_Submitted_Date);
+
 
         var note = Text("h4", beatmap.Note);
         bottom.appendChild(note);
@@ -67,9 +71,73 @@ export class MedalsUI {
 
         var extrabutton = Div("div", "pill-button")
         bottom.appendChild(extrabutton);
-        bottom.classList.add("square")
+        extrabutton.classList.add("square")
         extrabutton.appendChild(LucideIcon("ellipsis"));
 
+
+        var extrabutton_dropdown = Div("div", "dropdown-content");
+        grid.appendChild(extrabutton_dropdown);
+
+        createDropdown(extrabutton, extrabutton_dropdown);
+
+        var report = Button("Report", "warning icon-button");
+        extrabutton_dropdown.appendChild(report);
+        report.addEventListener("click", () => {
+
+            const element = document.createElement("div");
+
+            const panel = Div("div", "basic-modal basic-modal-input character-creator-panel");
+            element.appendChild(panel);
+
+            const title = Text("h1", "Report " + beatmap.Song_Title);
+
+            const nameInput = TextArea("");
+            nameInput.setAttribute("type", "character");
+
+            const buttonRow = Div("div", "button-row");
+            const cancelButton = Button("Cancel");
+            const continueButton = Button("Send", "cta");
+
+            panel.appendChild(LucideIcon("triangle-alert"));
+            panel.appendChild(title);
+            panel.appendChild(nameInput);
+            buttonRow.appendChild(cancelButton);
+            buttonRow.appendChild(continueButton);
+            panel.appendChild(buttonRow);
+
+            continueButton.classList.add("disabled");
+
+            nameInput.addEventListener("keyup", () => {
+                if(nameInput.textLength > 0) {
+                    continueButton.classList.remove("disabled");
+                } else {
+                    continueButton.classList.add("disabled");
+                }
+            })
+
+
+            const overlay = new Overlay(element);
+            overlay.allowclickoff = false;
+            cancelButton.addEventListener("click", () => {
+                overlay.remove();
+            })
+            continueButton.addEventListener("click", async () => {
+                panel.classList.add("loading");
+                await DoRequest("POST", `/api/medals/beatmaps/report/${beatmap.ID}`, {
+                    // @ts-ignore
+                    "reporter_name": userData.username,
+                    // @ts-ignore
+                    "reporter_id": userData.id,
+                    "reason": nameInput.value
+                })
+                overlay.remove();
+                PushToast({
+                    "theme": "success",
+                    content: "Thanks for the report! We'll look into it soon!"
+                })
+            })
+        })
+        report.prepend(LucideIcon("triangle-alert"));
 
         outer.appendChild(bottom);
 
@@ -118,19 +186,24 @@ export class MedalsUI {
     static LoadBeatmaps(medal: Medal) {
         var beatmapGrid = document.getElementById("medal_beatmaps");
         beatmapGrid.innerHTML = "";
-        var beatmapGrid = document.getElementById("medal_beatmaps");
-        // @ts-ignore
-        for (var beatmap of medal.Beatmaps) {
-            if (medal.BeatmapsType == "beatmaps")
-                beatmapGrid.appendChild(MedalsUI.AddBeatmap(beatmap));
-            if (medal.BeatmapsType == "packs")
-                beatmapGrid.appendChild(MedalsUI.AddPack(beatmap));
-        }
-        // @ts-ignore
-        if (medal.Beatmaps.length < 3) {
-            beatmapGrid.classList.add("large");
-        } else {
-            beatmapGrid.classList.remove("large");
+
+        if(medal.Beatmaps !== null) {
+            if (medal.BeatmapsType == "packs") {
+                document.getElementById("medal_beatmaps_add").classList.add("hidden");
+            }
+            // @ts-ignore
+            for (var beatmap of medal.Beatmaps) {
+                if (medal.BeatmapsType == "beatmaps")
+                    beatmapGrid.appendChild(MedalsUI.AddBeatmap(beatmap, beatmapGrid));
+                if (medal.BeatmapsType == "packs")
+                    beatmapGrid.appendChild(MedalsUI.AddPack(beatmap));
+            }
+            // @ts-ignore
+            if (medal.Beatmaps.length < 3) {
+                beatmapGrid.classList.add("large");
+            } else {
+                beatmapGrid.classList.remove("large");
+            }
         }
     }
 

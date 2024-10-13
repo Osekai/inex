@@ -169,7 +169,7 @@
 .medals__page .main-right {
     flex: 2;
 
-    flex-grow: 2;
+    flex-grow: 2.5;
     flex-shrink: 1; /* Prevent shrinking if necessary */
     flex-basis: 0; /* Adjust this to control initial size */
 }
@@ -193,18 +193,18 @@
     width: 100%;
     display: grid;
     grid-gap: 16px;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
 }
 #medal_beatmaps.large {
     grid-template-columns: 1fr;
 }
 .beatmap {
     border-radius: 12px;
-    overflow: hidden;
     background: linear-gradient(to bottom, color-mix(in srgb, var(--col-d2) 80%, transparent), color-mix(in srgb, var(--col-l2) 40%, transparent)), var(--bg);
     width: 100%;
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     background-position: center !important;
     background-size: cover !important;
 }
@@ -234,6 +234,7 @@
     display: flex;
     align-items: center;
 }
+
 .beatmap .top > div {
 
     justify-content: space-between;
@@ -267,6 +268,11 @@
     backdrop-filter: blur(8px);
     background-color: color-mix(in srgb, var(--col-l2) 80%, transparent);
 }
+.beatmap .top > div, .beatmap .bottom {
+    display: flex;
+    align-items: center;
+}
+
 .beatmap .top h1 {
     font-size: 20px;
     font-weight: 600;
@@ -275,6 +281,9 @@
 .beatmap .top h3 {
     font-weight: 300;
     font-size: 17px;
+}
+.beatmap {
+    overflow: hidden;
 }
 .beatmap .bottom h4 {
     margin-right: auto;
@@ -285,7 +294,6 @@
     display: block;
     text-overflow: ellipsis;
     padding-right: 8px;
-
     padding-top: 5px;
     padding-bottom: 5px;
     user-select: none;
@@ -420,6 +428,7 @@
     }
     .medals__page .main-left {
         margin-right: 0px;
+        width: 100%;
     }
     .main-right {
         width: 100%;
