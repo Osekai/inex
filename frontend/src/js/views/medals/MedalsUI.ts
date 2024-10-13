@@ -8,7 +8,7 @@ import {DoRequest} from "../../utils/requests";
 import {GetMod} from "../../utils/osu/mods";
 import {TimeTransform_MM_SS} from "../../utils/time";
 import {createDropdown} from "../../ui/ultra-dropdown";
-import {Modal, ModalButton, ModalIcon, Overlay} from "../../ui/overlay";
+import {Overlay} from "../../ui/overlay";
 import {PushToast} from "../../ui/toasts";
 
 
@@ -108,7 +108,7 @@ export class MedalsUI {
             continueButton.classList.add("disabled");
 
             nameInput.addEventListener("keyup", () => {
-                if(nameInput.textLength > 0) {
+                if (nameInput.textLength > 0) {
                     continueButton.classList.remove("disabled");
                 } else {
                     continueButton.classList.add("disabled");
@@ -187,7 +187,7 @@ export class MedalsUI {
         var beatmapGrid = document.getElementById("medal_beatmaps");
         beatmapGrid.innerHTML = "";
 
-        if(medal.Beatmaps !== null) {
+        if (medal.Beatmaps !== null) {
             if (medal.BeatmapsType == "packs") {
                 document.getElementById("medal_beatmaps_add").classList.add("hidden");
             }
@@ -255,7 +255,7 @@ export class MedalsUI {
         document.getElementById("medal_instructions").innerHTML = medal.Instructions; // instructions have <i> sometimes
 
 
-        if(medal.Solution !== null) {
+        if (medal.Solution !== null) {
             // @ts-ignore
             document.getElementById("medal_solution").innerHTML = marked.parse(medal.Solution);
         } else {

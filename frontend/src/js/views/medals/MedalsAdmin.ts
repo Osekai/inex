@@ -51,8 +51,8 @@ function OpenEditor() {
     var addGamemodeInput = (gamemode: string) => {
         var packId = "";
         // @ts-ignore
-        for(var pack of medal.Beatmaps) {
-            if(pack.Gamemode == gamemode) {
+        for (var pack of medal.Beatmaps) {
+            if (pack.Gamemode == gamemode) {
                 packId = pack.Pack_ID;
             }
         }

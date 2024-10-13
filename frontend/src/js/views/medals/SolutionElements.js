@@ -33,13 +33,35 @@ export class Note extends HTMLElement {
     }
 
     connectedCallback() {
+        var text = Div("p");
+        text.innerHTML = this.innerHTML;
+
+        this.innerHTML = "";
+
         this.classList.add("solution-note");
         this.classList.add(this.nodeName);
+
+        var icon = LucideIcon("book-plus");
+        var tooltip = "Solution Note";
+        this.style.setProperty("--background", "#fffa");
+
         if(this.nodeName === "STABLE-DIFFERENCE") {
-            this.prepend(LucideIcon("triangle-alert"));
-        } else {
-            this.prepend(LucideIcon("book-plus"));
+            icon = LucideIcon("triangle-alert");
+            tooltip = "Stable Differences"
+            this.style.setProperty("--background", "#dd4a68");
         }
+
+        if(this.hasAttribute("advice")) {
+            icon = LucideIcon("hand-helping");
+            tooltip = "Advice"
+            this.style.setProperty("--background", "#39FFA0");
+        }
+
+
+        icon.setAttribute("tooltip", tooltip);
+
+        this.appendChild(icon);
+        this.appendChild(text);
     }
 }
 export class StableDifference extends Note {}
