@@ -62,25 +62,7 @@ import("lucide").then(({createIcons, icons}) => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("%cAnthera Started!", "font-family:cursive;font-weight:900;border-left:2px solid #0f6;background:#333;color:#0f6;font-size:15px;padding:6px;border-radius:10px;");
-    console.log("best not to paste anything in here if you don't know what it is :)")
-    console.log(`    ▒▒▒    ▓▓
-    ▓▒▒▒▒▒  ▓▓▓▓
-     ▓▒▒▒▒▒ ▓▓▓▓     beep!
-      ▓▒▒▒▒▓█▒▒▒▓▓
-      █▓▒▒▒▒▒▒░░░░▒▓▓
-       ▓▒▒▒▒▒░███████░░
-      ▓▒▒▒▒▒░█████▓████░░
-      ▓▒▒▒▒▒░██  ██▓█████░
-      ▓▒▒▒▒░░█▌▐▌▐████████░
-      ▓▒▒▒░ ░█████████████░
-      ▓▒▒▒▓░░░████ ██▀▀██▀█
-      █▓▒▒▒▓▓░░████▄ ▄█▄ ▄▓
-      █▓▒▒▒▒▒▓▓░░▒▓▓▓▓▓▓▓
-       █▓▒▒▒▒▒▒▓██████`)
-
     if (aCreateIcons != null) aCreateIcons();
-
 
     var targetNode = document.body;
     var config = {

@@ -24,14 +24,14 @@ class StringHelper
 
         if($blacklisted) {
             $blacklistedWords = implode(', ', $blacklisted);
-            if(USE_BEANSTALK)
-            Queue::getClient()->sendEvent("webhook-log", [
-                "webhook" => "blocked",
-                "data" => [
-                    "username" => "!",
-                    "content" => URL . "/@" . Database\Session::UserData()['Tag'] . " - " . $where . "```" . $string . "``` filtered due to blocklist: " . json_encode($blacklistedWords)
-                ]
-            ]);
+            //if(USE_BEANSTALK)
+            //Queue::getClient()->sendEvent("webhook-log", [
+            //    "webhook" => "blocked",
+            //    "data" => [
+            //        "username" => "!",
+            //        "content" => URL . "/@" . Database\Session::UserData()['Tag'] . " - " . $where . "```" . $string . "``` filtered due to blocklist: " . json_encode($blacklistedWords)
+            //    ]
+            //]);
             return array_values($blacklisted);
         }
         return false;
