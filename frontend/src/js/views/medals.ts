@@ -102,7 +102,8 @@ async function Load() {
                 if(resp.success == true) {
                     overlay.remove();
                     PushToast({"theme": "success", content: "Added beatmap!"});
-                    MedalsUI.AddBeatmap(resp.content);
+                    var grid = document.getElementById("medal_beatmaps");
+                    grid.prepend(MedalsUI.AddBeatmap(resp.content, grid));
                 } else {
                     PushToast({"theme": "error", content: resp.message});
                 }
