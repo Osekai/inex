@@ -23,6 +23,7 @@ class CommentsSection extends HTMLElement {
         const outer = new Div("div", "comment-input");
         if (loggedIn) {
             const input = document.createElement("textarea");
+            input.rows = 1;
             outer.appendChild(input);
 
             const button = Button(LucideIcon("send"));

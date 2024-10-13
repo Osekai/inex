@@ -488,7 +488,18 @@
     opacity: 0.5;
     filter: grayscale(1);
 }
-
+.filter-obtained .medals__medal-button.obtained:hover {
+    filter: grayscale(0.5);
+}
+.filter-obtained .medals__medal-button.obtained.active {
+    filter: grayscale(0.5) drop-shadow(0px 0px 20px #fffa) drop-shadow(0px 0px 5px #fffa);
+    opacity: 0.7;
+    transform: scale(1.1);
+}
+.filter-obtained .medals__medal-button.hidden {
+    display: none !important;
+    opacity: 0;
+}
 #medal_beatmaps .pack {
     padding: 16px;
     border-radius: 16px;

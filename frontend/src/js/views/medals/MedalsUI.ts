@@ -107,6 +107,8 @@ export class MedalsUI {
         downloadButton.href = pack.Link;
         visitButton.href = "https://osu.ppy.sh/beatmaps/packs/" + pack.Pack_ID;
 
+        visitButton.target = "_blank";
+
         packDiv_right.appendChild(downloadButton);
         packDiv_right.appendChild(visitButton);
 

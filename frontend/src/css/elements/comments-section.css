@@ -110,19 +110,22 @@ comments-section {
 .comment-input {
     display: flex;
     align-items: stretch;
-    border-radius: var(--border-radius);
+    border-radius: 25px;
     overflow: hidden;
 }
 .comment-input .input {
     border-radius: 0px;
     margin-right: 2px;
+    resize: vertical;
+    background: #0004;
 }
 .comment-input .button {
     display: flex;
     align-items: center;
     border-radius: 0px;
-    padding: 14px;
-    background-color: var(--col-l5);
+    padding-left: 12px;
+    padding-right: 16px;
+    background-color: var(--col-sat-1);
 }
 .comment-input .button svg {
     width: 20px;
