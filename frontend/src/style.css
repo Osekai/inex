@@ -93,8 +93,8 @@ theme-picker {
 }
 
 .hidden {
-    pointer-events: none;
-    opacity: 0;
+    pointer-events: none !important;
+    opacity: 0 !important;
 position: absolute !important;;
 }
 .hidden-naf {

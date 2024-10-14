@@ -52,7 +52,12 @@ if ($cur_medal == null) {
             <div class="bg-outer">
             <div class="bg"></div>
             </div>
-            <div class="scrollable">
+            <div class="homepage" id="medal-home">
+                <img src="/public/img/branding/icon_monochrome.svg">
+                <h1>Welcome to Osekai Medals!</h1>
+                <p>Select a medal on the left</p>
+            </div>
+            <div class="scrollable _hidden" id="medal-info">
                 <div class="main-left">
                     <div class="mobile medal__info-toolbar">
                         <button id="back" class="button pill-button"><i data-lucide="chevron-left"></i> Back</button>
@@ -62,9 +67,9 @@ if ($cur_medal == null) {
                             <img id="medal_image" src="/public/img/branding/icon_monochrome.svg">
                             <div class="medal__info-text">
                                 <div>
-                                    <h1 id="medal_name">Welcome to Osekai Inex!</h1>
-                                    <h2 id="medal_description">This is all very heavily WIP</h2>
-                                    <h3 id="medal_instructions">Select a medal on your left :3</h3>
+                                    <h1 id="medal_name"></h1>
+                                    <h2 id="medal_description"></h2>
+                                    <h3 id="medal_instructions"></h3>
                                 </div>
                                 <?php
                                 if (\Data\OsekaiUsers::HasPermission("medal.edit", false)) {

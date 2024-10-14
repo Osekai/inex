@@ -235,6 +235,10 @@ export class MedalsUI {
     }
 
     static LoadMedal(medal: Medal, scrollTo = false) {
+        document.getElementById("medal-home").classList.add("_hidden");
+        document.getElementById("medal-info").classList.remove("_hidden");
+
+
         // @ts-ignore
         document.getElementById("medal_beatmaps").innerHTML = loader;
 

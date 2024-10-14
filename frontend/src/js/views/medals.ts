@@ -45,10 +45,18 @@ window.addEventListener("popstate", () => {
  * @param scrollTo
  */
 export function SetMedal(inputMedal: string | number, setUrl = false, scrollTo = false) {
-    if(inputMedal == null || inputMedal == "") {
+    console.log(inputMedal);
+    if(inputMedal == null || inputMedal == "" || typeof(inputMedal) == "undefined" || inputMedal == "undefined") {
+        document.getElementById("medal-home").classList.remove("_hidden");
+        document.getElementById("medal-info").classList.add("_hidden");
+
+
         document.getElementById("medal-page").classList.add("home");
         if((<any>getSections(`/medals/{medal}`))['medal'] != null)
         setSections("/medals/{medal}", {"medal": ""});
+
+        document.querySelector(".medals__medal-button.active").classList.remove("active");
+
         return;
     } else {
         console.log(inputMedal);
