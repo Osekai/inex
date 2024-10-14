@@ -1,8 +1,12 @@
 <?php
-if(!isset($router)) die("Do not call this directly!");
+if (!isset($router)) die("Do not call this directly!");
 
+use Data\Comments;
+use Data\Medals\MedalsBeatmaps;
+use Data\OsekaiUsers;
 use Data\Post\Edit;
 use Data\Post\Gallery;
+use Data\Votes;
 
 if (!function_exists('json_validate')) {
     /**
@@ -22,32 +26,12 @@ if (!function_exists('json_validate')) {
         try {
             json_decode($json, false, $depth, $flags | JSON_THROW_ON_ERROR);
             return true;
-        } catch (\JsonException $e) {
+        } catch (JsonException $e) {
             return false;
         }
     }
 }
 
-$router->all("/api/comments/{ref}/{section}/get", function ($ref, $section) {
-    echo Data\Comments::Get($section, $ref, $_POST['ParentID'])->ReturnJson();
-});
-
-$router->all("/api/comments/{ref}/{section}/send", function ($ref, $section) {
-    if (!requireLogin()) return;
-    $replyingTo = null;
-    if (isset($_REQUEST['replyingTo'])) {
-        $replyingTo = $_REQUEST['replyingTo'];
-    }
-    echo json_encode(Data\Comments::Post($section, $ref, $_REQUEST['content'], $replyingTo));
-});
-
-
-
-
-$router->all("/api/comment/{id}/report", function ($id) {
-    if (requireLogin())
-        echo (Data\Comments::Report($id))->ReturnJson();
-});
 
 $router->post("/api/usersettings/set", function () {
     if (!checkPermRequirement("account.edit"))
@@ -60,35 +44,79 @@ $router->post("/api/usersettings/set", function () {
 });
 
 
+/// =====================
+/// Medals
+/// =====================
 
 $router->all("/api/medals/get_all", function () {
     echo \Data\Medals::GetAll()->ReturnJson();
 });
-$router->all("/api/medals/{id}/beatmaps", function ($id) {
-    echo \Data\Medals::GetBeatmaps($id)->ReturnJson();
-});
-
-$router->all("/api/medals/beatmaps/report/{id}", function ($id) {
-    echo \Data\Medals::ReportBeatmap($id, $_POST)->ReturnJson();
-});
-
-$router->all("/api/medals/{id}/packs", function ($id) {
-    echo \Data\Medals::GetPacks($id)->ReturnJson();
-});
-
-$router->all("/api/medals/{id}/beatmap/add", function ($id) {
-    echo \Data\Medals::AddBeatmap($_POST['url'], $id, $_POST['note'])->ReturnJson();
-});
 $router->all("/api/medals/{id}/save", function ($id) {
-    if(!\Data\OsekaiUsers::HasPermission("medal.edit", false)) {
+    if (!OsekaiUsers::HasPermission("medal.edit", false)) {
         echo "no perms";
         exit;
     }
     echo \Data\Medals::Save($id, $_REQUEST)->ReturnJson();
 });
-$router->all("/api/comments/post", function ($id) {
-    echo \Data\Comments::Post($_POST['id'], $_POST['table'], $_POST['text'])->ReturnJson();
+
+
+/// =====================
+/// Medals Beatmaps
+/// =====================
+
+$router->all("/api/medals/beatmaps/{id}/delete", function ($id) {
+    echo MedalsBeatmaps::Delete($id)->ReturnJson();
 });
+$router->all("/api/medals/beatmaps/{id}/admindelete", function ($id) {
+    echo MedalsBeatmaps::AdminDelete($id)->ReturnJson();
+});
+$router->all("/api/medals/{id}/beatmaps", function ($id) {
+    echo MedalsBeatmaps::GetBeatmaps($id)->ReturnJson();
+});
+$router->all("/api/medals/beatmaps/{id}/report", function ($id) {
+    echo MedalsBeatmaps::ReportBeatmap($id, $_POST)->ReturnJson();
+});
+$router->all("/api/medals/{id}/packs", function ($id) {
+    echo MedalsBeatmaps::GetPacks($id)->ReturnJson();
+});
+$router->all("/api/medals/{id}/beatmap/add", function ($id) {
+    echo MedalsBeatmaps::AddBeatmap($_POST['url'], $id, $_POST['note'])->ReturnJson();
+});
+
+
+/// =====================
+/// Comments
+/// =====================
+
+$router->all("/api/comments/post", function ($id) {
+    echo Comments::Post($_POST['id'], $_POST['table'], $_POST['text'])->ReturnJson();
+});
+$router->all("/api/comments/{id}/report", function ($id) {
+    echo Comments::Report($id, $_POST)->ReturnJson();
+});
+$router->all("/api/comments/{id}/delete", function ($id) {
+    echo Comments::Delete($id)->ReturnJson();
+});
+$router->all("/api/comments/{id}/admindelete", function ($id) {
+    echo Comments::AdminDelete($id)->ReturnJson();
+});
+$router->all("/api/comments/{ref}/{section}/get", function ($ref, $section) {
+    echo Data\Comments::Get($section, $ref, $_POST['ParentID'])->ReturnJson();
+});
+$router->all("/api/comments/{ref}/{section}/send", function ($ref, $section) {
+    if (!requireLogin()) return;
+    $replyingTo = null;
+    if (isset($_REQUEST['replyingTo'])) {
+        $replyingTo = $_REQUEST['replyingTo'];
+    }
+    echo json_encode(Data\Comments::Post($section, $ref, $_REQUEST['content'], $replyingTo));
+});
+
+
+/// =====================
+/// Voting
+/// =====================
+
 $router->all("/api/vote/{target}/{id}", function ($target, $id) {
-    echo \Data\Votes::Vote($target, $id)->ReturnJson();
+    echo Votes::Vote($target, $id)->ReturnJson();
 });

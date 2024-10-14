@@ -33,7 +33,7 @@ searchable-dropdown {
 }
 
 .dropdown-content {
-    background-color: var(--col-l4);
+    background-color: var(--col-l3);
     box-shadow: 4px 4px 12px var(--col-l2);
     position: absolute;
 
@@ -50,8 +50,12 @@ searchable-dropdown {
 }
 .dropdown-content .button {
     margin: 5px;
+    margin-top: 0px;
     background: var(--col-l4);
     border-radius: calc(var(--border-radius) - 5px);
+}
+.dropdown-content .button:first-child {
+    margin-top: 5px;
 }
 .dropdown-open {
     opacity: 1;

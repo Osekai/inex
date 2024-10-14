@@ -13,7 +13,7 @@ export class Overlay {
 
         this.overlay.addEventListener("click", (e) => {
             console.log(e);
-            if(e.target == this.overlay && this.allowclickoff) this.overlay.remove();
+            if(e.target == this.overlay && this.allowclickoff) this.remove();
         })
     }
     remove() {

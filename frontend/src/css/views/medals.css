@@ -126,7 +126,6 @@
 .medals__page .main .scrollable {
     display: flex;
     padding: 20px;
-    overflow-y: scroll;
     max-height: 100%;
     align-items: flex-start;
 }

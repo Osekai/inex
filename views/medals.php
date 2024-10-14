@@ -83,7 +83,7 @@ if ($cur_medal == null) {
                     </div>
 
 
-                    <div class="panel">
+                    <div class="panel" id="medal_beatmaps_panel">
                         <div class="panel-header">
                             <h1>Beatmaps</h1>
                             <button id="medal_beatmaps_add" class="button cta pill-button">Add Beatmap</button>

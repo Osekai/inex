@@ -1,6 +1,6 @@
 <?php
-use API\Response;
-use Database\Connection;
+
+use Data\Medals\MedalsBeatmaps;
 
 class CheckTargetValidity
 {
@@ -14,7 +14,7 @@ class CheckTargetValidity
             if ($medal == null) return false;
         }
         if ($target == "Medals_Beatmaps") {
-            $medal = Data\Medals::GetOneBeatmap($id);
+            $medal = MedalsBeatmaps::GetOneBeatmap($id);
             if ($medal == null) return false;
         }
 

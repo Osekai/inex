@@ -5,6 +5,8 @@ namespace Data;
 use API\Response;
 use Database\Connection;
 use Database\Session;
+use Woeler\DiscordPhp\Message\DiscordEmbedMessage;
+use Woeler\DiscordPhp\Webhook\DiscordWebhook;
 
 
 class Comments
@@ -82,9 +84,45 @@ ORDER BY Is_Pinned, VoteCount DESC, Replies DESC";
         return new Response(true, "ok", Connection::execSelect($query, $types, $values));
     }
 
-    public static function Report($id)
+    public static function Report($id, $data)
     {
         $comment = Comments::GetOne($id);
+
+
+
+        $message = (new DiscordEmbedMessage())
+            ->setColor(0x66aaff)
+            ->setContent('Report from ' . $data['reporter_name'])
+            ->setAvatar('https://a.ppy.sh/' . $data['reporter_id'])
+            ->setUsername('COMMENT')
+            ->setTitle("Comment report on " . $data['url'])
+            ->setDescription($data['reason'])
+            ->setUrl($data['url'])
+            ->addField("Comment Content", $comment['Text'])
+            ->setFooterText($comment['Target_Table'] . ":" . $comment['Target_ID'])
+            ->setFooterIcon("https://a.ppy.sh/" . $comment['User_ID']);
+
+        $webhook = new DiscordWebhook(MOD_WEBHOOK);
+        $messageData = $webhook->send($message);
+
+        return new Response(true, "ok");
+    }
+
+    public static function AdminDelete($id)
+    {
+        if(!OsekaiUsers::HasPermission("comments.delete.any")) return new Response(false, "no");
+
+        return self::Delete($id, true);
+    }
+
+    public static function Delete($id, $skipCheck = false)
+    {
+        $comment = self::GetOne($id);
+
+        if($comment['User_ID'] !== Session::UserData()['id'] && !$skipCheck) return new Response(false, "Not your comment, silly");
+
+        Connection::execOperation("UPDATE Common_Comments SET Deleted = 1 WHERE ID = ?", "i", [$id]);
+
         return new Response(true, "ok");
     }
 }

@@ -8,8 +8,11 @@ import {DoRequest} from "../../utils/requests";
 import {GetMod} from "../../utils/osu/mods";
 import {TimeTransform_MM_SS} from "../../utils/time";
 import {createDropdown} from "../../ui/ultra-dropdown";
-import {Overlay} from "../../ui/overlay";
+import {Modal, ModalButton, ModalIcon, Overlay} from "../../ui/overlay";
 import {PushToast} from "../../ui/toasts";
+import {reportOverlay} from "../../ui/reportOverlay";
+import {LoaderOverlay} from "../../ui/loader-overlay";
+import {PermissionChecker} from "../../utils/permissionChecker";
 
 
 export class MedalsUI {
@@ -80,57 +83,17 @@ export class MedalsUI {
 
         createDropdown(extrabutton, extrabutton_dropdown);
 
-        var report = Button("Report", "warning icon-button");
+        var report = Button("Report", "icon-button");
         extrabutton_dropdown.appendChild(report);
         report.addEventListener("click", () => {
-
-            const element = document.createElement("div");
-
-            const panel = Div("div", "basic-modal basic-modal-input character-creator-panel");
-            element.appendChild(panel);
-
-            const title = Text("h1", "Report " + beatmap.Song_Title);
-
-            const nameInput = TextArea("");
-            nameInput.setAttribute("type", "character");
-
-            const buttonRow = Div("div", "button-row");
-            const cancelButton = Button("Cancel");
-            const continueButton = Button("Send", "cta");
-
-            panel.appendChild(LucideIcon("triangle-alert"));
-            panel.appendChild(title);
-            panel.appendChild(nameInput);
-            buttonRow.appendChild(cancelButton);
-            buttonRow.appendChild(continueButton);
-            panel.appendChild(buttonRow);
-
-            continueButton.classList.add("disabled");
-
-            nameInput.addEventListener("keyup", () => {
-                if (nameInput.textLength > 0) {
-                    continueButton.classList.remove("disabled");
-                } else {
-                    continueButton.classList.add("disabled");
-                }
-            })
-
-
-            const overlay = new Overlay(element);
-            overlay.allowclickoff = false;
-            cancelButton.addEventListener("click", () => {
-                overlay.remove();
-            })
-            continueButton.addEventListener("click", async () => {
-                panel.classList.add("loading");
-                await DoRequest("POST", `/api/medals/beatmaps/report/${beatmap.ID}`, {
+            reportOverlay("Report " + beatmap.Song_Title, async (value : string) => {
+                await DoRequest("POST", `/api/medals/beatmaps/${beatmap.ID}/report`, {
                     // @ts-ignore
                     "reporter_name": userData.username,
                     // @ts-ignore
                     "reporter_id": userData.id,
-                    "reason": nameInput.value
+                    "reason": value
                 })
-                overlay.remove();
                 PushToast({
                     "theme": "success",
                     content: "Thanks for the report! We'll look into it soon!"
@@ -138,6 +101,45 @@ export class MedalsUI {
             })
         })
         report.prepend(LucideIcon("triangle-alert"));
+
+
+        var del = async (admin = false) => {
+            var modal = new Modal("Are you sure you want to delete this post?", "This cannot be undone!", [new ModalButton("Delete", async () => {
+                var url  =`/api/medals/beatmaps/${beatmap.ID}/` + (admin == true ? "admindelete" : "delete");
+                var loader = new LoaderOverlay("Deleting");
+                var r = await DoRequest('POST', url);
+                loader.overlay.remove();
+                if (r.success) {
+                    outer.remove();
+                } else {
+                    PushToast({
+                        theme: "error",
+                        content: r.message
+                    })
+                }
+                modal.overlay.remove();
+            }), new ModalButton("Cancel", () => {
+                modal.close();
+            })], new ModalIcon("alert-triangle", "#ff623e"));
+        }
+        // @ts-ignore
+        if(loggedIn && beatmap.Beatmap_Submitted_User_ID === userData.id) {
+            var _delete = Button("Delete", "warning icon-button");
+            extrabutton_dropdown.appendChild(_delete);
+            _delete.prepend(LucideIcon("trash"));
+            _delete.addEventListener("click", async () => {
+                await del();
+            });
+        }
+        if(PermissionChecker("medals.beatmaps.delete.any")) {
+            var adm_delete = Button("AdminDelete", "warning icon-button");
+
+            extrabutton_dropdown.appendChild(adm_delete);
+            adm_delete.prepend(LucideIcon("zap"));
+            adm_delete.addEventListener("click", async () => {
+                await del(true);
+            });
+        }
 
         outer.appendChild(bottom);
 
@@ -187,6 +189,12 @@ export class MedalsUI {
         var beatmapGrid = document.getElementById("medal_beatmaps");
         beatmapGrid.innerHTML = "";
 
+        if (medal.Is_Restricted == 1) {
+            document.getElementById("medal_beatmaps_add").classList.add("hidden");
+        } else {
+            document.getElementById("medal_beatmaps_add").classList.remove("hidden");
+        }
+
         if (medal.Beatmaps !== null) {
             if (medal.BeatmapsType == "packs") {
                 document.getElementById("medal_beatmaps_add").classList.add("hidden");
@@ -203,6 +211,13 @@ export class MedalsUI {
                 beatmapGrid.classList.add("large");
             } else {
                 beatmapGrid.classList.remove("large");
+            }
+
+            // @ts-ignore
+            if(medal.Beatmaps.length == 0 && medal.Is_Restricted == 1) {
+                document.getElementById("medal_beatmaps_panel").classList.add("hidden");
+            } else {
+                document.getElementById("medal_beatmaps_panel").classList.remove("hidden");
             }
         }
     }
@@ -222,11 +237,7 @@ export class MedalsUI {
     static LoadMedal(medal: Medal, scrollTo = false) {
         // @ts-ignore
         document.getElementById("medal_beatmaps").innerHTML = loader;
-        if (medal.Is_Restricted == 1) {
-            document.getElementById("medal_beatmaps_add").classList.add("hidden");
-        } else {
-            document.getElementById("medal_beatmaps_add").classList.remove("hidden");
-        }
+
         MedalData.LoadExtra(medal, {
             "beatmaps": this.LoadBeatmaps
         });

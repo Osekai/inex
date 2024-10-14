@@ -4,6 +4,12 @@ import {DoRequest} from "../utils/requests";
 import {Button, Div, LucideIcon, Text, Image} from "../utils/dom";
 import {timeAgo} from "../utils/timeago";
 import bbCodeParser from 'js-bbcode-parser';
+import {createDropdown} from "../ui/ultra-dropdown";
+import {reportOverlay} from "../ui/reportOverlay";
+import {PushToast} from "../ui/toasts";
+import {LoaderOverlay} from "../ui/loader-overlay";
+import {PermissionChecker} from "../utils/permissionChecker";
+import {Modal, ModalButton, ModalIcon} from "../ui/overlay";
 
 class CommentsSection extends HTMLElement {
 
@@ -127,6 +133,76 @@ class CommentsSection extends HTMLElement {
         var reply = Text("button", "Reply");
         reply.prepend(LucideIcon("reply"));
         toolbar.appendChild(reply);
+
+        var extrabutton = Div("button", "")
+        toolbar.appendChild(extrabutton);
+        extrabutton.appendChild(LucideIcon("ellipsis"));
+
+
+        var extrabutton_dropdown = Div("div", "dropdown-content");
+        commentOuter.appendChild(extrabutton_dropdown);
+
+        createDropdown(extrabutton, extrabutton_dropdown, "bottomleft");
+
+        var report = Button("Report", "icon-button");
+        extrabutton_dropdown.appendChild(report);
+        report.prepend(LucideIcon("triangle-alert"));
+        report.addEventListener("click", () => {
+            reportOverlay("Report " + comment.Username + "'s comment", async (value) => {
+                await DoRequest("POST", `/api/comments/${comment.ID}/report`, {
+                    // @ts-ignore
+                    "reporter_name": userData.username,
+                    // @ts-ignore
+                    "reporter_id": userData.id,
+                    "reason": value,
+                    "url": location.href
+                })
+                PushToast({
+                    "theme": "success",
+                    content: "Thanks for the report! We'll look into it soon!"
+                })
+            })
+        })
+
+
+        var del = async (admin = false) => {
+            var modal = new Modal("Are you sure you want to delete this post?", "This cannot be undone!", [new ModalButton("Delete", async () => {
+                var url  = `/api/comments/${comment.ID}/` + (admin == true ? "admindelete" : "delete");
+                var loader = new LoaderOverlay("Deleting");
+                var r = await DoRequest('POST', url);
+                loader.overlay.remove();
+                if (r.success) {
+                    commentOuter.remove();
+                } else {
+                    PushToast({
+                        theme: "error",
+                        content: r.message
+                    })
+                }
+                modal.overlay.remove();
+            }), new ModalButton("Cancel", () => {
+                modal.close();
+            })], new ModalIcon("alert-triangle", "#ff623e"));
+        }
+
+        if(loggedIn && comment.User_ID === userData.id) {
+            var _delete = Button("Delete", "warning icon-button");
+            extrabutton_dropdown.appendChild(_delete);
+            _delete.prepend(LucideIcon("trash"));
+            _delete.addEventListener("click", async () => {
+                await del();
+            });
+        }
+
+        if(PermissionChecker("comments.delete.any")) {
+            var adm_delete = Button("AdminDelete", "warning icon-button");
+
+            extrabutton_dropdown.appendChild(adm_delete);
+            adm_delete.prepend(LucideIcon("zap"));
+            adm_delete.addEventListener("click", async () => {
+                await del(true);
+            });
+        }
 
         if(loggedIn) {
             upvote.addEventListener("click", async () => {
