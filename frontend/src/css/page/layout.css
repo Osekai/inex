@@ -20,7 +20,6 @@ body {
 
 .footer {
     margin-top: auto;
-    height: var(--navbar-height);
 }
 .page-container-inner {
     min-width: 0;
@@ -29,7 +28,10 @@ body {
     margin: 20px auto;
     padding-bottom: 5px;
 }
-
+.center {
+    max-width: var(--page-width);
+    padding: 0px 15px;
+}
 .toolbar {
     display: flex;
     align-items: center;

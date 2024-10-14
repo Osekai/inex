@@ -38,6 +38,7 @@ body, .col-reset, .warning {
     --col-sat-1: hsl(var(--hue), calc(50% * var(--sat)),  calc(50% * var(--val)));
 
     --col-sat-2: hsl(var(--hue), calc(100% * var(--sat)),  calc(80% * var(--val)));
+    --col-sat-3: hsl(var(--hue), calc(80% * var(--sat)),  calc(60% * var(--val)));
 
 
     --gradient-base: hsl(var(--accent-1)) 0%, hsl(var(--accent-2)) 46.35%, hsl(var(--accent-3)) 100%;

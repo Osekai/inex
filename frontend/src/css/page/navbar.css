@@ -1,5 +1,5 @@
 body {
-    --navbar-height: 84px;
+    --navbar-height: 78px;
     --toolbar-height: 0px;
 }
 
@@ -69,6 +69,11 @@ body {
     margin-left: 8px;
 }
 
+.navbar-pfp-container button {
+    display: flex;
+    align-items: center;
+}
+
 .navbar-icon-container > a, .navbar-icon-container > button {
     margin-right: 5px;
     border-radius: 90px;;
@@ -78,7 +83,6 @@ body {
     align-items: center;
     justify-content: center;
 }
-
 .navbar-icon-container.invites {
     opacity: 0.5;
 }
@@ -136,8 +140,8 @@ body {
 }
 
 .navbar-right .pfp {
-    height: 44px;
-    border-radius: var(--border-radius);
+    height: 48px;
+    border-radius: 900px;
 }
 
 .navbar-pfp-container, .navbar-icon-container {
@@ -162,6 +166,8 @@ body {
     top: 69px;
     transition: all 0.2s ease;
     z-index: 500;
+
+    cursor: default;
 
     opacity: 0;
     pointer-events: none;

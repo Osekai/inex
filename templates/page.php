@@ -1,33 +1,31 @@
 <?php
 
-use Database\Session;
-
-?>
+use Database\Session; ?>
 
 <div class="navbar">
     <a class="skip-link" href='#main'>Skip to content</a>
     <div class="navbar-upper">
         <div class="navbar-left">
-            <img src="/public/img/branding/icon_monochrome.svg">
+            <a href="/">
+                <img src="/public/img/branding/icon_monochrome.svg">
+            </a>
             <div class="navbar-links">
-                <a href="/home">home</a>
+                <a href="/">home</a>
                 <a href="/medals">medals</a>
                 <a href="https://osekai.net/rankings">ranking</a>
                 <a href="https://osekai.net/profiles">profiles</a>
-                <a href="https://osekai.net/snapshots">snapshots</a>
             </div>
         </div>
         <div class="navbar-right">
-            <?php
-            //use Data;
-            if (Database\Session::LoggedIn()) {
-                ?>
-                <div class="navbar-pfp-container">
-                    <button dropdown-button="pfp-dropdown"><img class="pfp"
-                                                                src="<?= Database\Session::UserData()['avatar_url'] ?>"
-                                                                alt="Your Profile Picture"></button>
-                    <div dropdown="pfp-dropdown" class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden"
-                         id="navbar-profile-dropdown">
+            <div class="navbar-pfp-container">
+                <button dropdown-button="pfp-dropdown"><img class="pfp"
+                                                            src="<?= Database\Session::GetPFP() ?>"
+                                                            alt="Your Profile Picture"></button>
+                <div dropdown="pfp-dropdown" class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden"
+                     id="navbar-profile-dropdown">
+                    <?php
+                    if (Session::LoggedIn()) {
+                        ?>
                         <div class="navbar-pfp-dropdown-header">
                             <img src="<?= Database\Session::UserData()['avatar_url'] ?>"
                                  alt="Your Profile Picture">
@@ -39,15 +37,12 @@ use Database\Session;
                             </div>
                         </div>
                         <a href="/logout" class="navbar-pfp-dropdown-item"><i data-lucide="log-out"></i>Log Out</a>
-                    </div>
+                    <?php } else {
+                        ?>
+                        <a href="/login" class="navbar-pfp-dropdown-item"><i simple-icon="osu"></i> Log in with osu!</a>
+                    <?php } ?>
                 </div>
-                <?php
-            } else {
-                ?>
-                <a href="/login" class="button icon-button"><i simple-icon="osu"></i> Log in with osu!</a>
-                <?php
-            }
-            ?>
+            </div>
         </div>
     </div>
     <div class="navbar-trim">

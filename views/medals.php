@@ -28,7 +28,7 @@ if ($cur_medal == null) {
             <?php
             if (\Database\Session::LoggedIn()) {
                 ?>
-                <button class="button square" tooltip="Filter Achieved" id="filter-button"><i data-lucide="filter"></i>
+                <button class="button square" tooltip="Mark Completed Medals" id="filter-button"><i data-lucide="filter"></i>
                 </button>
             <?php } else { ?>
                 <a tooltip="Log in to use Filter" href="/login">

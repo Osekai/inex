@@ -1,32 +1,161 @@
 .home-welcome {
-    padding: 90px 50px;
-    border-radius: var(--border-radius);
+    padding: 120px 50px;
     background-image: url("../../../../public/img/inex-banner.png");
     background-position: center;
     background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
+
+.home-welcome h1 {
+    font-size: 50px;
+    margin-bottom: 20px;
+    font-weight: 100;
+}
+
 .home-welcome img {
     height: 80px;
     margin-bottom: 20px;
 }
 
 .home-panel {
-    padding: 30px 50px;
-    margin-top: 20px;
-    background: var(--col-l4);
     display: flex;
     align-items: center;
-    text-decoration: none;
-    border-radius: var(--border-radius);
-    color: inherit;
-    transition: all 0.2s ease;
-    border-left: 0px solid var(--col-sat-1);
+    padding: 30px;
+    background: var(--col-l3);
+    border-radius: 20px;
+    margin-top: 20px;
 }
-.home-panel:hover {
-    border-left: 15px solid var(--col-sat-2);
-    padding-left: 35px;
 
+.home-panel img {
+    width: 100%;
+    border-radius: 8px;
+    max-width: 500px;
 }
+
 .home-panel h1 {
-    font-weight: 400;
+    font-size: 40px;
+    font-weight: 300;
+}
+.home-panel h1 span {
+    background: var(--col-d1);
+    font-size: 20px;
+    padding: 5px 15px;
+    border-radius: 20px;
+    display: inline-block;
+    transform: translateY(-3px);
+    margin-left: 4px;
+}
+.home-panel p {
+    margin-top: 3px;
+    font-size: 20px;
+    margin-bottom: 24px;
+}
+
+.home-panel > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 30px;
+}
+
+.home-difference {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.home-difference > div {
+    display: flex;
+    gap: 20px;
+}
+
+.home-difference > div > div {
+    flex: 1;
+    background: var(--col-l2);
+    padding: 20px;
+    position: relative;
+    border-radius: 20px;
+}
+
+.home-difference > div > div:last-child:after {
+    background: linear-gradient(to bottom right,
+    color-mix(in srgb, var(--col-sat-2) 90%, transparent),
+    color-mix(in srgb, var(--col-sat-1) 5%, transparent),
+    color-mix(in srgb, var(--col-sat-1) 40%, transparent));
+
+    content: "";
+    position: absolute;
+    z-index: -1;
+    border-radius: 23px;
+    top: -2px;
+    left: -2px;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+}
+
+.home-difference > div > div p {
+    max-width: 600px;
+    margin: 5px auto;
+    margin-bottom: 20px;
+}
+
+.home-difference > div > div h1 {
+    font-weight: 200;
+    font-size: 40px;
+}
+
+.home-difference > div > div img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0px -4px 12px var(--col-d1);
+}
+
+.home-panel-sbs {
+    display: flex;
+    gap: 20px
+}
+
+.home-panel-sbs > div {
+    flex-direction: column;
+    flex: 1;
+    align-items: center;
+    background: var(--col-l2);
+}
+
+.home-panel-sbs > div > div {
+    align-items: center;
+    text-align: center;
+    margin-top: 20px;
+    margin-left: 0px;
+}
+
+.outer-differences {
+    padding: 20px 0px;
+    background: linear-gradient(
+            to bottom right,
+            color-mix(in srgb, var(--col-l3) 40%, transparent),
+            color-mix(in srgb, var(--col-l3) 20%, transparent),
+            color-mix(in srgb, var(--col-l3) 90%, transparent));
+}
+
+@media (max-width: 800px) {
+    .home-difference > div {
+        flex-direction: column;
+    }
+    .home-panel {
+        flex-direction: column;
+    }
+    .home-panel > div {
+        margin-left: 0px;
+        align-items: center;
+        text-align: center;
+    }
+    .home-panel-sbs {
+        flex-direction: column;
+    }
 }

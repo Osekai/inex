@@ -27,7 +27,7 @@ function LoginPage($name)
 
 
 
-$router->get('/home', function () {
+$router->get('/', function () {
     DrawViewWithTemplate("home", "page");
 });
 

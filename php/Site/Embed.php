@@ -45,6 +45,7 @@ class Embed
 
     public static function SetBannerImage($image)
     {
+        self::SetImage($image);
         self::$image_banner = strip_tags($image);
         self::$large_image = true;
     }

@@ -75,5 +75,11 @@ namespace Database {
         {
             setcookie("session", null, strtotime("2018-01-19 03:14:07"));
         }
+
+        public static function GetPFP()
+        {
+            if(self::LoggedIn()) return self::UserData()['avatar_url'];
+            return "https://osu.ppy.sh/assets/images/avatar-guest.8a2df920.png";
+        }
     }
 }

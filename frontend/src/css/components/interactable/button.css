@@ -49,20 +49,22 @@
 
 .button.cta, .pill-button.cta {
     background-color: transparent;
-    transition: background 1s ease;
-    background: var(--col-sat-1);
+    transition: background 0.2s ease;
+    background: var(--col-sat-3);
     color: var(--topcol);
     font-weight: 500;
+    text-shadow: 0px 2px 4px #0000;
 }
 
 
 .button.cta:hover, .pill-button.cta:hover {
-    background: #fff5 var(--gradient);
+    background: var(--col-sat-2);
     outline: 2px solid var(--col-l90);
+    text-shadow: 0px 2px 4px #0002;
 }
 
 .button.cta:active, .pill-button.cta:active {
-    background: var(--gradient_90);
+    background: var(--col-sat-1);
     outline: 2px solid var(--col-l90);
 }
 

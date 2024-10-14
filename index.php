@@ -54,8 +54,8 @@ $router->set404(function () {
     header('HTTP/1.1 404 Not Found');
     DrawViewWithTemplate("404", "page");
 });
-$router->get('/', function () {
-    header("Location: /home");
+$router->get('/home', function () {
+    header("Location: /");
 });
 
 
