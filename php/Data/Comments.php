@@ -23,7 +23,7 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
     }
 
     public static function GetOne($id) {
-        $comment = Connection::execSelect("SELECT * FROM Common_Comments WHERE ID = ?", "i", [$id]);
+        $comment = Connection::execSelect("SELECT * FROM Common_Comments WHERE ID = ? AND Deleted = 0", "i", [$id]);
         if(count($comment) > 0) return $comment[0];
         return null;
     }
@@ -70,6 +70,7 @@ LEFT JOIN System_Users ON System_Users.User_ID = Common_Comments.User_ID
 LEFT JOIN Common_Votes ON Common_Votes.Target_Table = 'Common_Comments' 
 AND Common_Votes.Target_ID = Common_Comments.ID
 WHERE Common_Comments.Target_ID = ? 
+AND Common_Comments.Deleted = 0
 AND Common_Comments.Target_Table = ? " .
             ($single == null ? "" : "AND Common_Comments.Text = ? ") .
             "AND Common_Comments.Parent_Comment_ID " .

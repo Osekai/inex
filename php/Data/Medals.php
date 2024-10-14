@@ -46,7 +46,7 @@ class Medals
 
         Beatmaps::StoreBeatmap($beatmap);
         Connection::execOperation("INSERT INTO `Medals_Beatmaps` (`Medal_ID`, `Beatmap_ID`, `Beatmap_Submitted_User_ID`, `Beatmap_Submitted_Date`)
-        VALUES (?, ?, ?, CURRENT_TIMESTAMP());", "iii", [$medal, $id, Session::UserData()['id']]);
+        VALUES (?, ?, ?, CURRENT_TIMESTAMP());", "iii", [$medal['Medal_ID'], $id, Session::UserData()['id']]);
 
         self::WipeBeatmapCache($medal);
 
@@ -89,17 +89,19 @@ class Medals
             $vars = "i" . $vars;
             array_unshift($inp, Session::UserData()['id']);
         }
+
         return new Response(true, "beatmaps", Connection::execSelect("
     SELECT Medals_Beatmaps.*, Beatmaps_Data.*, COUNT(Common_Votes.User_ID) AS VoteCount"
             . (Session::LoggedIn() ? ", (SELECT COUNT(Common_Votes.User_ID) 
  FROM Common_Votes 
  WHERE Common_Votes.User_ID = ? 
+ AND Medals_Beatmaps.Deleted = 0
  AND Common_Votes.Target_Table = 'Medals_Beatmaps' 
  AND Common_Votes.Target_ID = Medals_Beatmaps.ID) AS HasVoted " : "") .
             " FROM Medals_Beatmaps 
     LEFT JOIN Beatmaps_Data ON Medals_Beatmaps.Beatmap_ID = Beatmaps_Data.Beatmap_ID
     LEFT JOIN Common_Votes ON Common_Votes.Target_Table = 'Medals_Beatmaps' AND Common_Votes.Target_ID = Medals_Beatmaps.ID
-    WHERE Medals_Beatmaps.Medal_ID = ? " . ($single == null ? "" : "AND Medals_Beatmaps.Beatmap_ID = ? ") . " GROUP BY Medals_Beatmaps.Beatmap_ID  ORDER BY VoteCount DESC, Medals_Beatmaps.ID", $vars, $inp));
+    WHERE Medals_Beatmaps.Medal_ID = ? " . ($single == null ? "" : "AND Medals_Beatmaps.Beatmap_ID = ? ") . " GROUP BY Medals_Beatmaps.Beatmap_ID  ORDER BY VoteCount DESC, Medals_Beatmaps.ID DESC", $vars, $inp));
     }
 
     static function AddNote($id, $note)
