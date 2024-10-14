@@ -23,6 +23,7 @@ if (Site::$base_loaded == false) {
         const loggedIn = <?= json_encode(Database\Session::LoggedIn()) ?>;
         const mods = <?= json_encode(\Database\Connection::execSimpleSelect("SELECT * FROM Common_Mods", "2mods", 9999)) ?>;
         const countries = <?= json_encode(\Database\Connection::execSimpleSelect("SELECT * FROM Common_Countries", "countries", 9999)) ?>;
+        const roles = <?= json_encode(\Database\Connection::execSimpleSelect("SELECT * FROM System_Roles_Roles", "roles", 9999)) ?>;
     </script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">

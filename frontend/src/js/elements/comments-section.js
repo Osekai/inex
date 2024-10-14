@@ -1,7 +1,7 @@
 import '../../css/elements/comments-section.css'
 
 import {DoRequest} from "../utils/requests";
-import {Button, Div, LucideIcon, Text, Image} from "../utils/dom";
+import {Button, Div, LucideIcon, Text, Image, RoleBadge} from "../utils/dom";
 import {timeAgo} from "../utils/timeago";
 import bbCodeParser from 'js-bbcode-parser';
 import {createDropdown} from "../ui/ultra-dropdown";
@@ -10,6 +10,7 @@ import {PushToast} from "../ui/toasts";
 import {LoaderOverlay} from "../ui/loader-overlay";
 import {PermissionChecker} from "../utils/permissionChecker";
 import {Modal, ModalButton, ModalIcon} from "../ui/overlay";
+import {CommaSeparatedRolesToRoleArray} from "../utils/groups";
 
 class CommentsSection extends HTMLElement {
 
@@ -106,6 +107,16 @@ class CommentsSection extends HTMLElement {
         var name = Div("div", "name");
         name.appendChild(Image("https://a.ppy.sh/" + comment.User_ID));
         name.appendChild(Text("h1", comment.Username));
+
+        if(comment.Roles != null) {
+            var groupsDiv = Div("div", "groups");
+            var groups = CommaSeparatedRolesToRoleArray(comment.Roles);
+            for (var group of groups) {
+                groupsDiv.append(RoleBadge(group));
+            }
+            name.appendChild(groupsDiv);
+        }
+
         name.appendChild(Text("h3", timeAgo.format(new Date(comment.Date))));
 
         var content = Div("div", "content");

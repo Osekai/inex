@@ -40,7 +40,13 @@ comments-section {
     display: flex;
     align-items: center;
 }
-
+.comment .name > div {
+    display: flex;
+    align-items: center;
+}
+.comment .name > div .role-badge {
+    margin-left: 5px;
+}
 .comment .name h1 {
     font-size: 22px;
     font-weight: 600;

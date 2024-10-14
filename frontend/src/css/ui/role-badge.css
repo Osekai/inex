@@ -1,7 +1,13 @@
 .role-badge {
     font-size: 14px;
-    padding: 4px 12px;
+    padding: 0px 10px;
+    height: 25px;
     background: var(--colour);
     display: flex;
+    align-items: center;
     border-radius: 200px;
+}
+.role-badge  svg {
+    height: 20px;
+    width: 20px;
 }

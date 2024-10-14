@@ -191,8 +191,15 @@ export function cloneAttributes(source: any, target: any) {
 
 export function RoleBadge(role: any) {
     var div = Div("div", "role-badge");
-    div.appendChild(Text("p", role.Name_Short));
+    if(role.Name_Short.startsWith("icon")) {
+        div.appendChild(LucideIcon(role.Name_Short.replace("icon:", "")));
+    } else {
+        div.appendChild(Text("p", role.Name_Short));
+    }
     div.style.setProperty("--colour", role.Colour);
+
+    div.setAttribute("tooltip", role.Name_Long);
+
     return div;
 }
 
