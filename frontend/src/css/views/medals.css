@@ -142,6 +142,7 @@
     transform: translateY(20px);
     transform-origin: top right;
     position: absolute;
+    pointer-events: none;
 }
 
 .medals__page > .main .main-inner .homepage img {
