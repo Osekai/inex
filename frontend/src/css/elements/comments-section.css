@@ -96,6 +96,7 @@ comments-section {
 .comment .content {
     margin-top: 6px;
     font-size: 16px;
+    display: inline;
 }
 .comment .content,
 .comment .content p {

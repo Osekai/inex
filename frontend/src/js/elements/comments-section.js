@@ -53,7 +53,8 @@ class CommentsSection extends HTMLElement {
 
                 const commentJson = await DoRequest("POST", `/api/comments/${this.section}/${this.ref}/send`, data);
 
-                const comment = this.createComment(commentJson["content"], false);
+
+                const comment = this.createComment(commentJson["content"], !replyingTo);
                 if (replyingTo == null) {
                     // we're toplevel, don't want to replace
                     this.listElement.prepend(comment);
@@ -124,7 +125,7 @@ class CommentsSection extends HTMLElement {
         name.appendChild(Text("h3", timeAgo.format(new Date(comment.Date))));
 
         var content = Div("div", "content");
-        content.innerHTML = bbCodeParser.parse(comment.Text);
+        content.innerHTML = bbCodeParser.parse(comment.Text.replace("\n", "<br>"));
         makeLinksClickable(content);
 
         commentContainer.appendChild(name);
