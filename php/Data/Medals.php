@@ -33,6 +33,8 @@ class Medals
 
     public static function Save($id, $data)
     {
+        if (!\Data\OsekaiUsers::HasPermission("medal.edit", false)) return new Response(false, "no");
+
         foreach ($data as $key => $value) {
             if ($value === "null") $data[$key] = null;
         }

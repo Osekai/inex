@@ -13,6 +13,8 @@ class Comments
 {
     public static function Post(mixed $id, mixed $table, mixed $text, $replyingTo = null)
     {
+        if (!Session::LoggedIn()) return new Response(false, "logged out");
+
         $valid_tables = ["Medals_Data"];
         if (!in_array($table, $valid_tables)) return new Response(false, "invalid_table");
 
@@ -126,6 +128,8 @@ ORDER BY Is_Pinned DESC, VoteCount DESC, Replies DESC";
 
     public static function Delete($id, $skipCheck = false)
     {
+        if (!Session::LoggedIn()) return new Response(false, "logged out");
+
         $comment = self::GetOne($id);
 
         if($comment['User_ID'] !== Session::UserData()['id'] && !$skipCheck) return new Response(false, "Not your comment, silly");

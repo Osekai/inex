@@ -11,6 +11,7 @@ class Votes
 
     public static function Vote($target, $id)
     {
+        if(!Session::LoggedIn()) return new Response(false, "Logged out");
         if (\CheckTargetValidity::Check($target, $id) == null) return new Response(false, "invalid_id");
 
 

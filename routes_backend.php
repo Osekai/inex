@@ -52,6 +52,7 @@ $router->all("/api/medals/get_all", function () {
     echo \Data\Medals::GetAll()->ReturnJson();
 });
 $router->all("/api/medals/{id}/save", function ($id) {
+    if (!requireLogin()) return;
     if (!OsekaiUsers::HasPermission("medal.edit", false)) {
         echo "no perms";
         exit;
@@ -65,9 +66,11 @@ $router->all("/api/medals/{id}/save", function ($id) {
 /// =====================
 
 $router->all("/api/medals/beatmaps/{id}/delete", function ($id) {
+    if (!requireLogin()) return;
     echo MedalsBeatmaps::Delete($id)->ReturnJson();
 });
 $router->all("/api/medals/beatmaps/{id}/admindelete", function ($id) {
+    if (!requireLogin()) return;
     echo MedalsBeatmaps::AdminDelete($id)->ReturnJson();
 });
 $router->all("/api/medals/{id}/beatmaps", function ($id) {
@@ -80,6 +83,7 @@ $router->all("/api/medals/{id}/packs", function ($id) {
     echo MedalsBeatmaps::GetPacks($id)->ReturnJson();
 });
 $router->all("/api/medals/{id}/beatmap/add", function ($id) {
+    if (!requireLogin()) return;
     echo MedalsBeatmaps::AddBeatmap($_POST['url'], $id, $_POST['note'])->ReturnJson();
 });
 
@@ -89,18 +93,22 @@ $router->all("/api/medals/{id}/beatmap/add", function ($id) {
 /// =====================
 
 $router->all("/api/comments/post", function ($id) {
+    if (!requireLogin()) return;
     echo Comments::Post($_POST['id'], $_POST['table'], $_POST['text'])->ReturnJson();
 });
 $router->all("/api/comments/{id}/report", function ($id) {
     echo Comments::Report($id, $_POST)->ReturnJson();
 });
 $router->all("/api/comments/{id}/delete", function ($id) {
+    if (!requireLogin()) return;
     echo Comments::Delete($id)->ReturnJson();
 });
 $router->all("/api/comments/{id}/admindelete", function ($id) {
+    if (!requireLogin()) return;
     echo Comments::AdminDelete($id)->ReturnJson();
 });
 $router->all("/api/comments/{id}/pin", function ($id) {
+    if (!requireLogin()) return;
     echo Comments::Pin($id)->ReturnJson();
 });
 $router->all("/api/comments/{ref}/{section}/get", function ($ref, $section) {
