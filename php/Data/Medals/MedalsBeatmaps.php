@@ -40,11 +40,12 @@ class MedalsBeatmaps
             return new Response(false, "Invalid Link " . $id);
         }
 
-        $medal = Medals::Get($medal);
-        if ($medal == null) return new Response(false, "Invalid");
-        if ($medal['Is_Restricted'] == 1) return new Response(false, "Not Allowed");
+        $medalinfo = Medals::Get($medal);
+        if ($medalinfo == null) return new Response(false, "Invalid");
+        if ($medalinfo['Is_Restricted'] == 1) return new Response(false, "Not Allowed");
 
         $beatmap = Beatmaps::GetBeatmap($id);
+
 
         if ($beatmap['Status'] == "graveyard" || $beatmap['Status'] == "pending" || $beatmap['Status'] == "wip") {
             return new Response(false, "Map is graveyarded");
@@ -53,9 +54,10 @@ class MedalsBeatmaps
 
         Beatmaps::StoreBeatmap($beatmap);
         Connection::execOperation("INSERT INTO `Medals_Beatmaps` (`Medal_ID`, `Beatmap_ID`, `Beatmap_Submitted_User_ID`, `Beatmap_Submitted_Date`)
-        VALUES (?, ?, ?, CURRENT_TIMESTAMP());", "iii", [$medal['Medal_ID'], $id, Session::UserData()['id']]);
+        VALUES (?, ?, ?, CURRENT_TIMESTAMP());", "iii", [$medalinfo['Medal_ID'], $id, Session::UserData()['id']]);
 
         self::WipeBeatmapCache($medal);
+
 
         $beatmap = self::GetBeatmaps($medal, $id)->content[0];
 
@@ -101,7 +103,7 @@ class MedalsBeatmaps
             " FROM Medals_Beatmaps 
     LEFT JOIN Beatmaps_Data ON Medals_Beatmaps.Beatmap_ID = Beatmaps_Data.Beatmap_ID
     LEFT JOIN Common_Votes ON Common_Votes.Target_Table = 'Medals_Beatmaps' AND Common_Votes.Target_ID = Medals_Beatmaps.ID
-    WHERE Medals_Beatmaps.Medal_ID = ? AND Medals_Beatmaps.Deleted = 0" . ($single == null ? "" : "AND Medals_Beatmaps.Beatmap_ID = ? ") . " GROUP BY Medals_Beatmaps.Beatmap_ID  ORDER BY VoteCount DESC, Medals_Beatmaps.ID DESC", $vars, $inp));
+    WHERE Medals_Beatmaps.Medal_ID = ? AND Medals_Beatmaps.Deleted = 0" . ($single == null ? "" : " AND Medals_Beatmaps.Beatmap_ID = ? ") . " GROUP BY Medals_Beatmaps.Beatmap_ID  ORDER BY VoteCount DESC, Medals_Beatmaps.ID DESC", $vars, $inp));
     }
 
     public static function ReportBeatmap($id, $data)

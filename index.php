@@ -32,7 +32,6 @@ include("php/General.php");
 
 Database\Session::Begin();
 include("frontend_resp.php");
-include("backend_resp.php");
 include("variables.php");
 
 function requireLogin(): bool
@@ -61,7 +60,6 @@ $router->get('/home', function () {
 
 include("routes_backend.php");
 include("routes_frontend.php");
-include("routes_connections.php");
 
 //echo "<pre>";
 //print_r($router->afterRoutes["GET"]);

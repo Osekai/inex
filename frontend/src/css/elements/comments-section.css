@@ -9,6 +9,10 @@ comments-section {
 .comment-outer.replies-opened {
     margin-bottom: 30px;
 }
+.comment-outer.replies-opened .view-replies svg {
+    transform: rotate(-180deg) translateY(1px);
+}
+
 .comment-outer .comment-replies {
     opacity: 0;
     max-height: 0px;
@@ -31,14 +35,42 @@ comments-section {
     padding-top: 8px;
     padding-left: 12px;
 }
-
 .comment-inner {
-    display: flex;
-    align-items: flex-start;
+    position: relative;
+}
+.comment-inner.pinned:after, .comment-inner.pinned:before {
+    content: "";
+    position: absolute;
+    --offset: -12px;
+    border-radius: var(--border-radius);
+    top: var(--offset);
+    left: var(--offset);
+    width: calc(100% + (var(--offset)*(-2)));
+    height: calc(100% + 20px);
+    pointer-events: none;
+}
+.comment-inner.pinned:before {
+    border: 1px solid var(--col-sat-3);
+    mask-image: linear-gradient(to bottom right, #fff, #fff0 50%);
+}
+.comment-inner.pinned:after {
+    background: color-mix(in srgb, var(--col-sat-1) 20%, transparent);
+    box-shadow: 0px 0px 40px inset var(--col-sat-2);
+    z-index: -1;
+    mask-image: linear-gradient(-20deg, #fff0 40%, #fff);
 }
 .comment .name {
     display: flex;
     align-items: center;
+}
+.comment .name .pin {
+    margin-left: auto;
+    transform: rotate(45deg);
+}
+.comment .name .pin, .comment .name .pin * {
+    height: 20px;
+    width: 20px;
+    stroke-width: 1px;
 }
 .comment .name > div {
     display: flex;
@@ -71,7 +103,8 @@ comments-section {
 }
 
 .comment .content img {
-    max-width: 60%;
+    width: 60%;
+    max-height: 250px;
 }
 .comment .toolbar .right {
     margin-left: auto;
@@ -103,6 +136,9 @@ comments-section {
 }
 .comment .toolbar > *:not(.view-replies) svg {
     margin-right: 3px;
+}
+.comment .toolbar .view-replies svg {
+    transition: all 0.2s ease;
 }
 
 .comment .toolbar > *:hover {

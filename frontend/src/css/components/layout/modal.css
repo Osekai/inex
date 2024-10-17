@@ -15,15 +15,18 @@
     text-align: center;
 }
 
-.basic-modal h2 {
-    font-size: 20px;
+.basic-modal h1 {
+    font-size: 26px;
     font-weight: 300;
     text-align: center;
+    margin-bottom: 10px;
 }
 
-.basic-modal > input {
-    margin: 8px 0px;
+.basic-modal > .input {
+    margin: 4px 0px;
 }
+
+
 .basic-modal > handle-check {
     margin-top: 12px;
     margin-bottom: 5px;
@@ -38,7 +41,7 @@
     position: relative;
     background-color: var(--col-l3);
 }
-.basic-modal .buttons {
+.basic-modal .button-row {
     margin-top: 20px;
     display: flex;
     gap: 8px;

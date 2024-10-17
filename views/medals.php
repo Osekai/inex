@@ -24,11 +24,16 @@ if ($cur_medal == null) {
 <div class="medals__page home" id="medal-page">
     <div class="sidebar">
         <div class="sidebar-toolbar">
-            <input type="text" class="input" placeholder="search" id="medal_search">
+            <div class="input-container">
+                <i data-lucide="search"></i>
+                <input type="text" class="input" placeholder="search" id="medal_search">
+                <button class="hidden" id="medal_search_clear"><i data-lucide="x"></i></button>
+            </div>
             <?php
             if (\Database\Session::LoggedIn()) {
                 ?>
-                <button class="button square" tooltip="Mark Completed Medals" id="filter-button"><i data-lucide="filter"></i>
+                <button class="button square" tooltip="Mark Completed Medals" id="filter-button"><i
+                            data-lucide="filter"></i>
                 </button>
             <?php } else { ?>
                 <a tooltip="Log in to use Filter" href="/login">
@@ -50,7 +55,7 @@ if ($cur_medal == null) {
     <div class="main col-reset" id="main-col">
         <div class="main-inner">
             <div class="bg-outer">
-            <div class="bg"></div>
+                <div class="bg"></div>
             </div>
             <div class="homepage" id="medal-home">
                 <img src="/public/img/branding/icon_monochrome.svg">
@@ -83,7 +88,19 @@ if ($cur_medal == null) {
                         <div class="medal__info-solution">
                             <h1>Solution</h1>
                             <p id="medal_solution">Solution</p>
-                            <div id="mods"></div>
+                            <div class="toolbar">
+                                <div id="mods"></div>
+                                <div id="support">
+                                    <div class="support-pill" id="support-stable">
+                                        <div icon></div>
+                                        <p>Stable</p>
+                                    </div>
+                                    <div class="support-pill" id="support-lazer">
+                                        <div icon></div>
+                                        <p>Lazer</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

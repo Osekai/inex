@@ -18,6 +18,13 @@ export class MedalsSidebar {
 
 
     Search(text) {
+
+        if(text.length > 0) {
+            document.getElementById("medal_search_clear").classList.remove("hidden");
+        } else {
+            document.getElementById("medal_search_clear").classList.add("hidden");
+        }
+
         var exact = false;
         if(text.startsWith("\"") && text.endsWith("\"")) {
             exact = true;
@@ -159,6 +166,11 @@ export class MedalsSidebar {
         var searchbar = document.getElementById("medal_search");
         searchbar.addEventListener("keyup", () => {
             this.Search(searchbar.value);
+        })
+
+        document.getElementById("medal_search_clear").addEventListener("click", () => {
+            searchbar.value = "";
+            this.Search("");
         })
         this.Search(searchbar.value);
 

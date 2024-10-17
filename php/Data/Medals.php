@@ -88,11 +88,12 @@ class Medals
         $bpu->etirun([]);
         ///
 
+
         return new Response(true, "Success", Connection::execOperation("
         UPDATE Medals_Configuration
-        SET Solution = ?, Is_Solution_Found = ?, Video_URL = ?, Is_Lazer = ?, Is_Restricted = ?, Date_Released = ?, First_Achieved_Date = ?, First_Achieved_User_ID = ?
+        SET Solution = ?, Is_Solution_Found = ?, Video_URL = ?, Supports_Lazer = ?, Supports_Stable = ?, Is_Restricted = ?, Date_Released = ?, First_Achieved_Date = ?, First_Achieved_User_ID = ?
         WHERE Medal_ID = ?
-        ", "sisiissii", [$data['Solution'], $data['Is_Solution_Found'], $data['Video_URL'], $data['Is_Lazer'], $data['Is_Restricted'], $data['Date_Released'], $data['First_Achieved_Date'], $data['First_Achieved_User_ID'], $data['Medal_ID']]));
+        ", "sisiiissii", [$data['Solution'], $data['Is_Solution_Found'], $data['Video_URL'], $data['Supports_Lazer'], $data['Supports_Stable'], $data['Is_Restricted'], $data['Date_Released'], $data['First_Achieved_Date'], $data['First_Achieved_User_ID'], $data['Medal_ID']]));
     }
 
 }

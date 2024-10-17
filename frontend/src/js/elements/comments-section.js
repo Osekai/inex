@@ -11,6 +11,8 @@ import {LoaderOverlay} from "../ui/loader-overlay";
 import {PermissionChecker} from "../utils/permissionChecker";
 import {Modal, ModalButton, ModalIcon} from "../ui/overlay";
 import {CommaSeparatedRolesToRoleArray} from "../utils/groups";
+import {makeLinksClickable} from "../utils/makeLinksClickable";
+import {CenteredLoader} from "../utils/loaderUtils";
 
 class CommentsSection extends HTMLElement {
 
@@ -104,6 +106,8 @@ class CommentsSection extends HTMLElement {
 
 
 
+
+
         var name = Div("div", "name");
         name.appendChild(Image("https://a.ppy.sh/" + comment.User_ID));
         name.appendChild(Text("h1", comment.Username));
@@ -121,9 +125,10 @@ class CommentsSection extends HTMLElement {
 
         var content = Div("div", "content");
         content.innerHTML = bbCodeParser.parse(comment.Text);
+        makeLinksClickable(content);
 
-        outerContainer.appendChild(name);
-        outerContainer.appendChild(content);
+        commentContainer.appendChild(name);
+        commentContainer.appendChild(content);
 
         var toolbar = Div("div", "toolbar");
 
@@ -196,6 +201,17 @@ class CommentsSection extends HTMLElement {
             })], new ModalIcon("alert-triangle", "#ff623e"));
         }
 
+        if(PermissionChecker("comments.pin")) {
+            var adm_pin = Button("AdminPin", "cta icon-button");
+
+            extrabutton_dropdown.appendChild(adm_pin);
+            adm_pin.prepend(LucideIcon("pin"));
+            adm_pin.addEventListener("click", async () => {
+                await DoRequest(`/api/comments/${comment.ID}/pin`);
+                this.loadComments(this.ref);
+            });
+        }
+
         if(loggedIn && comment.User_ID === userData.id) {
             var _delete = Button("Delete", "warning icon-button");
             extrabutton_dropdown.appendChild(_delete);
@@ -214,6 +230,9 @@ class CommentsSection extends HTMLElement {
                 await del(true);
             });
         }
+
+
+
 
         if(loggedIn) {
             upvote.addEventListener("click", async () => {
@@ -263,15 +282,25 @@ class CommentsSection extends HTMLElement {
         }
 
 
+        if(comment.Is_Pinned == 1) {
+            commentContainer.classList.add("pinned");
+            var pin = Div("div", "pin");
+            pin.appendChild(LucideIcon("pin"));
+            pin.setAttribute("tooltip", "Pinned Comment")
+            name.appendChild(pin)
+        }
+
+        commentContainer.appendChild(toolbar);
 
 
-        outerContainer.appendChild(toolbar);
+        outerContainer.appendChild(commentContainer);
         outerContainer.appendChild(replyInputContainer);
         outerContainer.appendChild(replyContainer);
 
         if (toplevel && comment.Replies>0) {
             viewReplies.addEventListener("click", async () => {
                 if(!replies_opened) {
+                    viewReplies.classList.add("loading");
                     var replies = (await DoRequest("POST", `/api/comments/${this.section}/${this.ref}/get`, {
                         "ParentID": comment.ID
                     }))["content"];
@@ -281,6 +310,7 @@ class CommentsSection extends HTMLElement {
                     replies_opened = true;
                     recalcReplyHeight();
                     commentOuter.classList.add("replies-opened");
+                    viewReplies.classList.remove("loading");
                 } else {
                     commentOuter.classList.toggle("replies-opened");
                 }
@@ -295,7 +325,9 @@ class CommentsSection extends HTMLElement {
 
     async loadComments(ref) {
         this.ref = ref;
-        this.listElement.innerHTML = loader;
+        this.listElement.innerHTML = "";
+        this.listElement.appendChild(CenteredLoader());
+
         const data = (await DoRequest("POST", `/api/comments/${this.section}/${ref}/get`))["content"];
         this.listElement.innerHTML = "";
         for (let comment of data) {

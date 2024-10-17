@@ -100,9 +100,40 @@
     top: 0;
     z-index: 9;
 }
-
+.medals__page .sidebar-toolbar .input-container {
+    display: flex;
+    flex: 1;
+    align-items: stretch;
+    position: relative;
+}
+.medals__page .sidebar-toolbar .input-container > svg {
+    position: absolute;
+    top: calc(50% - 0.5px);
+    height: 20px;
+    width: 20px;
+    left: 12px;
+    transform: translateY(-50%);
+}
+.medals__page .sidebar-toolbar .input-container > button {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 7px;
+    background: var(--col-l1);
+    top: 50%;
+    transform: translateY(-50%);
+    height: 29px;
+    width: 29px;
+    border-radius: 22px;
+}
+.medals__page .sidebar-toolbar .input-container > button svg {
+    height: 18px;
+    width: 18px;
+}
 .medals__page .sidebar-toolbar input {
     background: var(--col-l4);
+    padding-left: 40px;
 }
 
 .medals__page > .main {
@@ -340,7 +371,45 @@
     padding: var(--padding);
     border-radius: var(--border-radius);
 }
+.medal__info-solution {
+    width: 100%;
+}
+.medal__info-solution .toolbar {
+    display: flex;
+    align-items: flex-end;
+}
+.medal__info-solution .toolbar #support {
+    display: flex;
+    margin-left: auto;
+}
+.medal__info-solution .toolbar #support > div {
+    display: flex;
+    align-items: center;
+    padding: 3px 8px;
+    background: #fff1;
+    border-radius: 100px;
+    margin-left: 5px;
+}
+.medal__info-solution .toolbar #support > div p {
+    font-size: 15px;
+}
 
+.medal__info-solution .toolbar #support > div.unsupported {
+    opacity: 0.5;
+    outline: 1px solid #dd4a68;
+}
+.medal__info-solution .toolbar #support > div.unsupported svg {
+    stroke: #ff234f;
+}
+.medal__info-solution .toolbar #support > div > div {
+    height: 18px;
+    width: 18px;
+    margin-right: 3px;
+}
+.medal__info-solution .toolbar #support > div svg {
+    height: 18px;
+    width: 18px;
+}
 .medal__info-upper {
     display: flex;
     align-items: center;

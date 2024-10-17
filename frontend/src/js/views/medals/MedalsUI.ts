@@ -13,6 +13,7 @@ import {PushToast} from "../../ui/toasts";
 import {reportOverlay} from "../../ui/reportOverlay";
 import {LoaderOverlay} from "../../ui/loader-overlay";
 import {PermissionChecker} from "../../utils/permissionChecker";
+import {CenteredLoader} from "../../utils/loaderUtils";
 
 
 export class MedalsUI {
@@ -240,7 +241,8 @@ export class MedalsUI {
 
 
         // @ts-ignore
-        document.getElementById("medal_beatmaps").innerHTML = loader;
+        document.getElementById("medal_beatmaps").innerHTML = "";
+        document.getElementById("medal_beatmaps").appendChild(CenteredLoader());
 
         MedalData.LoadExtra(medal, {
             "beatmaps": this.LoadBeatmaps
@@ -276,6 +278,26 @@ export class MedalsUI {
         } else {
             document.getElementById("medal_solution").innerHTML = "Unknown";
         }
+
+
+
+
+        function setSupport(type : string, support : number) {
+            var el = document.getElementById("support-"+ type);
+            var icon = el.querySelector("[icon]");
+            icon.innerHTML = "";
+
+            if(support == 1) {
+                el.classList.remove("unsupported");
+                icon.appendChild(LucideIcon("check"));
+            } else {
+                el.classList.add("unsupported");
+                icon.appendChild(LucideIcon("x"));
+            }
+        }
+        setSupport("stable", medal.Supports_Stable);
+        setSupport("lazer", medal.Supports_Lazer);
+
         var mods = document.getElementById("mods");
         mods.classList.add("hidden");
         mods.innerHTML = "";

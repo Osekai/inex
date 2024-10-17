@@ -100,6 +100,9 @@ $router->all("/api/comments/{id}/delete", function ($id) {
 $router->all("/api/comments/{id}/admindelete", function ($id) {
     echo Comments::AdminDelete($id)->ReturnJson();
 });
+$router->all("/api/comments/{id}/pin", function ($id) {
+    echo Comments::Pin($id)->ReturnJson();
+});
 $router->all("/api/comments/{ref}/{section}/get", function ($ref, $section) {
     echo Data\Comments::Get($section, $ref, $_POST['ParentID'])->ReturnJson();
 });

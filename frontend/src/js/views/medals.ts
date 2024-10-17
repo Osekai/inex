@@ -55,7 +55,7 @@ export function SetMedal(inputMedal: string | number, setUrl = false, scrollTo =
         if((<any>getSections(`/medals/{medal}`))['medal'] != null)
         setSections("/medals/{medal}", {"medal": ""});
 
-        document.querySelector(".medals__medal-button.active").classList.remove("active");
+        if(document.querySelector(".medals__medal-button.active")) document.querySelector(".medals__medal-button.active").classList.remove("active");
 
         return;
     } else {
@@ -94,13 +94,17 @@ async function Load() {
     // @ts-ignore
     if(loggedIn) {
         document.getElementById("medal_beatmaps_add").addEventListener("click", () => {
-            var panel = Div("div", "panel");
+            var panel = Div("div", "basic-modal basic-modal-input");
             var overlay = new Overlay(panel)
             overlay.allowclickoff = false;
 
+            panel.appendChild(LucideIcon("package-plus"));
             panel.appendChild(Text("h1", "Add beatmap"));
             var input = Input("Beatmap URL", "text")
             var note = Input("Note (optional)", "text")
+
+            var buttons = Div("div", "button-row");
+
             var done = Button("Add", "button cta");
             var cancel = Button("Nevermind", "button");
 
@@ -122,10 +126,12 @@ async function Load() {
                 overlay.remove();
             })
 
+
             panel.appendChild(input);
             panel.appendChild(note);
-            panel.appendChild(done);
-            panel.appendChild(cancel);
+            buttons.appendChild(done);
+            buttons.appendChild(cancel);
+            panel.appendChild(buttons);
         })
     } else {
         document.getElementById("medal_beatmaps_add").classList.add("disabled");

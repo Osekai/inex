@@ -24,13 +24,16 @@ export class Medal {
     First_Achieved_Date: string;
     First_Achieved_User_ID: number;
     Is_Solution_Found: string;
-    Is_Lazer: number;
     Is_Restricted: number;
     Solution: string;
     Date_Released: string;
     Beatmaps: unknown;
     Mods: string;
     Packs: string;
+
+
+    Supports_Lazer: number;
+    Supports_Stable: number;
 
     MedalButton: HTMLAnchorElement;
 

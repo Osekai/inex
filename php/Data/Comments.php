@@ -81,7 +81,7 @@ AND Common_Comments.Target_Table = ? " .
             "AND Common_Comments.Parent_Comment_ID " .
             ($parent == null ? "IS NULL" : "= ?") . " 
 GROUP BY Common_Comments.ID 
-ORDER BY Is_Pinned, VoteCount DESC, Replies DESC";
+ORDER BY Is_Pinned DESC, VoteCount DESC, Replies DESC";
 
 
         return new Response(true, "ok", Connection::execSelect($query, $types, $values));
@@ -125,6 +125,18 @@ ORDER BY Is_Pinned, VoteCount DESC, Replies DESC";
         if($comment['User_ID'] !== Session::UserData()['id'] && !$skipCheck) return new Response(false, "Not your comment, silly");
 
         Connection::execOperation("UPDATE Common_Comments SET Deleted = 1 WHERE ID = ?", "i", [$id]);
+
+        return new Response(true, "ok");
+    }
+
+    public static function Pin($id)
+    {
+        if(!OsekaiUsers::HasPermission("comments.pin")) return new Response(false, "no");
+
+
+        Connection::execOperation("UPDATE Common_Comments
+SET Is_Pinned = IF(Is_Pinned = 1, 0, 1)
+WHERE ID = ?", "i", [$id]);
 
         return new Response(true, "ok");
     }

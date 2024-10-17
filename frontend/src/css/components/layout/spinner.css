@@ -7,6 +7,16 @@
     height: 0.6em;
     border-radius: 50%;
 }
+.loader-centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.loader-centered .spinner {
+    --ring-size: 20;
+    --spinner-size: 4;
+    margin: 40px auto;
+}
 
 .spinner-small {
     width: 0.3em;
@@ -18,7 +28,7 @@
 .spinner .line2,
 .spinner .line3 {
     fill: none;
-    stroke: hsl(var(--accent-1));
+    stroke: var(--col-sat-2);
     stroke-width: var(--ring-size);
     stroke-linecap: round;
     transform-origin: 50% 50%;
@@ -26,14 +36,17 @@
     animation: 2156ms spinner-arc ease-in-out infinite, 1829ms spinner-rotate linear infinite;
 }
 
+.spinner .line1 {
+    opacity: 0.5;
+}
+
 .spinner .line2 {
-    stroke: hsl(var(--accent-2));
-    animation-delay: -0.1s;
+    stroke: var(--col-sat-2);
+    animation-delay: -0.4s;
 }
 
 .spinner .line3 {
-    stroke: hsl(var(--accent-3));
-    animation-delay: -0.2s;
+    display: none;
 }
 
 

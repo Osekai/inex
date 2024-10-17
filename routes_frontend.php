@@ -38,6 +38,9 @@ $router->get('/medals', function () {
 $router->get('/medals/{medal}/', function ($medal) {
     DrawViewWithTemplate("medals", "page", $medal);
 });
+$router->get('/test/', function () {
+    DrawViewWithTemplate("test", "page");
+});
 
 $router->get('/login', function () {
     General::Redirect("https://osu.ppy.sh/oauth/authorize?response_type=code&redirect_uri=" . htmlentities(REDIRECT_URI) . "&client_id=" . CLIENT_ID);

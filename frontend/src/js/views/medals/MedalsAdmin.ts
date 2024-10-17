@@ -38,7 +38,8 @@ function OpenEditor() {
 
     inputs["Video_URL"] = InputText("Video URL", "text", medal.Video_URL);
 
-    inputs["Is_Lazer"] = Checkbox("Supports Lazer", medal.Is_Lazer);
+    inputs["Supports_Lazer"] = Checkbox("Supports Lazer", medal.Supports_Lazer);
+    inputs["Supports_Stable"] = Checkbox("Supports Stable", medal.Supports_Stable);
     inputs["Is_Restricted"] = Checkbox("Restrict Beatmaps", medal.Is_Restricted);
 
 
@@ -75,7 +76,8 @@ function OpenEditor() {
 
     var toggles = Div();
     otherInfo.appendChild(toggles);
-    toggles.appendChild(inputs['Is_Lazer'].element);
+    toggles.appendChild(inputs['Supports_Lazer'].element);
+    toggles.appendChild(inputs['Supports_Stable'].element);
     toggles.appendChild(inputs['Is_Restricted'].element);
     inputs['Is_Restricted'].element.style.marginTop = "10px";
 

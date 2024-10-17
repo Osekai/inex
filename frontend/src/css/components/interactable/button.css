@@ -50,8 +50,8 @@
 .button.cta, .pill-button.cta {
     background-color: transparent;
     transition: background 0.2s ease;
-    background: var(--col-sat-3);
-    color: var(--topcol);
+    background: var(--col-sat-3) !important;
+    color: var(--topcol) !important;
     font-weight: 500;
     text-shadow: 0px 2px 4px #0000;
 }

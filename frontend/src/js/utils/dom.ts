@@ -150,11 +150,18 @@ export function Checkbox(text: string, value: boolean | number) {
     var outer = Div("div", "toggle-text");
     outer.appendChild(input);
     outer.appendChild(label);
+
+    if(value == 0) {
+        input.checked = false;
+    } else {
+        input.checked = true;
+    }
+
     return {
         element: outer,
         value: () => {
-            if (input.value == true || input.value == false) return input.value;
-            return input.value == 1;
+            if (input.checked == true) return 1;
+            return 0;
         }
     };
 }
