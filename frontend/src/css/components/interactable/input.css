@@ -1,6 +1,7 @@
 .input {
     background-color: var(--col-d1);
     width: 100%;
+    cursor: text;
 }
 
 .input:hover {
