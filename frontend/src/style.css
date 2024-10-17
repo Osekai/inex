@@ -92,21 +92,22 @@ theme-picker {
     z-index: 9999;
 }
 
-.hidden {
-    pointer-events: none !important;
-    opacity: 0 !important;
-position: absolute !important;;
-}
-.hidden-naf {
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
+
 
 .disabled {
     opacity: 0.5 !important;
     filter: grayscale(0.2);
     pointer-events: none;
     user-select: none;
+}
+.hidden {
+    pointer-events: none !important;
+    opacity: 0 !important;
+    position: absolute !important;;
+}
+.hidden-naf {
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 
 .split-70-30, .split-30-70 {
