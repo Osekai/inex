@@ -378,7 +378,10 @@ body {
 .medal__info-solution {
     width: 100%;
 }
-
+.medal__info-solution ul {
+    margin: 4px 0px;
+    margin-left: 16px;
+}
 .medal__info-solution table {
     border-collapse: collapse;
     margin: 10px 0;
