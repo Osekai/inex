@@ -108,6 +108,7 @@ class CommentsSection extends HTMLElement {
 
 
 
+        console.log(comment);
 
         var name = Div("div", "name");
         name.appendChild(Image("https://a.ppy.sh/" + comment.User_ID));
