@@ -112,7 +112,12 @@ class CommentsSection extends HTMLElement {
 
         var name = Div("div", "name");
         name.appendChild(Image("https://a.ppy.sh/" + comment.User_ID));
-        name.appendChild(Text("h1", comment.Username));
+        var nameText = Text("h1", comment.Username);
+        if(comment.Username == "") {
+            nameText.innerHTML = "Unknown User";
+            nameText.prepend(LucideIcon("circle-help"))
+        }
+        name.appendChild(nameText);
 
         if(comment.Roles != null) {
             var groupsDiv = Div("div", "groups");
