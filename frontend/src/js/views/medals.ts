@@ -20,7 +20,6 @@ import {PermissionChecker} from "../utils/permissionChecker";
 export * from "./medals/SolutionElements.js";
 
 if(PermissionChecker("medal.edit", false)) {
-    console.log("You have edit permissions");
     Initialize();
 }
 
@@ -45,7 +44,6 @@ window.addEventListener("popstate", () => {
  * @param scrollTo
  */
 export function SetMedal(inputMedal: string | number, setUrl = false, scrollTo = false) {
-    console.log(inputMedal);
     if(inputMedal == null || inputMedal == "" || typeof(inputMedal) == "undefined" || inputMedal == "undefined") {
         document.getElementById("medal-home").classList.remove("_hidden");
         document.getElementById("medal-info").classList.add("_hidden");
@@ -59,16 +57,13 @@ export function SetMedal(inputMedal: string | number, setUrl = false, scrollTo =
 
         return;
     } else {
-        console.log(inputMedal);
         document.getElementById("medal-page").classList.remove("home");
     }
     if (typeof (inputMedal) !== "number") {
         inputMedal = decodeURI(inputMedal.replace("_", " "));
     }
 
-    console.log(inputMedal);
     var currentMedal = MedalUtils.GetMedalFromName(inputMedal); // will check ID afterward in case
-    console.log(currentMedal);
 
     if (setUrl) {
         setSections(`/medals/{medal}`, {"medal": currentMedal.Name})

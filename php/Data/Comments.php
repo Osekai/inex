@@ -91,12 +91,18 @@ ORDER BY Is_Pinned DESC, VoteCount DESC, Replies DESC";
     {
         $comment = Comments::GetOne($id);
 
+        $user_name = "Anonymous";
+        $user_id = 0;
 
+        if(Session::LoggedIn()) {
+            $user_name = Session::UserData()['username'];
+            $user_id = Session::UserData()['id'];
+        }
 
         $message = (new DiscordEmbedMessage())
             ->setColor(0x66aaff)
-            ->setContent('Report from ' . $data['reporter_name'])
-            ->setAvatar('https://a.ppy.sh/' . $data['reporter_id'])
+            ->setContent('Report from ' . $user_name)
+            ->setAvatar('https://a.ppy.sh/' . $user_id)
             ->setUsername('COMMENT')
             ->setTitle("Comment report on " . $data['url'])
             ->setDescription($data['reason'])

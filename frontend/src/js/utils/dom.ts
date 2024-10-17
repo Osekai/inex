@@ -198,15 +198,19 @@ export function cloneAttributes(source: any, target: any) {
 
 export function RoleBadge(role: any) {
     var div = Div("div", "role-badge");
-    if(role.Name_Short.startsWith("icon")) {
-        div.appendChild(LucideIcon(role.Name_Short.replace("icon:", "")));
-    } else {
-        div.appendChild(Text("p", role.Name_Short));
-    }
-    div.style.setProperty("--colour", role.Colour);
+    const parts = role.Name_Short.split(" ");
 
+    // @ts-ignore
+    parts.forEach(part => {
+        if (part.startsWith("icon:")) {
+            div.appendChild(LucideIcon(part.replace("icon:", "")));
+        } else {
+            div.appendChild(Text("p", part));
+        }
+    });
+
+    div.style.setProperty("--colour", role.Colour);
     div.setAttribute("tooltip", role.Name_Long);
 
     return div;
 }
-

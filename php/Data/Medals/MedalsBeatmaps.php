@@ -113,10 +113,18 @@ class MedalsBeatmaps
         $medalInfo = Medals::Get($beatmapInfo['Medal_ID']);
 
 
+        $user_name = "Anonymous";
+        $user_id = 0;
+
+        if(Session::LoggedIn()) {
+            $user_name = Session::UserData()['username'];
+            $user_id = Session::UserData()['id'];
+        }
+
         $message = (new DiscordEmbedMessage())
             ->setColor(0xff66aa)
-            ->setContent('Report from ' . $data['reporter_name'])
-            ->setAvatar('https://a.ppy.sh/' . $data['reporter_id'])
+            ->setContent('Report from ' . $user_name)
+            ->setAvatar('https://a.ppy.sh/' . $user_id)
             ->setUsername('BEATMAP')
             ->setTitle($beatmapInfo['Song_Title'] . ' - ' . $beatmapInfo['Song_Artist'] . ' (by ' . $beatmapInfo['Mapper_Name'] . ') [' . $beatmapInfo['Difficulty_Name'] . '}')
             ->setDescription($data['reason'])

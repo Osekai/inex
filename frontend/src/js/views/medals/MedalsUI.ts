@@ -301,7 +301,7 @@ export class MedalsUI {
         var mods = document.getElementById("mods");
         mods.classList.add("hidden");
         mods.innerHTML = "";
-        console.log(medal);
+
         if (medal.Mods !== null) {
             for (var mod of medal.Mods.split(",")) {
                 mods.classList.remove("hidden");

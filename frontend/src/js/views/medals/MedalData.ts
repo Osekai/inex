@@ -35,7 +35,6 @@ export class MedalData {
                     this.Medals[medal.Medal_ID].Obtained = true;
                 }
             }
-            console.log(this.Medals);
         }
         return this.Medals;
     }
@@ -48,7 +47,6 @@ export class MedalData {
     static LoadExtra(medal: Medal, callbacks: any) {
         DoRequest("POST", `/api/medals/${medal.Medal_ID}/` + (medal.Packs == null ? "beatmaps" : "packs"), medal).then((data) => {
             var content = data['content'];
-            console.log(data);
             if (content.length != 0) {
                 this.Medals[content[0].Medal_ID].BeatmapsType = data['message'];
                 if (typeof (content[0]) != "undefined") {
