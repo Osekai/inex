@@ -1,4 +1,8 @@
 @import "./medals/solution-elements.css";
+body {
+    overflow: hidden !important;
+}
+
 .medals__page {
     --maxheight: calc(100vh - var(--navbar-height));
     height: 100%;
