@@ -378,6 +378,37 @@ body {
 .medal__info-solution {
     width: 100%;
 }
+
+.medal__info-solution table {
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.medal__info-solution table tr {
+    background-color: var(--col-l5);
+    color: #ffffff;
+    text-align: left;
+}
+.medal__info-solution table th,
+.medal__info-solution table td {
+    padding: 10px 12px;
+}
+
+
+.medal__info-solution table tbody tr:nth-of-type(even) {
+    background-color: var(--col-l6);
+}
+
+
+.medal__info-solution table tbody tr:first-child {
+    background-color: var(--col-sat-1);
+}
+
+
+
 .medal__info-solution .toolbar {
     display: flex;
     align-items: flex-end;
@@ -385,6 +416,7 @@ body {
 .medal__info-solution .toolbar #support {
     display: flex;
     margin-left: auto;
+    margin-top: 5px;
 }
 .medal__info-solution .toolbar #support > div {
     display: flex;
@@ -455,7 +487,7 @@ body {
     content: "";
     --col: #fff6;
     --col-trans: #fff0;
-    border-radius: var(--border-radius);
+    border-radius: calc(var(--border-radius) - 1px); /* for border. ghrhdsgmgd */
 
 
     transition: background 1s ease;
