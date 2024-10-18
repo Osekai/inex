@@ -9,7 +9,8 @@ class Caching
             return $item;
         }
         $data = $function();
-        \Database\Memcache::set($key, $data, $time);
+
+        if($data !== null) \Database\Memcache::set($key, $data, $time);
         return $data;
     }
 }

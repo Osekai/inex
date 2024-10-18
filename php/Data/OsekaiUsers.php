@@ -10,6 +10,9 @@ class OsekaiUsers
     static function GetUser($userid, $gamemode) {
         return \Caching::Layer("osekaiuser_" . $userid, function() use ($userid, $gamemode) {
             $data = \API\Osu\User::GetUser($userid, $gamemode);
+            if(!isset($data['page'])) {
+                return null;
+            }
             $data['page'] = null;
 
             $groups = Connection::execSelect("SELECT * FROM System_Roles_Assignments 
