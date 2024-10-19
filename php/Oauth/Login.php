@@ -25,14 +25,15 @@ namespace Oauth {
 
             $response = curl_exec($ch);
 
+            print_r($response);
+
+            exit;
+            
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             if ($http_status >= 400) {
                 die("cannot contact osu servers, please try again later - error code X" . $http_status);
             }
-
-
-            print_r($response);
 
             $response = json_decode($response, true);
 
@@ -52,6 +53,7 @@ namespace Oauth {
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 
             $response = curl_exec($curl);
+
 
             if ($response === false) {
                 die("cannot contact osu servers, please try again later");
