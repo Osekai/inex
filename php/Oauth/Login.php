@@ -31,6 +31,7 @@ namespace Oauth {
 
         public static function GetUserData($token)
         {
+            echo "fetching with token " . $token;
             $headers = [
                 'Authorization: Bearer ' . $token,
                 'Content-Type: application/json'
@@ -42,7 +43,6 @@ namespace Oauth {
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 
             $response = curl_exec($curl);
-            print_r($response);
 
             if ($response === false) {
                 die("cannot contact osu servers, please try again later");
