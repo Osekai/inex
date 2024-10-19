@@ -25,10 +25,6 @@ namespace Oauth {
 
             $response = curl_exec($ch);
 
-            print_r($response);
-
-            exit;
-            
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             if ($http_status >= 400) {
@@ -42,6 +38,8 @@ namespace Oauth {
 
         public static function GetUserData($token)
         {
+            echo $token;
+            exit;
             $headers = [
                 'Authorization: Bearer ' . $token,
                 'Content-Type: application/json'
