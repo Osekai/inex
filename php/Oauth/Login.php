@@ -26,12 +26,17 @@ namespace Oauth {
             $response = curl_exec($ch);
             $response = json_decode($response, true);
 
+            $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            if ($http_status >= 400) {
+                die("cannot contact osu servers, please try again later - error code X" . $http_status);
+            }
+
             return $response['access_token'];
         }
 
         public static function GetUserData($token)
         {
-            echo "fetching with token " . $token;
             $headers = [
                 'Authorization: Bearer ' . $token,
                 'Content-Type: application/json'
