@@ -62,7 +62,10 @@ namespace Oauth {
 
             $userdata = Oauth\Login::GetUserData($token);
 
-            print_r($userdata);
+            if($userdata == null) {
+                echo "oh no";
+                exit;
+            }
 
             $member = Database\Connection::execSelect("SELECT * FROM System_Users WHERE User_ID = ?", "i", [$userdata['id']]);
             if(count($member) == 0) {
