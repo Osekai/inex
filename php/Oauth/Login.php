@@ -57,6 +57,10 @@ namespace Oauth {
                 die("cannot contact osu servers, please try again later - error code B" . $http_status . ":" . strlen($token));
             }
 
+            if($response === null) {
+                die("what " . $http_status . ":" . strlen($token));
+            }
+
             return json_decode($response, true);
         }
 
