@@ -38,8 +38,6 @@ namespace Oauth {
 
         public static function GetUserData($token)
         {
-            echo $token;
-            exit;
             $headers = [
                 'Authorization: Bearer ' . $token,
                 'Content-Type: application/json'
