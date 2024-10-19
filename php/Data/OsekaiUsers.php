@@ -4,39 +4,42 @@ namespace Data;
 
 use Database\Connection;
 use Database\Session;
+use Exception;
 
 class OsekaiUsers
 {
     static function GetUser($userid, $gamemode) {
         return \Caching::Layer("osekaiuser_" . $userid, function() use ($userid, $gamemode) {
-            $data = \API\Osu\User::GetUser($userid, $gamemode);
-            if(!isset($data['page'])) {
-                return null;
-            }
-            $data['page'] = null;
+            try {
+                $data = \API\Osu\User::GetUser($userid, $gamemode);
 
-            $groups = Connection::execSelect("SELECT * FROM System_Roles_Assignments 
+                $data['page'] = null;
+
+                $groups = Connection::execSelect("SELECT * FROM System_Roles_Assignments 
             LEFT JOIN System_Roles_Roles ON System_Roles_Roles.ID = System_Roles_Assignments.Role_ID
             WHERE User_ID = ?", "i", [$data['id']]);
 
-            $data['Roles'] = $groups;
+                $data['Roles'] = $groups;
 
-            $permissions = [];
-            $permissions_blocked = [];
-            foreach ($groups as $group) {
-                $blockedpermissions = json_decode($group['Blocked_Permissions'], true);
-                $permissions = json_decode($group['Permissions'], true);
-                foreach ($blockedpermissions as $perm) $permissions_blocked[] = $perm;
-                foreach ($permissions as $perm) $permissions[] = $perm;
+                $permissions = [];
+                $permissions_blocked = [];
+                foreach ($groups as $group) {
+                    $blockedpermissions = json_decode($group['Blocked_Permissions'], true);
+                    $permissions = json_decode($group['Permissions'], true);
+                    foreach ($blockedpermissions as $perm) $permissions_blocked[] = $perm;
+                    foreach ($permissions as $perm) $permissions[] = $perm;
 
-                // people don't need to know what specific permissions each group gets.
-                unset($group['BlockedPermissions']);
-                unset($group['Permissions']);
+                    // people don't need to know what specific permissions each group gets.
+                    unset($group['BlockedPermissions']);
+                    unset($group['Permissions']);
+                }
+                $data['Permissions'] = array_unique($permissions);
+                $data['BlockedPermissions'] = array_unique($permissions_blocked);
+
+                return $data;
+            } catch(Exception $exception) {
+                return null;
             }
-            $data['Permissions'] = array_unique($permissions);
-            $data['BlockedPermissions'] = array_unique($permissions_blocked);
-
-            return $data;
         }, 6000);
     }
 
