@@ -24,13 +24,17 @@ namespace Oauth {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 
             $response = curl_exec($ch);
-            $response = json_decode($response, true);
 
             $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             if ($http_status >= 400) {
                 die("cannot contact osu servers, please try again later - error code X" . $http_status);
             }
+
+
+            print_r($response);
+
+            $response = json_decode($response, true);
 
             return $response['access_token'];
         }
