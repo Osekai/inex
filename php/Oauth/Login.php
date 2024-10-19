@@ -49,11 +49,7 @@ namespace Oauth {
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 
             $response = curl_exec($curl);
-
-
-            if ($response === false) {
-                die("cannot contact osu servers, please try again later");
-            }
+            
 
             $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
