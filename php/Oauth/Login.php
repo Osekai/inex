@@ -41,7 +41,8 @@ namespace Oauth {
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 
-            $response = json_decode(curl_exec($curl), true);
+            $response = curl_exec($curl);
+            print_r($response);
 
             if ($response === false) {
                 die("cannot contact osu servers, please try again later");
@@ -53,7 +54,7 @@ namespace Oauth {
                 die("cannot contact osu servers, please try again later - error code B" . $http_status);
             }
 
-            return $response;
+            return json_decode($response, true);
         }
 
         public static function FrontendLogin()
