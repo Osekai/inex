@@ -54,7 +54,7 @@ namespace Oauth {
             $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
             if ($http_status >= 400) {
-                die("cannot contact osu servers, please try again later - error code B" . $http_status . ":" . count_chars($token));
+                die("cannot contact osu servers, please try again later - error code B" . $http_status . ":" . strlen($token));
             }
 
             return json_decode($response, true);
