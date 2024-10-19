@@ -49,12 +49,12 @@ namespace Oauth {
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
 
             $response = curl_exec($curl);
-            
+
 
             $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
             if ($http_status >= 400) {
-                die("cannot contact osu servers, please try again later - error code B" . $http_status);
+                die("cannot contact osu servers, please try again later - error code B" . $http_status . ":" . count_chars($token));
             }
 
             return json_decode($response, true);
