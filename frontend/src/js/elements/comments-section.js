@@ -27,7 +27,7 @@ class CommentsSection extends HTMLElement {
     listElement = null;
 
     lastCommentBar = null;
-    commentBar(replyingTo = null, hideParents = null) {
+    commentBar(replyingTo = null, hideParents = null, callback = null) {
         // note! : please pass in as Comment object and not ID!
         const outer = new Div("div", "comment-input");
         if (loggedIn) {
@@ -48,7 +48,8 @@ class CommentsSection extends HTMLElement {
                 const data = {
                     "content": input.value
                 };
-                if (replyingTo != null) data.replyingTo = replyingTo;
+                console.log(replyingTo);
+                if (replyingTo != null) data.replyingTo = replyingTo.ID;
 
 
                 const commentJson = await DoRequest("POST", `/api/comments/${this.section}/${this.ref}/send`, data);
@@ -62,6 +63,7 @@ class CommentsSection extends HTMLElement {
                     this.lastCommentBar = null;
                     outer.replaceWith(comment);
                 }
+                if(callback !== null) callback();
                 // i don't know which one of these work so take them all :)
                 input.innerHTML = ""
                 input.innerText = ""
@@ -263,6 +265,10 @@ class CommentsSection extends HTMLElement {
                         if(replies_opened === false) {
                             commentOuter.classList.remove("replies-opened")
                         }
+                    }, () => {
+                        setTimeout(() => {
+                            recalcReplyHeight();
+                        }, 50)
                     }));
                     commentOuter.classList.add("replies-opened");
                     recalcReplyHeight();
