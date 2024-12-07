@@ -1,3 +1,16 @@
+.panel:has(comments-section) .sort-toggle {
+    background: #0003;
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 90px;
+    gap: 5px;
+    cursor: pointer;
+    justify-content: flex-end;
+}
+.panel:has(comments-section) .sort-toggle svg {
+    height: 20px;
+}
 comments-section {
     width: 100%;
 }

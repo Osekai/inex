@@ -118,9 +118,12 @@ if ($cur_medal == null) {
                 </div>
                 <div class="main-right">
                     <div class="panel">
+                        <div class="panel-header">
                         <h1>Comments</h1>
+                            <div class="left sort-toggle" id="comments_dropdown">loading</div>
+                        </div>
                         <div class="divider"></div>
-                        <comments-section section="Medals_Data" ref="334" id="comments"></comments-section>
+                        <comments-section dropdown="comments_dropdown" section="Medals_Data" ref="334" id="comments"></comments-section>
                     </div>
                 </div>
             </div>

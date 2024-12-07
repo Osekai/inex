@@ -1,7 +1,7 @@
 import '../../css/elements/comments-section.css'
 
 import {DoRequest} from "../utils/requests";
-import {Button, Div, LucideIcon, Text, Image, RoleBadge} from "../utils/dom";
+import {Button, Div, Image, LucideIcon, RoleBadge, Text} from "../utils/dom";
 import {timeAgo} from "../utils/timeago";
 import bbCodeParser from 'js-bbcode-parser';
 import {createDropdown} from "../ui/ultra-dropdown";
@@ -27,6 +27,7 @@ class CommentsSection extends HTMLElement {
     listElement = null;
 
     lastCommentBar = null;
+
     commentBar(replyingTo = null, hideParents = null, callback = null) {
         // note! : please pass in as Comment object and not ID!
         const outer = new Div("div", "comment-input");
@@ -40,7 +41,7 @@ class CommentsSection extends HTMLElement {
 
             input.classList.add("input");
             input.classList.add("lighter");
-            input.setAttribute("placeholder", "Leave a " + (replyingTo == null ? "comment" :  "reply"));
+            input.setAttribute("placeholder", "Leave a " + (replyingTo == null ? "comment" : "reply"));
 
 
             button.addEventListener("click", async () => {
@@ -63,7 +64,7 @@ class CommentsSection extends HTMLElement {
                     this.lastCommentBar = null;
                     outer.replaceWith(comment);
                 }
-                if(callback !== null) callback();
+                if (callback !== null) callback();
                 // i don't know which one of these work so take them all :)
                 input.innerHTML = ""
                 input.innerText = ""
@@ -72,8 +73,8 @@ class CommentsSection extends HTMLElement {
 
             outer.hideParents = hideParents;
 
-            if(replyingTo != null) {
-                if(this.lastCommentBar != null) {
+            if (replyingTo != null) {
+                if (this.lastCommentBar != null) {
                     this.lastCommentBar.hideParents();
                     this.lastCommentBar.remove();
                 }
@@ -96,7 +97,7 @@ class CommentsSection extends HTMLElement {
 
         var recalcReplyHeight = () => {
             var height = 0;
-            for(var child of replyContainer.children) {
+            for (var child of replyContainer.children) {
                 let childHeight = child.getBoundingClientRect().height;
                 console.log(`Child height: ${childHeight}`);
                 height += childHeight;
@@ -106,22 +107,18 @@ class CommentsSection extends HTMLElement {
         }
 
 
-
-
-
-
         console.log(comment);
 
         var name = Div("div", "name");
         name.appendChild(Image("https://a.ppy.sh/" + comment.User_ID));
         var nameText = Text("h1", comment.Username);
-        if(comment.Username == "") {
+        if (comment.Username == "") {
             nameText.innerHTML = "Unknown User";
             nameText.prepend(LucideIcon("circle-help"))
         }
         name.appendChild(nameText);
 
-        if(comment.Roles != null) {
+        if (comment.Roles != null) {
             var groupsDiv = Div("div", "groups");
             var groups = CommaSeparatedRolesToRoleArray(comment.Roles);
             for (var group of groups) {
@@ -142,7 +139,6 @@ class CommentsSection extends HTMLElement {
         var toolbar = Div("div", "toolbar");
 
 
-
         var upvote = Text("button", "");
         upvote.prepend(LucideIcon("thumbs-up"));
         toolbar.appendChild(upvote);
@@ -150,7 +146,7 @@ class CommentsSection extends HTMLElement {
         var upvote_count = Text("p", comment.VoteCount);
         upvote.appendChild(upvote_count);
 
-        if(comment.HasVoted === 1) upvote.classList.add("active");
+        if (comment.HasVoted === 1) upvote.classList.add("active");
 
 
         var replies_opened = false;
@@ -192,7 +188,7 @@ class CommentsSection extends HTMLElement {
 
         var del = async (admin = false) => {
             var modal = new Modal("Are you sure you want to delete this post?", "This cannot be undone!", [new ModalButton("Delete", async () => {
-                var url  = `/api/comments/${comment.ID}/` + (admin == true ? "admindelete" : "delete");
+                var url = `/api/comments/${comment.ID}/` + (admin == true ? "admindelete" : "delete");
                 var loader = new LoaderOverlay("Deleting");
                 var r = await DoRequest('POST', url);
                 loader.overlay.remove();
@@ -210,7 +206,7 @@ class CommentsSection extends HTMLElement {
             })], new ModalIcon("alert-triangle", "#ff623e"));
         }
 
-        if(PermissionChecker("comments.pin")) {
+        if (PermissionChecker("comments.pin")) {
             var adm_pin = Button("AdminPin", "cta icon-button");
 
             extrabutton_dropdown.appendChild(adm_pin);
@@ -221,7 +217,7 @@ class CommentsSection extends HTMLElement {
             });
         }
 
-        if(loggedIn && comment.User_ID === userData.id) {
+        if (loggedIn && comment.User_ID === userData.id) {
             var _delete = Button("Delete", "warning icon-button");
             extrabutton_dropdown.appendChild(_delete);
             _delete.prepend(LucideIcon("trash"));
@@ -230,7 +226,7 @@ class CommentsSection extends HTMLElement {
             });
         }
 
-        if(PermissionChecker("comments.delete.any")) {
+        if (PermissionChecker("comments.delete.any")) {
             var adm_delete = Button("AdminDelete", "warning icon-button");
 
             extrabutton_dropdown.appendChild(adm_delete);
@@ -241,16 +237,14 @@ class CommentsSection extends HTMLElement {
         }
 
 
-
-
-        if(loggedIn) {
+        if (loggedIn) {
             upvote.addEventListener("click", async () => {
                 upvote.classList.add("loading");
                 var data = await DoRequest("POST", "/api/vote/Common_Comments/" + comment.ID)
-                if(data.message === "vote_add") {
+                if (data.message === "vote_add") {
                     upvote.classList.add("active");
                     comment.VoteCount++;
-                } else if(data.message === "vote_remove") {
+                } else if (data.message === "vote_remove") {
                     upvote.classList.remove("active");
                     comment.VoteCount--;
                 }
@@ -260,9 +254,9 @@ class CommentsSection extends HTMLElement {
 
 
             reply.addEventListener("click", () => {
-                if(replyContainer.querySelector(".comment-input") == null) {
+                if (replyContainer.querySelector(".comment-input") == null) {
                     replyContainer.prepend(this.commentBar(comment, () => {
-                        if(replies_opened === false) {
+                        if (replies_opened === false) {
                             commentOuter.classList.remove("replies-opened")
                         }
                     }, () => {
@@ -273,7 +267,7 @@ class CommentsSection extends HTMLElement {
                     commentOuter.classList.add("replies-opened");
                     recalcReplyHeight();
                 } else {
-                    if(replies_opened === false) {
+                    if (replies_opened === false) {
                         commentOuter.classList.remove("replies-opened")
                     }
                     replyContainer.querySelector(".comment-input").remove();
@@ -281,12 +275,12 @@ class CommentsSection extends HTMLElement {
                 }
             })
         }
-        if(!loggedIn) {
+        if (!loggedIn) {
             upvote.classList.add("disabled");
             reply.classList.add("disabled");
         }
 
-        if (toplevel && comment.Replies>0) {
+        if (toplevel && comment.Replies > 0) {
             var viewReplies = Div("button", "view-replies");
             viewReplies.innerText = comment.Replies + " Replies";
             viewReplies.prepend(LucideIcon("chevron-down"));
@@ -295,7 +289,7 @@ class CommentsSection extends HTMLElement {
         }
 
 
-        if(comment.Is_Pinned == 1) {
+        if (comment.Is_Pinned == 1) {
             commentContainer.classList.add("pinned");
             var pin = Div("div", "pin");
             pin.appendChild(LucideIcon("pin"));
@@ -310,13 +304,14 @@ class CommentsSection extends HTMLElement {
         outerContainer.appendChild(replyInputContainer);
         outerContainer.appendChild(replyContainer);
 
-        if (toplevel && comment.Replies>0) {
+        if (toplevel && comment.Replies > 0) {
             viewReplies.addEventListener("click", async () => {
-                if(!replies_opened) {
+                if (!replies_opened) {
                     viewReplies.classList.add("loading");
                     var replies = (await DoRequest("POST", `/api/comments/${this.section}/${this.ref}/get`, {
                         "ParentID": comment.ID
                     }))["content"];
+
                     for (let reply of replies) {
                         replyContainer.appendChild(this.createComment(reply, false))
                     }
@@ -334,19 +329,17 @@ class CommentsSection extends HTMLElement {
         return commentOuter;
     }
 
-
+    data = null
 
     async loadComments(ref) {
         this.ref = ref;
         this.listElement.innerHTML = "";
         this.listElement.appendChild(CenteredLoader());
 
-        const data = (await DoRequest("POST", `/api/comments/${this.section}/${ref}/get`))["content"];
-        this.listElement.innerHTML = "";
-        for (let comment of data) {
-            this.listElement.appendChild(this.createComment(comment));
-        }
+        this.data = (await DoRequest("POST", `/api/comments/${this.section}/${ref}/get`))["content"];
+        this.loadCommentsUI();
     }
+
 
     async load() {
         this.appendChild(this.commentBar());
@@ -363,7 +356,58 @@ class CommentsSection extends HTMLElement {
         this.appendChild(this.listElement);
     }
 
+    sortDropdown = null;
+    sortTypes = {
+        "upvotes": {
+            "name": "Upvotes",
+            "icon": "thumbs-up",
+            "order": (a, b) => b.VoteCount - a.VoteCount // Sort by VoteCount in descending order
+        },
+        "replies": {
+            "name": "Replies",
+            "icon": "message-square-reply",
+            "order": (a, b) => b.Replies - a.Replies // Sort by VoteCount in descending order
+        },
+        "date": {
+            "name": "Date Posted",
+            "icon": "calendar",
+            "order": (a, b) => new Date(b.Date) - new Date(a.Date) // Sort by Date in descending order
+        }
+    };
+    sortType = "upvotes";
+
+    loadCommentsUI() {
+        // Clear the existing comments
+        this.listElement.innerHTML = "";
+
+        // Sort the data by the selected sortType
+        const sortFunction = this.sortTypes[this.sortType].order;
+        const sortedData = [...this.data].sort(sortFunction); // Avoid mutating the original data
+
+        // Append sorted comments to the list element
+        for (let comment of sortedData) {
+            this.listElement.appendChild(this.createComment(comment));
+        }
+    }
+
+
     async connectedCallback() {
+        this.sortDropdown = document.getElementById(this.getAttribute("dropdown"));
+        var updateSortDropdownElement = () => {
+            this.sortDropdown.innerHTML = `sort by <strong>${this.sortTypes[this.sortType].name}</strong>`;
+            this.sortDropdown.append(LucideIcon(this.sortTypes[this.sortType].icon))
+        };
+
+        updateSortDropdownElement();
+
+        this.sortDropdown.addEventListener("click", () => {
+            const sortKeys = Object.keys(this.sortTypes);
+            let currentIndex = sortKeys.indexOf(this.sortType);
+            this.sortType = sortKeys[(currentIndex + 1) % sortKeys.length];
+            updateSortDropdownElement();
+            this.loadCommentsUI();
+        });
+
         await this.load();
     }
 
