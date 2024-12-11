@@ -26,7 +26,7 @@ use Database\Session; ?>
                     <h1>Settings</h1>
                     <label setting-item="medals.hideUnachievedMedals" class="toggle-text navbar-pfp-dropdown-item" for="checkbox">
                         <input type="checkbox" class="checkbox" id="checkbox">
-                        <p>Hide unachieved medals</p>
+                        <p>Completely hide obtained medals</p>
                     </label>
                 </div>
             </div>
