@@ -27,7 +27,7 @@ use Database\Session; ?>
                     <label setting-item="medals.hideUnachievedMedals" class="toggle-text navbar-pfp-dropdown-item" for="checkbox">
                         <input type="checkbox" class="checkbox" id="checkbox">
                         <p>Completely hide obtained medals</p>
-                        <small>Only works when filter is enabled</small>
+                        <small>Only enabled when filter is on</small>
                     </label>
                 </div>
             </div>
