@@ -106,7 +106,7 @@ class Medals
         $changes = []; // Array to store changed values
 
         foreach ($newMedal as $key => $newValue) {
-            if (isset($oldMedal[$key]) && $oldMedal[$key] !== $newValue) {
+            if (isset($oldMedal[$key]) && strtolower(trim($oldMedal[$key])) !== strtolower(trim($newValue))) {
                 $changes[$key] = [
                     'old' => $oldMedal[$key],
                     'new' => $newValue
