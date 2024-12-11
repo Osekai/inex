@@ -13,7 +13,7 @@ import {Overlay} from "../ui/overlay";
 import {PushToast} from "../ui/toasts";
 import {MedalsSidebar} from "./medals/ui/MedalsSidebar";
 import {Currency} from "lucide";
-import {GetSetting} from "../utils/usersettings";
+import {GetSetting, OnChangeSetting} from "../utils/usersettings";
 import {Initialize} from "./medals/MedalsAdmin";
 import {PermissionChecker} from "../utils/permissionChecker";
 
@@ -80,10 +80,14 @@ export function SetMedal(inputMedal: string | number, setUrl = false, scrollTo =
     }
 }
 
-
+var sidebar: MedalsSidebar = null;
 async function Load() {
     await MedalData.GetMedals();
-    (new MedalsSidebar()).LoadSidebar();
+    sidebar = new MedalsSidebar();
+    sidebar.LoadSidebar();
+    OnChangeSetting("medals.hideUnachievedMedals", () => {
+        //sidebar.LoadSidebar();
+    })
     GetMedalFromUrl();
 
     // @ts-ignore

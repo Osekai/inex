@@ -86,6 +86,9 @@ export function Input(text: string, type = "", content = "") {
 }
 
 export function InputText(text: string, type = "", content = "") {
+    if(type == "date") {
+        type = "text" // fuck you
+    }
     var header = Text("h3", text);
     var input = Input(text, type, content);
 

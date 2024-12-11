@@ -18,6 +18,19 @@ use Database\Session; ?>
         </div>
         <div class="navbar-right">
             <div class="navbar-pfp-container">
+                <a class="navbar-right-button" tooltip="settings" dropdown-button="settings-dropdown">
+                    <i data-lucide="cog"></i>
+                </a>
+
+                <div dropdown="settings-dropdown" class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
+                    <h1>Settings</h1>
+                    <label setting-item="medals.hideUnachievedMedals" class="toggle-text navbar-pfp-dropdown-item" for="checkbox">
+                        <input type="checkbox" class="checkbox" id="checkbox">
+                        <p>Hide unachieved medals</p>
+                    </label>
+                </div>
+            </div>
+            <div class="navbar-pfp-container">
                 <button dropdown-button="pfp-dropdown"><img class="pfp"
                                                             src="<?= Database\Session::GetPFP() ?>"
                                                             alt="Your Profile Picture"></button>

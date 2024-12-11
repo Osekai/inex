@@ -11,7 +11,7 @@ body {
     flex-direction: column;
     align-items: center;
     position: relative;
-    z-index: 23;
+    z-index: 2324;
 }
 
 .login-button {
@@ -63,6 +63,19 @@ body {
 .navbar-right {
     padding-right: 5px;
     margin-left: auto;
+}
+
+.navbar-right-button {
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 90px;
+    margin-right: 8px;
+}
+.navbar-right-button:hover {
+
 }
 
 .navbar-right .navbar-pfp-container {
@@ -163,9 +176,9 @@ body {
     width: 90vw;
     display: flex;
     flex-direction: column;
-    top: 69px;
+    top: 79px;
     transition: all 0.2s ease;
-    z-index: 500;
+    z-index: 500000000000;
 
     cursor: default;
 
@@ -208,7 +221,15 @@ body {
     margin-top: 0px !important;
     width: calc(100% - 10px);
 }
+.navbar-pfp-dropdown-item > input {
+    margin-right: 8px;
+    display: inline-block;
+}
 
+.navbar-pfp-dropdown > h1 {
+    font-size: 20px;
+    padding: 12px 16px;
+}
 .navbar-pfp-dropdown-item:first-child {
     margin-top: 5px !important;
 }

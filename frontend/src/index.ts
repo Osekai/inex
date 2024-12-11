@@ -23,6 +23,7 @@ const simpleicons = [siDiscord, siTwitter, siTwitch, siPatreon, siGithub, siYout
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'
 import {RoleBadge} from "./js/utils/dom";
+import {GetSetting, SetSettings} from "./js/utils/usersettings";
 
 var aCreateIcons: () => void = null;
 
@@ -94,5 +95,18 @@ if(loggedIn) {
     var roles = userData.Roles;
     for(var role of roles) {
         document.getElementById("roles").appendChild(RoleBadge(role));
+    }
+}
+
+
+for(var item of document.querySelectorAll("[setting-item]")) {
+    var input = item.querySelector("input");
+    var name = item.getAttribute("setting-item");
+
+    if(input.type == "checkbox") {
+        input.checked = GetSetting(name, false, true);
+        input.addEventListener("change", () => {
+            SetSettings(name, input.checked, true)
+        })
     }
 }

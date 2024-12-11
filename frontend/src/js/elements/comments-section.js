@@ -49,7 +49,7 @@ class CommentsSection extends HTMLElement {
                 const data = {
                     "content": input.value
                 };
-                console.log(replyingTo);
+
                 if (replyingTo != null) data.replyingTo = replyingTo.ID;
 
 
@@ -99,15 +99,11 @@ class CommentsSection extends HTMLElement {
             var height = 0;
             for (var child of replyContainer.children) {
                 let childHeight = child.getBoundingClientRect().height;
-                console.log(`Child height: ${childHeight}`);
                 height += childHeight;
             }
-            console.log(`Total height: ${height}`);
             replyContainer.style.setProperty("--reply-height", height + "px");
         }
 
-
-        console.log(comment);
 
         var name = Div("div", "name");
         name.appendChild(Image("https://a.ppy.sh/" + comment.User_ID));
@@ -263,6 +259,9 @@ class CommentsSection extends HTMLElement {
                         setTimeout(() => {
                             recalcReplyHeight();
                         }, 50)
+                        setTimeout(() => {
+                            recalcReplyHeight();
+                        }, 150)
                     }));
                     commentOuter.classList.add("replies-opened");
                     recalcReplyHeight();
@@ -377,17 +376,24 @@ class CommentsSection extends HTMLElement {
     sortType = "upvotes";
 
     loadCommentsUI() {
-        // Clear the existing comments
         this.listElement.innerHTML = "";
 
-        // Sort the data by the selected sortType
-        const sortFunction = this.sortTypes[this.sortType].order;
-        const sortedData = [...this.data].sort(sortFunction); // Avoid mutating the original data
+        const sortFunction = this.getSortFunction(this.sortType);
+        const sortedData = [...this.data].sort(sortFunction);
 
-        // Append sorted comments to the list element
         for (let comment of sortedData) {
             this.listElement.appendChild(this.createComment(comment));
         }
+    }
+
+    getSortFunction(sortType) {
+        const baseOrder = this.sortTypes[sortType].order;
+
+        return (a, b) => {
+            if (a.Pinned && !b.Pinned) return -1;
+            if (!a.Pinned && b.Pinned) return 1;
+            return baseOrder(a, b);
+        };
     }
 
 

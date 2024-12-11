@@ -5,7 +5,14 @@ namespace Data;
 use API\Response;
 use Database\Connection;
 use Database\Memcache;
+use Database\Session;
+use Discord;
+use Jfcherng\Diff\Differ;
+use Jfcherng\Diff\Renderer\RendererConstant;
+use Jfcherng\Diff\Renderer\Text\Unified;
 use Tasks\Runners\BeatmapPacks;
+use Woeler\DiscordPhp\Message\DiscordEmbedMessage;
+use Woeler\DiscordPhp\Webhook\DiscordWebhook;
 
 class Medals
 {
@@ -20,17 +27,6 @@ class Medals
         "));
     }
 
-    public static function Get(mixed $id)
-    {
-        $medal = Connection::execSelect("
-        SELECT *, Medals_Data.Medal_ID as Medal_ID FROM Medals_Data 
-        LEFT JOIN Medals_Configuration ON Medals_Data.Medal_ID = Medals_Configuration.Medal_ID
-        WHERE Medals_Data.Medal_ID = ?
-        ", "i", [$id], "medals_" . $id, 60);
-        if (count($medal) == 0) return null;
-        return $medal[0];
-    }
-
     public static function Save($id, $data)
     {
         if (!\Data\OsekaiUsers::HasPermission("medal.edit", false)) return new Response(false, "no");
@@ -39,12 +35,17 @@ class Medals
             if ($value === "null") $data[$key] = null;
         }
 
+
         if ($data['Date_Released'] == "") $data['Date_Released'] = null;
         if ($data['First_Achieved_Date'] == "") $data['First_Achieved_Date'] = null;
 
         Memcache::remove("medals");
 
         $mods = explode(",", $data['Mods']);
+
+
+        $oldMedal = Medals::Get($data['Medal_ID'], 0);
+
 
         Connection::execOperation("DELETE FROM Medals_Solutions_Mods WHERE Medal_ID = ?", "i", [$data['Medal_ID']]);
         if ($data['Mods'] != null) {
@@ -91,11 +92,82 @@ class Medals
         ///
 
 
-        return new Response(true, "Success", Connection::execOperation("
+
+            Connection::execOperation("
         UPDATE Medals_Configuration
         SET Solution = ?, Is_Solution_Found = ?, Video_URL = ?, Supports_Lazer = ?, Supports_Stable = ?, Is_Restricted = ?, Date_Released = ?, First_Achieved_Date = ?, First_Achieved_User_ID = ?
         WHERE Medal_ID = ?
-        ", "sisiiissii", [$data['Solution'], $data['Is_Solution_Found'], $data['Video_URL'], $data['Supports_Lazer'], $data['Supports_Stable'], $data['Is_Restricted'], $data['Date_Released'], $data['First_Achieved_Date'], $data['First_Achieved_User_ID'], $data['Medal_ID']]));
+        ", "sisiiissii", [$data['Solution'], $data['Is_Solution_Found'], $data['Video_URL'], $data['Supports_Lazer'], $data['Supports_Stable'], $data['Is_Restricted'], $data['Date_Released'], $data['First_Achieved_Date'], $data['First_Achieved_User_ID'], $data['Medal_ID']]);
+
+
+            // variable exists $oldMedal
+        $newMedal = Medals::Get($data['Medal_ID'], 0);
+
+        $changes = []; // Array to store changed values
+
+        foreach ($newMedal as $key => $newValue) {
+            if (isset($oldMedal[$key]) && $oldMedal[$key] !== $newValue) {
+                $changes[$key] = [
+                    'old' => $oldMedal[$key],
+                    'new' => $newValue
+                ];
+            }
+        }
+        $changes_txt = "";
+
+        foreach ($changes as $field => $change) {
+            $changes_txt .= "## {$field}\n";
+
+            $old_content = $change['old'];
+            $new_content = $change['new'];
+
+            // Create the diff using the Differ class
+            $differ = new Differ(explode("\n", $old_content), explode("\n", $new_content));
+
+            // Use the Unified renderer for a Git-style diff
+            $renderer = new Unified(['context' => 3, 'cliColorization' => RendererConstant::CLI_COLOR_AUTO]);
+
+            // Render the diff as a Git-style diff
+            $diff_txt = $renderer->render($differ);
+
+            // Remove the "No newline at end of file" message
+            $diff_txt = str_replace("\ No newline at end of file", "", $diff_txt);
+
+            // Remove the first line that starts with @@ (diff header line)
+            $diff_txt = preg_replace('/^@@ .+ @@$/m', '', $diff_txt);
+
+            // Wrap the diff in a code block with the 'diff' language for Git diff style
+            $changes_txt .= "```diff\n{$diff_txt}\n```\n";
+        }
+
+
+
+        $embeds = [[
+            'title' => $oldMedal['Name'],
+            'description' => 'Edited by ' . Session::UserData()['username'],
+            'color' => 0xff66aa // Red color in decimal
+        ], [
+            "title" => "Changes",
+            "description" => $changes_txt
+        ]];
+        $messageData = Discord::postDiscordEmbeds(MOD_WEBHOOK_EDITS, $embeds);
+
+
+        return new Response(true, "Success", []);
+    }
+
+    public static function Get(mixed $id, $cacheLength = 60)
+    {
+        $medal = Connection::execSelect("
+        SELECT Medals_Data.*, Medals_Configuration.*, GROUP_CONCAT(Medals_Solutions_Mods.Mod SEPARATOR ',') as Mods, GROUP_CONCAT(Medals_Solutions_Beatmaps_Packs.Pack_ID SEPARATOR ',') as Packs FROM Medals_Data 
+        LEFT JOIN Medals_Configuration ON Medals_Data.Medal_ID = Medals_Configuration.Medal_ID
+        LEFT JOIN Medals_Solutions_Mods ON Medals_Solutions_Mods.Medal_ID = Medals_Data.Medal_ID
+        LEFT JOIN Medals_Solutions_Beatmaps_Packs ON Medals_Solutions_Beatmaps_Packs.Medal_ID = Medals_Data.Medal_ID
+        WHERE Medals_Data.Medal_ID = ?
+        GROUP BY Medals_Data.Medal_ID
+        ", "i", [$id], "medals_" . $id, $cacheLength);
+        if (count($medal) == 0) return null;
+        return $medal[0];
     }
 
 }

@@ -41,6 +41,8 @@
     "guzzlehttp/guzzle": "^7.0",
     "guzzlehttp/promises": "2.0.x-dev",
     "ext-mysqli": "*",
-    "woeler/phpdiscord": "dev-master"
+    "woeler/phpdiscord": "dev-master",
+    "atakde/discord-webhook-php": "dev-master",
+    "jfcherng/php-diff": "v6.x-dev"
   }
 }

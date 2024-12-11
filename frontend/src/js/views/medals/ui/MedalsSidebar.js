@@ -5,6 +5,7 @@ import {MedalData} from "../MedalData";
 import {MedalsUI} from "../MedalsUI";
 import {SetMedal} from "../../medals";
 import {GamemodeToName} from "../../../utils/osu/gamemode";
+import {GetSetting, OnChangeSetting} from "../../../utils/usersettings";
 
 String.prototype.includes_nl = function(text) {
     return this.toLowerCase().includes(text.toLowerCase());
@@ -17,8 +18,10 @@ export class MedalsSidebar {
     }
 
 
-    Search(text) {
-
+    Search(text = null) {
+        if(text == null) {
+            text = document.getElementById("medal_search").value;
+        }
         if(text.length > 0) {
             document.getElementById("medal_search_clear").classList.remove("hidden");
         } else {
@@ -45,6 +48,12 @@ export class MedalsSidebar {
                 }
             }
 
+
+            if(medal.Obtained && GetSetting("medals.hideUnachievedMedals", false, true) == true && GetSetting("medals.hide_obtained", false, true) == true) {
+                show = false;
+            }
+
+
             if(show) {
                 medal.Button.classList.remove("hidden");
                 medal.Button.classList.add("visible");
@@ -54,18 +63,7 @@ export class MedalsSidebar {
             }
         }
 
-        function checkSection(classname) {
-            for(var sect of document.querySelectorAll(classname)) {
-                if(sect.querySelectorAll(".visible").length === 0) {
-                    sect.classList.add("hidden");
-                } else {
-                    sect.classList.remove("hidden");
-                }
-            }
-        }
-        checkSection(".medals__medal-grid");
-        checkSection(".medals__medal-gamemodesection");
-        checkSection(".medals__medal-section");
+        this.HideSectionsWithNoVisibleMedals();
 
 
         if(document.getElementById("sidebar").querySelectorAll(".visible").length === 0) {
@@ -91,7 +89,10 @@ export class MedalsSidebar {
 
             medalButton.classList.add("visible");
 
-            if(medal.Obtained) medalButton.classList.add("obtained");
+            if(medal.Obtained) {
+                medalButton.classList.add("obtained");
+            }
+
 
             grid.appendChild(medalButton);
 
@@ -136,6 +137,7 @@ export class MedalsSidebar {
     }
     LoadSidebar() {
         var sidebar = document.getElementById("sidebar");
+        sidebar.innerHTML = "";
 
         for (var cat of Misc.Medals.GroupingOrdering) {
             this.InitializeCategory(this.categorized, cat);
@@ -168,11 +170,33 @@ export class MedalsSidebar {
             this.Search(searchbar.value);
         })
 
+        OnChangeSetting("medals.hide_obtained", () => {
+            this.Search();
+        })
+        OnChangeSetting("medals.hideUnachievedMedals", () => {
+            this.Search();
+        })
+
         document.getElementById("medal_search_clear").addEventListener("click", () => {
             searchbar.value = "";
             this.Search("");
         })
         this.Search(searchbar.value);
 
+    }
+
+    HideSectionsWithNoVisibleMedals() {
+        function checkSection(classname) {
+            for(var sect of document.querySelectorAll(classname)) {
+                if((sect.querySelectorAll(".visible").length + sect.querySelectorAll(".noobtain-visible").length) === 0) {
+                    sect.classList.add("hidden");
+                } else {
+                    sect.classList.remove("hidden");
+                }
+            }
+        }
+        checkSection(".medals__medal-grid");
+        checkSection(".medals__medal-gamemodesection");
+        checkSection(".medals__medal-section");
     }
 }

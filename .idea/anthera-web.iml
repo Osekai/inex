@@ -2,7 +2,6 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/php" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
@@ -61,6 +60,11 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-client" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ralouphie/getallheaders" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/woeler/phpdiscord" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/atakde/discord-webhook-php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jfcherng/php-color-output" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jfcherng/php-diff" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jfcherng/php-mb-string" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jfcherng/php-sequence-matcher" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
