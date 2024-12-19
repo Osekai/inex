@@ -1,60 +1,158 @@
 import {AntheraIcon, Div, Image, Text} from "../../../utils/dom";
 import {Misc} from "../../../utils/misc";
-import {Medal} from "../Medal";
 import {MedalData} from "../MedalData";
-import {MedalsUI} from "../MedalsUI";
 import {SetMedal} from "../../medals";
 import {GamemodeToName} from "../../../utils/osu/gamemode";
 import {GetSetting, OnChangeSetting} from "../../../utils/usersettings";
 
-String.prototype.includes_nl = function(text) {
+String.prototype.includes_nl = function (text) {
     return this.toLowerCase().includes(text.toLowerCase());
 }
 
 export class MedalsSidebar {
     categorized = {};
+
     InitializeCategory(full, cat) {
         full[cat] = {"all": [], "osu": [], "taiko": [], "catch": [], "mania": []};
     }
 
 
-    Search(text = null) {
-        if(text == null) {
-            text = document.getElementById("medal_search").value;
+    Search(rawtext = null) {
+        if (rawtext == null) {
+            rawtext = document.getElementById("medal_search").rawtext;
         }
-        if(text.length > 0) {
+        if (rawtext.length > 0) {
             document.getElementById("medal_search_clear").classList.remove("hidden");
         } else {
             document.getElementById("medal_search_clear").classList.add("hidden");
         }
 
+        var text = "";
+
+        var attributes = [];
+
+        for (var split of rawtext.split(" ")) {
+            if (split.startsWith("@")) {
+                var attribute = split.replace("@", "");
+                var operatorMatch = attribute.match(/(=|!=|>=|<=|>|<)/); // Match any operator
+
+                if (operatorMatch) {
+                    var operator = operatorMatch[0]; // Extract the operator
+                    var parts = attribute.split(operator);
+                    var attr_name = parts[0];
+                    var attr_val = parts[1];
+
+                    attributes.push({
+                        name: attr_name.toLowerCase(),
+                        value: attr_val.toLowerCase(),
+                        operator: operator
+                    })
+                }
+            } else {
+                text += split + " ";
+            }
+        }
+        text = text.trim();
+
         var exact = false;
-        if(text.startsWith("\"") && text.endsWith("\"")) {
+        if (text.startsWith("\"") && text.endsWith("\"")) {
             exact = true;
-            text = text.substring(1, text.length-1);
+            text = text.substring(1, text.length - 1);
         }
         text = text.replace('"', '');
+
+        function CheckValueWithOperator(v1, v2, op) {
+            if (v2 === "") return true;
+
+            const operations = {
+                "=": (a, b) => a === b,
+                "!=": (a, b) => a !== b,
+                ">": (a, b) => a > b,
+                "<": (a, b) => a < b,
+                ">=": (a, b) => a >= b,
+                "<=": (a, b) => a <= b
+            };
+
+            const show = operations[op]?.(v1, v2) || false;
+            return show;
+        }
+
+        function parseBool(b) {
+            if (b === true || b === "1" || b === "true") return true;
+            if (b === false || b === "0" || b === "false") return false;
+            return "";
+        }
+
+
         for (let medal of Object.values(MedalData.GetMedalsSync())) {
             var show = false;
-            if(medal.Name.includes_nl(text)) {
+            if (medal.Name.includes_nl(text)) {
                 show = true;
             }
-            if(!exact) {
-                if(medal.Description.includes_nl(text)) {
+            if (!exact) {
+                if (medal.Description.includes_nl(text)) {
                     show = true;
                 }
-                if(medal.Instructions != null && medal.Instructions.includes_nl(text)) {
+                if (medal.Instructions != null && medal.Instructions.includes_nl(text)) {
                     show = true;
                 }
             }
 
+            for (let attr of attributes) {
+                switch (attr.name) {
+                    case "supportslazer":
+                    case "canlazer": {
+                        let attrValue = parseBool(attr.value);
+                        if (!CheckValueWithOperator(parseBool(medal.Supports_Lazer), attrValue, attr.operator)) show = false;
+                        break;
+                    }
+                    case "supportsstable":
+                    case "canstable": {
+                        let attrValue = parseBool(attr.value);
+                        if (!CheckValueWithOperator(parseBool(medal.Supports_Stable), attrValue, attr.operator)) show = false;
+                        break;
+                    }
+                    case "modsexact":
+                    case "exactmods": {
+                        if (medal.Mods == null) {
+                            show = false;
+                            break;
+                        }
+                        let attrValue = attr.value;
+                        let mods = medal.Mods.split(",");
 
-            if(medal.Obtained && GetSetting("medals.hideUnachievedMedals", false, true) == true && GetSetting("medals.hide_obtained", false, true) == true) {
+                        for (let mod of mods) {
+                            if (!attrValue.includes(mod.toLowerCase())) {
+                                show = false;
+                                console.log("matching", mod, "to", attrValue, "fail");
+                                break; // Exit the loop early if any mod fails
+                            }
+                        }
+                        break;
+                    }
+                    case "mods":
+                    case "hasmod":
+                    case "mod": {
+                        if (medal.Mods == null) {
+                            show = false;
+                            break;
+                        }
+                        let attrValue = attr.value;
+                        let mods = medal.Mods.split(",");
+
+                        let hasAnyMods = mods.some(mod => attrValue.includes(mod.toLowerCase()));
+                        if (!hasAnyMods) show = false;
+                        break;
+                    }
+                }
+            }
+
+            if (medal.Obtained && GetSetting("medals.hideUnachievedMedals", false, true) == true && GetSetting("medals.hide_obtained", false, true) == true) {
                 show = false;
             }
 
 
-            if(show) {
+            if (show) {
                 medal.Button.classList.remove("hidden");
                 medal.Button.classList.add("visible");
             } else {
@@ -66,13 +164,14 @@ export class MedalsSidebar {
         this.HideSectionsWithNoVisibleMedals();
 
 
-        if(document.getElementById("sidebar").querySelectorAll(".visible").length === 0) {
+        if (document.getElementById("sidebar").querySelectorAll(".visible").length === 0) {
             document.getElementById("no-results").classList.remove("hidden");
         } else {
             document.getElementById("no-results").classList.add("hidden");
         }
 
     }
+
     RenderMedalGrid(medals) {
         var grid = Div("div", "medals__medal-grid");
         for (let medal of medals) {
@@ -89,7 +188,7 @@ export class MedalsSidebar {
 
             medalButton.classList.add("visible");
 
-            if(medal.Obtained) {
+            if (medal.Obtained) {
                 medalButton.classList.add("obtained");
             }
 
@@ -100,6 +199,7 @@ export class MedalsSidebar {
         }
         return grid;
     }
+
     RenderGamemode(gamemode, name) {
         var gamemodecategorydiv = Div("div", "medals__medal-gamemodesection");
         var modeheader = Text("h2", GamemodeToName(name));
@@ -113,7 +213,7 @@ export class MedalsSidebar {
             gamemodecategorydiv.appendChild(this.RenderMedalGrid(ordering));
         }
 
-        gamemodecategorydiv.classList.add("gamemode-"+name);
+        gamemodecategorydiv.classList.add("gamemode-" + name);
         gamemodecategorydiv.classList.add("col-reset");
 
 
@@ -122,7 +222,9 @@ export class MedalsSidebar {
 
         return gamemodecategorydiv;
     }
+
     offset = 0;
+
     RenderSection(category, name) {
         var categorydiv = Div("div", "medals__medal-section");
         var header = Text("h1", name);
@@ -135,6 +237,7 @@ export class MedalsSidebar {
 
         return categorydiv;
     }
+
     LoadSidebar() {
         var sidebar = document.getElementById("sidebar");
         sidebar.innerHTML = "";
@@ -187,14 +290,15 @@ export class MedalsSidebar {
 
     HideSectionsWithNoVisibleMedals() {
         function checkSection(classname) {
-            for(var sect of document.querySelectorAll(classname)) {
-                if((sect.querySelectorAll(".visible").length + sect.querySelectorAll(".noobtain-visible").length) === 0) {
+            for (var sect of document.querySelectorAll(classname)) {
+                if ((sect.querySelectorAll(".visible").length + sect.querySelectorAll(".noobtain-visible").length) === 0) {
                     sect.classList.add("hidden");
                 } else {
                     sect.classList.remove("hidden");
                 }
             }
         }
+
         checkSection(".medals__medal-grid");
         checkSection(".medals__medal-gamemodesection");
         checkSection(".medals__medal-section");

@@ -1,6 +1,6 @@
 import {Medal} from "./Medal";
 import {MedalData} from "./MedalData";
-import {AntheraIcon, Button, Div, LucideIcon, Text, TextArea} from "../../utils/dom";
+import {AntheraIcon, Button, Div, LucideIcon, Text} from "../../utils/dom";
 import {getAverageRGB, rgbToHsl} from "../../utils/colour";
 import {marked} from "marked";
 import CommentsSection from "../../elements/comments-section";
@@ -8,7 +8,7 @@ import {DoRequest} from "../../utils/requests";
 import {GetMod} from "../../utils/osu/mods";
 import {TimeTransform_MM_SS} from "../../utils/time";
 import {createDropdown} from "../../ui/ultra-dropdown";
-import {Modal, ModalButton, ModalIcon, Overlay} from "../../ui/overlay";
+import {Modal, ModalButton, ModalIcon} from "../../ui/overlay";
 import {PushToast} from "../../ui/toasts";
 import {reportOverlay} from "../../ui/reportOverlay";
 import {LoaderOverlay} from "../../ui/loader-overlay";
@@ -87,7 +87,7 @@ export class MedalsUI {
         var report = Button("Report", "icon-button");
         extrabutton_dropdown.appendChild(report);
         report.addEventListener("click", () => {
-            reportOverlay("Report " + beatmap.Song_Title, async (value : string) => {
+            reportOverlay("Report " + beatmap.Song_Title, async (value: string) => {
                 await DoRequest("POST", `/api/medals/beatmaps/${beatmap.ID}/report`, {
                     // @ts-ignore
                     "reporter_name": userData.username,
@@ -106,7 +106,7 @@ export class MedalsUI {
 
         var del = async (admin = false) => {
             var modal = new Modal("Are you sure you want to delete this post?", "This cannot be undone!", [new ModalButton("Delete", async () => {
-                var url  =`/api/medals/beatmaps/${beatmap.ID}/` + (admin == true ? "admindelete" : "delete");
+                var url = `/api/medals/beatmaps/${beatmap.ID}/` + (admin == true ? "admindelete" : "delete");
                 var loader = new LoaderOverlay("Deleting");
                 var r = await DoRequest('POST', url);
                 loader.overlay.remove();
@@ -124,7 +124,7 @@ export class MedalsUI {
             })], new ModalIcon("alert-triangle", "#ff623e"));
         }
         // @ts-ignore
-        if(loggedIn && beatmap.Beatmap_Submitted_User_ID === userData.id) {
+        if (loggedIn && beatmap.Beatmap_Submitted_User_ID === userData.id) {
             var _delete = Button("Delete", "warning icon-button");
             extrabutton_dropdown.appendChild(_delete);
             _delete.prepend(LucideIcon("trash"));
@@ -132,7 +132,7 @@ export class MedalsUI {
                 await del();
             });
         }
-        if(PermissionChecker("medals.beatmaps.delete.any")) {
+        if (PermissionChecker("medals.beatmaps.delete.any")) {
             var adm_delete = Button("AdminDelete", "warning icon-button");
 
             extrabutton_dropdown.appendChild(adm_delete);
@@ -215,7 +215,7 @@ export class MedalsUI {
             }
 
             // @ts-ignore
-            if(medal.Beatmaps.length == 0 && medal.Is_Restricted == 1) {
+            if (medal.Beatmaps.length == 0 && medal.Is_Restricted == 1) {
                 document.getElementById("medal_beatmaps_panel").classList.add("hidden");
             } else {
                 document.getElementById("medal_beatmaps_panel").classList.remove("hidden");
@@ -250,10 +250,13 @@ export class MedalsUI {
         (<CommentsSection>document.getElementById("comments")).loadComments(medal.Medal_ID);
 
         if (scrollTo) {
-            document.querySelector("[medal-button-id='" + medal.Medal_ID + "']").scrollIntoView({
-                "behavior": "smooth",
-                "block": "center"
-            });
+            setTimeout(() => {
+                if (document.querySelector("[medal-button-id='" + medal.Medal_ID + "']").classList.contains("hidden")) return;
+                document.querySelector("[medal-button-id='" + medal.Medal_ID + "']").scrollIntoView({
+                    "behavior": "smooth",
+                    "block": "center"
+                });
+            }, 100)
         }
 
         var img: HTMLImageElement = <HTMLImageElement>document.getElementById("medal_image");
@@ -280,14 +283,12 @@ export class MedalsUI {
         }
 
 
-
-
-        function setSupport(type : string, support : number) {
-            var el = document.getElementById("support-"+ type);
+        function setSupport(type: string, support: number) {
+            var el = document.getElementById("support-" + type);
             var icon = el.querySelector("[icon]");
             icon.innerHTML = "";
 
-            if(support == 1) {
+            if (support == 1) {
                 el.classList.remove("unsupported");
                 icon.appendChild(LucideIcon("check"));
             } else {
@@ -295,6 +296,7 @@ export class MedalsUI {
                 icon.appendChild(LucideIcon("x"));
             }
         }
+
         setSupport("stable", medal.Supports_Stable);
         setSupport("lazer", medal.Supports_Lazer);
 
