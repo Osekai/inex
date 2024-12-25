@@ -35,6 +35,9 @@ $router->get('/', function () {
 $router->get('/medals', function () {
     DrawViewWithTemplate("medals", "page");
 });
+$router->get('/x', function () {
+    DrawViewWithTemplate("preview", "page");
+});
 $router->get('/medals/{medal}/', function ($medal) {
     DrawViewWithTemplate("medals", "page", $medal);
 });
