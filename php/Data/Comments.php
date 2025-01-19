@@ -15,7 +15,7 @@ class Comments
     {
         if (!Session::LoggedIn()) return new Response(false, "logged out");
 
-        $valid_tables = ["Medals_Data"];
+        $valid_tables = ["Medals_Data", "Custom"];
         if (!in_array($table, $valid_tables)) return new Response(false, "invalid_table");
 
         if (\CheckTargetValidity::Check($table, $id) == null) return new Response(false, "invalid_id");
