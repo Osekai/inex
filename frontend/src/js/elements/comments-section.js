@@ -379,7 +379,14 @@ class CommentsSection extends HTMLElement {
         this.listElement.innerHTML = "";
 
         const sortFunction = this.getSortFunction(this.sortType);
-        const sortedData = [...this.data].sort(sortFunction);
+
+        const pinnedItems = this.data.filter(item => item.Pinned);
+        const nonPinnedItems = this.data.filter(item => !item.Pinned);
+
+        const sortedNonPinnedData = [...nonPinnedItems].sort(sortFunction);
+
+        const sortedData = [...pinnedItems, ...sortedNonPinnedData];
+
 
         for (let comment of sortedData) {
             this.listElement.appendChild(this.createComment(comment));
