@@ -17,6 +17,9 @@ class CheckTargetValidity
             $medal = MedalsBeatmaps::GetOneBeatmap($id);
             if ($medal == null) return false;
         }
+        if ($target == "Custom") {
+            if($id > 10) return false;
+        }
 
 
         return true;
