@@ -379,14 +379,7 @@ class CommentsSection extends HTMLElement {
         this.listElement.innerHTML = "";
 
         const sortFunction = this.getSortFunction(this.sortType);
-
-        const pinnedItems = this.data.filter(item => item.Pinned);
-        const nonPinnedItems = this.data.filter(item => !item.Pinned);
-
-        const sortedNonPinnedData = [...nonPinnedItems].sort(sortFunction);
-
-        const sortedData = [...pinnedItems, ...sortedNonPinnedData];
-
+        const sortedData = [...this.data].sort(sortFunction);
 
         for (let comment of sortedData) {
             this.listElement.appendChild(this.createComment(comment));
@@ -397,8 +390,8 @@ class CommentsSection extends HTMLElement {
         const baseOrder = this.sortTypes[sortType].order;
 
         return (a, b) => {
-            if (a.Pinned && !b.Pinned) return -1;
-            if (!a.Pinned && b.Pinned) return 1;
+            if (a.Is_Pinned && !b.Is_Pinned) return -1;
+            if (!a.Is_Pinned && b.Is_Pinned) return 1;
             return baseOrder(a, b);
         };
     }
