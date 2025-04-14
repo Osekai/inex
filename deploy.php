@@ -3,8 +3,8 @@ include("config.php");
 // Configuration
 
 $githubToken = GITHUB_API_KEY; 
-$repoOwner = 'anthera-art';
-$repoName = 'web';
+$repoOwner = 'osekai';
+$repoName = 'inex';
 $artifactName = 'app-bundle';
 $prodUpdateScript = './prod-update.sh';
 $revFilePath = 'frontend/rev.txt';
