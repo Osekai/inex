@@ -11,8 +11,8 @@ So far, this is the status of the rewrites to Inex:
    - All data required for rankings is being given to Inex from osekai-scripts, backend and frontend is unfinished.
 - ### 🔴 Profiles
     - Relies on Rankings
-- ### 🟡 Badges
-    - Data is ready, needs backend and frontend.
+- ### 🔴 Badges
+    - Data is not being given by scripts-rust yet (it seems)
 - ### 🔴 Snapshots
     - Big undertaking, not there yet!
 
