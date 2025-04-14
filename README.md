@@ -8,7 +8,7 @@ So far, this is the status of the rewrites to Inex:
 - ### 🟢 Medals
    - Medals has been fully rolled out to all users!
 - ### 🟡 Rankings
-   - All data required for rankings is being given to Inex from osekai-scripts, backend and frontend is unfinished.
+   - All data required for rankings is being given to Inex from scripts-rust, backend and frontend is unfinished.
 - ### 🔴 Profiles
     - Relies on Rankings
 - ### 🔴 Badges
