@@ -20,3 +20,4 @@ const ETI_DATABASE_HOSTNAME = "localhost";
 
 // Caching
 const USE_MEMCACHE = false;
+const GITHUB_API_KEY = "";

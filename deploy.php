@@ -1,7 +1,8 @@
 <?php
-
+include("config.php");
 // Configuration
-$githubToken = '';  // Replace with your valid GitHub PAT
+
+$githubToken = GITHUB_API_KEY; 
 $repoOwner = 'anthera-art';
 $repoName = 'web';
 $artifactName = 'app-bundle';
