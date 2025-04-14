@@ -41,3 +41,9 @@ Before you contribute anything, we'd really recommend you let us know what you'r
 ## Please join our [Osekai Development Server!](https://discord.gg/m4mEGdnc) to talk!
 
 We're always looking for more help making Osekai as great as it can be!
+
+
+> [!IMPORTANT]
+> Osekai Inex is technically a fork of [Anthera](https://anthera.art) and so contains a lot of code which either goes unused or mentions things which otherwise don't exist.
+> 
+> I'm leaving in these things for now as I'm certain they'll have a use in the future, whether for admin backends or just for end users, so please excuse the weird out of place code :)
