@@ -368,6 +368,44 @@ body {
 .beatmap .bottom h4.expanded {
     white-space: inherit;
 }
+
+.medal__extra-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    > .fab {
+        width: 100%;
+    }
+    > div {
+        h3 {
+            font-size: 20px;
+            font-weight: 300;
+            margin-bottom: 3px;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 500;
+        }
+        > * {
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+            img {
+                height: 50px;
+                border-radius: 10px;
+            }
+            h2 {
+                margin-left: auto;
+                font-size: 18px;
+                font-weight: 200;
+            }
+        }
+    }
+}
+
 .medal__info {
     padding: 0px;
 }

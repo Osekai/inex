@@ -11,18 +11,23 @@ use Jfcherng\Diff\Differ;
 use Jfcherng\Diff\Renderer\RendererConstant;
 use Jfcherng\Diff\Renderer\Text\Unified;
 use Tasks\Runners\BeatmapPacks;
-use Woeler\DiscordPhp\Message\DiscordEmbedMessage;
-use Woeler\DiscordPhp\Webhook\DiscordWebhook;
 
 class Medals
 {
     static function GetAll(): Response
     {
         return new Response(true, "Success", Connection::execSimpleSelect("
-        SELECT Medals_Data.*, Medals_Configuration.*, GROUP_CONCAT(Medals_Solutions_Mods.Mod SEPARATOR ',') as Mods, GROUP_CONCAT(Medals_Solutions_Beatmaps_Packs.Pack_ID SEPARATOR ',') as Packs FROM Medals_Data 
+        SELECT 
+            Medals_Data.*, 
+            Medals_Configuration.*, 
+            GROUP_CONCAT(Medals_Solutions_Mods.Mod SEPARATOR ',') as Mods, 
+            GROUP_CONCAT(Medals_Solutions_Beatmaps_Packs.Pack_ID SEPARATOR ',') as Packs,
+            FirstAchievedUser.Name AS First_Achieved_Username
+        FROM Medals_Data
         LEFT JOIN Medals_Configuration ON Medals_Data.Medal_ID = Medals_Configuration.Medal_ID
         LEFT JOIN Medals_Solutions_Mods ON Medals_Solutions_Mods.Medal_ID = Medals_Data.Medal_ID
         LEFT JOIN Medals_Solutions_Beatmaps_Packs ON Medals_Solutions_Beatmaps_Packs.Medal_ID = Medals_Data.Medal_ID
+        LEFT JOIN Merged_Users FirstAchievedUser ON FirstAchievedUser.User_ID = Medals_Configuration.First_Achieved_User_ID
         GROUP BY Medals_Data.Medal_ID
         "));
     }
@@ -92,15 +97,14 @@ class Medals
         ///
 
 
-
-            Connection::execOperation("
+        Connection::execOperation("
         UPDATE Medals_Configuration
         SET Solution = ?, Is_Solution_Found = ?, Video_URL = ?, Supports_Lazer = ?, Supports_Stable = ?, Is_Restricted = ?, Date_Released = ?, First_Achieved_Date = ?, First_Achieved_User_ID = ?
         WHERE Medal_ID = ?
         ", "sisiiissii", [$data['Solution'], $data['Is_Solution_Found'], $data['Video_URL'], $data['Supports_Lazer'], $data['Supports_Stable'], $data['Is_Restricted'], $data['Date_Released'], $data['First_Achieved_Date'], $data['First_Achieved_User_ID'], $data['Medal_ID']]);
 
 
-            // variable exists $oldMedal
+        // variable exists $oldMedal
         $newMedal = Medals::Get($data['Medal_ID'], 0);
 
         $changes = []; // Array to store changed values
@@ -139,7 +143,6 @@ class Medals
             // Wrap the diff in a code block with the 'diff' language for Git diff style
             $changes_txt .= "```diff\n{$diff_txt}\n```\n";
         }
-
 
 
         $embeds = [[

@@ -119,11 +119,35 @@ if ($cur_medal == null) {
                 <div class="main-right">
                     <div class="panel">
                         <div class="panel-header">
-                        <h1>Comments</h1>
+                            <h1>Extra Info</h1>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="medal__extra-info">
+                            <div>
+                                <h3>Release Date</h3>
+                                <div>
+                                    <h1 id="medal_release_date"></h1>
+                                    <h2 id="medal_release_date_ago"></h2>
+                                </div>
+                            </div>
+                            <div class="fab">
+                                <h3>First Achieved By</h3>
+                                <a target="_blank" id="medal_first_achieved_by_link">
+                                    <img id="medal_first_achieved_by_pfp">
+                                    <h1 id="medal_first_achieved_by"></h1>
+                                    <h2 id="medal_first_achieved_date"></h2>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h1>Comments</h1>
                             <div class="left sort-toggle" id="comments_dropdown">loading</div>
                         </div>
                         <div class="divider"></div>
-                        <comments-section dropdown="comments_dropdown" section="Medals_Data" ref="334" id="comments"></comments-section>
+                        <comments-section dropdown="comments_dropdown" section="Medals_Data" ref="334"
+                                          id="comments"></comments-section>
                     </div>
                 </div>
             </div>

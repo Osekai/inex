@@ -23,6 +23,7 @@ export class Medal {
     Video_URL: string;
     First_Achieved_Date: string;
     First_Achieved_User_ID: number;
+    First_Achieved_Username: string;
     Is_Solution_Found: string;
     Is_Restricted: number;
     Solution: string;

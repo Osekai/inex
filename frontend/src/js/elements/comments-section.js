@@ -434,6 +434,9 @@ class CommentsSection extends HTMLElement {
     }
 }
 
-customElements.define("comments-section", CommentsSection);
+try {
+    customElements.define("comments-section", CommentsSection);
+} catch {
 
+}
 export default CommentsSection;

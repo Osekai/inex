@@ -15,6 +15,7 @@ import {reportOverlay} from "../../ui/reportOverlay";
 import {LoaderOverlay} from "../../ui/loader-overlay";
 import {PermissionChecker} from "../../utils/permissionChecker";
 import {CenteredLoader} from "../../utils/loaderUtils";
+import {timeAgo} from "../../utils/timeago";
 
 
 export class MedalsUI {
@@ -275,9 +276,15 @@ export class MedalsUI {
         document.getElementById("medal_description").innerText = medal.Description;
         document.getElementById("medal_instructions").innerHTML = medal.Instructions; // instructions have <i> sometimes
 
-        document.getElementById("medal_release_date").innerText = medal.Date_Released;
-        document.getElementById("medal_first_achieved_date").innerText = medal.First_Achieved_Date;
-        document.getElementById("medal_first_achieved_by").innerText = medal.First_Achieved_User_ID;
+        console.log(medal);
+
+
+        document.getElementById("medal_release_date_ago").innerText = timeAgo.format(new Date(medal.Date_Released));
+        document.getElementById("medal_release_date").innerText = new Date(medal.Date_Released.replace(" 00:00:00", "")).toLocaleDateString();
+        document.getElementById("medal_first_achieved_date").innerText = new Date(medal.First_Achieved_Date).toLocaleString();
+        document.getElementById("medal_first_achieved_by").innerText = medal.First_Achieved_Username;
+        document.getElementById("medal_first_achieved_by_pfp").src = "https://a.ppy.sh/" + medal.First_Achieved_User_ID;
+        document.getElementById("medal_first_achieved_by_link").href = "https://osu.ppy.sh/u/" + medal.First_Achieved_User_ID;
 
         if (medal.Solution !== null) {
             // @ts-ignore
