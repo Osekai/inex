@@ -1,0 +1,31 @@
+name: Deploy on Tag
+
+on:
+  push:
+    tags:
+      - '*'  # Trigger on new tags
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Make deploy script executable
+        run: chmod +x ./deploy.sh
+
+      - name: Run deploy script
+        run: ./deploy.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-bundle
+          path: app.tar.gz
