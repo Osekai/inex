@@ -44,7 +44,7 @@ function OpenEditor() {
 
 
     inputs["First_Achieved_Date"] = InputText("First Achieved", "date", medal.First_Achieved_Date);
-    inputs["First_Achieved_User_ID"] = InputText("First Achieved By", "number", <string><unknown>medal.First_Achieved_User_ID);
+    inputs["First_Achieved_User_ID"] = InputText("First Achieved By", "number", medal.First_Achieved_User_ID);
 
 
     var packs = medal.Beatmaps;

@@ -1,3 +1,4 @@
+// @flow
 import {Medal} from "./Medal";
 import {MedalData} from "./MedalData";
 import {AntheraIcon, Button, Div, LucideIcon, Text} from "../../utils/dom";
@@ -27,8 +28,8 @@ export class MedalsUI {
         top.appendChild(top_top);
         top.appendChild(top_bottom);
 
-        (<HTMLAnchorElement>top).href = `https://osu.ppy.sh/b/${beatmap.Beatmap_ID}`;
-        (<HTMLAnchorElement>top).target = "_blank";
+        top.href = `https://osu.ppy.sh/b/${beatmap.Beatmap_ID}`;
+        top.target = "_blank";
 
         top_top.appendChild(Text("h3", beatmap.Song_Artist));
         top_bottom.appendChild(Text("h1", beatmap.Song_Title));
@@ -87,7 +88,7 @@ export class MedalsUI {
         var report = Button("Report", "icon-button");
         extrabutton_dropdown.appendChild(report);
         report.addEventListener("click", () => {
-            reportOverlay("Report " + beatmap.Song_Title, async (value: string) => {
+            reportOverlay("Report " + beatmap.Song_Title, async (value) => {
                 await DoRequest("POST", `/api/medals/beatmaps/${beatmap.ID}/report`, {
                     // @ts-ignore
                     "reporter_name": userData.username,
@@ -149,7 +150,7 @@ export class MedalsUI {
         return outer;
     }
 
-    static AddPack(pack: any) {
+    static AddPack(pack) {
         var packDiv = Div("div", "gamemode-" + pack.Gamemode);
         packDiv.classList.add("pack");
         packDiv.classList.add("col-reset");
@@ -169,8 +170,8 @@ export class MedalsUI {
         info.appendChild(Text("h3", pack.Maps_Count + " maps"))
         info.appendChild(Text("p", TimeTransform_MM_SS(pack.Maps_Length)))
 
-        var downloadButton: HTMLAnchorElement = <HTMLAnchorElement>Div("a");
-        var visitButton: HTMLAnchorElement = <HTMLAnchorElement>Div("a");
+        var downloadButton = Div("a");
+        var visitButton = Div("a");
 
         downloadButton.appendChild(LucideIcon("download"))
         visitButton.appendChild(LucideIcon("external-link"))
@@ -247,7 +248,7 @@ export class MedalsUI {
         MedalData.LoadExtra(medal, {
             "beatmaps": this.LoadBeatmaps
         });
-        (<CommentsSection>document.getElementById("comments")).loadComments(medal.Medal_ID);
+        document.getElementById("comments").loadComments(medal.Medal_ID);
 
         if (scrollTo) {
             setTimeout(() => {
@@ -259,7 +260,7 @@ export class MedalsUI {
             }, 100)
         }
 
-        var img: HTMLImageElement = <HTMLImageElement>document.getElementById("medal_image");
+        var img = document.getElementById("medal_image");
         img.src = "/assets/osu/web/" + medal.Link;
         img.onload = () => {
             var rgb = getAverageRGB(img);
@@ -274,6 +275,9 @@ export class MedalsUI {
         document.getElementById("medal_description").innerText = medal.Description;
         document.getElementById("medal_instructions").innerHTML = medal.Instructions; // instructions have <i> sometimes
 
+        document.getElementById("medal_release_date").innerText = medal.Date_Released;
+        document.getElementById("medal_first_achieved_date").innerText = medal.First_Achieved_Date;
+        document.getElementById("medal_first_achieved_by").innerText = medal.First_Achieved_User_ID;
 
         if (medal.Solution !== null) {
             // @ts-ignore
@@ -283,7 +287,7 @@ export class MedalsUI {
         }
 
 
-        function setSupport(type: string, support: number) {
+        function setSupport(type, support) {
             var el = document.getElementById("support-" + type);
             var icon = el.querySelector("[icon]");
             icon.innerHTML = "";

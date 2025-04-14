@@ -27,7 +27,7 @@ export class Medal {
     Is_Restricted: number;
     Solution: string;
     Date_Released: string;
-    Beatmaps: unknown;
+    Beatmaps;
     Mods: string;
     Packs: string;
 

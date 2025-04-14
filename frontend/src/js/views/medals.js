@@ -25,7 +25,7 @@ if(PermissionChecker("medal.edit", false)) {
 
 function GetMedalFromUrl() {
 
-    SetMedal(decodeURIComponent((<any>getSections(`/medals/{medal}`))['medal']), false, true);
+    SetMedal(decodeURIComponent((getSections(`/medals/{medal}`))['medal']), false, true);
 }
 document.getElementById("back").addEventListener("click", () => {
     SetMedal("", true);
@@ -43,14 +43,14 @@ window.addEventListener("popstate", () => {
  * @param setUrl : boolean Should we update the URL? this manages history, too.
  * @param scrollTo
  */
-export function SetMedal(inputMedal: string | number, setUrl = false, scrollTo = false) {
-    if(inputMedal == null || inputMedal == "" || typeof(inputMedal) == "undefined" || inputMedal == "undefined") {
+export function SetMedal(inputMedal, setUrl = false, scrollTo = false) {
+    if(inputMedal == null || inputMedal === "" || typeof(inputMedal) == "undefined" || inputMedal === "undefined") {
         document.getElementById("medal-home").classList.remove("_hidden");
         document.getElementById("medal-info").classList.add("_hidden");
 
 
         document.getElementById("medal-page").classList.add("home");
-        if((<any>getSections(`/medals/{medal}`))['medal'] != null)
+        if((getSections(`/medals/{medal}`))['medal'] != null)
         setSections("/medals/{medal}", {"medal": ""});
 
         if(document.querySelector(".medals__medal-button.active")) document.querySelector(".medals__medal-button.active").classList.remove("active");
@@ -72,7 +72,7 @@ export function SetMedal(inputMedal: string | number, setUrl = false, scrollTo =
     MedalsUI.LoadMedal(currentMedal,scrollTo);
     for(var button of document.querySelectorAll("[medal-button-id]")) {
         // @ts-ignore
-        if(button.getAttribute("medal-button-id") == currentMedal.Medal_ID) {
+        if(button.getAttribute("medal-button-id") === currentMedal.Medal_ID) {
             button.classList.add("active");
         } else {
             button.classList.remove("active");
@@ -80,7 +80,7 @@ export function SetMedal(inputMedal: string | number, setUrl = false, scrollTo =
     }
 }
 
-var sidebar: MedalsSidebar = null;
+var sidebar = null;
 async function Load() {
     await MedalData.GetMedals();
     sidebar = new MedalsSidebar();
@@ -112,7 +112,7 @@ async function Load() {
                     "url": input.value,
                     "note": note.value
                 })
-                if(resp.success == true) {
+                if(resp.success === true) {
                     overlay.remove();
                     PushToast({"theme": "success", content: "Added beatmap!"});
                     var grid = document.getElementById("medal_beatmaps");

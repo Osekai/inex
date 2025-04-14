@@ -1,14 +1,17 @@
 import {createLazyLoadInstance} from "./js/utils/lazyload";
+import './style.css'
+import {siDiscord, siGithub, siOsu, siPatreon, siTwitch, siTwitter, siYoutube} from 'simple-icons';
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css'
+import {RoleBadge} from "./js/utils/dom";
+import {GetSetting, SetSettings} from "./js/utils/usersettings";
 
-// @ts-ignore
+
 window.loader = createLazyLoadInstance();
 
-import './style.css'
-// @ts-ignore
 export * from './js/external.js';
 export * from './js/utils/usersettings.js';
 export * from './js/ui/easyselector.js';
-// @ts-ignore
 export * from './js/ui/dropdown.js';
 export * from './js/ui/overlay.js';
 export * from './js/ui/toasts.js';
@@ -17,15 +20,9 @@ export * from './js/ui/otabs.js';
 export * from "./js/utils/array.js";
 export * from "./js/graphics/gradient-block.js";
 
-import { siDiscord, siTwitter, siTwitch, siPatreon, siGithub, siYoutube, siOsu } from 'simple-icons';
 const simpleicons = [siDiscord, siTwitter, siTwitch, siPatreon, siGithub, siYoutube, siOsu];
 
-import tippy from 'tippy.js';
-import 'tippy.js/dist/tippy.css'
-import {RoleBadge} from "./js/utils/dom";
-import {GetSetting, SetSettings} from "./js/utils/usersettings";
-
-var aCreateIcons: () => void = null;
+var aCreateIcons = null;
 
 
 import("lucide").then(({createIcons, icons}) => {
@@ -78,32 +75,28 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             element.removeAttribute("tooltip");
         }
-        // @ts-ignore
         window.loader.update();
     };
     callback();
     var observer = new MutationObserver(callback);
     observer.observe(targetNode, config);
 
-    // @ts-ignore
     window.loader.update();
 })
 
-// @ts-ignore
-if(loggedIn) {
-    // @ts-ignore
+if (loggedIn) {
     var roles = userData.Roles;
-    for(var role of roles) {
+    for (var role of roles) {
         document.getElementById("roles").appendChild(RoleBadge(role));
     }
 }
 
 
-for(var item of document.querySelectorAll("[setting-item]")) {
+for (var item of document.querySelectorAll("[setting-item]")) {
     var input = item.querySelector("input");
     var name = item.getAttribute("setting-item");
 
-    if(input.type == "checkbox") {
+    if (input.type == "checkbox") {
         input.checked = GetSetting(name, false, true);
         input.addEventListener("change", () => {
             SetSettings(name, input.checked, true)
