@@ -35,11 +35,19 @@ $router->get('/', function () {
 $router->get('/medals', function () {
     DrawViewWithTemplate("medals", "page");
 });
-$router->get('/x', function () {
-    DrawViewWithTemplate("preview", "page");
-});
 $router->get('/medals/{medal}/', function ($medal) {
     DrawViewWithTemplate("medals", "page", $medal);
+});
+
+$router->get('/badges', function () {
+    DrawViewWithTemplate("badges", "page");
+});
+$router->get('/badges/{badge}/', function ($badge) {
+    DrawViewWithTemplate("badges", "page", $badge);
+});
+
+$router->get('/x', function () {
+    DrawViewWithTemplate("preview", "page");
 });
 $router->get('/test/', function () {
     DrawViewWithTemplate("test", "page");

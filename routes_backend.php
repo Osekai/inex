@@ -131,3 +131,12 @@ $router->all("/api/comments/{ref}/{section}/send", function ($ref, $section) {
 $router->all("/api/vote/{target}/{id}", function ($target, $id) {
     echo Votes::Vote($target, $id)->ReturnJson();
 });
+
+
+/// =====================
+/// Badges
+/// =====================
+
+$router->all("/api/badges/get_all", function () {
+    echo \Data\Badges::GetAll()->ReturnJson();
+});
