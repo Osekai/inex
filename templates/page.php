@@ -60,6 +60,7 @@ use Database\Session; ?>
                                 </h1>
                             </div>
                         </div>
+                        <a href="https://osekai.net/profiles?user=<?= Session::UserData()['id'] ?>" class="navbar-pfp-dropdown-item"><i data-lucide="user"></i>Your Profile</a>
                         <a href="/logout" class="navbar-pfp-dropdown-item"><i data-lucide="log-out"></i>Log Out</a>
                     <?php } else {
                         ?>
