@@ -35,11 +35,19 @@ $router->get('/', function () {
 $router->get('/medals', function () {
     DrawViewWithTemplate("medals", "page");
 });
-$router->get('/x', function () {
-    DrawViewWithTemplate("preview", "page");
-});
 $router->get('/medals/{medal}/', function ($medal) {
     DrawViewWithTemplate("medals", "page", $medal);
+});
+
+$router->get('/badges', function () {
+    DrawViewWithTemplate("badges", "page");
+});
+$router->get('/badges/{badge}/', function ($badge) {
+    DrawViewWithTemplate("badges", "page", $badge);
+});
+
+$router->get('/x', function () {
+    DrawViewWithTemplate("preview", "page");
 });
 $router->get('/test/', function () {
     DrawViewWithTemplate("test", "page");
@@ -55,4 +63,20 @@ $router->get('/oauth', function () {
 $router->get('/logout', function () {
     \Database\Session::Logout();
     General::Redirect("/");
+});
+
+$router->get('/snapshots', function () {
+
+});
+$router->get('/snapshots/all', function () {
+    if(!\Data\OsekaiUsers::HasPermission("snapshots.admin")) exit;
+    DrawViewWithTemplate("snapshots_admin", "page");
+});
+$router->get('/snapshots/upload', function () {
+    if(!\Data\OsekaiUsers::HasPermission("snapshots.admin.upload")) exit;
+    DrawViewWithTemplate("snapshots_admin_upload", "page");
+});
+$router->get('/snapshots/edit/{ver}', function ($ver) {
+    if(!\Data\OsekaiUsers::HasPermission("snapshots.admin.edit")) exit;
+    DrawViewWithTemplate("snapshots_admin_ver", "page", $ver);
 });

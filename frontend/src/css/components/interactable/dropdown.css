@@ -44,9 +44,10 @@ searchable-dropdown {
     max-height: 40vh;
     overflow-y: auto;
     min-width: 300px;
-    right: 0;
     display: flex;
     flex-direction: column;
+    top: 50px;
+    left: 0;
 }
 .dropdown-content .button {
     margin: 5px;
@@ -97,7 +98,6 @@ searchable-dropdown {
 .dropdown-search-container *[data-lucide], .dropdown-search-container .lucide {
     margin: 0px 12px;
 }
-
 .dropdown-search-container input {
     font-size: 18px;
     height: 100%;

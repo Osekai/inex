@@ -15,6 +15,7 @@
 
 .icon-button {
     padding: 10px 10px;
+    padding-right: 16px;
     align-items: center;
 }
 
@@ -23,7 +24,7 @@
     margin-right: 8px;
 }
 .icon-button svg {
-    margin-right: 18px;
+    margin-right: 5px;
     height: 25px !important;
     width: 25px !important;
 }
@@ -113,3 +114,4 @@
     mix-blend-mode: hard-light;
     opacity: 0.4;
 }
+

@@ -1,4 +1,14 @@
 <?php
+$nav = [
+    '/' => 'home',
+    '/medals' => 'medals',
+    '/badges' => 'badges',
+    'https://osekai.net/rankings' => 'rankings',
+    'https://osekai.net/profiles' => 'profiles'
+];
+
+$current = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+$current = $current === '' ? '/' : $current;
 
 use Database\Session; ?>
 
@@ -10,10 +20,9 @@ use Database\Session; ?>
                 <img src="/public/img/branding/icon_monochrome.svg">
             </a>
             <div class="navbar-links">
-                <a href="/">home</a>
-                <a href="/medals">medals</a>
-                <a href="https://osekai.net/rankings">ranking</a>
-                <a href="https://osekai.net/profiles">profiles</a>
+                <?php foreach ($nav as $url => $label) { ?>
+                    <a href="<?= $url ?>" class="<?= $url === $current ? 'active' : '' ?>"><?= $label ?></a>
+                <?php } ?>
             </div>
         </div>
         <div class="navbar-right">
@@ -24,7 +33,8 @@ use Database\Session; ?>
 
                 <div dropdown="settings-dropdown" class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
                     <h1>Settings</h1>
-                    <label setting-item="medals.hideUnachievedMedals" class="toggle-text navbar-pfp-dropdown-item" for="checkbox">
+                    <label setting-item="medals.hideUnachievedMedals" class="toggle-text navbar-pfp-dropdown-item"
+                           for="checkbox">
                         <input type="checkbox" class="checkbox" id="checkbox">
                         <p>Completely hide obtained medals</p>
                         <small>Only enabled when filter is on</small>
@@ -50,6 +60,7 @@ use Database\Session; ?>
                                 </h1>
                             </div>
                         </div>
+                        <a href="https://osekai.net/profiles?user=<?= Session::UserData()['id'] ?>" class="navbar-pfp-dropdown-item"><i data-lucide="user"></i>Your Profile</a>
                         <a href="/logout" class="navbar-pfp-dropdown-item"><i data-lucide="log-out"></i>Log Out</a>
                     <?php } else {
                         ?>
