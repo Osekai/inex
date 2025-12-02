@@ -211,6 +211,7 @@ function renderVisibleItems(newStyle = false) {
         if (currentDisplayType !== "compact") {
             el.appendChild(DOM.Text("h4", item.RealName))
             el.appendChild(DOM.Text("h1", item.Description))
+            el.appendChild(DOM.Text("h3", item.Users.length + " player" + (item.Users.length === 1 ? "" : "s")));
 
         }
         if (item === currentBadge) {
