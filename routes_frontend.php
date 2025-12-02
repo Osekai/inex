@@ -64,3 +64,19 @@ $router->get('/logout', function () {
     \Database\Session::Logout();
     General::Redirect("/");
 });
+
+$router->get('/snapshots', function () {
+
+});
+$router->get('/snapshots/all', function () {
+    if(!\Data\OsekaiUsers::HasPermission("snapshots.admin")) exit;
+    DrawViewWithTemplate("snapshots_admin", "page");
+});
+$router->get('/snapshots/upload', function () {
+    if(!\Data\OsekaiUsers::HasPermission("snapshots.admin.upload")) exit;
+    DrawViewWithTemplate("snapshots_admin_upload", "page");
+});
+$router->get('/snapshots/edit/{ver}', function ($ver) {
+    if(!\Data\OsekaiUsers::HasPermission("snapshots.admin.edit")) exit;
+    DrawViewWithTemplate("snapshots_admin_ver", "page", $ver);
+});

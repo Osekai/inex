@@ -6,6 +6,7 @@ import {getParam, getSections, insertParam, removeParam, removeSection, setSecti
 import {timeAgo} from "../utils/timeago";
 import {SetTooltip} from "../utils/tooltip";
 import {debounce} from "../utils/debounce";
+import {D2} from "../utils/d2";
 
 var items = null;
 
@@ -52,6 +53,15 @@ function showBadge(badge, el = null, updateSection = true) {
     document.getElementById("badge-users").innerText = badge.Users.length;
     document.getElementById("badge-achieved").innerText = timeAgo.format(new Date(badge.First_Date_Awarded));
     SetTooltip(document.getElementById("badge-achieved"), badge.First_Date_Awarded, "bottom");
+
+    var list = document.getElementById("badge-users-list");
+    for(let user of badge.Users) {
+        var userObj = D2.CustomPlus("a", "badge__user", { "href": "https://osu.ppy.sh/users/" + user.User_ID },() => {
+            D2.Image("", "https://a.ppy.sh/" + user.User_ID);
+            D2.Text("h3", user.Username);
+        })
+        list.appendChild(userObj);
+    }
 
     document.getElementById("badge-sidebar").classList.add("open");
 }
@@ -209,9 +219,13 @@ function renderVisibleItems(newStyle = false) {
 
         el.appendChild(DOM.Image(item.Image_URL))
         if (currentDisplayType !== "compact") {
-            el.appendChild(DOM.Text("h4", item.RealName))
+            //el.appendChild(DOM.Text("h4", item.RealName))
             el.appendChild(DOM.Text("h1", item.Description))
-            el.appendChild(DOM.Text("h3", item.Users.length + " player" + (item.Users.length === 1 ? "" : "s")));
+
+            el.appendChild(D2.Div("", () => {
+                D2.Text("h3", "first awarded " + new Date(item.First_Date_Awarded).toISOString().slice(0, 10));
+                D2.Text("h3", " - " + item.Users.length + " player" + (item.Users.length === 1 ? "" : "s"));
+            }))
 
         }
         if (item === currentBadge) {
@@ -219,6 +233,10 @@ function renderVisibleItems(newStyle = false) {
         }
 
         el.addEventListener("click", () => {
+            if(item === currentBadge) {
+                showBadge(null, null, true);
+                return;
+            }
             showBadge(item, el);
         })
 
