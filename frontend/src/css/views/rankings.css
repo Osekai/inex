@@ -1,0 +1,105 @@
+@import "badges.css"; /* shared */
+* {
+    --hue: 200 !important;
+}
+.list__bar, .list__content {
+    width: 100vw;
+    max-width: 1300px !important;
+    margin: 0px auto;
+}
+
+.ranking-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    overflow: hidden;
+
+    table-layout: auto;
+}
+.ranking-table thead {
+    position: sticky;
+    top: 70px;
+    background: var(--col-base);
+    z-index: 9;
+}
+.ranking-table thead th {
+    color: inherit;
+    font-weight: 600;
+    text-align: left;
+    padding: 12px 16px;
+}
+
+
+.ranking-table tbody td {
+    padding: 12px 16px;
+    border-bottom: none;
+    vertical-align: middle;
+    background-color: var(--col-l1);
+    white-space: nowrap;
+    min-width: 200px;
+    &:first-child {
+        border-top-left-radius: var(--border-radius);
+        border-bottom-left-radius: var(--border-radius);
+    }
+    &:last-child {
+        border-top-right-radius: var(--border-radius);
+        border-bottom-right-radius: var(--border-radius);
+    }
+}
+.ranking-table tbody:has(.coltype-ranktext) td {
+    &:nth-child(2) {
+        border-top-left-radius: var(--border-radius);
+        border-bottom-left-radius: var(--border-radius);
+    }
+}
+
+.ranking-table tbody tr:nth-child(even) td {
+    background-color: var(--col-l4);
+}
+
+.ranking-table tbody td:last-child,
+.ranking-table thead th:last-child {
+    width: 100%; /* last column stretches */
+    white-space: normal; /* allow wrapping if needed */
+}
+
+
+
+.coltype-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    img {
+        height: 32px;
+        border-radius: 90px;
+    }
+}
+.coltype-medal {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    img {
+        height: 32px;
+    }
+}
+.ranking-table tbody td:has(.coltype-ranktext) {
+    min-width: 20px !important;
+    background: transparent !important;
+    position: relative;
+    .coltype-ranktext {
+        position: absolute;
+        top: 0; left: 0; bottom: 0; right: 4px;
+        border-radius: var(--border-radius);
+        background: var(--col-l2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 16px;
+    }
+}
+.ranking-table tbody tr:nth-child(even) td {
+    .coltype-ranktext{
+        background: var(--col-l3);
+    }
+}
