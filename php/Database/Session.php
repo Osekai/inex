@@ -21,6 +21,7 @@ namespace Database {
                     $userid = $userid[0]["User_ID"];
                 } else {
                     setcookie("session", "", -1);
+                    return;
                 }
 
                 $this->userdata = Data\OsekaiUsers::GetUser($userid, true);
