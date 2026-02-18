@@ -6,6 +6,15 @@ $time = explode(' ', $time);
 $time = $time[1] + $time[0];
 $start = $time;
 
+if (isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] === 'application/json') {
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if (json_last_error() === JSON_ERROR_NONE) {
+        $_POST = array_merge($_POST, $data);
+        $_REQUEST = array_merge($_REQUEST, $_POST);
+    }
+}
+
 
 
 

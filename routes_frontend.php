@@ -46,6 +46,13 @@ $router->get('/badges/{badge}/', function ($badge) {
     DrawViewWithTemplate("badges", "page", $badge);
 });
 
+$router->get('/rankings', function () {
+    DrawViewWithTemplate("rankings", "page");
+});
+$router->get('/rankings/{badge}/', function ($badge) {
+    DrawViewWithTemplate("rankings", "page", $badge);
+});
+
 $router->get('/x', function () {
     DrawViewWithTemplate("preview", "page");
 });
