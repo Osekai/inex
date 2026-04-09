@@ -7,12 +7,12 @@ We're working on rewriting the entire site from the ground up!
 So far, this is the status of the rewrites to Inex:
 - ### 🟢 Medals
    - Medals has been fully rolled out to all users!
-- ### 🟡 Rankings
-   - All data required for rankings is being given to Inex from scripts-rust, backend and frontend is unfinished.
+- ### 🟢 Rankings
+   - Rankings has been completed, rolling out soon!
 - ### 🔴 Profiles
     - Relies on Rankings
-- ### 🔴 Badges
-    - Data is not being given by scripts-rust yet (it seems)
+- ### 🟢 Badges
+    - Badges have been completed, rolling out soon!
 - ### 🔴 Snapshots
     - Big undertaking, not there yet!
 
