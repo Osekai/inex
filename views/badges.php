@@ -1,7 +1,7 @@
 <div class="badges__outer">
-    <div class="badges__area">
-        <div class="badges__bar-outer">
-            <div class="badges__bar">
+    <div class="list__area">
+        <div class="list__bar-outer">
+            <div class="list__bar">
                 <div>
                     <searchable-dropdown id="sort-dropdown"></searchable-dropdown>
                     <button id="ascend-button" class="button square">

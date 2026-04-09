@@ -132,7 +132,7 @@ class CommentsSection extends HTMLElement {
         commentContainer.appendChild(name);
         commentContainer.appendChild(content);
 
-        var toolbar = Div("div", "toolbar");
+        var toolbar = Div("div", "comment-toolbar");
 
 
         var upvote = Text("button", "");

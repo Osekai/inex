@@ -1,4 +1,6 @@
-import { removeItemAll } from "../utils/array";
+
+
+import { removeItemAll } from "../utils/array.js";
 
 function BaseRenderer(item, key) {
     var p = document.createElement("p");
@@ -6,179 +8,251 @@ function BaseRenderer(item, key) {
     return p;
 }
 
-
-
 class EasySelector {
     output = null;
     input = null;
     callback = null;
     renderer = null;
     options = null;
-    constructor(output, input, callback, renderer = BaseRenderer, options = {
-        "searchType": "find"
-    }) {
+
+    original_items = null;
+    filtered_items = [];
+    filtered_items_nocat = [];
+    elements = [];
+
+    index = 0;
+    last_index = null;
+    key = "name";
+
+    multiselect = false;
+    selected = []; // always an array
+
+    defualt_name = null;
+    any_selected_ak = false;
+
+    constructor(
+        output,
+        input,
+        callback,
+        renderer = BaseRenderer,
+        options = { searchType: "find" }
+    ) {
         this.output = output;
         this.input = input;
         this.callback = callback;
         this.renderer = renderer;
         this.options = options;
 
-        input.addEventListener("keydown", (e) => {
-            if(this.original_items == null) return;
-            if (e.keyCode === 38) {
-                if (this.any_selected_ak) this.Move(-1);
-                else {
-                    this.any_selected_ak = true;
-                    this.Move(0)
-                }
-            }
-            else if (e.keyCode === 40) {
-                if (this.any_selected_ak) this.Move(1);
-                else {
-                    this.any_selected_ak = true;
-                    this.Move(0)
-                }
-            }
-            else if (e.keyCode == 13) {
-                this.Click(this.index)
-            } else {
-                if (this.options.searchType == "find") {
-                    var filtered = [];
-                    for (var item of this.original_items) {
-                        if (typeof (item.category) != "undefined" || item.category != null) {
-                            filtered.push(item);
-                            continue;
+        this.input.addEventListener("keydown", (e) => {
+            const isEnter = e.keyCode === 13;
+
+            setTimeout(() => {
+                if (!this.original_items) return;
+
+                if (e.keyCode === 38) {
+                    this.Move(-1);
+                } else if (e.keyCode === 40) {
+                    this.Move(1);
+                } else {
+                    if (this.options.searchType === "find") {
+                        let filtered = [];
+
+                        for (let item of this.original_items) {
+                            if (item["fds-alwaysShow"] === true) {
+                                filtered.push(item);
+                                continue;
+                            }
+                            if (typeof item.category !== "undefined" && item.category != null) {
+                                filtered.push(item);
+                                continue;
+                            }
+                            if (
+                                item[this.key] &&
+                                item[this.key]
+                                    .toLowerCase()
+                                    .includes(this.input.value.toLowerCase())
+                            ) {
+                                filtered.push(item);
+                            }
                         }
-                        if (item[this.key].toLowerCase().includes(input.value.toLowerCase())) {
-                            filtered.push(item);
-                        }
+
+                        this.Set(filtered, this.key, this.multiselect);
+                        this.index = 0;
+                        this.Move(0);
                     }
-                    this.Set(filtered, this.key);
+
+                    if (this.options.searchType === "fetch") {
+                        // TODO: api searching
+                    }
                 }
-                if (options.searchType == "fetch") {
-                    // ! TODO: api searching
+
+                if (isEnter) {
+                    this.Click(this.index);
                 }
-            }
+            }, 1);
         });
+
+        setTimeout(() => {
+            this.clearSearchAndReset();
+        }, 2);
     }
-    any_selected_ak = false;
-
-    original_items = null;
-    filtered_items_nocat = null;
-    filtered_items = [];
-    elements = [];
-    index = 0;
-    key = "name";
-
-    multiselect = false;
-    selected = [];
-
-
-    defualt_name = null;
-    last_index = null;
 
     Move(direction) {
-        var temp = this.index + direction;
-        if (temp < 0 || temp >= this.filtered_items_nocat.length) {
-            return;
-        }
-        this.elements[this.index].classList.remove("selected");
-        this.index += direction;
+        const newIndex = this.index + direction;
+
+        if (newIndex < 0 || newIndex >= this.filtered_items_nocat.length) return;
+
+        // clear old selection highlight
+        if (this.elements[this.index])
+            this.elements[this.index].classList.remove("selected");
+
+        this.index = newIndex;
         this.last_index = this.filtered_items_nocat[this.index][this.key];
-        if (this.any_selected_ak) {
-            this.elements[this.index].classList.add("selected");
-        }
+
+        // clear all selected class to avoid duplicates
+        this.elements.forEach((el) => el.classList.remove("selected"));
+
+        // highlight current element
+        if (this.elements[this.index]) this.elements[this.index].classList.add("selected");
     }
 
-    SetDefaults(array) {
-        var countFound = 0;
-        for(let name of array) {
-            if(countFound => array.length) return;
-            this.defualt_name = name;
-            var x = -1;
-            for (var item of this.filtered_items) {
-                x++;
-                if (typeof (item.category) != "undefined" || item.category != null) {
-                    continue;
-                }
-                if (item[this.key] == name) {
-                    this.elements[this.index].classList.remove("selected");
-                    this.index = x;
-                    countFound++;
-                    break;
-                }
+    SetDefaults(namesArray) {
+        if (!Array.isArray(namesArray)) return;
+
+        for (const name of namesArray) {
+            for (let i = 0; i < this.filtered_items.length; i++) {
+                const item = this.filtered_items[i];
+
+                if (typeof item.category !== "undefined" && item.category != null) continue;
+
+                try {
+                    if (item[this.key] === name) {
+                        // clear previous visual highlight
+                        if (this.elements[this.index])
+                            this.elements[this.index].classList.remove("selected");
+
+                        this.index = i;
+
+                        // highlight new selected visually (but no callback)
+                        this.elements[this.index].classList.add("selected");
+
+                        // update last_index
+                        this.last_index = this.filtered_items_nocat[this.index][this.key];
+
+                        break;
+                    }
+                } catch {}
             }
-            this.Click(index);
         }
     }
 
     Click(index) {
+        if (!this.filtered_items_nocat[index]) return;
+
+        const selectedItem = this.filtered_items_nocat[index];
+
         if (this.multiselect) {
-            if (this.selected.includes(this.filtered_items_nocat[index])) {
+            if (this.selected.includes(selectedItem)) {
                 this.elements[index].classList.remove("ms-selected");
-                removeItemAll(this.selected, this.filtered_items_nocat[index]);
+                removeItemAll(this.selected, selectedItem);
             } else {
                 this.elements[index].classList.add("ms-selected");
-                this.selected.push(this.filtered_items_nocat[index]);
+                this.selected.push(selectedItem);
             }
+        } else {
+            // clear previous ms-selected styles
+            this.elements.forEach((el) => el.classList.remove("ms-selected"));
+
+            // update selected to array with one item
+            this.selected = [selectedItem];
+
+            // apply ms-selected style on current element
+            this.elements[index].classList.add("ms-selected");
         }
 
-        if(this.filtered_items_nocat[index] === undefined) return;
-        this.callback(this.filtered_items_nocat[index]);
+        this.callback(selectedItem);
     }
 
-    Set(_items, _key, _multiselect, defaultSelection = null) {
+    clearSearchAndReset() {
+        if (this.input) {
+            this.input.value = "";
+        }
+        // reset the list to original items, no multiselect, no default selection
+        this.Set(this.original_items || [], this.key, this.multiselect, null);
+    }
+
+    Set(_items, _key, _multiselect = false, defaultSelection = null) {
         this.multiselect = _multiselect;
         this.index = 0;
         this.elements = [];
         this.filtered_items = _items;
-        if (this.original_items == null) {
-            this.original_items = _items;
-        }
-        this.key = _key;
+
+        // clear container only once here
         this.output.innerHTML = "";
-        var count = 0;
-        var last_category_header = null;
+
+        // set original_items only once, copy to avoid mutations
+        if (this.original_items == null) this.original_items = _items.slice();
+
+        this.key = _key;
+
+        let last_category_header = null;
         this.filtered_items_nocat = [];
-        for (let item of this.filtered_items) {
-            if (typeof (item.category) != "undefined" || item.category != null) {
+
+        for (const item of this.filtered_items) {
+            if (typeof item.category !== "undefined" && item.category != null) {
                 if (last_category_header != null) {
                     last_category_header.innerText = item.category;
                     continue;
                 }
-                var header = document.createElement("h1");
+                const header = document.createElement("h1");
                 last_category_header = header;
                 header.innerText = item.category;
                 this.output.appendChild(header);
                 continue;
             }
+
             this.filtered_items_nocat.push(item);
             last_category_header = null;
-            let object = this.renderer(item, this.key);
-            for (var sitem of this.selected) {
-                if (sitem[this.key] === item[this.key]) {
-                    object.classList.add("ms-selected");
-                }
-            }
-            this.elements.push(object);
-            this.output.appendChild(object);
-            let thiscount = count;
-            object.addEventListener("click", () => {
-                this.Click(thiscount);
-            })
 
-            if(defaultSelection == thiscount && defaultSelection != null) {
-                this.Click(thiscount);
-            }
-            if (this.original_items != null) {
-                if (item[this.key] == this.last_index) {
-                    this.index = thiscount;
+            const element = this.renderer(item, this.key);
+
+            if (Array.isArray(this.selected)) {
+                for (const sitem of this.selected) {
+                    if (sitem[this.key] === item[this.key]) {
+                        element.classList.add("ms-selected");
+                    }
                 }
             }
-            count++;
+
+            this.elements.push(element);
+            this.output.appendChild(element);
+
+            const nocatIndex = this.filtered_items_nocat.length - 1;
+
+            element.addEventListener("click", () => {
+                this.Click(nocatIndex);
+            });
+
+            if (defaultSelection !== null && defaultSelection === nocatIndex) {
+                this.Click(nocatIndex);
+            }
+
+            if (this.original_items && item[this.key] === this.last_index) {
+                this.index = nocatIndex;
+            }
         }
+
+        if (Array.isArray(this.selected) && this.selected.length > 0) {
+            for (let i = 0; i < this.filtered_items_nocat.length; i++) {
+                if (this.filtered_items_nocat[i][this.key] === this.selected[0][this.key]) {
+                    this.index = i;
+                    break;
+                }
+            }
+        }
+
         this.Move(0);
     }
 }
 
-export {EasySelector};
+export { EasySelector };

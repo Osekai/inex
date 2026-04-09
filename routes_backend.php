@@ -140,3 +140,15 @@ $router->all("/api/vote/{target}/{id}", function ($target, $id) {
 $router->all("/api/badges/get_all", function () {
     echo \Data\Badges::GetAll()->ReturnJson();
 });
+
+
+/// =====================
+/// Rankings
+/// =====================
+
+$router->all("/api/rankings/get", function () {
+    $type = $_POST['type'] ?? '';
+    $options = $_POST['options'] ?? [];
+    $offset = $_POST['offset'] ?? 0;
+    echo \Data\Rankings::GetRanking($type, $options, 50, $offset)->ReturnJson();
+});

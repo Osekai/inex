@@ -23,7 +23,7 @@ if ($cur_medal == null) {
 </script>
 <div class="medals__page home" id="medal-page">
     <div class="sidebar">
-        <div class="sidebar-toolbar">
+        <div class="sidebar-md-toolbar">
             <div class="input-container">
                 <i data-lucide="search"></i>
                 <input type="text" class="input" placeholder="search" id="medal_search">
@@ -88,7 +88,7 @@ if ($cur_medal == null) {
                         <div class="medal__info-solution">
                             <h1>Solution</h1>
                             <p id="medal_solution">Solution</p>
-                            <div class="toolbar">
+                            <div class="md-toolbar">
                                 <div id="mods"></div>
                                 <div id="support">
                                     <div class="support-pill" id="support-stable">
