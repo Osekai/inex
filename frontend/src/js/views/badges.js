@@ -55,8 +55,9 @@ function showBadge(badge, el = null, updateSection = true) {
     SetTooltip(document.getElementById("badge-achieved"), badge.First_Date_Awarded, "bottom");
 
     var list = document.getElementById("badge-users-list");
+    list.innerHTML = "";
     for(let user of badge.Users) {
-        var userObj = D2.CustomPlus("a", "badge__user", { "href": "https://osu.ppy.sh/users/" + user.User_ID },() => {
+        var userObj = D2.CustomPlus("a", "badge__user", { "href": "https://osekai.net/profiles?user=" + user.User_ID },() => {
             D2.Image("", "https://a.ppy.sh/" + user.User_ID);
             D2.Text("h3", user.Username);
         })
@@ -66,24 +67,35 @@ function showBadge(badge, el = null, updateSection = true) {
     document.getElementById("badge-sidebar").classList.add("open");
 }
 
-var sorting = getParam("sort", "date-achieved");
-var dir = getParam("dir", "asc");
+const sortDefaults = {
+    "date_achieved": "desc",
+    "name": "asc",
+    "player_count": "desc",
+};
+var sorting = getParam("sort", "date_achieved");
+var dir = getParam("dir", sortDefaults[sorting] ?? "asc");
 var searchText = "";
 
 var ascendButton = document.getElementById("ascend-button");
 
 function updateAscend() {
     ascendButton.innerHTML = "";
+    const defaultDir = sortDefaults[sorting] ?? "asc";
+
+    if (dir === defaultDir) {
+        removeParam("dir");
+    } else {
+        insertParam("dir", dir, false);
+    }
+
     if (dir == "asc") {
         ascendButton.appendChild(LucideIcon("arrow-down-a-z"));
         SetTooltip(ascendButton, "Ascending", "bottom");
-        removeParam("dir");
     } else {
         ascendButton.appendChild(LucideIcon("arrow-up-a-z"));
         SetTooltip(ascendButton, "Descending", "bottom");
-        insertParam("dir", dir, false);
     }
-    renderVisibleItems()
+    renderVisibleItems();
 }
 
 updateAscend();
@@ -347,7 +359,8 @@ function galleryCreateSortDropdown() {
         if (i === "date_achieved") removeParam("sort"); // default
         else insertParam("sort", i.Key, false);
         sorting = i.Key;
-        renderVisibleItems();
+        dir = sortDefaults[sorting] ?? "asc";
+        updateAscend();
     });
 }
 

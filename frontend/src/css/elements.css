@@ -40,7 +40,10 @@ left {
     animation-fill-mode: both;
     background: linear-gradient(to bottom, #0005, #0000, #0000);
 }
+.jsdropdown-clickoff-layer-closed {
+    display: none !important;
 
+}
 .jsdropdown-button-active, .jsdropdown-open {
     z-index: 10990;
 }

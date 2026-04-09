@@ -26,6 +26,13 @@ class Rankings
             $whereClause = "WHERE Rankings_Users.Is_Restricted = 0";
         }
 
+        // optional extra conditions passed in via options
+        if (!empty($options['extra_conditions']) && is_array($options['extra_conditions'])) {
+            foreach ($options['extra_conditions'] as $condition) {
+                $whereClause .= " AND $condition";
+            }
+        }
+
         $sql = "";
 
         switch ($rankingType) {
@@ -52,7 +59,7 @@ ORDER BY Rankings_Users.Count_Medals DESC";
                 break;
 
             case "medals_rarity":
-                $sql = "SELECT * FROM Medals_Data ORDER BY Frequency DESC";
+                $sql = "SELECT * FROM Medals_Data ORDER BY Frequency";
                 break;
 
             case "pp":
@@ -80,20 +87,24 @@ ORDER BY Rankings_Users.Count_Medals DESC";
                 break;
 
             case "replays":
+                $whereClause .= " AND Count_Replays_Watched >= 1";
                 $sql = "SELECT * FROM Rankings_Users $whereClause ORDER BY Count_Replays_Watched DESC";
                 break;
 
             case "mapsets":
                 if (!isset($options['type'])) return ["error" => "No 'type' specified - must be 'ranked' or 'loved'"];
                 $order = $options['type'] === "ranked" ? "Count_Maps_Ranked" : "Count_Maps_Loved";
+                $whereClause .= " AND $order >= 1";
                 $sql = "SELECT * FROM Rankings_Users $whereClause ORDER BY $order DESC";
                 break;
 
             case "subscribers":
+                $whereClause .= " AND Count_Subscribers >= 1";
                 $sql = "SELECT * FROM Rankings_Users $whereClause ORDER BY Count_Subscribers DESC";
                 break;
 
             case "badges":
+                $whereClause .= " AND Count_Badges >= 1";
                 $sql = "SELECT * FROM Rankings_Users $whereClause ORDER BY Count_Badges DESC";
                 break;
 
@@ -109,7 +120,7 @@ ORDER BY Rankings_Users.Count_Medals DESC";
         $result = self::GenerateSQL($rankingType, $options);
         if (isset($result['error'])) return new Response(false, $result['error']);
 
-        // Parse search parameters
+        // parse search parameters
         $searchQuery = isset($options['query']) ? $options['query'] : null;
         $searchColumn = null;
         $searchParams = [];
@@ -132,7 +143,7 @@ ORDER BY Rankings_Users.Count_Medals DESC";
             }
         }
 
-        // Extract ORDER BY clause and clean it
+        // extract ORDER BY clause and clean it
         $orderByClause = "";
         if (preg_match('/ORDER BY (.+?)(?:LIMIT|$)/is', $result['sql'], $matches)) {
             $orderByPart = trim($matches[1]);
@@ -140,7 +151,7 @@ ORDER BY Rankings_Users.Count_Medals DESC";
             $orderByClause = $orderByPart;
         }
 
-        // Build search WHERE clause
+        // build search WHERE clause
         $searchWhereClause = "";
         if ($searchQuery !== null && $searchColumn !== null) {
             $useExactMatch = ($options['queryColumn'] === "User ID");
@@ -160,7 +171,7 @@ ORDER BY Rankings_Users.Count_Medals DESC";
             }
         }
 
-        // Build main query with ROW_NUMBER for ranking
+        // build main query with ROW_NUMBER for ranking
         $rankedSQL = "
             SELECT 
                 ROW_NUMBER() OVER (ORDER BY $orderByClause) AS Rank,
@@ -193,7 +204,7 @@ ORDER BY Rankings_Users.Count_Medals DESC";
 
         $data = Connection::execSelect($rankedSQL, $allTypes, $allParams);
 
-        // Build count query
+        // build count query
         $countSQL = "SELECT COUNT(*) as count FROM (" . $result['sql'] . ") AS ranked_data";
 
         if ($searchWhereClause) {
@@ -202,9 +213,14 @@ ORDER BY Rankings_Users.Count_Medals DESC";
 
         $countParams = array_merge($result['params'], $searchParams);
         $countTypes = $result['types'] . $searchTypes;
-        //$totalCount = Connection::execSelect($countSQL, $countTypes, $countParams)[0]['count'] ?? 0;
-$totalCount = 10000;
-        // Parse JSON fields
+        if ($rankingType === "medals_rarity" || $rankingType === "mapsets" || $rankingType === "replays" || $rankingType === "subscribers" || $rankingType === "badges") {
+            $totalCount = Connection::execSelect($countSQL, $countTypes, $countParams)[0]['count'] ?? 0;
+        } else {
+            $totalCount = 10000;
+        }
+        if($totalCount > 10000) $totalCount = 10000;
+
+        // parse JSON fields
         foreach ($data as &$row) {
             if (isset($row['Medal_Data'])) {
                 $row['Medal_Data'] = json_decode($row['Medal_Data'], true);

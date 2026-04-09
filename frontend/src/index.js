@@ -6,6 +6,7 @@ import 'tippy.js/dist/tippy.css'
 import {RoleBadge} from "./js/utils/dom";
 import {GetSetting, SetSettings} from "./js/utils/usersettings";
 import {renderDebugTimings} from "./js/layout/debug";
+import {InitDropdowns} from "./js/ui/dropdown";
 
 
 window.loader = createLazyLoadInstance();
@@ -77,12 +78,16 @@ document.addEventListener("DOMContentLoaded", () => {
             element.removeAttribute("tooltip");
         }
         window.loader.update();
+        InitDropdowns();
+
     };
     callback();
     var observer = new MutationObserver(callback);
     observer.observe(targetNode, config);
 
     window.loader.update();
+    InitDropdowns();
+
 })
 
 if (loggedIn) {

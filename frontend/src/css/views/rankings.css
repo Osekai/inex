@@ -17,10 +17,16 @@
     table-layout: auto;
 }
 .ranking-table thead {
-    position: sticky;
     top: 70px;
     background: var(--col-base);
     z-index: 1;
+}
+@-moz-document url-prefix() {
+    /* only on firefox - doesn't work under chromium-based */
+    .ranking-table thead {
+        position: sticky;
+        top: 70px;
+    }
 }
 .ranking-table thead th {
     color: inherit;

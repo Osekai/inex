@@ -32,7 +32,7 @@ use Database\Session; ?>
                     <i data-lucide="cog"></i>
                 </a>
 
-                <div dropdown="settings-dropdown" class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
+                <div dropdown-mode="legacy" dropdown="settings-dropdown" class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
                     <h1>Settings</h1>
                     <label setting-item="medals.hideUnachievedMedals" class="toggle-text navbar-pfp-dropdown-item"
                            for="checkbox">
@@ -46,7 +46,7 @@ use Database\Session; ?>
                 <button dropdown-button="pfp-dropdown"><img class="pfp"
                                                             src="<?= Database\Session::GetPFP() ?>"
                                                             alt="Your Profile Picture"></button>
-                <div dropdown="pfp-dropdown" class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden"
+                <div dropdown-mode="legacy" dropdown="pfp-dropdown" class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden"
                      id="navbar-profile-dropdown">
                     <?php
                     if (Session::LoggedIn()) {

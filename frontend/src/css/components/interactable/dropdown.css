@@ -4,12 +4,11 @@
 }
 
 .dropdown::after {
-    content: "\e9fd";
+    content: "▾";
     font-family: inherit;
     color: white;
     margin-left: auto;
-    transform: translateY(16%);
-    font-family: "Phosphor-Fill" !important;
+    transform: translateY(5%) scaleX(1.2);
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
@@ -58,7 +57,7 @@ searchable-dropdown {
 .dropdown-content .button:first-child {
     margin-top: 5px;
 }
-.dropdown-open {
+.dropdown-open, .jsdropdown-open {
     opacity: 1;
     pointer-events: all;
 }

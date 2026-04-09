@@ -121,17 +121,17 @@ comments-section {
 .comment .content img {
     width: 60%;
 }
-.comment .toolbar .right {
+.comment .comment-toolbar .right {
     margin-left: auto;
 }
-.comment .toolbar {
+.comment .comment-toolbar {
     margin-top: 5px;
     display: flex;
     align-items: center;
     margin-left: -8px;
     margin-right: -8px;
 }
-.comment .toolbar > * {
+.comment .comment-toolbar > * {
     display: flex;
     gap: 2px;
     align-items: center;
@@ -146,22 +146,22 @@ comments-section {
 }
 
 
-.comment .toolbar > .view-replies {
+.comment .comment-toolbar > .view-replies {
     padding-left: 5px;
     opacity: 1;
 }
-.comment .toolbar > *:not(.view-replies) svg {
+.comment .comment-toolbar > *:not(.view-replies) svg {
     margin-right: 3px;
 }
-.comment .toolbar .view-replies svg {
+.comment .comment-toolbar .view-replies svg {
     transition: all 0.2s ease;
 }
 
-.comment .toolbar > *:hover {
+.comment .comment-toolbar > *:hover {
     background: #fff2;
 }
 
-.comment .toolbar svg {
+.comment .comment-toolbar svg {
     width: 20px;
 }
 
@@ -200,10 +200,10 @@ comments-section {
     min-height: 44px;
 }
 
-.comment .toolbar > *.active {
+.comment .comment-toolbar > *.active {
     background: #fff1;
     opacity: 1;
 }
-.comment .toolbar > *.active svg {
+.comment .comment-toolbar > *.active svg {
     fill: white;
 }

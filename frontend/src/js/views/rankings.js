@@ -151,7 +151,7 @@ async function LoadPage(page = 0, fromPagination = true) {
     }
 
     const data = response.content.data;
-
+    console.log(response.content.max)
     if (data.length === 0) {
         tableArea.innerHTML = "";
         tableArea.appendChild(D2.Div("ranking-empty", () => {
@@ -358,7 +358,7 @@ function setActiveCategory(rankingType) {
     const catkey = types[rankingType].category.toLowerCase().replaceAll(" ", "-");
 
     setTimeout(() => {
-        document.getElementById("categories-outer").switchTab(catkey);
+        //document.getElementById("categories-outer").switchTab(catkey);
     });
 
     document.querySelector(`[page-button="${rankingType}"]`).classList.add("active");

@@ -23,7 +23,7 @@ if ($cur_medal == null) {
 </script>
 <div class="medals__page home" id="medal-page">
     <div class="sidebar">
-        <div class="sidebar-toolbar">
+        <div class="sidebar-md-toolbar">
             <div class="input-container">
                 <i data-lucide="search"></i>
                 <input type="text" class="input" placeholder="search" id="medal_search">
