@@ -161,6 +161,7 @@ body:not(:has(.lottie-doner)) .page-container-inner {
             background: linear-gradient(to left, #fff, #000);
             mix-blend-mode: overlay;
             opacity: 0.4;
+            pointer-events: none;
         }
         box-shadow: 2px 2px 180px hsl(var(--hue), 60%, 50%) inset;
         border-radius: 32px;
@@ -221,6 +222,7 @@ body:not(:has(.lottie-doner)) .page-container-inner {
             padding: 30px;
 
             >div {
+                z-index: 92;
                 height: 240px;
                 display: flex;
                 flex-direction: column;
