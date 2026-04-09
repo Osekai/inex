@@ -240,6 +240,13 @@ body {
     width: calc(100% - 10px);
 }
 
+.debug {
+    padding: 19px;
+    background: var(--col-d2);
+    border-radius: var(--border-radius);
+
+}
+
 .navbar-pfp-dropdown-item > input {
     margin-right: 8px;
     display: inline-block;

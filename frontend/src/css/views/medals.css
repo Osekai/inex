@@ -1,6 +1,8 @@
 @import "./medals/solution-elements.css";
+
 body {
     overflow: hidden !important;
+    --hue: 324 !important;
 }
 
 .medals__page {
@@ -91,7 +93,7 @@ body {
     flex: 2;
     overflow-y: scroll;
 }
-.medals__page .sidebar-toolbar {
+.medals__page .sidebar-md-toolbar {
     padding-bottom: 10px;
     padding-top: 30px;
     display: flex;
@@ -104,13 +106,13 @@ body {
     top: 0;
     z-index: 9;
 }
-.medals__page .sidebar-toolbar .input-container {
+.medals__page .sidebar-md-toolbar .input-container {
     display: flex;
     flex: 1;
     align-items: stretch;
     position: relative;
 }
-.medals__page .sidebar-toolbar .input-container > svg {
+.medals__page .sidebar-md-toolbar .input-container > svg {
     position: absolute;
     top: calc(50% - 0.5px);
     height: 20px;
@@ -118,7 +120,7 @@ body {
     left: 12px;
     transform: translateY(-50%);
 }
-.medals__page .sidebar-toolbar .input-container > button {
+.medals__page .sidebar-md-toolbar .input-container > button {
     position: absolute;
     display: flex;
     align-items: center;
@@ -131,11 +133,11 @@ body {
     width: 29px;
     border-radius: 22px;
 }
-.medals__page .sidebar-toolbar .input-container > button svg {
+.medals__page .sidebar-md-toolbar .input-container > button svg {
     height: 18px;
     width: 18px;
 }
-.medals__page .sidebar-toolbar input {
+.medals__page .sidebar-md-toolbar input {
     background: var(--col-l4);
     padding-left: 40px;
 }
@@ -445,16 +447,17 @@ body {
 
 
 
-.medal__info-solution .toolbar {
+.medal__info-solution .md-toolbar {
     display: flex;
     align-items: flex-end;
+    margin-top: 20px;
 }
-.medal__info-solution .toolbar #support {
+.medal__info-solution .md-toolbar #support {
     display: flex;
     margin-left: auto;
     margin-top: 5px;
 }
-.medal__info-solution .toolbar #support > div {
+.medal__info-solution .md-toolbar #support > div {
     display: flex;
     align-items: center;
     padding: 3px 8px;
@@ -462,23 +465,23 @@ body {
     border-radius: 100px;
     margin-left: 5px;
 }
-.medal__info-solution .toolbar #support > div p {
+.medal__info-solution .md-toolbar #support > div p {
     font-size: 15px;
 }
 
-.medal__info-solution .toolbar #support > div.unsupported {
+.medal__info-solution .md-toolbar #support > div.unsupported {
     opacity: 0.5;
     outline: 1px solid #dd4a68;
 }
-.medal__info-solution .toolbar #support > div.unsupported svg {
+.medal__info-solution .md-toolbar #support > div.unsupported svg {
     stroke: #ff234f;
 }
-.medal__info-solution .toolbar #support > div > div {
+.medal__info-solution .md-toolbar #support > div > div {
     height: 18px;
     width: 18px;
     margin-right: 3px;
 }
-.medal__info-solution .toolbar #support > div svg {
+.medal__info-solution .md-toolbar #support > div svg {
     height: 18px;
     width: 18px;
 }

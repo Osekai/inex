@@ -88,7 +88,7 @@ if ($cur_medal == null) {
                         <div class="medal__info-solution">
                             <h1>Solution</h1>
                             <p id="medal_solution">Solution</p>
-                            <div class="toolbar">
+                            <div class="md-toolbar">
                                 <div id="mods"></div>
                                 <div id="support">
                                     <div class="support-pill" id="support-stable">

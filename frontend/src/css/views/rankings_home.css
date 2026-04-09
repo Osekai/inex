@@ -1,0 +1,33 @@
+* {
+    --hue: 200 !important;
+}
+
+.rankings-home {
+    display: flex;
+    gap: 20px;
+    > div {
+        flex: 1;
+    }
+    >div:first-child {
+        max-width: 400px;
+    }
+}
+.buttongrid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 12px;
+    a {
+        padding: 16px;
+        min-height: 120px;
+        background: var(--col-l3);
+        border: 1px solid var(--col-l4);
+        font-size: 24px;
+        border-radius: var( --border-radius);
+        color: inherit;
+        font-weight: 300;
+        &:hover {
+            background: var(--col-l5);
+        }
+    }
+}

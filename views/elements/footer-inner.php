@@ -30,3 +30,7 @@
         </a>
     </div>
 </div>
+<div class="footer-inner footer-time">
+    <small>Rendered in {TIME} / Application
+        Revision <?= ApplicationVersion::revision() ?></small>
+</div>

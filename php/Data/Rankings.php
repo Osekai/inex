@@ -80,7 +80,7 @@ ORDER BY Rankings_Users.Count_Medals DESC";
                 break;
 
             case "replays":
-                $sql = "SELECT * FROM Rankings_Users $whereClause ORDER BY Count_Replays_Watched";
+                $sql = "SELECT * FROM Rankings_Users $whereClause ORDER BY Count_Replays_Watched DESC";
                 break;
 
             case "mapsets":
@@ -109,19 +109,106 @@ ORDER BY Rankings_Users.Count_Medals DESC";
         $result = self::GenerateSQL($rankingType, $options);
         if (isset($result['error'])) return new Response(false, $result['error']);
 
-        $sql = $result['sql'] . " LIMIT ? OFFSET ?";
-        $types = $result['types'] . "ii";
-        $params = array_merge($result['params'], [$limit, $offset]);
+        // Parse search parameters
+        $searchQuery = isset($options['query']) ? $options['query'] : null;
+        $searchColumn = null;
+        $searchParams = [];
+        $searchTypes = "";
 
-        $data = Connection::execSelect($sql, $types, $params);
+        if ($searchQuery !== null && isset($options['queryColumn'])) {
+            $searchColumns = [
+                "Username" => "Name",
+                "User ID" => "ID",
+                "Country" => "Country_Code"
+            ];
 
-        $countWhere = !empty($options['where']) ? $result['params'] : [];
-        $countQuery = "SELECT COUNT(*) as count FROM Rankings_Users " . (!empty($options['where']) ? "WHERE " . implode(" AND ", array_map(fn($k) => "$k = ?", array_keys($options['where']))) : "WHERE Rankings_Users.Is_Restricted = 0");
-        $totalCount = Connection::execSelect($countQuery, $result['types'], $countWhere)[0]['count'] ?? 0;
+            if ($rankingType === "medals_users") {
+                $searchColumns["Rarest Medal"] = "Medal_Data";
+                $searchColumns["Medal Name"] = "Medal_Data";
+            }
 
-        foreach ($data as $i => &$row) {
-            $row['Rank'] = $offset + $i + 1;
-            if (isset($row['Medal_Data'])) $row['Medal_Data'] = json_decode($row['Medal_Data'], true);
+            if (isset($searchColumns[$options['queryColumn']])) {
+                $searchColumn = $searchColumns[$options['queryColumn']];
+            }
+        }
+
+        // Extract ORDER BY clause and clean it
+        $orderByClause = "";
+        if (preg_match('/ORDER BY (.+?)(?:LIMIT|$)/is', $result['sql'], $matches)) {
+            $orderByPart = trim($matches[1]);
+            $orderByPart = preg_replace('/\b\w+\./', '', $orderByPart);
+            $orderByClause = $orderByPart;
+        }
+
+        // Build search WHERE clause
+        $searchWhereClause = "";
+        if ($searchQuery !== null && $searchColumn !== null) {
+            $useExactMatch = ($options['queryColumn'] === "User ID");
+
+            if ($searchColumn === "Medal_Data") {
+                $searchWhereClause = "WHERE JSON_UNQUOTE(JSON_EXTRACT(Medal_Data, '$.Name')) LIKE ?";
+                $searchParams[] = "%$searchQuery%";
+                $searchTypes .= "s";
+            } else if ($useExactMatch) {
+                $searchWhereClause = "WHERE $searchColumn = ?";
+                $searchParams[] = $searchQuery;
+                $searchTypes .= is_numeric($searchQuery) ? "i" : "s";
+            } else {
+                $searchWhereClause = "WHERE $searchColumn LIKE ?";
+                $searchParams[] = "%$searchQuery%";
+                $searchTypes .= "s";
+            }
+        }
+
+        // Build main query with ROW_NUMBER for ranking
+        $rankedSQL = "
+            SELECT 
+                ROW_NUMBER() OVER (ORDER BY $orderByClause) AS Rank,
+                ranked.*
+            FROM (
+                " . $result['sql'] . "
+            ) AS ranked";
+
+        if ($searchWhereClause) {
+            $rankedSQL = "
+                SELECT * FROM (
+                    $rankedSQL
+                ) AS ranked_data
+                $searchWhereClause AND ranked_data.Rank < 10000";
+        } else {
+            $rankedSQL = "
+        SELECT * FROM (
+            $rankedSQL
+        ) AS ranked_data
+        WHERE ranked_data.Rank < 10000
+    ";
+        }
+
+        $rankedSQL .= "
+            ORDER BY Rank ASC
+            LIMIT ? OFFSET ?";
+
+        $allParams = array_merge($result['params'], $searchParams, [$limit, $offset]);
+        $allTypes = $result['types'] . $searchTypes . "ii";
+
+        $data = Connection::execSelect($rankedSQL, $allTypes, $allParams);
+
+        // Build count query
+        $countSQL = "SELECT COUNT(*) as count FROM (" . $result['sql'] . ") AS ranked_data";
+
+        if ($searchWhereClause) {
+            $countSQL .= " " . $searchWhereClause;
+        }
+
+        $countParams = array_merge($result['params'], $searchParams);
+        $countTypes = $result['types'] . $searchTypes;
+        //$totalCount = Connection::execSelect($countSQL, $countTypes, $countParams)[0]['count'] ?? 0;
+$totalCount = 10000;
+        // Parse JSON fields
+        foreach ($data as &$row) {
+            if (isset($row['Medal_Data'])) {
+                $row['Medal_Data'] = json_decode($row['Medal_Data'], true);
+            }
         }
 
         return new Response(true, "ok", ["data" => $data, "max" => $totalCount]);

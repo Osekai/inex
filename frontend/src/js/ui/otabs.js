@@ -39,14 +39,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             oTabContainer.dispatchEvent(pageOpenEvent);
         }
+        oTabContainer.switchTab = switchTab;
 
 
 
 
         for (let oTabButton of oTabButtons) {
             if(oTabButton.closest("[otab-container]") != oTabContainer) continue;
-            if(oTabContainer.getAttribute("otab-no-replace") == null)
-                oTabButton.innerHTML = oTabButton.getAttribute("otab-button");
             oTabButton.addEventListener("click", function () {
                 switchTab(oTabButton.getAttribute("otab-button"));
             });

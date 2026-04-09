@@ -1,511 +1,425 @@
 import "../../css/views/rankings.css";
 import {D2} from "../utils/d2";
-import {getSections} from "../utils/urlQuery";
-import {DoRequest} from "../utils/requests";
+import {getParam, getSections, insertParam, removeParam} from "../utils/urlQuery";
+import {DoRequestCache} from "../utils/requests";
+import {Clubs} from "../utils/clubs";
+import {columnTypes, types} from "./rankings/RankingsUtils";
+import {LoaderPanelOverlay} from "../ui/loader-panel-overlay";
 
-const helpers = {
-    "stdev": {
-        "type": "toggle",
-        "options": {
-            "total": {
-                "label": "Total"
-            },
-            "stdev": {
-                "label": "Stardard Deviation"
-            }
-        }
-    },
-
-    "user": {
-        "type": "user",
-        "data": (data) => {
-            return {
-                "content": {
-                    "ID": data.ID,
-                    "Name": data.Name
-                },
-            }
-        },
-    },
-    "rank": {
-        "type": "ranktext",
-        "data": (data) => {
-            return {
-                "label": "Rank",
-                "content": "#" + data.Rank
-            }
-        },
-    },
-}
-
-
-const types = {
-
-    "medals_users": {
-        "category": "Medals",
-        "name": "Users",
-        "columns": [
-            helpers.rank,
-            helpers.user,
-            {
-                "type": "text",
-                "data": (data) => {
-                    return {
-                        "label": "Medals",
-                        "content": data.Count_Medals + " medals"
-                    }
-                }
-            },
-            {
-                "type": "medal",
-                "data": (data) => {
-                    return {
-                        "label": "Rarest Medal",
-                        "content": data.Medal_Data
-                    }
-                }
-            },
-            {
-                "type": "medalClub",
-                "data": (data) => {
-                    return {
-                        "content": data.Medal_Percentage
-                    }
-                }
-            }
-        ]
-    },
-
-    "medals_rarity": {
-        "category": "Medals",
-        "name": "Rarity",
-        "columns": [
-            helpers.rank,
-            {
-                "type": "medal",
-                "data": (data) => {
-                    return {
-                        "label": null,
-                        "content": data
-                    }
-                }
-            },
-            {
-                "type": "text",
-                "data": (data) => {
-                    return {
-                        "label": "Description",
-                        "content": data.Description
-                    }
-                }
-            },
-            {
-                "type": "text",
-                "data": (data) => {
-                    return {
-                        "label": "held by",
-                        "content": data.Frequency + "% (" + data.Count_Achieved_By + " users)"
-                    }
-                }
-            }
-        ]
-    },
-
-    "pp": {
-        "category": "All Mode",
-        "name": "PP",
-        "options": {
-            "type": helpers.stdev
-        },
-        "columns": [
-            helpers.rank,
-            helpers.user,
-            {
-                "type": "text",
-                "data": (data, options) => {
-                    return {
-                        "label": (options.type === "total" ? "total pp" : "standard deviated pp"),
-                        "content": (options.type === "total" ? data.PP_Total : data.PP_Stdev),
-                        "labelPosition": "after"
-                    }
-                }
-            },
-            {
-                "type": "scoreGraph",
-                "data": (data, options) => {
-                    return {
-                        "type": options.type,
-                        "values": {
-                            "standard": data.PP_Standard,
-                            "taiko": data.PP_Taiko,
-                            "mania": data.PP_Mania,
-                            "catch": data.PP_Catch
-                        },
-                        "prefix": "pp"
-                    }
-                }
-            }
-        ]
-    },
-
-    "level": {
-        "category": "All Mode",
-        "name": "Level",
-        "options": {
-            "type": helpers.stdev
-        },
-        "columns": [
-            helpers.rank,
-            helpers.user,
-            {
-                "type": "text",
-                "data": (data, options) => {
-                    return {
-                        "label": (options.type === "total" ? "total level" : "standard deviated level"),
-                        "content": (options.type === "total" ? data.Level_Total : data.Level_Stdev),
-                        "labelPosition": "after"
-                    }
-                }
-            },
-            {
-                "type": "scoreGraph",
-                "data": (data, options) => {
-                    return {
-                        "type": options.type,
-                        "values": {
-                            "standard": data.Level_Standard,
-                            "taiko": data.Level_Taiko,
-                            "mania": data.Level_Mania,
-                            "catch": data.Level_Catch
-                        },
-                        "prefix": "level"
-                    }
-                }
-            }
-        ]
-    },
-
-    "accuracy": {
-        "category": "All Mode",
-        "name": "Accuracy",
-        "options": {
-            "type": helpers.stdev
-        },
-        "columns": [
-            helpers.rank,
-            helpers.user,
-            {
-                "type": "text",
-                "data": (data, options) => {
-                    let label = (options.type === "total" ? "total accuracy" : "standard deviated accuracy");
-                    return {
-                        "label": label,
-                        "content": (options.type === "total" ? data.Accuracy_Total : data.Accuracy_Stdev) + label
-                    }
-                }
-            },
-            {
-                "type": "scoreGraph",
-                "data": (data, options) => {
-                    return {
-                        "type": options.type,
-                        "values": {
-                            "standard": data.Accuracy_Standard,
-                            "taiko": data.Accuracy_Taiko,
-                            "mania": data.Accuracy_Mania,
-                            "catch": data.Accuracy_Catch
-                        },
-                        "prefix": "accuracy"
-                    }
-                }
-            }
-        ]
-    },
-
-    "replays": {
-        "category": "All Mode",
-        "name": "Replays",
-        "columns": [
-            helpers.rank,
-            helpers.user,
-            {
-                "type": "text",
-                "data": (data) => {
-                    return {
-                        "label": "replays watched",
-                        "content": data.Count_Replays_Watched + " replays watched"
-                    }
-                }
-            }
-        ]
-    },
-
-    "mapsets": {
-        "category": "Mappers",
-        "name": "Mapsets",
-        "options": {
-            "type": {
-                "type": "toggle",
-                "options": {
-                    "ranked": {"label": "Ranked"},
-                    "loved": {"label": "Loved"}
-                }
-            }
-        },
-        "columns": [
-            helpers.rank,
-            helpers.user,
-            {
-                "type": "text",
-                "data": (data, options) => {
-                    return {
-                        "label": (options.type === "ranked" ? "ranked maps" : "loved maps"),
-                        "content": (options.type === "ranked" ? data.Count_Maps_Ranked + " ranked maps" : data.Count_Maps_Loved + " loved maps")
-                    }
-                }
-            }
-        ]
-    },
-
-    "subscribers": {
-        "category": "Mappers",
-        "name": "Subscribers",
-        "columns": [
-            helpers.rank,
-            helpers.user,
-            {
-                "type": "text",
-                "data": (data) => {
-                    return {
-                        "label": "subscribers",
-                        "content": data.Count_Subscribers + " subscribers"
-                    }
-                }
-            }
-        ]
-    },
-
-    "badges": {
-        "category": "Badges",
-        "name": "Badges",
-        "columns": [
-            helpers.rank,
-            helpers.user,
-            {
-                "type": "text",
-                "data": (data) => {
-                    return {
-                        "label": "badges",
-                        "content": data.Count_Badges + " badges"
-                    }
-                }
-            }
-        ]
-    }
-
-};
-
-
-const columnTypes = {
-    "user": (data) => {
-        console.log(data);
-        return D2.CustomPlus("a", "coltype-user", {href: "https://osu.ppy.sh/u/" + data.content.ID}, () => {
-            D2.Image("pfp", "https://a.ppy.sh/" + data.content.ID);
-            D2.Text("p", data.content.Name);
-        })
-    },
-    "text": (data) => {
-        return D2.Div("coltype-text", () => {
-            D2.Text("p", data.content);
-        })
-    },
-    "ranktext": (data) => {
-        return D2.Div("coltype-ranktext", () => {
-            D2.Text("p", data.content);
-        })
-    },
-    "medal": (data) => {
-        return D2.CustomPlus("a", "coltype-medal", {href: "/medals/" + encodeURIComponent(data.content.Name)}, () => {
-            D2.Image("medal", "/assets/osu/web/" + data.content.Link)
-            D2.Text("p", data.content.Name);
-        })
-    },
-    "scoreGraph": (data) => {
-        return D2.Text("p", "TODO");
-    },
-    "medalClub": (data) => {
-        return D2.Text("p", "TODO: " + data.content);
-    }
-}
 
 
 let currentCategory = null;
 let currentOptions = {};
 let currentPage = 0;
-let limit = 50; // items per page
+const limit = 50;
 
 const topPagination = document.querySelector('pagination-el[primary]');
 const bottomPagination = document.querySelector('pagination-el:not([primary])');
+const searchBar = document.getElementById("search-bar");
 
-async function LoadPage(page = 0) {
-    if (!currentCategory) return;
-    currentPage = page;
+// === UTILITY FUNCTIONS ===
 
-    let tableArea = document.getElementById("ranking-table-area");
-    tableArea.innerHTML = "";
+function autoParam(key, val, def = "") {
+    if (val === def || val === "" || val === null || val === undefined) {
+        removeParam(key);
+    } else {
+        insertParam(key, val);
+    }
+}
 
-    let response = await DoRequest("POST", "/api/rankings/get", {
-        offset: currentPage * limit,
+// === PAGINATION HELPERS ===
+
+function updateBothPaginations(maxPages) {
+    if (topPagination && topPagination.maxPages !== maxPages) {
+        topPagination.maxPages = maxPages;
+    }
+    if (bottomPagination && bottomPagination.maxPages !== maxPages) {
+        bottomPagination.maxPages = maxPages;
+    }
+}
+
+function setBothPaginationPages(page) {
+    if (topPagination) topPagination.setPage(page);
+    if (bottomPagination) bottomPagination.setPage(page);
+}
+
+function initializeBothPaginations(maxCount) {
+    if (maxCount !== 0) {
+        if (topPagination) topPagination.initialize(limit, maxCount);
+        if (bottomPagination) bottomPagination.initialize(limit, maxCount);
+    }
+}
+
+// === API REQUEST HELPERS ===
+
+async function fetchRankingsData(offset = 0) {
+    if (!currentCategory) return null;
+
+    if(currentOptions.query == "") currentOptions.query = null;
+
+    return await DoRequestCache("POST", "/api/rankings/get", {
+        offset,
         type: currentCategory.key,
         options: currentOptions
-    });
+    }, 5);
+}
 
-    if (!response || !response.content || !response.content.data) return;
+// === TABLE RENDERING ===
 
-    let data = response.content.data;
+function getColumnLabel(colDef, firstItem) {
+    if (firstItem) {
+        let firstItemData = colDef.data(firstItem, currentOptions);
+        if (firstItemData.label) return firstItemData.label;
+    }
 
-    let table = document.createElement("table");
-    table.className = "ranking-table";
+    const typeLabels = {
+        user: "User",
+        text: "Text",
+        medal: "Medal",
+        scoreGraph: "Graph"
+    };
 
-    // header
-    let thead = document.createElement("thead");
-    let headerRow = document.createElement("tr");
-    for (let colDef of currentCategory.value.columns) {
-        let th = document.createElement("th");
+    return typeLabels[colDef.type] || "Column";
+}
 
-        // try to get label from the first data item, fallback to type default
-        let label = "";
-        if (data.length > 0) {
-            let firstItemData = colDef.data(data[0], currentOptions);
-            label = firstItemData.label || "";
-        }
+function createTableHeader(columns, data) {
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
 
-        if (!label) {
-            label = colDef.type === "user" ? "User" :
-                colDef.type === "text" ? "Text" :
-                    colDef.type === "medal" ? "Medal" :
-                        colDef.type === "scoreGraph" ? "Graph" :
-                            "Column";
-        }
-
-        th.textContent = label;
+    for (let colDef of columns) {
+        const th = document.createElement("th");
+        th.textContent = getColumnLabel(colDef, data[0]);
         headerRow.appendChild(th);
     }
+
     thead.appendChild(headerRow);
-    table.appendChild(thead);
+    return thead;
+}
 
+function createTableBody(columns, data) {
+    const tbody = document.createElement("tbody");
 
-    // body
-    let tbody = document.createElement("tbody");
     for (let item of data) {
-        let row = document.createElement("tr");
-        for (let colDef of currentCategory.value.columns) {
-            let td = document.createElement("td");
-            let colData = colDef.data(item, currentOptions);
+        const row = document.createElement("tr");
+
+        for (let colDef of columns) {
+            const td = document.createElement("td");
+            const colData = colDef.data(item, currentOptions);
+
             if (columnTypes[colDef.type]) {
-                let result = columnTypes[colDef.type](colData);
-                td.appendChild(result);
+                td.appendChild(columnTypes[colDef.type](colData));
             } else {
                 td.textContent = "Unknown column type";
             }
+
             row.appendChild(td);
         }
+
         tbody.appendChild(row);
     }
-    table.appendChild(tbody);
 
-    tableArea.appendChild(table);
-
-    // update max pages if needed
-    const maxPages = Math.ceil(response.content.max / limit) - 1;
-    if (topPagination && topPagination.maxPages !== maxPages) topPagination.maxPages = maxPages;
-    if (bottomPagination && bottomPagination.maxPages !== maxPages) bottomPagination.maxPages = maxPages;
-
-    // set page on paginations without re-initializing
-    //if (topPagination) topPagination.setPage(currentPage);
-    //if (bottomPagination) bottomPagination.setPage(currentPage);
+    return tbody;
 }
 
+function renderTable(data, columns) {
+    const table = document.createElement("table");
+    table.className = "ranking-table";
+    table.appendChild(createTableHeader(columns, data));
+    table.appendChild(createTableBody(columns, data));
+    return table;
+}
 
-async function LoadCategory(category) {
-    let categoryType = types[category];
-    if (!categoryType) return;
+// === PAGE LOADING ===
 
-    currentCategory = {key: category, value: categoryType};
+let isLoading = false;
 
-    // default options
-    currentOptions = {};
+async function LoadPage(page = 0, fromPagination = true) {
+    if (!currentCategory || isLoading) return;
+
+    isLoading = true;
+    currentPage = page;
+
+    const tableArea = document.getElementById("ranking-table-area");
+    tableArea.innerHTML = "";
+    tableArea.appendChild(LoaderPanelOverlay());
+
+    const response = await fetchRankingsData(currentPage * limit);
+
+    if (!response?.content?.data) {
+        isLoading = false;
+        return;
+    }
+
+    const data = response.content.data;
+
+    if (data.length === 0) {
+        tableArea.innerHTML = "";
+        tableArea.appendChild(D2.Div("ranking-empty", () => {
+            D2.Text("p", "No results found");
+        }));
+        isLoading = false;
+        return;
+    }
+
+    tableArea.innerHTML = "";
+    tableArea.appendChild(renderTable(data, currentCategory.value.columns));
+
+    const maxPages = Math.ceil(response.content.max / limit) - 1;
+    updateBothPaginations(maxPages);
+
+    if (!fromPagination) {
+        setBothPaginationPages(currentPage);
+    }
+
+    isLoading = false;
+}
+
+async function updatePaginationMaxCount() {
+    if (!currentCategory) return;
+
+    const response = await fetchRankingsData(0);
+    const maxCount = response?.content?.max || 0;
+    const maxPages = Math.ceil(maxCount / limit) - 1;
+
+    updateBothPaginations(maxPages);
+}
+
+// === OPTIONS INITIALIZATION ===
+
+function getDefaultOption(optDef) {
+    return Object.keys(optDef.options)[0];
+}
+
+function createToggleOption(key, optDef) {
+    const div = document.createElement("div");
+    div.className = "option-group";
+
+    for (let optKey in optDef.options) {
+        const labelText = optDef.options[optKey].label;
+        const randomId = `opt-${key}-${Math.floor(Math.random() * 1000000)}`;
+
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = key;
+        input.value = optKey;
+        input.id = randomId;
+        input.checked = (optKey === currentOptions[key]);
+
+        input.addEventListener("change", (e) => {
+            currentOptions[key] = e.target.value;
+            autoParam(key, e.target.value, getDefaultOption(optDef));
+            LoadPage(0, false);
+        });
+
+        const label = document.createElement("label");
+        label.htmlFor = randomId;
+        label.textContent = labelText;
+
+        div.appendChild(input);
+        div.appendChild(label);
+    }
+
+    return div;
+}
+
+function InitializeOptions() {
+    const categoryType = currentCategory.value;
+
+    if (!currentOptions || Object.keys(currentOptions).length === 0) {
+        currentOptions = {};
+    }
+
+    // Set defaults for toggle options
     if (categoryType.options) {
         for (let key in categoryType.options) {
-            let optDef = categoryType.options[key];
-            if (optDef.type === "toggle") {
-                currentOptions[key] = Object.keys(optDef.options)[0];
+            const optDef = categoryType.options[key];
+
+            // read from URL param first
+            const urlValue = getParam(key);
+            if (urlValue && optDef.options[urlValue]) {
+                currentOptions[key] = urlValue;
+            } else if (!currentOptions[key]) {
+                currentOptions[key] = getDefaultOption(optDef);
             }
         }
     }
 
-    // build options UI
-    let optionsContainer = document.getElementById("ranking-options-area");
+    // Render options
+    const optionsContainer = document.getElementById("ranking-options-area");
     optionsContainer.innerHTML = "";
 
     if (categoryType.options) {
         for (let key in categoryType.options) {
-            let optDef = categoryType.options[key];
+            const optDef = categoryType.options[key];
             if (optDef.type === "toggle") {
-                let div = document.createElement("div");
-                div.className = "option-group";
-                div.innerHTML = `<strong>${key}</strong>: `;
-                for (let optKey in optDef.options) {
-                    let label = optDef.options[optKey].label;
-                    let input = document.createElement("input");
-                    input.type = "radio";
-                    input.name = key;
-                    input.value = optKey;
-                    input.checked = (optKey === currentOptions[key]);
-                    input.addEventListener("change", (e) => {
-                        currentOptions[key] = e.target.value;
-                        LoadPage(0); // reset to first page when options change
-                    });
-
-                    let span = document.createElement("span");
-                    span.textContent = label;
-
-                    div.appendChild(input);
-                    div.appendChild(span);
-                }
-                optionsContainer.appendChild(div);
+                optionsContainer.appendChild(createToggleOption(key, optDef));
             }
         }
     }
-
-    currentPage = 0;
-
-    // initialize paginations only once
-    const response = await DoRequest("POST", "/api/rankings/get", {
-        offset: 0,
-        type: currentCategory.key,
-        options: currentOptions
-    });
-
-    const maxCount = response.content?.max || 0;
-    if (topPagination) topPagination.initialize(limit, maxCount);
-    if (bottomPagination) bottomPagination.initialize(limit, maxCount);
-
-    await LoadPage(0);
 }
 
-async function Start() {
-    let currentType = getSections("/rankings/{ranking}");
-    if (!currentType.ranking) {
-        console.log("Ranking homepage, select a category.");
-    } else {
-        await LoadCategory(currentType.ranking);
+// === SEARCH DROPDOWN ===
+
+function InitializeSearchDropdown() {
+    const searchDropdown = document.getElementById("searchtype-dropdown");
+    if (!searchDropdown || !currentCategory) return;
+
+    const categoryDef = currentCategory.value;
+    const sortItems = (categoryDef.searchable || []).map(n => ({Name: n, Key: n}));
+
+    if (sortItems.length === 0) {
+        sortItems.push({Name: "Default", Key: "default"});
+    }
+
+    // Determine default index from URL param
+    let defaultIndex = 0;
+    if (currentOptions.queryColumn) {
+        const idx = sortItems.findIndex(x => x.Key === currentOptions.queryColumn);
+        if (idx !== -1) defaultIndex = idx;
+    }
+
+    searchDropdown.create(
+        sortItems,
+        "Name",
+        defaultIndex,
+        "",
+        (selectedItem) => {
+            currentOptions.queryColumn = selectedItem.Key;
+            autoParam("col", selectedItem.Key, sortItems[0].Key);
+            LoadPage(0, false);
+        }
+    );
+
+    // Set default without triggering URL update if not already set
+    if (!currentOptions.queryColumn) {
+        currentOptions.queryColumn = sortItems[0].Key;
     }
 }
 
-// hook paginations to update LoadPage
-if (topPagination) topPagination.addEventListener("page", (e) => LoadPage(e.page));
-if (bottomPagination) bottomPagination.addEventListener("page", (e) => LoadPage(e.page));
+// === CATEGORY LOADING ===
+
+async function LoadCategory(category) {
+    const categoryType = types[category];
+    if (!categoryType) return;
+
+    currentCategory = {key: category, value: categoryType};
+
+    InitializeOptions();
+    InitializeSearchDropdown();
+
+    currentPage = 0;
+
+    const response = await fetchRankingsData(0);
+    const maxCount = response?.content?.max || 0;
+
+    initializeBothPaginations(maxCount);
+    await LoadPage(0, false);
+}
+
+// === INITIALIZATION ===
+
+
+function buildCategoryStructure() {
+    const categories = {};
+
+    for (let [key, value] of Object.entries(types)) {
+        if (!categories[value.category]) {
+            categories[value.category] = [];
+        }
+        categories[value.category].push({key, name: value.name});
+    }
+
+    return categories;
+}
+
+function renderCategories(categories) {
+    const categoriesEl = document.getElementById("categories");
+    const pagesEl = document.getElementById("pages");
+
+    for (let [category, items] of Object.entries(categories)) {
+        const catkey = category.toLowerCase().replaceAll(" ", "-");
+
+        //categoriesEl.appendChild(D2.CustomPlus("button", "", {"otab-button": catkey, "otab-no-replace": "no"}, () => {
+        //    D2.Text("span", category);
+        //}));
+
+        pagesEl.appendChild(D2.CustomPlus("div", "test", {"otab-name": catkey}, () => {
+            D2.Text("p", category);
+            for (let item of items) {
+                D2.CustomPlus("a", "", {"href": "/rankings/" + item.key, "page-button": item.key}, () => {
+                    D2.Text("span", item.name);
+                });
+            }
+        }));
+    }
+}
+
+function setActiveCategory(rankingType) {
+    const catkey = types[rankingType].category.toLowerCase().replaceAll(" ", "-");
+
+    setTimeout(() => {
+        document.getElementById("categories-outer").switchTab(catkey);
+    });
+
+    document.querySelector(`[page-button="${rankingType}"]`).classList.add("active");
+}
+
+async function Start() {
+    const categories = buildCategoryStructure();
+    renderCategories(categories);
+
+    const currentType = getSections("/rankings/{ranking}");
+    const q = getParam("q", "");
+    const col = getParam("col", null);
+
+    searchBar.value = q;
+    currentOptions.query = q;
+
+    if (currentType.ranking) {
+        setActiveCategory(currentType.ranking);
+
+        // Set col option before loading category to prevent flicker
+        if (col && types[currentType.ranking].searchable?.includes(col)) {
+            currentOptions.queryColumn = col;
+        }
+
+        await LoadCategory(currentType.ranking);
+
+        // Update dropdown display without triggering change
+        if (col && types[currentType.ranking].searchable?.includes(col)) {
+            const dropdown = document.getElementById("searchtype-dropdown");
+            if (dropdown) dropdown.setValue(col);
+        }
+    }
+
+    // Only set URL params once at the end
+    autoParam("q", searchBar.value.trim(), "");
+    if (currentOptions.queryColumn) {
+        const categoryDef = types[currentType.ranking];
+        const sortItems = (categoryDef?.searchable || []);
+        const defaultCol = sortItems[0] || "default";
+        autoParam("col", currentOptions.queryColumn, defaultCol);
+    }
+}
+
+// === EVENT LISTENERS ===
+
+if (topPagination) {
+    topPagination.addEventListener("page", (e) => LoadPage(e.page));
+}
+if (bottomPagination) {
+    bottomPagination.addEventListener("page", (e) => LoadPage(e.page));
+}
+
+searchBar.addEventListener("keydown", async (e) => {
+    if (e.key === "Enter") {
+        const q = searchBar.value.trim();
+        currentOptions.query = q;
+        autoParam("q", q, "");
+        currentPage = 0;
+        setBothPaginationPages(0);
+        await LoadPage(0, true);
+    }
+});
 
 Start();
-

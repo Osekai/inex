@@ -237,6 +237,8 @@ async function DoRequestCache(method, url, data = null, cacheTime = 5) {
     const db = await openDB();
     const cachedEntry = await getFromDB(db, cacheKey);
 
+    console.log(cacheKey);
+
     if (cachedEntry) {
         if (now - cachedEntry.timestamp < cacheTime * 1000) {
             return cachedEntry.response;

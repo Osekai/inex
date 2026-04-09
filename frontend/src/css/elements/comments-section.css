@@ -120,7 +120,6 @@ comments-section {
 
 .comment .content img {
     width: 60%;
-    max-height: 250px;
 }
 .comment .toolbar .right {
     margin-left: auto;

@@ -3,6 +3,7 @@ namespace Database {
 
     use Data;
     use Database;
+    use Debug\Timings;
     use General;
     use API;
 
@@ -16,15 +17,21 @@ namespace Database {
         {
             if ($_COOKIE["session"] != null || $this->key != null) {
                 $this->key = $_COOKIE["session"];
+                $s = new Timings("session_fetch");
                 $userid = Database\Connection::execSelect("SELECT * FROM `System_Sessions` WHERE `Key` = ?", "s", [$this->key]);
+                $s->finish();
                 if (count($userid) > 0) {
                     $userid = $userid[0]["User_ID"];
                 } else {
                     setcookie("session", "", -1);
                 }
 
+                $s = new Timings("session_fetch_user");
                 $this->userdata = Data\OsekaiUsers::GetUser($userid, true);
+                $s->finish();
+                $s = new Timings("session_fetch_settings");
                 $this->settings = Data\Settings::Get($userid);
+                $s->finish();
             }
         }
 

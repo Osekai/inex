@@ -348,8 +348,6 @@ function galleryCreateSortDropdown() {
         else insertParam("sort", i.Key, false);
         sorting = i.Key;
         renderVisibleItems();
-
-
     });
 }
 

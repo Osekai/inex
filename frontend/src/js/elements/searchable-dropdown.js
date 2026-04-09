@@ -5,8 +5,10 @@ class SearchableDropdown extends HTMLElement {
     constructor() {
         super();
     }
+
     callback = null;
     selectedObj = null;
+
     create(items = [
         {
             "category": "CATEGORY 1",
@@ -29,13 +31,17 @@ class SearchableDropdown extends HTMLElement {
     ], keyname = "name", Defaultselected = 0, dropdownText = "", callback = null) {
         this.callback = callback;
         var showSelected = true;
-        if(dropdownText !== "") {
+        if (dropdownText !== "") {
             showSelected = false;
         }
         var that = this;
         var selected = null;
-        var dropdown = Object.assign(document.createElement("div"), {"innerText": items[1][keyname], "className": "dropdown"});
-        if(!showSelected) {
+        var firstItem = items.find(item => typeof item[keyname] !== 'undefined');
+        var dropdown = Object.assign(document.createElement("div"), {
+            "innerText": firstItem ? firstItem[keyname] : '',
+            "className": "dropdown"
+        });
+        if (!showSelected) {
             dropdown.innerText = dropdownText;
         }
         var dropdownContent = Object.assign(document.createElement("div"), {"className": "dropdown-content"})
@@ -48,21 +54,21 @@ class SearchableDropdown extends HTMLElement {
         var arrowKeyDirector = new EasySelector(
             dropdownInner,
             dropdownSearch,
-             (item) => {
+            (item) => {
                 dropdownContent.classList.remove("dropdown-open")
                 BlurAll();
-                if(showSelected)
-                dropdown.innerText = item[keyname];
+                if (showSelected)
+                    dropdown.innerText = item[keyname];
                 selected = item[keyname];
                 this.selectedObj = item;
                 arrowKeyDirector.SetDefaults([selected])
-                 if(that.callback != null) {
-                     that.callback(item);
-                 }
+                if (that.callback != null) {
+                    that.callback(item);
+                }
             }
         )
         dropdown.addEventListener("click", () => {
-            if(dropdownContent.classList.contains("dropdown-open")) {
+            if (dropdownContent.classList.contains("dropdown-open")) {
                 dropdownContent.classList.remove("dropdown-open")
                 BlurAll();
             } else {
@@ -75,6 +81,10 @@ class SearchableDropdown extends HTMLElement {
         dropdownContent.appendChild(dropdownInner);
         this.appendChild(dropdown)
         this.appendChild(dropdownContent);
+    }
+
+    setValue(key) {
+
     }
 
     disconnectedCallback() {
@@ -93,6 +103,7 @@ class SearchableDropdown extends HTMLElement {
 
     }
 }
+
 customElements.define("searchable-dropdown", SearchableDropdown);
 
 export default {SearchableDropdown};

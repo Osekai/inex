@@ -5,6 +5,7 @@ import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'
 import {RoleBadge} from "./js/utils/dom";
 import {GetSetting, SetSettings} from "./js/utils/usersettings";
+import {renderDebugTimings} from "./js/layout/debug";
 
 
 window.loader = createLazyLoadInstance();
@@ -103,3 +104,4 @@ for (var item of document.querySelectorAll("[setting-item]")) {
         })
     }
 }
+window.debug = renderDebugTimings;
