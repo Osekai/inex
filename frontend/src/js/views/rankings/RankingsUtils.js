@@ -143,6 +143,16 @@ export const types = {
                 }
             },
             {
+                "type": "text",
+                "data": (data, options) => {
+                    return {
+                        "label": (options.type === "total" ? "standard deviated pp" : "total pp"),
+                        "content": (options.type === "total" ? data.PP_Stdev : data.PP_Total),
+                        "labelPosition": "after"
+                    }
+                }
+            },
+            {
                 "type": "scoreGraph",
                 "data": (data, options) => {
                     return {
