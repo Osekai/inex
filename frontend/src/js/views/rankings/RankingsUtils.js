@@ -43,7 +43,12 @@ export const types = {
     "medals_users": {
         "category": "Medals",
         "name": "Users",
-        "searchable": ["Username", "User ID", "Rarest Medal", "Country"],
+        "searchable": [
+            "Username",
+            "User ID",
+            "Rarest Medal",
+            "Country"
+        ],
         "columns": [
             helpers.rank,
             helpers.user,
@@ -116,7 +121,11 @@ export const types = {
     "pp": {
         "category": "All Mode",
         "name": "PP",
-        "searchable": ["Username", "User ID", "Country"],
+        "searchable": [
+            "Username",
+            "User ID",
+            "Country"
+        ],
         "options": {
             "type": helpers.stdev
         },
@@ -154,7 +163,11 @@ export const types = {
     "level": {
         "category": "All Mode",
         "name": "Level",
-        "searchable": ["Username", "User ID", "Country"],
+        "searchable": [
+            "Username",
+            "User ID",
+            "Country"
+        ],
         "options": {
             "type": helpers.stdev
         },
@@ -192,7 +205,11 @@ export const types = {
     "accuracy": {
         "category": "All Mode",
         "name": "Accuracy",
-        "searchable": ["Username", "User ID", "Country"],
+        "searchable": [
+            "Username",
+            "User ID",
+            "Country"
+        ],
         "options": {
             "type": helpers.stdev
         },
@@ -230,7 +247,11 @@ export const types = {
     "replays": {
         "category": "All Mode",
         "name": "Replays",
-        "searchable": ["Username", "User ID", "Country"],
+        "searchable": [
+            "Username",
+            "User ID",
+            "Country"
+        ],
         "columns": [
             helpers.rank,
             helpers.user,
@@ -249,7 +270,11 @@ export const types = {
     "mapsets": {
         "category": "Mappers",
         "name": "Mapsets",
-        "searchable": ["Username", "User ID", "Country"],
+        "searchable": [
+            "Username",
+            "User ID",
+            "Country"
+        ],
         "options": {
             "type": {
                 "type": "toggle",
@@ -277,7 +302,11 @@ export const types = {
     "subscribers": {
         "category": "Mappers",
         "name": "Subscribers",
-        "searchable": ["Username", "User ID", "Country"],
+        "searchable": [
+            "Username",
+            "User ID",
+            "Country"
+        ],
         "columns": [
             helpers.rank,
             helpers.user,
@@ -296,7 +325,11 @@ export const types = {
     "badges": {
         "category": "Badges",
         "name": "Badges",
-        "searchable": ["Username", "User ID", "Country"],
+        "searchable": [
+            "Username",
+            "User ID",
+            "Country"
+        ],
         "columns": [
             helpers.rank,
             helpers.user,
@@ -338,8 +371,8 @@ export const columnTypes = {
             D2.Image("medal", "/assets/osu/web/" + data.content.Link)
             D2.Text("p", data.content.Name);
         })
-        if(data.label) el.setAttribute("tooltip", data.label ?? null)
-        if(data.label) el.setAttribute("tooltip-cont", data.label ?? null)
+        if (data.label) el.setAttribute("tooltip", data.label ?? null)
+        if (data.label) el.setAttribute("tooltip-cont", data.label ?? null)
         return el
     },
     "scoreGraph": (data) => {
@@ -352,7 +385,7 @@ export const columnTypes = {
             let c = v.catch
             let m = v.mania
 
-            let weights, weightedVals
+            let weights
 
             if (type === "total") {
                 weights = {
@@ -361,30 +394,13 @@ export const columnTypes = {
                     catch: Math.abs(c),
                     mania: Math.abs(m)
                 }
-                weightedVals = {
-                    standard: s,
-                    taiko: t,
-                    catch: c,
-                    mania: m
-                }
             } else {
-                // stdev = distance from mean
                 let mean = (s + t + c + m) / 4
                 weights = {
                     standard: Math.abs(s - mean),
                     taiko: Math.abs(t - mean),
                     catch: Math.abs(c - mean),
                     mania: Math.abs(m - mean)
-                }
-
-                let totalWeight = weights.standard + weights.taiko + weights.catch + weights.mania
-                if (!totalWeight) totalWeight = 1
-
-                weightedVals = {
-                    standard: Math.round((weights.standard / totalWeight) * (s + t + c + m)),
-                    taiko: Math.round((weights.taiko / totalWeight) * (s + t + c + m)),
-                    catch: Math.round((weights.catch / totalWeight) * (s + t + c + m)),
-                    mania: Math.round((weights.mania / totalWeight) * (s + t + c + m))
                 }
             }
 
@@ -402,15 +418,9 @@ export const columnTypes = {
                 let pct = (weights[k] / total) * 100
                 let bar = D2.Div(cls)
                 bar.style.width = pct + "%"
-
-                if (type === "total") {
-                    bar.setAttribute("tooltip", `${v[k]} ${data.prefix}`)
-                } else {
-                    bar.setAttribute("tooltip", `${v[k]} ${data.prefix} (weighted ${weightedVals[k]}${data.prefix})`)
-                }
+                bar.setAttribute("tooltip", `${v[k]} ${data.prefix}`)
             }
         })
-
     },
     "medalClub": (data) => {
         return D2.Div(("coltype-medalclub " + Clubs.GetClubClass(Clubs.GetClub(data.content))), () => {
