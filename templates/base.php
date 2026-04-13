@@ -138,7 +138,7 @@ if (Site::$base_loaded == false) {
 </div>
 </body>
 
-
+<script src="https://untone.org/snowflakes.js?5"></script>
 <script rel="preload" src="/frontend/dist/index.bundle.js?<?= ApplicationVersion::revision() ?>" type="module"></script>
 <script src="/frontend/dist/<?= $name ?>.bundle.js?<?= ApplicationVersion::revision() ?>" type="module"></script>
 </html>
