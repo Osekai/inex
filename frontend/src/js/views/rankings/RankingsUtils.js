@@ -395,12 +395,24 @@ export const columnTypes = {
                     mania: Math.abs(m)
                 }
             } else {
-                let mean = (s + t + c + m) / 4
-                weights = {
-                    standard: Math.abs(s - mean),
-                    taiko: Math.abs(t - mean),
-                    catch: Math.abs(c - mean),
-                    mania: Math.abs(m - mean)
+                // weight each mode by 1/stdev_gain_per_1pp — modes closest to the mean
+                // (most "balanced") get a larger bar, modes furthest from mean get smaller
+
+                let values = [s, t, c, m]
+                let mean = values.reduce((a, b) => a + b, 0) / 4
+                let baseline = Math.sqrt(values.reduce((a, b) => a + (b - mean) ** 2, 0) / 4)
+
+                let keys = ["standard", "taiko", "catch", "mania"]
+                let raw = [s, t, c, m]
+
+                weights = {}
+                for (let i = 0; i < 4; i++) {
+                    let bumped = [...raw]
+                    bumped[i] += 1
+                    let bumpedMean = bumped.reduce((a, b) => a + b, 0) / 4
+                    let bumpedStdev = Math.sqrt(bumped.reduce((a, b) => a + (b - bumpedMean) ** 2, 0) / 4)
+                    let gain = bumpedStdev - baseline
+                    weights[keys[i]] = 1 / (gain || 0.0001) // avoid div by zero if all values equal
                 }
             }
 
