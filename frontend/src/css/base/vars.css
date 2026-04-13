@@ -2,7 +2,7 @@ body {
     --accent-1: var(--hue), 50%, 60.4%;
     --accent-2: var(--hue), 50%, 70.3%;
     --accent-3: var(--hue), 50%, 80.4%;
-    --sat: 2;
+    --sat: 2.5;
 
     --base-sat: 17%;
     --val: 0.9;

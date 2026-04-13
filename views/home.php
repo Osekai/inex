@@ -4,11 +4,7 @@
 \Site\Embed::SetBannerImage("/public/img/inex-banner.png");
 
 ?>
-<style>
-    * {
-        --hue: 200 !important;
-    }
-</style>
+
 
 <div class="home-welcome" id="home-welcome">
     <div id="unicorn"></div>

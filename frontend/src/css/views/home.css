@@ -1,3 +1,7 @@
+body {
+    --hue: 220 !important;
+}
+
 @keyframes unicorn-welcome {
     0% {
         opacity: 0;

@@ -3,6 +3,7 @@
 namespace Data;
 
 use API\Response;
+use Caching;
 use Database\Connection;
 use Database\Memcache;
 use Database\Session;
@@ -112,8 +113,8 @@ class Medals
         foreach ($newMedal as $key => $newValue) {
             if (isset($oldMedal[$key]) && strtolower(trim($oldMedal[$key])) !== strtolower(trim($newValue))) {
                 $changes[$key] = [
-                    'old' => $oldMedal[$key],
-                    'new' => $newValue
+                        'old' => $oldMedal[$key],
+                        'new' => $newValue
                 ];
             }
         }
@@ -146,12 +147,12 @@ class Medals
 
 
         $embeds = [[
-            'title' => $oldMedal['Name'],
-            'description' => 'Edited by ' . Session::UserData()['username'],
-            'color' => 0xff66aa // Red color in decimal
+                'title' => $oldMedal['Name'],
+                'description' => 'Edited by ' . Session::UserData()['username'],
+                'color' => 0xff66aa // Red color in decimal
         ], [
-            "title" => "Changes",
-            "description" => $changes_txt
+                "title" => "Changes",
+                "description" => $changes_txt
         ]];
         $messageData = Discord::postDiscordEmbeds(MOD_WEBHOOK_EDITS, $embeds);
 
@@ -173,4 +174,167 @@ class Medals
         return $medal[0];
     }
 
+    public static function Suggestions()
+    {
+        $userid = Session::UserData()['id'];
+
+        // IMPORTANT: this takes like, 10 seconds!
+        $user = OsekaiUsers::GetUser($userid, "osu");
+        $osuUser = $user;
+        $catchUser = OsekaiUsers::GetUser($userid, "fruits");
+        $taikoUser = OsekaiUsers::GetUser($userid, "taiko");
+        $maniaUser = OsekaiUsers::GetUser($userid, "mania");
+        //echo "<pre>" . json_encode($user, JSON_PRETTY_PRINT) . "</pre>";
+
+        $hits = [
+                "osu" =>   $osuUser  ['statistics']['play_time'],
+                "catch" => $catchUser['statistics']['play_time'],
+                "taiko" => $taikoUser['statistics']['play_time'],
+                "mania" => $maniaUser['statistics']['play_time'],
+        ];
+
+
+        $userMedalIds = array_column($user['user_achievements'], 'achievement_id');
+        $ourCount = count($userMedalIds);
+
+        $placeholders = implode(',', array_fill(0, count($userMedalIds), '?'));
+        $types = 'i' . str_repeat('i', count($userMedalIds));
+
+
+        if ($ourCount < 60) {
+            echo "You need at least 60 medals to get suggestions!";
+            return;
+        }
+        $scores = Caching::Layer("medala_suggestions_" . $userid, function () use ($types, $ourCount, $userMedalIds, $placeholders) {
+            $scores = [];
+            Connection::execSelectStream(
+                    "SELECT rum.User_ID, rum.Medal_ID
+         FROM Rankings_Users_Medals rum
+         INNER JOIN Rankings_Users ru ON ru.ID = rum.User_ID AND ru.Count_Medals >= ?
+         WHERE rum.User_ID IN (
+             SELECT User_ID
+             FROM Rankings_Users_Medals
+             WHERE Medal_ID IN ($placeholders)
+             GROUP BY User_ID
+             HAVING COUNT(*) >= 60
+         )",
+                    $types,
+                    array_merge([$ourCount - 20], $userMedalIds),
+                    function ($row) use (&$scores, $userMedalIds) {
+                        $medalId = $row['Medal_ID'];
+                        if (!in_array($medalId, $userMedalIds)) {
+                            $scores[$medalId] = ($scores[$medalId] ?? 0) + 1;
+                        }
+                    }
+            );
+            return $scores;
+        }, 0.1); // cache for 1 hour
+
+        arsort($scores);
+
+        $medalIds = array_keys($scores);
+        $placeholders2 = implode(',', array_fill(0, count($medalIds), '?'));
+        $types2 = str_repeat('i', count($medalIds));
+
+        $frequencies = Connection::execSelect(
+                "SELECT Medal_ID, Frequency FROM Medals_Data WHERE Medal_ID IN ($placeholders2)",
+                $types2,
+                $medalIds
+        );
+
+        $freqMap = array_column($frequencies, 'Frequency', 'Medal_ID');
+
+        $medals = Medals::GetAll();
+        foreach ($scores as $medalId => $coOccurrence) {
+            // main scoring algo
+            $freq = $freqMap[$medalId] ?? 1;
+
+            // the less rare the medal, the easier it is (probably) - so you should go get it
+            $scores[$medalId] = $coOccurrence * pow((float)$freq, 0.9);
+            $scores[$medalId] = $scores[$medalId] * 500;
+
+            $medal = null;
+            foreach ($medals->content as $medalData) {
+                if ($medalData['Medal_ID'] == $medalId) {
+                    $medal = $medalData;
+                }
+            }
+
+            // if it's an FC it's probably hard
+            if (str_contains($medal['Solution'], "FC"))
+                $scores[$medalId] = $scores[$medalId] * 0.7;
+
+            // if it's a PFC it's probably even harder
+            if (str_contains($medal['Solution'], "PFC"))
+                $scores[$medalId] = $scores[$medalId] * 0.6;
+            if (str_contains($medal['Solution'], "Pass any ranked"))
+                $scores[$medalId] = $scores[$medalId] * 1.3;
+
+            // if the solution is super long it's gonna be complex, so we push it down a bit
+            $solutionLength = strlen($medal['Solution'] ?? '');
+            $lengthPenalty = 1 / log(max($solutionLength, 70)); // not much though
+            $scores[$medalId] *= $lengthPenalty;
+
+            preg_match('/[\d,]+/', $medal['Name'], $matches);
+            if (!empty($matches)) {
+                $num = (int)str_replace(',', '', $matches[0]);
+                // if there's a number in the title that probably means it's a combo/plays/keys/etc medal
+                // these can be pushed down since it's basically "do you have spare time?"
+                if($num > 10000) $num = 10000;
+                $penalty = 1 / (1 + log($num / 400, 12));
+                $scores[$medalId] *= $penalty;
+
+            }
+
+            if (str_contains($medal['Grouping'], "Hush")) {
+                // hush-hush medals are more fun!
+                $scores[$medalId] *= 3.3;
+            }
+            if (str_contains($medal['Grouping'], "Pack") || str_contains($medal['Grouping'], "Spotlight")) {
+                // pack medals are NOT fun
+                $scores[$medalId] *= 0.2;
+            }
+
+            if (str_contains($medal['Grouping'], "Dedication")) {
+                // not that exciting
+                $scores[$medalId] *= 0.9;
+            }
+
+            preg_match('/<star-rating>(\d+\+?)<\/star-rating>/', $medal['Solution'], $matches);
+            if (!empty($matches)) {
+                $rating = $matches[1]; // "6" or "6+"
+                $isPlus = str_ends_with($rating, '+');
+                $num = (int)$rating;
+
+                if($num <= 3) {
+                    // under 3 star map, probably easy
+                    $scores[$medalId] *= 6;
+                }
+                if($num > 6) {
+                    $scores[$medalId] *= 0.5;
+                }
+            }
+
+            if($medal['Gamemode'] == "") $medal['Gamemode'] = "osu"; // TODO: this should just be their most played mode instead of osu hardcoded
+            $scores[$medalId] *= pow($hits[$medal['Gamemode']]/100000, 1.03);
+        }
+        unset($score);
+
+        arsort($scores);
+        $topMedals = array_slice($scores, 0, 20, true);
+
+        $readableMedalScores = [];
+        foreach ($topMedals as $medalId => &$score) {
+            foreach ($medals->content as $medal) {
+                if ($medal['Medal_ID'] == $medalId) {
+                    $readableMedalScores[] = [
+                            "Medal" => (int)$medal['Medal_ID'],
+                            "Score" => round($score, 4)
+                    ];
+                }
+            }
+        }
+
+        return new Response(true, "Success", $readableMedalScores);
+    }
 }

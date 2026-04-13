@@ -16,6 +16,7 @@ import {LoaderOverlay} from "../../ui/loader-overlay";
 import {PermissionChecker} from "../../utils/permissionChecker";
 import {CenteredLoader} from "../../utils/loaderUtils";
 import {timeAgo} from "../../utils/timeago";
+import {SetMedal} from "../medals";
 
 
 export class MedalsUI {
@@ -333,6 +334,18 @@ export class MedalsUI {
         }
     }
 
+    static LoadMedalQuick(medal) {
+        SetMedal(medal.Medal_ID, true, true);
+    }
+
+    static Init() {
+        let buttons = document.querySelectorAll("[medal-button]");
+        for (let button of buttons) {
+            button.addEventListener("click", () => [
+                MedalsUI.LoadMedalQuick(button.getAttribute("medal-button"))
+            ])
+        }
+    }
 }
 
 MedalsUI.CheckObtainedFilter();

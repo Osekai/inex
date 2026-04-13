@@ -64,6 +64,27 @@ class BaseConnection
         }
     }
 
+    public function execSelectStream($strQuery, $strTypes, $colVariables, callable $callback): void
+    {
+        $mysql = $this->connection;
+        $stmt = $mysql->prepare($strQuery);
+        $stmt->bind_param($strTypes, ...$colVariables);
+        $stmt->execute();
+        $stmt->store_result(); // needed for memory-efficient row-by-row access
+        $meta = $stmt->result_metadata();
+
+        while ($field = $meta->fetch_field()) $params[] = &$row[$field->name];
+        $stmt->bind_result(...$params);
+
+        while ($stmt->fetch()) {
+            $c = [];
+            foreach ($row as $key => $val) $c[$key] = $val;
+            $callback($c);
+        }
+
+        $stmt->free_result();
+    }
+
     /**
      * @param string $strQuery
      *

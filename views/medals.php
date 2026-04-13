@@ -58,9 +58,43 @@ if ($cur_medal == null) {
                 <div class="bg"></div>
             </div>
             <div class="homepage" id="medal-home">
-                <img src="/public/img/branding/icon_monochrome.svg">
-                <h1>Welcome to Osekai Medals!</h1>
-                <p>Select a medal on the left</p>
+                <div class="hp-navbar">
+                    <img src="/public/img/branding/icon_monochrome.svg">
+                    <h1>Welcome back to Osekai Medals!</h1>
+                </div>
+                <?php
+                $new = [];
+                $oneMonthAgo = strtotime('-1 month');
+                foreach ($medals->content as $medal) {
+                    if (strtotime($medal['Date_Released']) >= $oneMonthAgo) {
+                        $new[] = $medal;
+                    }
+                }
+                if($new !== []) {
+                    ?>
+                <div class="homepage-panel">
+                    <h1>New Medals are here!</h1>
+                    <div class="medals-grid">
+                        <?php
+                        foreach ($new as $medal) {
+                            ?>
+                            <a class="medal-card" medal-button="<?= $medal['ID'] ?>">
+                                <img src="/assets/osu/web/<?= $medal['Link'] ?>">
+                                <h1><?= $medal['Name'] ?></h1>
+                                <h2><?= $medal['Description'] ?></h2>
+                            </a>
+                        <?php } ?>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+                <div class="homepage-panel">
+                    <h1>Our recommendations for you</h1>
+                    <div class="recommendations-grid" id="recommendations-grid">
+                        <?= LOADER ?>
+                    </div>
+                </div>
             </div>
             <div class="scrollable _hidden" id="medal-info">
                 <div class="main-left">

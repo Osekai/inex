@@ -51,6 +51,9 @@ $router->post("/api/usersettings/set", function () {
 $router->all("/api/medals/get_all", function () {
     echo \Data\Medals::GetAll()->ReturnJson();
 });
+$router->all("/api/medals/suggestions", function () {
+    echo \Data\Medals::Suggestions()->ReturnJson();
+});
 $router->all("/api/medals/{id}/save", function ($id) {
     if (!requireLogin()) return;
     if (!OsekaiUsers::HasPermission("medal.edit", false)) {

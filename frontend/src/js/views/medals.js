@@ -16,6 +16,7 @@ import {Currency} from "lucide";
 import {GetSetting, OnChangeSetting} from "../utils/usersettings";
 import {Initialize} from "./medals/MedalsAdmin";
 import {PermissionChecker} from "../utils/permissionChecker";
+import {MedalsSuggestions} from "./medals/ui/MedalsSuggestions";
 
 export * from "./medals/SolutionElements.js";
 
@@ -85,6 +86,11 @@ async function Load() {
     await MedalData.GetMedals();
     sidebar = new MedalsSidebar();
     sidebar.LoadSidebar();
+    let suggestions = new MedalsSuggestions();
+    suggestions.Load();
+
+    MedalsUI.Init();
+
     OnChangeSetting("medals.hideUnachievedMedals", () => {
         //sidebar.LoadSidebar();
     })
