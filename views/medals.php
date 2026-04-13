@@ -78,7 +78,7 @@ if ($cur_medal == null) {
                         <?php
                         foreach ($new as $medal) {
                             ?>
-                            <a class="medal-card" medal-button="<?= $medal['ID'] ?>">
+                            <a class="medal-card" medal-button="<?= $medal['Medal_ID'] ?>">
                                 <img src="/assets/osu/web/<?= $medal['Link'] ?>">
                                 <h1><?= $medal['Name'] ?></h1>
                                 <h2><?= $medal['Description'] ?></h2>
