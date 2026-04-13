@@ -2,6 +2,7 @@
 
 namespace Data;
 
+use API\Osu\User;
 use API\Response;
 use Database\Connection;
 
@@ -228,5 +229,16 @@ ORDER BY Rankings_Users.Count_Medals DESC";
         }
 
         return new Response(true, "ok", ["data" => $data, "max" => $totalCount]);
+    }
+
+    public static function AddUser(mixed $id)
+    {
+        $user = User::GetUser($id);
+        $id = $user['id'];
+        if($user == null) return new Response(false, "User not found");
+        $exists = Connection::execSelect("SELECT * FROM Rankings_Users WHERE ID = ?", "i", [$id]);
+        if(count($exists) > 0) return new Response(false, "User already exists");
+        Connection::execOperation("INSERT INTO Rankings_Users (ID) VALUES (?)", "i", [$id]);
+        return new Response(true, "ok");
     }
 }

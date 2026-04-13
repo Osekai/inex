@@ -155,3 +155,6 @@ $router->all("/api/rankings/get", function () {
     $offset = $_POST['offset'] ?? 0;
     echo \Data\Rankings::GetRanking($type, $options, 50, $offset)->ReturnJson();
 });
+$router->all("/api/rankings/add", function () {
+    echo \Data\Rankings::AddUser($_POST['id'])->ReturnJson();
+});

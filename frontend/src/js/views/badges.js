@@ -182,7 +182,7 @@ function renderVisibleItems(newStyle = false) {
 
 
     for (var item of _cleanedItems) {
-        if (searchText == "" || item.Name.includes(searchText) || item.Description.includes(searchText)) {
+        if (searchText == "" || item.Name.toLowerCase().includes(searchText) || item.Description.toLowerCase().includes(searchText)) {
             cleanedItems.push(item);
         }
     }
