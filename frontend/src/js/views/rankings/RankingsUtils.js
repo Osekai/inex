@@ -111,7 +111,7 @@ export const types = {
                 "data": (data) => {
                     return {
                         "label": "held by",
-                        "content": data.Frequency + "% (" + data.Count_Achieved_By + " users)"
+                        "content": data.Frequency*100 + "% (" + data.Count_Achieved_By + " users)"
                     }
                 }
             }
