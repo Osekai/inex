@@ -66,7 +66,7 @@
             <div>
                 <h1>Osekai <strong>Snapshots</strong></h1>
                 <p>Explore our archive of osu! versions, dating from 2007 to now!</p>
-                <a href="/snapshots" class="button">Explore Snapshots</a>
+                <a href="https://osekai.net/snapshots" class="button">Explore Snapshots</a>
             </div>
         </div>
         <div class="app classic profiles col-reset">
@@ -74,7 +74,7 @@
             <div>
                 <h1>Osekai <strong>Profiles</strong></h1>
                 <p>Get in-depth information about your osu! profile, map out your past in a timeline, and create future goals!</p>
-                <a href="/profiles" class="button">Explore Profiles</a>
+                <a href="https://osekai.net/profiles" class="button">Explore Profiles</a>
             </div>
         </div>
     </div>
