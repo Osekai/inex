@@ -67,7 +67,7 @@ switch($ranking) {
                 <pagination-el link-id="ranking"></pagination-el>
                 <div>
                     <searchable-dropdown id="searchtype-dropdown"></searchable-dropdown>
-                    <input type="text" class="input" placeholder="Search users" id="search-bar">
+                    <input type="text" class="input" placeholder="Search" id="search-bar">
                 </div>
             </div>
         </div>
