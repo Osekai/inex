@@ -395,24 +395,26 @@ export const columnTypes = {
                     mania: Math.abs(m)
                 }
             } else {
-                // weight each mode by 1/stdev_gain_per_1pp — modes closest to the mean
-                // (most "balanced") get a larger bar, modes furthest from mean get smaller
-
-                let values = [s, t, c, m]
-                let mean = values.reduce((a, b) => a + b, 0) / 4
-                let baseline = Math.sqrt(values.reduce((a, b) => a + (b - mean) ** 2, 0) / 4)
-
-                let keys = ["standard", "taiko", "catch", "mania"]
+                // weight each mode by 1/spp_gain_per_1pp — modes that contribute most efficiently
+                // (closest to mean) get a larger bar, modes dragging the score down get smaller
                 let raw = [s, t, c, m]
+                let keys = ["standard", "taiko", "catch", "mania"]
 
+                function spp(v) {
+                    let total = v.reduce((a, b) => a + b, 0)
+                    let mean = total / 4
+                    let variance = v.reduce((a, b) => a + (b - mean) ** 2, 0)
+                    let std = Math.sqrt(variance / 3)
+                    return Math.max(0, total - 2 * std)
+                }
+
+                let baseline = spp(raw)
                 weights = {}
                 for (let i = 0; i < 4; i++) {
                     let bumped = [...raw]
                     bumped[i] += 1
-                    let bumpedMean = bumped.reduce((a, b) => a + b, 0) / 4
-                    let bumpedStdev = Math.sqrt(bumped.reduce((a, b) => a + (b - bumpedMean) ** 2, 0) / 4)
-                    let gain = bumpedStdev - baseline
-                    weights[keys[i]] = 1 / (gain || 0.0001) // avoid div by zero if all values equal
+                    let gain = spp(bumped) - baseline
+                    weights[keys[i]] = 1 / (gain || 0.0001)
                 }
             }
 
