@@ -5,11 +5,11 @@ export const helpers = {
     "stdev": {
         "type": "toggle",
         "options": {
-            "total": {
-                "label": "Total"
-            },
             "stdev": {
                 "label": "Standard Deviation"
+            },
+            "total": {
+                "label": "Total"
             }
         }
     },
