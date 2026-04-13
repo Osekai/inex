@@ -1,6 +1,8 @@
 @import "./medals/solution-elements.css";
+
 body {
     overflow: hidden !important;
+    --hue: 324 !important;
 }
 
 .medals__page {
@@ -91,7 +93,7 @@ body {
     flex: 2;
     overflow-y: scroll;
 }
-.medals__page .sidebar-toolbar {
+.medals__page .sidebar-md-toolbar {
     padding-bottom: 10px;
     padding-top: 30px;
     display: flex;
@@ -104,13 +106,13 @@ body {
     top: 0;
     z-index: 9;
 }
-.medals__page .sidebar-toolbar .input-container {
+.medals__page .sidebar-md-toolbar .input-container {
     display: flex;
     flex: 1;
     align-items: stretch;
     position: relative;
 }
-.medals__page .sidebar-toolbar .input-container > svg {
+.medals__page .sidebar-md-toolbar .input-container > svg {
     position: absolute;
     top: calc(50% - 0.5px);
     height: 20px;
@@ -118,7 +120,7 @@ body {
     left: 12px;
     transform: translateY(-50%);
 }
-.medals__page .sidebar-toolbar .input-container > button {
+.medals__page .sidebar-md-toolbar .input-container > button {
     position: absolute;
     display: flex;
     align-items: center;
@@ -131,11 +133,11 @@ body {
     width: 29px;
     border-radius: 22px;
 }
-.medals__page .sidebar-toolbar .input-container > button svg {
+.medals__page .sidebar-md-toolbar .input-container > button svg {
     height: 18px;
     width: 18px;
 }
-.medals__page .sidebar-toolbar input {
+.medals__page .sidebar-md-toolbar input {
     background: var(--col-l4);
     padding-left: 40px;
 }
@@ -157,16 +159,171 @@ body {
     transition: all 0.2s ease;
 }
 .medals__page > .main .main-inner .homepage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    min-height: calc(100vh - var(--navbar-height) - 40px);
-    z-index: 9;
+    padding: 16px;
+    background: linear-gradient(to bottom right, #ff66aa22, #fff0, #fff0, #fff0);
+    border-radius: 20px;
+    height: 100%;
+    z-index: 92;
     position: relative;
-    mix-blend-mode: lighten;
-    opacity: 0.8;
+    .hp-navbar {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 16px 24px;
+    }
+
+    .homepage-panel {
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        border-radius: 20px;
+        margin-top: 20px;
+        background: var(--col-l2);
+        border: 1px solid var(--col-l4);
+        >h1 {
+            color: #ff66aa;
+            font-weight: 300;
+            font-size: 40px;
+            padding: 6px 16px;
+        }
+        .recommendations-grid:not(.not-enough) {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+            margin-top: 12px;
+            gap: 16px;
+            .medal-suggestion {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 16px;
+                border-radius: 12px;
+                background: linear-gradient(to bottom right, var(--col-l2), var(--col-sat-1));
+                transition: all 0.2s ease;
+                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+                height: 300px;
+                &:before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(to bottom, var(--col-sat-1), var(--col-sat-2));
+                    z-index: 1;
+                    opacity: 0;
+                    transition: opacity 0.2s ease;
+                }
+                &:hover {
+
+                    transform: translateY(-2px);
+                    box-shadow: 0 0 10px var(--col-sat-1);
+                    &:before {
+                        opacity: 0.4;
+                        filter: saturate(5);
+                    }
+                }
+                * {
+
+                    z-index: 2;
+                }
+                >.markdown {
+                    margin-top: auto;
+                }
+                >.info {
+                    align-items: center;
+                    display: flex;
+                    gap: 16px;
+
+                    img {
+                        height: 90px;
+                    }
+                    h1 {
+                        font-size: 26px;
+                    }
+                    h2 {
+                        font-size: 18px;
+                        font-weight: 300;
+                    }
+                    h3 {
+                        font-size: 16px;
+                        font-weight: 300;
+                    }
+                }
+            }
+        }
+        .recommendations-grid.not-enough {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            text-align: center;
+            flex-direction: column;
+            svg {
+                height: 60px;
+                width: auto;
+            }
+        }
+        .medals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+            .medal-card {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                background: var(--col-l3);
+                border-radius: 12px;
+                text-align: center;
+                color: inherit;
+                h1 {
+                    font-size: 23px;
+                    font-weight: 800;
+                }
+                h2 {
+                    font-size: 16px;
+                    font-weight: 500;
+                }
+                img {
+                    height: 80px;
+                    margin-bottom: 8px;
+                }
+                position: relative;
+                &:before {
+                    content: "";
+                    position: absolute;
+                    bottom: -3px;
+                    left: 20%;
+                    right: 20%;
+                    height: 6px;
+                    background: linear-gradient(to right, var(--col-sat-1), var(--col-sat-2));
+                    border-radius: 0 0 12px 12px;
+                    transition: all 0.2s ease;
+                }
+                transition: all 0.2s ease;
+                &:hover {
+                    background: var(--col-l5);
+                    &:before {
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        height: 20px;
+                    }
+                    padding-bottom: 30px;
+                }
+                &:active {
+                    transform: translateY(2px);
+                    background: var(--col-l6);
+                }
+                min-height: 220px;
+            }
+        }
+    }
 }
 
 
@@ -314,7 +471,7 @@ body {
     padding: 3px 16px;
     background: var(--col-l5);
 }
-.beatmap .pill-button:last-child {
+.beatmap .pill-button.dark {
     background: var(--col-d1);
     padding: 3px 8px;
     display: flex;
@@ -362,7 +519,6 @@ body {
     padding-right: 8px;
     padding-top: 5px;
     padding-bottom: 5px;
-    user-select: none;
     cursor: pointer;
 }
 .beatmap .bottom h4.expanded {
@@ -445,16 +601,17 @@ body {
 
 
 
-.medal__info-solution .toolbar {
+.medal__info-solution .md-toolbar {
     display: flex;
     align-items: flex-end;
+    margin-top: 20px;
 }
-.medal__info-solution .toolbar #support {
+.medal__info-solution .md-toolbar #support {
     display: flex;
     margin-left: auto;
     margin-top: 5px;
 }
-.medal__info-solution .toolbar #support > div {
+.medal__info-solution .md-toolbar #support > div {
     display: flex;
     align-items: center;
     padding: 3px 8px;
@@ -462,23 +619,23 @@ body {
     border-radius: 100px;
     margin-left: 5px;
 }
-.medal__info-solution .toolbar #support > div p {
+.medal__info-solution .md-toolbar #support > div p {
     font-size: 15px;
 }
 
-.medal__info-solution .toolbar #support > div.unsupported {
+.medal__info-solution .md-toolbar #support > div.unsupported {
     opacity: 0.5;
     outline: 1px solid #dd4a68;
 }
-.medal__info-solution .toolbar #support > div.unsupported svg {
+.medal__info-solution .md-toolbar #support > div.unsupported svg {
     stroke: #ff234f;
 }
-.medal__info-solution .toolbar #support > div > div {
+.medal__info-solution .md-toolbar #support > div > div {
     height: 18px;
     width: 18px;
     margin-right: 3px;
 }
-.medal__info-solution .toolbar #support > div svg {
+.medal__info-solution .md-toolbar #support > div svg {
     height: 18px;
     width: 18px;
 }

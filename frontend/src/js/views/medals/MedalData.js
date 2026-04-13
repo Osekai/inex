@@ -39,6 +39,11 @@ export class MedalData {
         return this.Medals;
     }
 
+    static async GetMedalFromID(id: number) {
+        if (this.Medals == null) await this.GetMedals();
+        return this.Medals[id];
+    }
+
     static GetMedalsSync() {
         if (this.Medals == null) return []
         return this.Medals;

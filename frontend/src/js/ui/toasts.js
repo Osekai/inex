@@ -30,6 +30,11 @@ var themes = {
         "icon": "info",
         "time": 9
     },
+    "warning": {
+        "hue": "40",
+        "icon": "alert-triangle",
+        "time": 15
+    }
 }
 
 export function PushToast({ theme = "default", content = "Unknown", time = null } = {}) {

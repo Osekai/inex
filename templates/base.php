@@ -123,6 +123,19 @@ if (Site::$base_loaded == false) {
 <div class="content">
     <?= $html; ?>
 </div>
+<div class="debug-timings full-hidden" id="debug-timings">
+    <div class="debug-timing-info" id="debug-timing-info">
+        <h1 id="debug-timing-title"></h1>
+        <div id="debug-timing-description">
+
+        </div>
+        <pre id="debug-timing-trace"></pre>
+
+    </div>
+    <div class="debug-timing-bars" id="debug-timing-bars">
+
+    </div>
+</div>
 </body>
 
 <script src="https://untone.org/snowflakes.js?5"></script>

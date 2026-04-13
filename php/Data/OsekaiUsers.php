@@ -9,38 +9,42 @@ use Exception;
 class OsekaiUsers
 {
     static function GetUser($userid, $gamemode) {
-        return \Caching::Layer("osekaiuser_" . $userid, function() use ($userid, $gamemode) {
+        return \Caching::Layer("osekaiuser_" . $userid . "_" . $gamemode, function() use ($userid, $gamemode) {
             try {
                 $data = \API\Osu\User::GetUser($userid, $gamemode);
 
-                $data['page'] = null;
+                $data['page'] = null; // this can get long and cause problems.
 
                 $groups = Connection::execSelect("SELECT * FROM System_Roles_Assignments 
-            LEFT JOIN System_Roles_Roles ON System_Roles_Roles.ID = System_Roles_Assignments.Role_ID
-            WHERE User_ID = ?", "i", [$data['id']]);
+        LEFT JOIN System_Roles_Roles ON System_Roles_Roles.ID = System_Roles_Assignments.Role_ID
+        WHERE User_ID = ?", "i", [$data['id']]);
 
                 $data['Roles'] = $groups;
 
                 $permissions = [];
                 $permissions_blocked = [];
-                foreach ($groups as $group) {
-                    $blockedpermissions = json_decode($group['Blocked_Permissions'], true);
-                    $permissions = json_decode($group['Permissions'], true);
-                    foreach ($blockedpermissions as $perm) $permissions_blocked[] = $perm;
-                    foreach ($permissions as $perm) $permissions[] = $perm;
+                foreach ($groups as &$group) {
+                    $groupPermissions = json_decode($group['Permissions'], true) ?? [];
+                    $groupBlocked = json_decode($group['Blocked_Permissions'], true) ?? [];
+
+                    foreach ($groupPermissions as $perm) $permissions[] = $perm;
+                    foreach ($groupBlocked as $perm) $permissions_blocked[] = $perm;
 
                     // people don't need to know what specific permissions each group gets.
-                    unset($group['BlockedPermissions']);
+                    unset($group['Blocked_Permissions']);
                     unset($group['Permissions']);
                 }
+                unset($group);
+
                 $data['Permissions'] = array_unique($permissions);
                 $data['BlockedPermissions'] = array_unique($permissions_blocked);
 
                 return $data;
             } catch(Exception $exception) {
+                error_log("Failed to get user data for " . $userid . " in " . $gamemode . ": " . $exception->getMessage());
                 return null;
             }
-        }, 6000);
+        }, 3600*6); // 6 hours
     }
 
     public static function CheckPermissionArray($permission, $array, $default = false)

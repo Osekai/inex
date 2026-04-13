@@ -4,6 +4,7 @@
 @import url("./external/wangeditor.css");
 @import url("./ui/overlay.css");
 @import url("./ui/toasts.css");
+@import url("./ui/tabs.css");
 @import url("./ui/role-badge.css");
 
 a {
@@ -28,7 +29,7 @@ left {
 }
 .jsdropdown-clickoff-layer {
     pointer-events: all;
-    z-index: 10;
+    z-index: 100;
     position: absolute;
     top: 0px;
     left: 0px;
@@ -37,9 +38,13 @@ left {
     opacity: 0;
     animation: fade-in 0.3s ease;
     animation-fill-mode: both;
-    background: linear-gradient(to bottom, #0005, #0000, #0000);
+    background: linear-gradient(to bottom, #000a, #0002, #0000);
+    backdrop-filter: blur(2px);
 }
+.jsdropdown-clickoff-layer-closed {
+    display: none !important;
 
+}
 .jsdropdown-button-active, .jsdropdown-open {
     z-index: 10990;
 }

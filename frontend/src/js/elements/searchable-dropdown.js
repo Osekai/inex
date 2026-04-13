@@ -1,98 +1,121 @@
-import {BlurAll, LucideIcon} from "../utils/dom";
-import {EasySelector} from "../ui/easyselector";
+
+
+import {BlurAll} from "../utils/dom.js";
+import {EasySelector} from "../ui/easyselector.js";
+import {Dropdown} from "../ui/dropdown";
+import {D2} from "../utils/d2";
 
 class SearchableDropdown extends HTMLElement {
     constructor() {
         super();
+        this.callback = null;
+        this.selectedObj = null;
+        this.dropdownContent = null;
+        this.ignoredIDs = [];
+        this.items = [];
+        this.keyname = "name";
+        this.arrowKeyDirector = null;
     }
-    callback = null;
-    selectedObj = null;
-    create(items = [
-        {
-            "category": "CATEGORY 1",
-        },
-        {
-            "name": "cute art :3"
-        },
-        {
-            "name": "3D Art"
-        },
-        {
-            "category": "CATEGORY 2",
-        },
-        {
-            "name": "Digital Art"
-        },
-        {
-            "name": "Traditional Art"
-        },
-    ], keyname = "name", Defaultselected = 0, dropdownText = "", callback = null) {
+
+    create(
+        items = [
+            {"category": "CATEGORY 1"},
+            {"name": "cute art :3"},
+            {"name": "3D Art"},
+            {"category": "CATEGORY 2"},
+            {"name": "Digital Art"},
+            {"name": "Traditional Art"},
+        ],
+        keyname = "name",
+        Defaultselected = 0,
+        dropdownText = "",
+        callback = null
+    ) {
         this.callback = callback;
-        var showSelected = true;
-        if(dropdownText !== "") {
+        this.items = items;
+        this.keyname = keyname;
+
+        // filter items based on ignoredIDs
+        const filteredItems = items.filter(item => !this.ignoredIDs.includes(item[keyname]));
+
+        let showSelected = true;
+        if (dropdownText !== "" && dropdownText !== null) {
             showSelected = false;
         }
-        var that = this;
-        var selected = null;
-        var dropdown = Object.assign(document.createElement("div"), {"innerText": items[1][keyname], "className": "dropdown"});
-        if(!showSelected) {
+
+        let that = this;
+        let selected = null;
+
+        let dropdown = Object.assign(document.createElement("button"), {
+            "innerText": filteredItems[0]?.[keyname] || ""
+        });
+        dropdown.classList = this.classList + " dropdown";
+        if (!showSelected) {
             dropdown.innerText = dropdownText;
         }
-        var dropdownContent = Object.assign(document.createElement("div"), {"className": "dropdown-content"})
-        var dropdownSearchContainer = Object.assign(document.createElement("div"), {"className": "dropdown-search-container"});
-        var dropdownSearchIcon = LucideIcon("search");
-        var dropdownSearch = Object.assign(document.createElement("input"), {"className": "dropdown-search"});
+
+        let dropdownContent = Object.assign(document.createElement("div"), {"className": "dropdown-content"});
+        let dropdownSearchContainer = Object.assign(document.createElement("div"), {"className": "dropdown-search-container"});
+        let dropdownSearchIcon = D2.LucideIcon("search");
+        let dropdownSearch = Object.assign(document.createElement("input"), {"className": "dropdown-search"});
+
         dropdownSearchContainer.appendChild(dropdownSearchIcon);
         dropdownSearchContainer.appendChild(dropdownSearch);
-        var dropdownInner = Object.assign(document.createElement("div"), {"className": "dropdown-inner"});
-        var arrowKeyDirector = new EasySelector(
+        let dropdownInner = Object.assign(document.createElement("div"), {"className": "dropdown-inner"});
+
+        var dd = new Dropdown(dropdownContent, dropdown);
+
+        let arrowKeyDirector = new EasySelector(
             dropdownInner,
             dropdownSearch,
-             (item) => {
-                dropdownContent.classList.remove("dropdown-open")
+            (item) => {
+                dd.close();
                 BlurAll();
-                if(showSelected)
-                dropdown.innerText = item[keyname];
+                if (showSelected)
+                    dropdown.innerText = item[keyname];
                 selected = item[keyname];
                 this.selectedObj = item;
-                arrowKeyDirector.SetDefaults([selected])
-                 if(that.callback != null) {
-                     that.callback(item);
-                 }
+                arrowKeyDirector.SetDefaults([selected]);
+                if (that.callback != null) {
+                    that.callback(item);
+                }
+                arrowKeyDirector.clearSearchAndReset();
+                this.dispatchEvent(new CustomEvent('change', {
+                    detail: item,
+                    bubbles: true,
+                    composed: true
+                }));
             }
-        )
-        dropdown.addEventListener("click", () => {
-            if(dropdownContent.classList.contains("dropdown-open")) {
-                dropdownContent.classList.remove("dropdown-open")
-                BlurAll();
-            } else {
-                dropdownContent.classList.add("dropdown-open")
-                dropdownSearch.focus();
-            }
-        });
-        arrowKeyDirector.Set(items, keyname, false, Defaultselected);
+        );
+
+        arrowKeyDirector.Set(filteredItems, keyname, false, Defaultselected);
+
         dropdownContent.appendChild(dropdownSearchContainer);
         dropdownContent.appendChild(dropdownInner);
-        this.appendChild(dropdown)
+        this.appendChild(dropdown);
         this.appendChild(dropdownContent);
+
+        this.dropdownContent = dropdownContent;
+        this.arrowKeyDirector = arrowKeyDirector;
     }
 
-    disconnectedCallback() {
+    setIgnoredIDs(key, value) {
 
     }
+
+    disconnectedCallback() {}
 
     static get observedAttributes() {
         return [];
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
+    attributeChangedCallback(name, oldValue, newValue) {}
 
-    }
-
-    adoptedCallback() {
-
-    }
+    adoptedCallback() {}
 }
-customElements.define("searchable-dropdown", SearchableDropdown);
+
+try {
+    customElements.define("searchable-dropdown", SearchableDropdown)
+} catch {}
 
 export default {SearchableDropdown};

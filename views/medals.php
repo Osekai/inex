@@ -23,7 +23,7 @@ if ($cur_medal == null) {
 </script>
 <div class="medals__page home" id="medal-page">
     <div class="sidebar">
-        <div class="sidebar-toolbar">
+        <div class="sidebar-md-toolbar">
             <div class="input-container">
                 <i data-lucide="search"></i>
                 <input type="text" class="input" placeholder="search" id="medal_search">
@@ -58,9 +58,43 @@ if ($cur_medal == null) {
                 <div class="bg"></div>
             </div>
             <div class="homepage" id="medal-home">
-                <img src="/public/img/branding/icon_monochrome.svg">
-                <h1>Welcome to Osekai Medals!</h1>
-                <p>Select a medal on the left</p>
+                <div class="hp-navbar">
+                    <img src="/public/img/branding/icon_monochrome.svg">
+                    <h1>Welcome back to Osekai Medals!</h1>
+                </div>
+                <?php
+                $new = [];
+                $oneMonthAgo = strtotime('-1 month');
+                foreach ($medals->content as $medal) {
+                    if (strtotime($medal['Date_Released']) >= $oneMonthAgo) {
+                        $new[] = $medal;
+                    }
+                }
+                if($new !== []) {
+                    ?>
+                <div class="homepage-panel">
+                    <h1>New Medals are here!</h1>
+                    <div class="medals-grid">
+                        <?php
+                        foreach ($new as $medal) {
+                            ?>
+                            <a class="medal-card" medal-button="<?= $medal['ID'] ?>">
+                                <img src="/assets/osu/web/<?= $medal['Link'] ?>">
+                                <h1><?= $medal['Name'] ?></h1>
+                                <h2><?= $medal['Description'] ?></h2>
+                            </a>
+                        <?php } ?>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+                <div class="homepage-panel">
+                    <h1>Our recommendations for you</h1>
+                    <div class="recommendations-grid" id="recommendations-grid">
+                        <?= LOADER ?>
+                    </div>
+                </div>
             </div>
             <div class="scrollable _hidden" id="medal-info">
                 <div class="main-left">
@@ -88,7 +122,7 @@ if ($cur_medal == null) {
                         <div class="medal__info-solution">
                             <h1>Solution</h1>
                             <p id="medal_solution">Solution</p>
-                            <div class="toolbar">
+                            <div class="md-toolbar">
                                 <div id="mods"></div>
                                 <div id="support">
                                     <div class="support-pill" id="support-stable">

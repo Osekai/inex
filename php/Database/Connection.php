@@ -28,6 +28,10 @@ namespace Database {
             self::getConnection();
             return self::$db->execSelect($strQuery, $strTypes, $colVariables, $cacheKey, $cacheLength);
         }
+        public static function execSelectStream($strQuery, $strTypes, $colVariables, callable $callback): void {
+            self::getConnection();
+            self::$db->execSelectStream($strQuery, $strTypes, $colVariables, $callback);
+        }
 
         /**
          * @param string $strQuery

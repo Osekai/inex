@@ -51,6 +51,9 @@ $router->post("/api/usersettings/set", function () {
 $router->all("/api/medals/get_all", function () {
     echo \Data\Medals::GetAll()->ReturnJson();
 });
+$router->all("/api/medals/suggestions", function () {
+    echo \Data\Medals::Suggestions()->ReturnJson();
+});
 $router->all("/api/medals/{id}/save", function ($id) {
     if (!requireLogin()) return;
     if (!OsekaiUsers::HasPermission("medal.edit", false)) {
@@ -130,4 +133,28 @@ $router->all("/api/comments/{ref}/{section}/send", function ($ref, $section) {
 
 $router->all("/api/vote/{target}/{id}", function ($target, $id) {
     echo Votes::Vote($target, $id)->ReturnJson();
+});
+
+
+/// =====================
+/// Badges
+/// =====================
+
+$router->all("/api/badges/get_all", function () {
+    echo \Data\Badges::GetAll()->ReturnJson();
+});
+
+
+/// =====================
+/// Rankings
+/// =====================
+
+$router->all("/api/rankings/get", function () {
+    $type = $_POST['type'] ?? '';
+    $options = $_POST['options'] ?? [];
+    $offset = $_POST['offset'] ?? 0;
+    echo \Data\Rankings::GetRanking($type, $options, 50, $offset)->ReturnJson();
+});
+$router->all("/api/rankings/add", function () {
+    echo \Data\Rankings::AddUser($_POST['id'])->ReturnJson();
 });

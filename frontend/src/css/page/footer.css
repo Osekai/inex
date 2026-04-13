@@ -8,6 +8,10 @@
     display: flex;
     flex-direction: column;
 }
+.footer-time {
+    margin-top: 30px;
+    opacity: 0.5;
+}
 .footer-inner > div{
     display: flex;
     justify-content: space-between;

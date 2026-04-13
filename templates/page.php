@@ -1,4 +1,14 @@
 <?php
+$nav = [
+    '/' => 'home',
+    '/medals' => 'medals',
+    '/badges' => 'badges',
+    '/rankings' => 'rankings',
+    'https://osekai.net/profiles' => 'profiles'
+];
+
+$current = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+$current = $current === '' ? '/' : $current;
 
 use Database\Session; ?>
 
@@ -10,21 +20,23 @@ use Database\Session; ?>
                 <img src="/public/img/branding/icon_monochrome.svg">
             </a>
             <div class="navbar-links">
-                <a href="/">home</a>
-                <a href="/medals">medals</a>
-                <a href="https://osekai.net/rankings">ranking</a>
-                <a href="https://osekai.net/profiles">profiles</a>
+                <?php foreach ($nav as $url => $label) {
+                    ?>
+                    <a href="<?= $url ?>" class="<?= ($url === '/' ? $current === '/' : str_starts_with($current, $url)) ? 'active' : '' ?>"><?= $label ?></a>
+                <?php } ?>
             </div>
         </div>
         <div class="navbar-right">
             <div class="navbar-pfp-container">
+                <a href="https://github.com/osekai/inex/issues/new" target="_blank" tooltip="report a bug" class="navbar-right-button"><i data-lucide="bug"></i></a>
                 <a class="navbar-right-button" tooltip="settings" dropdown-button="settings-dropdown">
                     <i data-lucide="cog"></i>
                 </a>
 
-                <div dropdown="settings-dropdown" class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
+                <div dropdown-mode="legacy" dropdown="settings-dropdown" class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
                     <h1>Settings</h1>
-                    <label setting-item="medals.hideUnachievedMedals" class="toggle-text navbar-pfp-dropdown-item" for="checkbox">
+                    <label setting-item="medals.hideUnachievedMedals" class="toggle-text navbar-pfp-dropdown-item"
+                           for="checkbox">
                         <input type="checkbox" class="checkbox" id="checkbox">
                         <p>Completely hide obtained medals</p>
                         <small>Only enabled when filter is on</small>
@@ -35,7 +47,7 @@ use Database\Session; ?>
                 <button dropdown-button="pfp-dropdown"><img class="pfp"
                                                             src="<?= Database\Session::GetPFP() ?>"
                                                             alt="Your Profile Picture"></button>
-                <div dropdown="pfp-dropdown" class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden"
+                <div dropdown-mode="legacy" dropdown="pfp-dropdown" class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden"
                      id="navbar-profile-dropdown">
                     <?php
                     if (Session::LoggedIn()) {
@@ -50,11 +62,17 @@ use Database\Session; ?>
                                 </h1>
                             </div>
                         </div>
+                        <a href="https://osekai.net/profiles?user=<?= Session::UserData()['id'] ?>" class="navbar-pfp-dropdown-item"><i data-lucide="user"></i>Your Profile</a>
+                        <a href="https://osu.ppy.sh/u/<?= Session::UserData()['id'] ?>" class="navbar-pfp-dropdown-item"><i data-lucide="user"></i>Your Profile on osu!</a>
                         <a href="/logout" class="navbar-pfp-dropdown-item"><i data-lucide="log-out"></i>Log Out</a>
                     <?php } else {
                         ?>
                         <a href="/login" class="navbar-pfp-dropdown-item"><i simple-icon="osu"></i> Log in with osu!</a>
                     <?php } ?>
+                    <div class="debug">
+                        <h3>Debug Options</h3>
+                        <a onclick="window.debug()">Debug timings (backend)</a>
+                    </div>
                 </div>
             </div>
         </div>

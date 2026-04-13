@@ -16,6 +16,8 @@ import {LoaderOverlay} from "../../ui/loader-overlay";
 import {PermissionChecker} from "../../utils/permissionChecker";
 import {CenteredLoader} from "../../utils/loaderUtils";
 import {timeAgo} from "../../utils/timeago";
+import {SetMedal} from "../medals";
+import {D2} from "../../utils/d2";
 
 
 export class MedalsUI {
@@ -54,6 +56,7 @@ export class MedalsUI {
             note.classList.toggle("expanded");
         })
 
+
         var votebutton = Div("div", "pill-button")
         bottom.appendChild(votebutton);
         votebutton.classList.add("vote-button")
@@ -75,7 +78,12 @@ export class MedalsUI {
             votebutton.classList.remove("loading");
         })
 
-        var extrabutton = Div("div", "pill-button")
+        let download = D2.Link("", "pill-button square dark", `osu://b/${beatmap.Beatmap_ID}`)
+        download.appendChild(LucideIcon("download"));
+        bottom.appendChild(download);
+
+
+        var extrabutton = Div("div", "pill-button dark")
         bottom.appendChild(extrabutton);
         extrabutton.classList.add("square")
         extrabutton.appendChild(LucideIcon("ellipsis"));
@@ -333,6 +341,18 @@ export class MedalsUI {
         }
     }
 
+    static LoadMedalQuick(medal) {
+        SetMedal(medal.Medal_ID, true, true);
+    }
+
+    static Init() {
+        let buttons = document.querySelectorAll("[medal-button]");
+        for (let button of buttons) {
+            button.addEventListener("click", () => [
+                MedalsUI.LoadMedalQuick(button.getAttribute("medal-button"))
+            ])
+        }
+    }
 }
 
 MedalsUI.CheckObtainedFilter();

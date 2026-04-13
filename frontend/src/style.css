@@ -105,6 +105,9 @@ theme-picker {
     opacity: 0 !important;
     position: absolute !important;;
 }
+.full-hidden {
+    display: none !important;
+}
 .hidden-naf {
     opacity: 0 !important;
     pointer-events: none !important;
@@ -222,4 +225,89 @@ theme-picker {
 .user-text h4,
 .user-text h5 {
     margin: 20px 0;
+}
+
+
+.debug-timings {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    justify-content: flex-end;
+    padding: 8px;
+    gap: 8px;
+    > * {
+        background: #111b;
+        min-height: 100px;
+        backdrop-filter: blur(12px);
+        pointer-events: all;
+        border-radius: 16px;
+    }
+    .debug-timing-bars {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        .bar-outer {
+            transition: all 0.2s ease;
+            height: 30px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            .bar {
+                display: flex;
+                transition: all 0.2s ease;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 0;
+                min-width: 2px;
+                height: 30px;
+                background: hsl(var(--randhue), 76%, 27%) !important;
+                white-space: nowrap;
+                border-radius: 8px;
+                position: absolute;
+                flex-direction: column;
+                justify-items: center;
+
+                p {
+                    border-radius: 8px;
+                    text-shadow: 0px 0px 5px hsl(var(--randhue), 76%, 27%);
+                    line-height: 1;
+                }
+                span {
+                    line-height: 1;
+                    font-weight: 900;
+                    font-size: 10px;
+                }
+
+                &.active {
+                    padding: 4px 8px;
+                    height: 40px;
+                    background: hsl(var(--randhue), 76%, 47%) !important;
+                }
+            }
+            margin: 2px;
+            background: #fff1;
+            border-radius: 8px;
+            &.active {
+                height: 40px;
+            }
+        }
+        padding: 8px;
+    }
+
+    .debug-timing-info {
+        max-width: 500px;
+        height: auto;
+        max-height: 600px;
+        padding: 15px;
+        transition: all 0.1s ease;
+        &:not(&.active) {
+            pointer-events: none;
+            opacity: 0;
+        }
+    }
 }

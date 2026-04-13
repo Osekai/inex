@@ -73,17 +73,42 @@ function setSections(is, p) {
     var sections = window.location.pathname.split("/");
     var inputSections = is.split("/");
 
-
-    for(var x = 0; x < inputSections.length; x++) {
+    for (var x = 0; x < inputSections.length; x++) {
         var inputSection = inputSections[x];
-        var section = sections[x];
-
-        if(inputSection.startsWith("{")) {
+        if (inputSection.startsWith("{")) {
             sections[x] = encodeURIComponent(p[inputSection.slice(1, -1)]);
         }
     }
-    window.history.pushState({ url: sections.join("/") }, null, sections.join("/"));
 
+    // Preserve existing query params and hash
+    var newPath = sections.join("/") + window.location.search + window.location.hash;
+    window.history.pushState({ url: newPath }, null, newPath);
 }
 
-export { insertParam, getParam, removeParam, getSections, setSections };
+function removeSection(is, keyToRemove) {
+    var sections = window.location.pathname.split("/");
+    var inputSections = is.split("/");
+
+    var newSections = [];
+
+    for (var x = 0; x < inputSections.length; x++) {
+        var inputSection = inputSections[x];
+
+        if (inputSection.startsWith("{")) {
+            var key = inputSection.slice(1, -1);
+            if (key === keyToRemove) {
+                continue;
+            } else {
+                newSections.push(sections[x]);
+            }
+        } else {
+            newSections.push(sections[x]);
+        }
+    }
+
+    var newPath = newSections.join("/") + window.location.search + window.location.hash;
+    window.history.pushState({ url: newPath }, null, newPath);
+}
+
+
+export { insertParam, getParam, removeParam, getSections, setSections, removeSection };

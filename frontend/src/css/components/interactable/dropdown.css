@@ -4,12 +4,11 @@
 }
 
 .dropdown::after {
-    content: "\e9fd";
+    content: "▾";
     font-family: inherit;
     color: white;
     margin-left: auto;
-    transform: translateY(16%);
-    font-family: "Phosphor-Fill" !important;
+    transform: translateY(5%) scaleX(1.2);
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
@@ -44,9 +43,10 @@ searchable-dropdown {
     max-height: 40vh;
     overflow-y: auto;
     min-width: 300px;
-    right: 0;
     display: flex;
     flex-direction: column;
+    top: 50px;
+    left: 0;
 }
 .dropdown-content .button {
     margin: 5px;
@@ -57,7 +57,7 @@ searchable-dropdown {
 .dropdown-content .button:first-child {
     margin-top: 5px;
 }
-.dropdown-open {
+.dropdown-open, .jsdropdown-open {
     opacity: 1;
     pointer-events: all;
 }
@@ -97,7 +97,6 @@ searchable-dropdown {
 .dropdown-search-container *[data-lucide], .dropdown-search-container .lucide {
     margin: 0px 12px;
 }
-
 .dropdown-search-container input {
     font-size: 18px;
     height: 100%;

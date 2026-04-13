@@ -22,12 +22,23 @@ namespace Database {
         }
 
         public static function get($key) {
-            if(!USE_MEMCACHE) return false;
-            return self::getConnection()->get("inex-" . $key);
+            if (!USE_MEMCACHE) return false;
+            $conn = self::getConnection();
+            $value = $conn->get("inex-" . $key);
+            if ($value === false && $conn->getResultCode() !== Memcached::RES_NOTFOUND) {
+                error_log("Memcache GET failed: " . $conn->getResultMessage());
+            }
+            return $value;
         }
+
         public static function set($key, $value, $expiration = 0) {
-            if(!USE_MEMCACHE) return false;
-            return self::getConnection()->set("inex-" . $key, $value, $expiration);
+            if (!USE_MEMCACHE) return false;
+            $conn = self::getConnection();
+            $result = $conn->set("inex-" . $key, $value, $expiration);
+            if (!$result) {
+                error_log("Memcache SET failed: " . $conn->getResultMessage());
+            }
+            return $result;
         }
         public static function remove($key) {
             if(!USE_MEMCACHE) return false;

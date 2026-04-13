@@ -57,3 +57,146 @@
 .input-with-text > p {
     margin-bottom: 8px;
 }
+
+.input-with-text.slide {
+    position: relative;
+    background: var(--col-d0);
+    border: 1px solid var(--col-l1);
+    border-radius: 3px;
+    border-bottom: 3px solid var(--col-l3);
+    transition: all 0.2s ease;
+    outline: 0px solid var(--col-l5);
+    >p {
+        transition: all 0.2s ease;
+        position: absolute;
+        transform: translateY(20px);
+        font-size: 17px;
+        color: #fff7;
+        padding-left: 10px;
+        pointer-events: none;
+    }
+    >* {
+        background: transparent !important;
+    }
+    .input-container {
+        background: transparent !important;
+    }
+    >input, >.dropdown, searchable-dropdown>.dropdown, .slideinput, >textarea {
+        transition: all 0.2s ease;
+        font-size: 17px;
+        background: transparent !important;
+        border-radius: 0px;
+        font-weight: 400;
+        padding-top: 19px;
+        padding-bottom: 19px;
+
+        padding-right: 8px;
+        padding-left: 10px;
+
+        * {
+            font-size: 17px;
+        }
+
+
+        outline: 0px solid red !important;
+    }
+
+    tag-input, .input-limited {
+        input {
+            background: transparent !important;
+            outline: 0px solid red !important;
+        }
+    }
+}
+
+.input-limited {
+    position: relative;
+}
+.input-limited p {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 14px;
+    color: #fff6;
+    font-weight: 400;
+    span {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fffc;
+    }
+}
+.input-with-text.slide:has(tag-input) {
+    >p {
+        display: none;
+    }
+}
+.input-with-text.slide:hover {
+    background: var(--col-l1);
+    border: 1px solid var(--col-l3);
+    border-bottom: 3px solid var(--col-l5);
+}
+.input-with-text.slide:has(.dropdown) {
+    /* we aint an input today silly */
+    background: var(--col-l1);
+    border: 1px solid var(--col-l3);
+    border-bottom: 3px solid var(--col-l5);
+}
+
+.input-with-text.slide:before {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--brand-accent);
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    transform: scaleX(0);
+    transition: all 0.2s ease;
+}
+.input-with-text.slide:has(.invalid) {
+    outline: 1px solid #ED2121;
+    box-shadow: 0px 0px 15px #ED2121;
+}
+.input-with-text.slide:has(.invalid):before {
+    background: #ED2121;
+}
+.input-with-text.slide:has(*:focus)  {
+    background: var(--col-l2);
+    border: 1px solid var(--col-l3);
+    border-bottom: 3px solid var(--col-l5);
+}
+.input-with-text.slide:has(*:focus):before {
+    transform: scaleX(1);
+}
+
+.input-with-text.slide:has(input:not(:placeholder-shown)),
+.input-with-text.slide:has(textarea:not(:placeholder-shown)),
+.input-with-text.slide:not(:has(input)):not(:has(textarea)),
+.input-with-text:has(input[type="date"]) /* dates always have text content (even if they're not "valid") */
+{
+    >p {
+        transform: translateY(10px) !important;
+        color: #fffc;
+        font-size: 14px;
+        font-weight: 200;
+    }
+    >input, >.dropdown, searchable-dropdown>.dropdown, .slideinput, >textarea {
+        padding-top: 28px;
+        padding-bottom: 10px;
+
+        padding-right: 8px;
+        padding-left: 10px;
+    }
+}
+
+.form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    .button {
+        align-self: flex-end;
+    }
+}

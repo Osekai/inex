@@ -102,13 +102,11 @@ class PaginationEl extends HTMLElement {
 
     initialize(limit, max_count) {
         if(this.getAttribute("primary") != null) this.primary = true
-        console.log("reinitializing pag");
 
         this.friends = document.querySelectorAll("[link-id=" + this.getAttribute("link-id") + "]");
 
         this.maxPages = Math.ceil(max_count / limit) - 1;
         this.innerHTML = "";
-        console.log(limit);
 
         var next = Button("next");
         var prev = Button("prev");
@@ -135,8 +133,8 @@ class PaginationEl extends HTMLElement {
 
         if(getParam(this.key) != null && this.primary) {
             this.setPage(parseInt(getParam(this.key))-1);
-            if(this.page != 0) this.broadcastPage(this);
         }
+        this.broadcastPage(this);
 
     }
 
