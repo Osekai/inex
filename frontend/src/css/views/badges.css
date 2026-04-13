@@ -166,10 +166,13 @@
     background: var(--col-d2);
     transition: margin-left 0.3s ease-in-out, transform 0.3s ease-in-out;
     min-height: calc(100vw - var(--navbar-height));
+
 }
 
 .badges__sidebar-inner {
     position: sticky;
+    overflow-y: auto;
+    max-height: 100vh;
     top: 0;
 
     .divider {

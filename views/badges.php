@@ -1,3 +1,24 @@
+<?php
+if($args[0] == null) {
+    \Site\Embed::SetTitle("Osekai Badges");
+    \Site\Embed::SetDescription("view (almost) all of osu!'s badges");
+} else {
+    $badge = \Data\Badges::GetOne($args[0]);
+    $userCount = count($badge['Users']);
+    $date = date("F j, Y", strtotime($badge['First_Date_Awarded']));
+
+    $previewNames = array_slice(array_column($badge['Users'], 'Username'), 0, 3);
+    $previewStr = implode(", ", $previewNames);
+    if ($userCount > 3) $previewStr .= ", +" . ($userCount - 3) . " more";
+
+    \Site\Embed::SetTitle("Osekai Badges / " . $badge['Description']);
+    \Site\Embed::SetDescription(
+            "First awarded " . $date . "\n" .
+            $userCount . " " . ($userCount === 1 ? "player" : "players") . ": " . $previewStr
+    );
+    \Site\Embed::SetBannerImage($badge['Image_URL']);
+}
+?>
 <div class="badges__outer">
     <div class="list__area">
         <div class="list__bar-outer">

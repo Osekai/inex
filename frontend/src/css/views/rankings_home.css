@@ -31,3 +31,12 @@
         }
     }
 }
+
+@media (max-width: 1000px) {
+    .rankings-home {
+        flex-direction: column;
+        >div:first-child {
+            max-width: 100%;
+        }
+    }
+}

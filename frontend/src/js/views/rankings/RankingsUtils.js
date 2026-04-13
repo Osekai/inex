@@ -334,10 +334,13 @@ export const columnTypes = {
         })
     },
     "medal": (data) => {
-        return D2.CustomPlus("a", "coltype-medal", {href: "/medals/" + encodeURIComponent(data.content.Name)}, () => {
+        let el = D2.CustomPlus("a", "coltype-medal", {href: "/medals/" + encodeURIComponent(data.content.Name)}, () => {
             D2.Image("medal", "/assets/osu/web/" + data.content.Link)
             D2.Text("p", data.content.Name);
         })
+        if(data.label) el.setAttribute("tooltip", data.label ?? null)
+        if(data.label) el.setAttribute("tooltip-cont", data.label ?? null)
+        return el
     },
     "scoreGraph": (data) => {
         return D2.Div("coltype-scoregraph", () => {

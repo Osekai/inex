@@ -8,9 +8,7 @@ var conf = {
     scale: 0.6,
     dpi: 1.5,
     filePath: "/public/inex.json",
-    fixed: true,
-    width: 1920,
-    height: 800
+    fixed: true
 };
 if (window.innerWidth < 600) {
     conf.scale = 0.5;

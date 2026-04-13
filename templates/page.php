@@ -28,6 +28,7 @@ use Database\Session; ?>
         </div>
         <div class="navbar-right">
             <div class="navbar-pfp-container">
+                <a href="https://github.com/osekai/inex/issues/new" target="_blank" tooltip="report a bug" class="navbar-right-button"><i data-lucide="bug"></i></a>
                 <a class="navbar-right-button" tooltip="settings" dropdown-button="settings-dropdown">
                     <i data-lucide="cog"></i>
                 </a>

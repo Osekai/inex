@@ -156,8 +156,10 @@
 .list__bar .pages {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 10px 40px;
     width: 100%;
+    flex-wrap: wrap;
     > div {
         display: flex;
         align-items: center;
@@ -260,5 +262,58 @@ td:has(.coltype-medalclub) {
         font-size: 14px;
         height: 12px;
         border-radius: 8px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .ranking-table,
+    .ranking-table tbody,
+    .ranking-table tbody tr,
+    .ranking-table tbody td {
+        display: block;
+    }
+
+    /* hide the header row since labels won't align anymore */
+    .ranking-table thead {
+        display: none;
+    }
+    .ranking-table {
+        padding: 20px;
+    }
+
+    .ranking-table tbody tr {
+        background: var(--col-l1);
+        border-radius: var(--border-radius);
+        margin-bottom: 8px;
+        padding: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+
+    }
+
+    .ranking-table tbody td {
+        background: transparent !important;
+        border-radius: 0 !important;
+        padding: 4px 8px;
+        min-width: unset;
+        white-space: normal;
+        display: flex;
+        align-items: center;
+    }
+
+    .coltype-ranktext {
+        background: transparent !important;
+    }
+    td:has(.coltype-ranktext) {
+        width: 50px;
+    }
+    td:not(:has(.coltype-ranktext)) {
+        min-width: 100px !important;
+        [tooltip-cont]:before {
+            content: attr(tooltip-cont) ":";
+            color: white;
+        }
     }
 }

@@ -16,14 +16,18 @@ SELECT Badges_Data.*,
         DISTINCT JSON_OBJECT(
             'User_ID', Badges_Users.User_ID,
             'Date_Awarded', Badges_Users.Date_Awarded,
-            'Username', Merged_Users.Name
+            'Username', Merged_Users_Deduped.Name
         )
     ) AS Users,
     MIN(Badges_Users.Date_Awarded) AS First_Date_Awarded,
     Badges_Users.Description AS Description
 FROM Badges_Data 
         LEFT JOIN Badges_Users ON Badges_Data.ID = Badges_Users.Badge_ID
-        LEFT JOIN Merged_Users ON Merged_Users.User_ID = Badges_Users.User_ID
+        LEFT JOIN (
+            SELECT User_ID, MIN(Name) AS Name
+            FROM Merged_Users
+            GROUP BY User_ID
+        ) Merged_Users_Deduped ON Merged_Users_Deduped.User_ID = Badges_Users.User_ID
 GROUP BY Badges_Data.ID
 ORDER BY First_Date_Awarded DESC
         ");
@@ -36,5 +40,17 @@ ORDER BY First_Date_Awarded DESC
 
 
         return new Response(true, "ok", $db);
+    }
+
+    public static function GetOne(mixed $name)
+    {
+        // this is incredibly dumb but i didnt wanna copy/paste the query
+        $all = self::GetAll();
+        if($all->success) {
+            foreach($all->content as $badge) {
+                if($badge['Name'] == $name) return $badge;
+            }
+        }
+        return null;
     }
 }
