@@ -8,11 +8,11 @@ So far, this is the status of the rewrites to Inex:
 - ### 🟢 Medals
    - Medals has been fully rolled out to all users!
 - ### 🟢 Rankings
-   - Rankings has been completed, rolling out soon!
+   - Rankings has been completed!
 - ### 🔴 Profiles
     - Relies on Rankings
 - ### 🟢 Badges
-    - Badges have been completed, rolling out soon!
+    - Badges have been completed!
 - ### 🔴 Snapshots
     - Big undertaking, not there yet!
 
@@ -38,7 +38,7 @@ So far, this is the status of the rewrites to Inex:
 # Contributing
 
 Before you contribute anything, we'd really recommend you let us know what you're planning to contribute! It'd be best to know what everyone's doing so there's no overlap.
-## Please join our [Osekai Development Server!](https://discord.gg/m4mEGdnc) to talk!
+## Please join our [Osekai Development Server!](https://discord.gg/zJY3W5smpU) to talk!
 
 We're always looking for more help making Osekai as great as it can be!
 
