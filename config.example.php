@@ -21,3 +21,15 @@ const ETI_DATABASE_HOSTNAME = "localhost";
 // Caching
 const USE_MEMCACHE = false;
 const GITHUB_API_KEY = "";
+
+
+const MOD_WEBHOOK_EDITS = null;
+const MOD_WEBHOOK = null;
+
+
+const BUCKET_NAME = "";
+const CLOUDFLARE_TOKEN = "";
+const BUCKET_ENDPOINT = "";
+const ACCESS_KEY_ID = "";
+const ACCESS_KEY_SECRET = "";
+const S3_URL_PATH = "";

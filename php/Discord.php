@@ -4,6 +4,10 @@ class Discord
 {
     static function postDiscordEmbeds(string $webhookUrl, array $embeds, string $content = ''): bool
     {
+        if($webhookUrl == null) {
+            error_log("Discord webhook URL is null - might not be set in config?");
+            return false;
+        }
         // Ensure embeds do not exceed Discord's limit of 10
         if (count($embeds) > 10) {
             throw new InvalidArgumentException('Discord allows a maximum of 10 embeds per message.');

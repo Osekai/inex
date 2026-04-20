@@ -9,7 +9,7 @@
         "dist": {
           "url": "https://github.com/anthera-art/router/archive/refs/heads/master.zip",
           "type": "zip"
-        },
+        }, 
         "source": {
           "url": "https://github.com/anthera-art/router",
           "type": "git",
