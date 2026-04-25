@@ -1,4 +1,5 @@
 <?php
+const ROOT = __DIR__;
 include("./php/Debug/Timings.php");
 ini_set('display_errors', 0); // just read the terminal silly
 

@@ -1,0 +1,3 @@
+[submodule "public/lang"]
+	path = public/lang
+	url = https://github.com/Osekai/inex-lang

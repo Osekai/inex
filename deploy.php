@@ -148,5 +148,4 @@ if (file_put_contents($revFilePath, $latestTagName) !== false) {
 } else {
     die("Failed to update $revFilePath.\n");
 }
-
 ?>

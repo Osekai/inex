@@ -13,7 +13,7 @@
             <div id="logo-anim"></div>
             <h1>INEX</h1>
         </div>
-        <p>The next generation of Osekai</p>
+        <p langkey="home/header.h1">The next generation of Osekai</p>
     </div>
 </div>
 

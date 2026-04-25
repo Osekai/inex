@@ -36,6 +36,8 @@ AddRunner("eti_roleassignments", new Runners\RoleAssignments());
 AddRunner("medalimages", new Runners\MedalImages());
 AddRunner("beatmappacks", new Runners\BeatmapPacks());
 
+AddRunner("preparelocalization", new Runners\PrepareLocalization());
+
 
 if (count($argv) < 3) {
     echo "Available Runners:\n";
