@@ -74,13 +74,13 @@ class PrepareLocalization extends AbstractRunner
             // {{home/header.h1 | Default text}} in PHP templates/attributes
             preg_match_all('/\{\{([a-zA-Z0-9_.\/-]+)\s*\|\s*([^}]+?)\s*\}\}/', $contents, $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
-                $inThisFile[$match[1]] = trim($match[2]);
+                $inThisFile[$match[1]] = preg_replace('/\s+/', ' ', trim($match[2]));
             }
 
             // <p langkey="home/header.h1">Default text</p> in HTML
             preg_match_all('/langkey=["\']([a-zA-Z0-9_.\/-]+)["\']\s*>([^<]+)</', $contents, $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
-                $inThisFile[$match[1]] = trim($match[2]);
+                $inThisFile[$match[1]] = preg_replace('/\s+/', ' ', trim($match[2]));
             }
 
             // Trans('home/header.h1', 'Default text') in JS
