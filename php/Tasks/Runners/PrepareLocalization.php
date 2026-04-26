@@ -1,5 +1,7 @@
 <?php
+
 namespace Tasks\Runners;
+
 use Tasks\AbstractRunner;
 
 class PrepareLocalization extends AbstractRunner
@@ -66,8 +68,8 @@ class PrepareLocalization extends AbstractRunner
             if ($this->isIgnored($file->getPathname())) continue;
 
             $inThisFile = [];
-
             $contents = file_get_contents($file->getPathname());
+            $contents = $clean = preg_replace('/\/\/[^\n]*|\/\*.*?\*\/|<!--.*?-->/s', '', $contents);
 
             // {{home/header.h1 | Default text}} in PHP templates/attributes
             preg_match_all('/\{\{([a-zA-Z0-9_.\/-]+)\s*\|\s*([^}]+?)\s*\}\}/', $contents, $matches, PREG_SET_ORDER);
@@ -89,7 +91,7 @@ class PrepareLocalization extends AbstractRunner
 
             $found = array_merge($found, $inThisFile);
 
-            if(count($inThisFile) > 0) {
+            if (count($inThisFile) > 0) {
                 echo "Found " . count($inThisFile) . " keys in " . $file->getPathname() . "\n";
             }
         }
@@ -114,9 +116,7 @@ class PrepareLocalization extends AbstractRunner
             $section = $parts[0];
             $subkey = $parts[1] ?? $parts[0];
 
-            if (!isset($existing[$section][$subkey])) {
-                $existing[$section][$subkey] = $default;
-            }
+            $existing[$section][$subkey] = $default;
         }
 
         ksort($existing);

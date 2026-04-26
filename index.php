@@ -99,6 +99,9 @@ $s->finish();
 $output = ob_get_contents();
 ob_end_clean();
 
+$localization = new Localization();
+$output = $localization->ParseHTML($output);
+
 
 $time = microtime();
 $time = explode(' ', $time);

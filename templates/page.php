@@ -34,12 +34,12 @@ use Database\Session; ?>
                 </a>
 
                 <div dropdown-mode="legacy" dropdown="settings-dropdown" class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
-                    <h1>Settings</h1>
+                    <h1 langkey="navbar/settings.h1">Settings</h1>
                     <label setting-item="medals.hideUnachievedMedals" class="toggle-text navbar-pfp-dropdown-item"
                            for="checkbox">
                         <input type="checkbox" class="checkbox" id="checkbox">
-                        <p>Completely hide obtained medals</p>
-                        <small>Only enabled when filter is on</small>
+                        <p langkey="navbar/settings.hideobtained.title">Completely hide obtained medals</p>
+                        <small langkey="navbar/settings.hideobtained.flair">Only enabled when filter is on</small>
                     </label>
                 </div>
             </div>
