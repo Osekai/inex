@@ -165,6 +165,10 @@ ORDER BY Rankings_Users.Count_Medals DESC";
                 $searchWhereClause = "WHERE $searchColumn = ?";
                 $searchParams[] = $searchQuery;
                 $searchTypes .= is_numeric($searchQuery) ? "i" : "s";
+            } else if ($searchColumn === "Country_Code") {
+                $searchWhereClause = "WHERE UPPER(Country_Code) = UPPER(?) OR Country_Code IN (SELECT Country_Code FROM Common_Countries WHERE Name LIKE ?)";
+                array_push($searchParams, $searchQuery, "$searchQuery%");
+                $searchTypes .= "ss";
             } else {
                 $searchWhereClause = "WHERE $searchColumn LIKE ?";
                 $searchParams[] = "%$searchQuery%";
