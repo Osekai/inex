@@ -387,6 +387,14 @@ export class MedalsUI {
                 MedalsUI.LoadMedalQuick(button.getAttribute("medal-button"))
             })
         }
+
+        const el = document.getElementById("medal_first_achieved_date");
+        if (el) {
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+            }, { capture: true });
+        }
     }
 }
 
