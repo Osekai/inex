@@ -4,6 +4,7 @@ namespace Database {
     use Data;
     use Database;
     use Debug\Timings;
+    use DX\Setup;
     use General;
     use API;
 
@@ -18,7 +19,12 @@ namespace Database {
             if ($_COOKIE["session"] != null || $this->key != null) {
                 $this->key = $_COOKIE["session"];
                 $s = new Timings("session_fetch");
-                $userid = Database\Connection::execSelect("SELECT * FROM `System_Sessions` WHERE `Key` = ?", "s", [$this->key]);
+                try {
+                    // this is the first time we use the database in the flow, so this is where we can warn the user if they haven't migrated!
+                    $userid = Database\Connection::execSelect("SELECT * FROM `System_Sessions` WHERE `Key` = ?", "s", [$this->key]);
+                } catch (\Exception $e) {
+                    Setup::PrintError("Database has not been set up!", "Run <code>php vendor/bin/phinx migrate</code> to set up your database!");
+                }
                 $s->finish();
                 if (count($userid) > 0) {
                     $userid = $userid[0]["User_ID"];

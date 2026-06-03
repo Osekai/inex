@@ -1,5 +1,6 @@
 <?php
 // Basic Data
+const DEV = true;
 const URL = "http://0.0.0.0:19242";
 
 // OAUTH Login
