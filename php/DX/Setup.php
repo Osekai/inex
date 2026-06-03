@@ -143,7 +143,7 @@ class Setup
             echo "  <a href='https://status.untone.org' target='_blank'>Check service status</a>";
             echo "</small>";
             echo "</div>";
-            echo "<small class='bypass' style='opacity: 0.3; font-size: 11px;'>" . htmlspecialchars($message) . "</small>";
+            echo "<small class='bypass' style='opacity: 0.3; font-size: 11px;'>" . $message . "</small>";
             exit;
         }
     }
