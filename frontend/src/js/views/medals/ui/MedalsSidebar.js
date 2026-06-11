@@ -19,7 +19,7 @@ export class MedalsSidebar {
 
     Search(rawtext = null) {
         if (rawtext == null) {
-            rawtext = document.getElementById("medal_search").rawtext;
+            rawtext = document.getElementById("medal_search").value;
         }
         if (rawtext.length > 0) {
             document.getElementById("medal_search_clear").classList.remove("hidden");

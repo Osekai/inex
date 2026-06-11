@@ -11,7 +11,8 @@
   "corejs": "2",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate-icon-fonts": "npx fantasticon --descent 33 ./icons -o ./src/fonts/iconfont"
+    "generate-icon-fonts": "npx fantasticon --descent 33 ./icons -o ./src/fonts/iconfont",
+    "dev": "webpack --mode development --watch"
   },
   "keywords": [],
   "author": "",

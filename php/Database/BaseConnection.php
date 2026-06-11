@@ -3,6 +3,7 @@
 namespace Database;
 
 use Database;
+use DX\Setup;
 use mysqli;
 
 class BaseConnection
@@ -11,7 +12,11 @@ class BaseConnection
 
     public function __construct($host, $username, $password, $database)
     {
-        $this->connection = new mysqli($host, $username, $password, $database);
+        try {
+            $this->connection = new mysqli($host, $username, $password, $database);
+        } catch (\mysqli_sql_exception $e) {
+            Setup::PrintError("Failed to connect to MySQL", $e->getMessage());
+        }
         $this->connection->set_charset("utf8mb4"); // to fix emojis in comments
         $this->connection->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, 1);
     }

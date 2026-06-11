@@ -1,6 +1,7 @@
 <?php
 const ROOT = __DIR__;
 include("./php/Debug/Timings.php");
+include("./php/DX/Setup.php");
 ini_set('display_errors', 0); // just read the terminal silly
 
 $time = microtime();
@@ -20,17 +21,20 @@ if (isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] === 'application
 $s->finish();
 
 
-
 $s = new \Debug\Timings("autoload");
 include("autoload.php");
 $s->finish();
 $s = new \Debug\Timings("vendor autoload");
-require __DIR__ . '/vendor/autoload.php';
+if (file_exists(__DIR__ . '/vendor/autoload.php'))
+    require __DIR__ . '/vendor/autoload.php';
+else {
+    \DX\Setup::PrintError("Composer is not set up!", "Run 'composer install' in the root directory to install composer dependencies.");
+}
 $s->finish();
 
 
-if(php_sapi_name() == "cli") {
-    if($argv[1] == "task") {
+if (php_sapi_name() == "cli") {
+    if ($argv[1] == "task") {
         include("php/Tasks/run.php");
     } else {
         echo "Use command 'task' to run tasks\n";
@@ -48,7 +52,15 @@ include("error.php");
 $s->finish();
 
 $s = new \Debug\Timings("config");
+if(!file_exists("config.php")) {
+    \DX\Setup::PrintError("Config file not found!", "Please copy config.example.php to config.php and fill in the required values.");
+}
 include("config.php");
+try {
+    $temp = DATABASE_HOSTNAME;
+} catch (\Error $e) {
+    \DX\Setup::PrintError("config.php is invalid.", "Something in config.php doesn't seem right - make sure it matches the example!");
+}
 $s->finish();
 
 $s = new \Debug\Timings("general");
@@ -99,7 +111,12 @@ $s->finish();
 $output = ob_get_contents();
 ob_end_clean();
 
-if(Site::$am_frontend) {
+if (Site::$am_frontend && DEV) {
+    $frontendCompiled = file_exists("frontend/dist/index.css");
+    if(!$frontendCompiled) \DX\Setup::PrintError("Frontend not compiled!", "Go to the <code>frontend</code> directory and run <code>npm install</code> and then <code>npm run dev</code>.");
+}
+
+if (Site::$am_frontend) {
     $localization = new Localization();
     $output = $localization->ParseHTML($output);
 }
@@ -124,10 +141,10 @@ if (Site::$login_redir_here && Site::$am_frontend) {
 
 
 echo $output;
-if(Site::$am_frontend) {
+if (Site::$am_frontend) {
     ?>
     <script id="debug-timings">
-        if(typeof(window.be) == "undefined") window.be = {};
+        if (typeof (window.be) == "undefined") window.be = {};
         window.be.debugTimings = {
             "start": <?= $start ?>,
             "finish": <?= microtime(true) ?>,
