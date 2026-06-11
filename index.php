@@ -114,6 +114,14 @@ $total_time = round(($finish - $start), 4);
 
 $output = str_replace("{TIME}", $total_time * 1000 . " ms", $output);
 
+if (Site::$login_redir_here && Site::$am_frontend) {
+    setcookie("login_redir", $_SERVER['REQUEST_URI'], [
+        'path' => '/',
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+}
+
 
 echo $output;
 if(Site::$am_frontend) {

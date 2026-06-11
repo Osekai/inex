@@ -11,7 +11,7 @@ const REDIRECT_URI = URL . "/oauth";
 const DATABASE_NAME = "anthera";
 const DATABASE_USERNAME = "root";
 const DATABASE_PASSWORD = "password";
-const DATABASE_HOSTNAME = "localhost";
+const DATABASE_HOSTNAME = "127.0.0.1";
 
 const ETI_DATABASE_NAME = "osekai";
 const ETI_DATABASE_USERNAME = "root";

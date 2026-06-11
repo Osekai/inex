@@ -1,0 +1,15 @@
+{
+    http_port 8400
+    https_port 8401
+    auto_https off
+    frankenphp {
+        php_ini error_log /dev/stderr
+        php_ini log_errors 1
+    }
+}
+
+:8400 {
+    root * .
+    log
+    php_server
+}

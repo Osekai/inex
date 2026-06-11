@@ -68,13 +68,16 @@ $router->get('/test/', function () {
 });
 
 $router->get('/login', function () {
+    Site::$login_redir_here = false;
     General::Redirect("https://osu.ppy.sh/oauth/authorize?response_type=code&redirect_uri=" . htmlentities(REDIRECT_URI) . "&client_id=" . CLIENT_ID);
     //General::Redirect("https://osu.ppy.sh/oauth/authorize?client_id=" . CLIENT_ID . "&redirect_uri=" . REDIRECT_URI . "&response_type=code");
 });
 $router->get('/oauth', function () {
+    Site::$login_redir_here = false;
     Oauth\Login::FrontendLogin();
 });
 $router->get('/logout', function () {
+    Site::$login_redir_here = false;
     \Database\Session::Logout();
     General::Redirect("/");
 });

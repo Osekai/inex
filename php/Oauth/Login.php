@@ -82,6 +82,15 @@ VALUES (?, ?, now());", "is", [$userdata['id'], $userdata['username']]);
             }
 
             Database\Session::Login($userdata['id']);
+
+            if (isset($_COOKIE['login_redir'])) {
+                $redir = $_COOKIE['login_redir'];
+                // only allow relative paths — no protocol, no external host
+                if (preg_match('#^/[^/\\\\]#', $redir)) {
+                    setcookie("login_redir", '', ['expires' => time() - 3600, 'path' => '/']);
+                    General::Redirect($redir);
+                }
+            }
             General::Redirect("/home");
 
             exit;
