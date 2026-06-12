@@ -228,7 +228,7 @@ class Medals
                     }
             );
             return $scores;
-        }, 0.1); // cache for 1 hour
+        }, 3600); // cache for 1 hour
 
         arsort($scores);
 
