@@ -173,10 +173,10 @@ if ($cur_medal == null) {
                                 <div class="header">
                                     <h3>First Achieved By</h3>
                                 </div>
-                                <a target="_blank" id="medal_first_achieved_by_link" class="inner">
+                                <a target="_blank" id="medal_first_achieved_by_link" class="inner" draggable="false">
                                     <img id="medal_first_achieved_by_pfp">
                                     <h1 id="medal_first_achieved_by"></h1>
-                                    <h2 id="medal_first_achieved_date"></h2>
+                                    <h2 id="medal_first_achieved_date" draggable="false"></h2>
                                 </a>
                             </div>
                             <div>
