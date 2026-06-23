@@ -34,9 +34,9 @@
 .user-header {
     display: flex;
     align-items: center;
-    height: 170px;
+    height: 200px;
     img {
-        height: 170px;
+        height: 200px;
         border-radius: 20px;
     }
     .name {
@@ -65,9 +65,25 @@
         display: flex;
         gap: 16px;
         >div {
-            height: 170px;
+            &:hover {
+                &:not(:has(.toolbar-area:hover)) {
+                    background: color-mix(in srgb, var(--col-l3) 50%, transparent);
+                    transform: translateY(-5px);
+                    cursor: pointer;
+                    border-color: var(--col-l3);
+
+                    .rank-image {
+
+                        animation: spin 1s ease;
+
+                    }
+                }
+            }
+            transition: all 0.2s ease;
+
+            height: 185px;
             background: color-mix(in srgb, var(--col-l2) 50%, transparent);
-            width: 280px;
+            width: 300px;
             backdrop-filter: blur(10px);
             outline: color-mix(in srgb, var(--col-l6) 50%, transparent) solid 1px;
             border-radius: 20px;
@@ -78,9 +94,13 @@
         }
     }
 }
-
-
+@keyframes spin {
+    0% { transform: perspective(160px) rotateY(0deg); }
+    100% { transform: perspective(160px) rotateY(360deg); }
+}
 .panel-stats {
+
+
     display: flex;
     flex-direction: column;
     padding: 14px;
@@ -91,6 +111,7 @@
         font-weight: 500;
         text-transform: uppercase;
         color: #FFFA;
+        margin-bottom: 4px;
     }
 
     .toolbar-area {
@@ -116,6 +137,7 @@
     .cunt {
         flex: 1;
         position: relative;
+        padding-top: 6px;
     }
     .mainarea {
         flex: 1;
@@ -198,11 +220,13 @@
         }
 
         position: relative;
+
         .rank-image {
             position: absolute;
             top: 14px;
             right: 14px;
             height: 100px;
+            display: flex;
         }
         .next-medals {
             display: flex;
@@ -248,6 +272,27 @@
                     opacity: 0.4;
                 }
             }
+        }
+    }
+}
+
+
+.main-profile {
+    display: flex;
+    flex-direction: column;
+    >.tabs {
+        display: flex;
+        >* {
+            background: var(--col-l2);
+            padding: 24px;
+            &.otab-button-active {
+                background: var(--col-l90);
+                color: var(--col-l2);
+            }
+        }
+
+        a {
+            margin-left: auto;
         }
     }
 }

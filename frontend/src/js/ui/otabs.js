@@ -101,7 +101,10 @@ export function LoadOTabs() {
                 oTabButton.innerHTML = oTabButton.getAttribute("otab-button");
             }
             if (!oTabButton.dataset.otabBound) {
-                oTabButton.addEventListener("click", function () {
+                oTabButton.addEventListener("click", function (e) {
+                    if (e.target.closest("[otab-button]") !== oTabButton) {
+                        return;
+                    }
                     switchTab(oTabButton.getAttribute("otab-button"));
                 });
                 oTabButton.dataset.otabBound = "true";

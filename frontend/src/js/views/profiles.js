@@ -32,6 +32,9 @@ async function Load() {
     for(let el of document.querySelectorAll("[pr-el=pfp]")) {
         el.src = profiles.User.avatar_url;
     }
+    for(let el of document.querySelectorAll("[pr-el=link-osu]")) {
+        el.href = "https://osu.ppy.sh/users/" + profiles.User.id;
+    }
     for(let el of document.querySelectorAll("[pr-el=username]")) {
         el.innerText = profiles.User.username;
     }
