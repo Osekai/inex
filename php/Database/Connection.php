@@ -67,5 +67,11 @@ namespace Database {
             self::getConnection();
             self::$db->execSimpleOperation($strQuery);
         }
+
+        public static function insert(string $string, array $item)
+        {
+            self::getConnecgtion();
+            self::$db->insert($string, $item);
+        }
     }
 }

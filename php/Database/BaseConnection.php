@@ -5,15 +5,28 @@ namespace Database;
 use Database;
 use DX\Setup;
 use mysqli;
+use PDO;
+use PDOException;
 
 class BaseConnection
 {
     public $connection;
+    public $pdoConnection = null;
+
+    private $host;
+    private $username;
+    private $password;
+    private $database;
 
     public function __construct($host, $username, $password, $database)
     {
+        $this->host = $host;
+        $this->username = $username;
+        $this->password = $password;
+        $this->database = $database;
+
         try {
-            $this->connection = new mysqli($host, $username, $password, $database);
+            $this->connection = new mysqli($this->host, $this->username, $this->password, $this->database);
         } catch (\mysqli_sql_exception $e) {
             Setup::PrintError("Failed to connect to MySQL", $e->getMessage());
         }
@@ -139,4 +152,49 @@ class BaseConnection
         $stmt = $mysql->prepare($strQuery);
         $stmt->execute();
     }
+
+    public function insert(string $table, array $data): void
+    {
+        $columns = implode(', ', array_keys($data));
+        $placeholders = implode(', ', array_fill(0, count($data), '?'));
+        $query = "INSERT INTO `$table` ($columns) VALUES ($placeholders)";
+        $this->advExecOperation($query, array_values($data));
+    }
+
+    private function getPdoConnection(): PDO
+    {
+        if ($this->pdoConnection === null) {
+            $dsn = "mysql:host={$this->host};dbname={$this->database};charset=utf8mb4";
+            try {
+                $this->pdoConnection = new PDO($dsn, $this->username, $this->password, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                ]);
+            } catch (PDOException $e) {
+                throw new PDOException($e->getMessage(), (int)$e->getCode());
+            }
+        }
+        return $this->pdoConnection;
+    }
+
+
+    public function advExecSelect(string $query, array $params = []): array
+    {
+        $stmt = $this->getPdoConnection()->prepare($query);
+        $stmt->execute($params);
+        $result = $stmt->fetchAll();
+        return $result;
+    }
+
+    public function advExecOperation(string $query, array $params = []): void
+    {
+        $this->getPdoConnection()->prepare($query)->execute($params);
+    }
+
+    public function advGetLastInsertId(): int
+    {
+        return (int)$this->getPdoConnection()->lastInsertId();
+    }
+
 }

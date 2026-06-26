@@ -26,13 +26,13 @@ if ($cur_medal == null) {
         <div class="sidebar-md-toolbar">
             <div class="input-container">
                 <i data-lucide="search"></i>
-                <input type="text" class="input" placeholder="search" id="medal_search">
+                <input type="text" class="input" placeholder="search" id="medal_search" bug-reportable="medals/search">
                 <button class="hidden" id="medal_search_clear"><i data-lucide="x"></i></button>
             </div>
             <?php
             if (\Database\Session::LoggedIn()) {
                 ?>
-                <button class="button square" tooltip="Mark Completed Medals" id="filter-button"><i
+                <button class="button square" tooltip="Mark Completed Medals" id="filter-button" bug-reportable="medals/search_filter"><i
                             data-lucide="filter"></i>
                 </button>
             <?php } else { ?>
@@ -94,7 +94,7 @@ if ($cur_medal == null) {
                 <?php
                 }
                 ?>
-                <div class="homepage-panel">
+                <div class="homepage-panel" bug-reportable="medals/suggestions" bug-reportable-name="Medal Suggestions">
                     <h1>Our recommendations for you</h1>
                     <div class="recommendations-grid" id="recommendations-grid">
                         <?= LOADER ?>

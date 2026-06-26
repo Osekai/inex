@@ -9,6 +9,10 @@ class LoaderOverlay {
         outer.innerHTML += loader;
         outer.appendChild(Object.assign(document.createElement("p"), {"innerText": text}));
     }
+
+    remove() {
+        this.overlay.remove();
+    }
 }
 
 export {LoaderOverlay};

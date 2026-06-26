@@ -1,4 +1,9 @@
 <?php
+
+use Ampra\IO;
+use Database\Connection;
+use Database\Session;
+
 if(!isset($router)) die("Do not call this directly!");
 
 function BasePage($name)
@@ -104,4 +109,67 @@ $router->get('/poll/1', function () {
 });
 $router->post('/poll/1', function () {
     echo \Polldata\P1_Hardware::Submit()->ReturnJson();
+});
+
+
+
+$router->post("/api/feedback/bug", function () {
+    // https://github.com/anthera-art/web/blob/main/routing/backend.php#L946
+    if(!Session::LoggedIn()) return;
+    $nullableFloat = fn($key) => isset($_POST[$key]) && $_POST[$key] !== '' ? (float)$_POST[$key] : null;
+    $nullableInt = fn($key) => isset($_POST[$key]) && $_POST[$key] !== '' ? (int)$_POST[$key] : null;
+    $nullableBool = fn($key) => isset($_POST[$key]) && $_POST[$key] !== '' ? filter_var($_POST[$key], FILTER_VALIDATE_BOOLEAN) : null;
+    $str = fn($key, $default = '') => trim($_POST[$key] ?? $default);
+
+    // TODO: we probably shouldn't send *all* of this, lol - bit too much info for osekai (fine for anthera)
+    $item = [
+        "UserAgent" => $_SERVER['HTTP_USER_AGENT'] ?? $str('userAgent'),
+        "Url" => $str('url'),
+        "Referrer" => $str('referrer'),
+        "Viewport" => $str('viewport'),
+        "Screen" => $str('screen'),
+        "DevicePixelRatio" => $nullableFloat('devicePixelRatio'),
+        "ColorDepth" => $nullableInt('colorDepth'),
+        "Language" => $str('language'),
+        "Timezone" => $str('timezone'),
+        "Memory" => $nullableFloat('memory'),
+        "Cores" => $nullableInt('cores'),
+        "Online" => $nullableBool('online'),
+        "Problem" => $str('problem'),
+        "Reproduce" => $str('reproduce'),
+        "Expected" => $str('expected'),
+        "Priority" => $str('priority', 'medium'),
+        "Type" => $str('type', 'unknown'),
+        "TypeReadable" => $str('readableType', $str('type', 'unknown')),
+        "Timestamp" => date('c'),
+        "UserTimestamp" => $str('timestamp'),
+        "Secret" => md5(str_replace('-', '', bin2hex(openssl_random_pseudo_bytes(16)))),
+        "Creator" => Session::UserData()['id'],
+    ];
+    print_r($_FILES);
+
+    Connection::insert("UserFeedback_Bug", $item);
+    IO::Send("/feedback/bug", $item);
+});
+
+$router->post("/api/feedback/feedback", function () {
+    // https://github.com/anthera-art/web/blob/main/routing/backend.php#L986
+    if(!Session::LoggedIn()) return;
+    $str = fn($key, $default = '') => trim($_POST[$key] ?? $default);
+    $nullableFloat = fn($key) => isset($_POST[$key]) && $_POST[$key] !== '' ? (float)$_POST[$key] : null;
+
+    $item = [
+        "Feedback" => $str('feedback'),
+        "Rating" => $nullableFloat('rating'),
+        "Priority" => $str('priority', 'medium'),
+        "Type" => $str('type', 'unknown'),
+        "TypeReadable" => $str('readableType', $str('type', 'unknown')),
+        "Timestamp" => date('c'),
+        "UserTimestamp" => $str('timestamp'),
+        "Secret" => md5(str_replace('-', '', bin2hex(openssl_random_pseudo_bytes(16)))),
+        "Creator" => Session::UserData()['id']
+    ];
+
+    Connection::insert("UserFeedback_Feedback", $item);
+    IO::Send("/feedback/feedback", $item);
 });

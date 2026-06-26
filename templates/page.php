@@ -26,7 +26,7 @@ if(\Database\Session::LoggedIn()) {
 
 use Database\Session; ?>
 
-<div class="navbar">
+<div class="navbar" bug-reportable="navbar" bug-reportable-name="Navbar">
     <a class="skip-link" href='#main'>Skip to content</a>
     <div class="navbar-upper">
         <div class="navbar-left">
@@ -49,8 +49,14 @@ use Database\Session; ?>
         </div>
         <div class="navbar-right">
             <div class="navbar-pfp-container">
-                <a href="https://github.com/osekai/inex/issues/new" target="_blank" tooltip="report a bug"
+                <a class="hidden" dropdown-button="bugs" tooltip="suggestions / bugs"
                    class="navbar-right-button"><i data-lucide="bug"></i></a>
+                <div dropdown-mode="legacy" dropdown="bugs"
+                     class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
+                    <h1 langkey="navbar/bugs.h1">Help us make Osekai better</h1>
+                    <div langkey="navbar/bugs.bug" class="button">Report a bug</div>
+                    <div langkey="navbar/bugs.feedback" class="button">Feature request / Other feedback</div>
+                </div>
                 <?php
                 if (Session::LoggedIn()) {
                     ?>

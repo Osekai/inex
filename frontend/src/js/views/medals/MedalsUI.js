@@ -242,6 +242,7 @@ export class MedalsUI {
         console.log("???", extraData);
 
         let adoptionGraphContainer = document.getElementById("medal_adoption_graph");
+        adoptionGraphContainer.innerHTML = "";
         let adoptionData = [];
 
         let maxAdoption = 0;

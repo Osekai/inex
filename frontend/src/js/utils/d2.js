@@ -8,7 +8,7 @@ export class D2 {
         if (typeof children === "function") {
             const prevParent = D2._currentParent;
             D2._currentParent = parent;
-            const ret = children();
+            const ret = children(parent);
             if (ret instanceof Node) {
                 parent.appendChild(ret);
             } else if (Array.isArray(ret)) {
@@ -147,8 +147,10 @@ export class D2 {
         return i;
     }
 
-    static Button(text, type = "") {
-        return D2._interactableBase(text, type, "button");
+    static Button(text, type = "", cb) {
+        let button = D2._interactableBase(text, type, "button");
+        if (cb) button.addEventListener("click", cb);
+        return button;
     }
 
     static IconButton(icon, text, type = "", buttonType = "button icon-button") {
