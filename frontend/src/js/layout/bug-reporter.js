@@ -418,7 +418,6 @@ function ReportOverlay(cb, type = "bug") {
                 el = el.parentElement;
             }
 
-            while 
 
             box._rect = r;
             box._z = z;

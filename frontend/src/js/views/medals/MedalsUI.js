@@ -306,15 +306,21 @@ export class MedalsUI {
         }
 
         var img = document.getElementById("medal_image");
-        img.src = "/assets/medals/web/" + medal.Link;
-        img.onload = () => {
-            var rgb = getAverageRGB(img);
-            var hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-            // @ts-ignore
-            document.getElementById("main-col").style.setProperty("--hue", hsl[0] * 360);
-            // @ts-ignore
-            document.getElementById("main-col").style.setProperty("--sat", hsl[1] * 3);
-        };
+        img.setAttribute("src", medal.Link);
+        //img.onload = () => {
+        //    var rgb = getAverageRGB(img);
+        //    var hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+        //    // @ts-ignore
+        //    document.getElementById("main-col").style.setProperty("--hue", hsl[0] * 360);
+        //    // @ts-ignore
+        //    document.getElementById("main-col").style.setProperty("--sat", hsl[1] * 3);
+        //};
+        img.addEventListener("load", () => {
+            let colours = img.getColour();
+
+            document.getElementById("main-col").style.setProperty("--hue", colours[0] * 360);
+            document.getElementById("main-col").style.setProperty("--sat", colours[1]);
+        })
 
         document.getElementById("medal_name").innerText = medal.Name;
         document.getElementById("medal_description").innerText = medal.Description;

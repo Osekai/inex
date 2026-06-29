@@ -6,5 +6,6 @@ export * from './elements/advanced-code-field.js';
 export * from './elements/image-drag-area.js';
 export * from './elements/comments-section.js';
 export * from './elements/input-waiter';
+export * from './elements/medal-icon';
 
 export * from './layout/bug-reporter';

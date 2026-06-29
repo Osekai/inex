@@ -718,6 +718,10 @@ body {
     height: 100px;
     margin: 10px 0px;
 }
+.medal__info-upper > medal-icon {
+    height: 100px;
+    margin: 10px 0px;
+}
 .medal__info-upper:before {
     content: "";
     --col: #fff6;

@@ -108,7 +108,7 @@ if ($cur_medal == null) {
                     </div>
                     <div class="panel medal__info">
                         <div class="medal__info-upper" bug="medals/info/info">
-                            <img id="medal_image" src="/public/img/branding/icon_monochrome.svg">
+                            <medal-icon id="medal_image" src="all-secret-jackpot"></medal-icon>
                             <div class="medal__info-text">
                                 <div>
                                     <h1 id="medal_name"></h1>
