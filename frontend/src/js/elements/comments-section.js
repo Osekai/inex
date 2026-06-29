@@ -29,8 +29,10 @@ class CommentsSection extends HTMLElement {
     lastCommentBar = null;
 
     commentBar(replyingTo = null, hideParents = null, callback = null) {
+
         // note! : please pass in as Comment object and not ID!
         const outer = new Div("div", "comment-input");
+        outer.setAttribute("bug", "comments/input");
         if (loggedIn) {
             const input = document.createElement("textarea");
             input.rows = 1;
@@ -351,6 +353,7 @@ class CommentsSection extends HTMLElement {
         }
 
         this.listElement = Div();
+        this.listElement.setAttribute("bug", "comments/list");
 
         this.appendChild(this.listElement);
     }

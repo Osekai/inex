@@ -15,7 +15,7 @@ if ($cur_medal == null) {
 } else {
     \Site\Embed::$title = "Osekai Medals / " . $cur_medal['Name'];
     \Site\Embed::$description = Sanitize::HTML($cur_medal['Description']);
-    \Site\Embed::SetImage("/assets/osu/web/" . $cur_medal['Link']);
+    \Site\Embed::SetImage("/assets/osu/assets/medals/output/web/" . $cur_medal['Link']);
 }
 ?>
 <script>
@@ -26,13 +26,13 @@ if ($cur_medal == null) {
         <div class="sidebar-md-toolbar">
             <div class="input-container">
                 <i data-lucide="search"></i>
-                <input type="text" class="input" placeholder="search" id="medal_search" bug-reportable="medals/search">
+                <input type="text" class="input" placeholder="search" id="medal_search" bug="medals/search">
                 <button class="hidden" id="medal_search_clear"><i data-lucide="x"></i></button>
             </div>
             <?php
             if (\Database\Session::LoggedIn()) {
                 ?>
-                <button class="button square" tooltip="Mark Completed Medals" id="filter-button" bug-reportable="medals/search_filter"><i
+                <button class="button square" tooltip="Mark Completed Medals" id="filter-button" bug="medals/search_filter"><i
                             data-lucide="filter"></i>
                 </button>
             <?php } else { ?>
@@ -77,14 +77,14 @@ if ($cur_medal == null) {
                 }
                 if($new !== []) {
                     ?>
-                <div class="homepage-panel">
+                <div class="homepage-panel" bug="medals/home/new">
                     <h1>New Medals are here!</h1>
                     <div class="medals-grid">
                         <?php
                         foreach ($new as $medal) {
                             ?>
                             <a class="medal-card" medal-button="<?= $medal['Medal_ID'] ?>">
-                                <img src="/assets/osu/web/<?= $medal['Link'] ?>">
+                                <img src="/assets/osu/assets/medals/output/web/<?= $medal['Link'] ?>">
                                 <h1><?= $medal['Name'] ?></h1>
                                 <h2><?= $medal['Description'] ?></h2>
                             </a>
@@ -94,7 +94,7 @@ if ($cur_medal == null) {
                 <?php
                 }
                 ?>
-                <div class="homepage-panel" bug-reportable="medals/suggestions" bug-reportable-name="Medal Suggestions">
+                <div class="homepage-panel" bug="medals/home/suggestions">
                     <h1>Our recommendations for you</h1>
                     <div class="recommendations-grid" id="recommendations-grid">
                         <?= LOADER ?>
@@ -107,7 +107,7 @@ if ($cur_medal == null) {
                         <button id="back" class="button pill-button"><i data-lucide="chevron-left"></i> Back</button>
                     </div>
                     <div class="panel medal__info">
-                        <div class="medal__info-upper">
+                        <div class="medal__info-upper" bug="medals/info/info">
                             <img id="medal_image" src="/public/img/branding/icon_monochrome.svg">
                             <div class="medal__info-text">
                                 <div>
@@ -124,7 +124,7 @@ if ($cur_medal == null) {
                                 <?php } ?>
                             </div>
                         </div>
-                        <div class="medal__info-solution">
+                        <div class="medal__info-solution" bug="medals/info/solution">
                             <h1>Solution</h1>
                             <p id="medal_solution">Solution</p>
                             <div class="md-toolbar">
@@ -144,7 +144,7 @@ if ($cur_medal == null) {
                     </div>
 
 
-                    <div class="panel" id="medal_beatmaps_panel">
+                    <div class="panel" id="medal_beatmaps_panel" bug="medals/info/beatmaps">
                         <div class="panel-header">
                             <h1>Beatmaps</h1>
                             <button id="medal_beatmaps_add" class="button cta pill-button">Add Beatmap</button>
@@ -162,14 +162,14 @@ if ($cur_medal == null) {
                         </div>
                         <div class="divider"></div>
                         <div class="medal__extra-info col-reset">
-                            <div>
+                            <div bug="medals/info/stats/release">
                                 <h3>Release Date</h3>
                                 <div>
                                     <h1 id="medal_release_date"></h1>
                                     <h2 id="medal_release_date_ago"></h2>
                                 </div>
                             </div>
-                            <div class="fab">
+                            <div class="fab" bug="medals/info/stats/first_achieved">
                                 <div class="header">
                                     <h3>First Achieved By</h3>
                                 </div>
@@ -179,7 +179,7 @@ if ($cur_medal == null) {
                                     <h2 id="medal_first_achieved_date"></h2>
                                 </a>
                             </div>
-                            <div>
+                            <div bug="medals/info/stats/adoption">
                                 <div class="header">
                                     <h3>Medal Adoption</h3>
                                     <p><span id="medal_adoption_users"></span> users</p>

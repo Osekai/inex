@@ -267,7 +267,8 @@ export function InitDropdowns() {
     document.querySelectorAll("[dropdown]").forEach((dropdownEl) => {
         if (!dropdownEl.hasAttribute("jsdr-init")) {
             dropdownEl.setAttribute("jsdr-init", "");
-            new Dropdown(dropdownEl);
+            let dropdown = new Dropdown(dropdownEl);
+            dropdownEl.dropdown = dropdown;
         }
     });
 }

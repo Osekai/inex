@@ -37,7 +37,7 @@ export class MedalsSuggestions {
 
             let button = D2.Div("medal-suggestion col-reset", () => {
                 D2.Div("info", () => {
-                    img = D2.Image("", "/assets/osu/web/" + medal.Link);
+                    img = D2.Image("", "/assets/osu/assets/medals/output/web/" + medal.Link);
                     D2.Div("", () => {
                         D2.Text("h1", medal.Name);
                         D2.Text("h2", medal.Description);

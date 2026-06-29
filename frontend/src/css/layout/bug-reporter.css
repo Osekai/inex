@@ -97,14 +97,13 @@
         height: 100vh;
         >* {
             transition: all 0.2s ease;
-            box-shadow: 0px 0px 20px #000a, 0px 0px 0px 0px inset #fff0;
+            box-shadow: 0px 0px 20px #000a, 0px 0px 0px 1px inset #fff2;
             position: absolute;
             top: var(--top);
             left: var(--left);
             width: var(--width);
             height: var(--height);
             border-radius: var(--border-radius);
-            outline: 1px solid #fff5;
             animation: bro-open-outline 0.4s ease, bro-anim-fade 1s ease;
             background: linear-gradient(to bottom, #fff0, #fff4, #fff0, #fff0);
             background: linear-gradient(to bottom,
@@ -136,16 +135,17 @@
                 &:after {
                     opacity: 0.6;
                 }
-                outline: 1px solid #fff8;
+                box-shadow: 0px 0px 20px #000a, 0px 0px 0px 1px inset var(--col-sat-2);
                 cursor: pointer;
             }
             &.active {
-                outline: 3px solid var(--col-sat-1);
                 box-shadow: 0px 0px 20px #000a, 0px 0px 0px 4px inset var(--col-sat-1);
                 &:after {
                     opacity: 0.4;
                 }
             }
+
+
         }
     }
 }
@@ -235,3 +235,5 @@
         max-width: 60vw !important;
     }
 }
+
+body:has(.bug-report-overlay) { overflow: hidden; }

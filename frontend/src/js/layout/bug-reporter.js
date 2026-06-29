@@ -256,7 +256,7 @@ async function Feedback(type, readableType) {
 }
 
 
-function ReportOverlay(cb) {
+function ReportOverlay(cb, type = "bug") {
     console.log("Like a ghost, I fled the scene\n");
 
     let boxes = [];
@@ -291,8 +291,12 @@ function ReportOverlay(cb) {
     let overlay = D2.Div("bug-report-overlay", () => {
         placer = D2.Div("bug-report-overlay-placer", () => {});
         D2.Div("bug-report-overlay-inner", () => {
-            D2.Text("h1", "Report a bug");
-            D2.Text("p", "Please select a section of the page to report a bug on! If you can't, just submit with 'None' and try explain :3");
+            D2.Text("h1", type == "bug" ? "Report a bug" : "Give feedback");
+            if(type == "bug") {
+                D2.Text("p", "Please select a section of the page to report a bug on! If you can't, just submit with 'None' and try explain.");
+            } else {
+                D2.Text("p", "Please select a section of the page to give feedback on! If you can't, just submit with 'None' and try explain!");
+            }
             D2.Div("selected", () => {
                 D2.Text("p", "Currently Selected");
                 selectedText = D2.Text("h3", "None");
@@ -301,7 +305,7 @@ function ReportOverlay(cb) {
                 D2.Button("Cancel", "", () => {
                     cancel();
                 })
-                D2.Button("Submit", "cta", () => {
+                D2.Button("Continue", "cta", () => {
                     submit()
                 })
             })
@@ -331,7 +335,7 @@ function ReportOverlay(cb) {
 
 
 
-    let sections = document.querySelectorAll("[bug-reportable]");
+    let sections = document.querySelectorAll("[bug]");
 
     let offset = 0.2;
     for (let section of sections) {
@@ -347,9 +351,9 @@ function ReportOverlay(cb) {
         offset += 0.2;
 
 
-        let readable = section.getAttribute("bug-reportable-name");
+        let readable = section.getAttribute("bug-name");
         if(!readable) {
-            readable = section.getAttribute("bug-reportable").replace("/", " - ").replace("_" , " ");
+            readable = section.getAttribute("bug").replaceAll("/", " / ").replaceAll("_" , " ");
             // uppercase first letters of each word
             readable = readable.replace(/\w\S*/g, (txt) => {
                 return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
@@ -357,13 +361,14 @@ function ReportOverlay(cb) {
         }
         let obj = {
             section,
-            name: section.getAttribute("bug-reportable"),
+            name: section.getAttribute("bug"),
             readableName: readable,
             box,
             maskRect,
+            unique: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
         };
         boxes.push(obj);
-
+        box.classList.add("bug-report-overlay-box-" + obj.unique);
         box.addEventListener("click", () => {
             if(selectedSection !== obj) {
                 selectedSection?.box.classList.remove("active");
@@ -378,13 +383,47 @@ function ReportOverlay(cb) {
         })
     }
 
-    let updateBoxPositions = () => {
-        for (let box of boxes) {
-            let r = box.section.getBoundingClientRect();
+    let style = document.createElement("style");
+    document.head.appendChild(style);
 
-            if(r.height > document.body.clientHeight) {
-                r.height = document.body.clientHeight; // cleaner animations
+    let updateBoxPositions = () => {
+        // first pass: compute rects and z-indices
+        for (let box of boxes) {
+            if (!box.section.checkVisibility({ opacityProperty: true, visibilityProperty: true })) {
+                box.box.style.display = "none";
+                box.maskRect.setAttribute("width", "0");
+                box.maskRect.setAttribute("height", "0");
+                box._rect = null;
+                continue;
             }
+
+            box.box.style.display = "";
+
+            let r = box.section.getBoundingClientRect();
+            r = JSON.parse(JSON.stringify(r));
+
+            if (r.top < 0) {
+                r.height += r.top;
+                r.top = 0;
+            }
+            if (r.height > document.body.clientHeight) {
+                r.height = document.body.clientHeight;
+            }
+
+            let z = 0;
+            let el = box.section;
+            while (el && el !== document.body) {
+                const computed = parseInt(getComputedStyle(el).zIndex);
+                if (!isNaN(computed)) z = Math.max(z, computed);
+                el = el.parentElement;
+            }
+
+            while 
+
+            box._rect = r;
+            box._z = z;
+            box.box.style.zIndex = z + 1;
+
             box.box.style.setProperty("--top", r.top + "px");
             box.box.style.setProperty("--left", r.left + "px");
             box.box.style.setProperty("--width", r.width + "px");
@@ -393,9 +432,60 @@ function ReportOverlay(cb) {
             box.maskRect.setAttribute("y", r.top);
             box.maskRect.setAttribute("width", r.width);
             box.maskRect.setAttribute("height", r.height);
-            box.maskRect.setAttribute("rx", getComputedStyle(box.section).borderRadius.replace("px", "") || "0");
+            box.maskRect.setAttribute("rx", getComputedStyle(box.section).borderRadius.replace("px", "") || "16");
+        }
+
+        // second pass: per-box svg masks to subtract higher boxes
+        style.innerHTML = "";
+        for (let box of boxes) {
+            if (!box._rect) continue;
+
+            const r = box._rect;
+
+            const overlaps = boxes.filter(other =>
+                other !== box &&
+                other._rect &&
+                other._z >= box._z &&
+                other._rect.left < r.left + r.width &&
+                other._rect.left + other._rect.width > r.left &&
+                other._rect.top < r.top + r.height &&
+                other._rect.top + other._rect.height > r.top
+            );
+
+            if (overlaps.length === 0) {
+                box.box.style.webkitMaskImage = "";
+                box.box.style.maskImage = "";
+                continue;
+            }
+
+            // build a css gradient mask using radial/linear isn't flexible enough,
+            // so we use an inline svg mask via mask-image url(data:...)
+            const svgNS = "http://www.w3.org/2000/svg";
+
+            // coords relative to the box itself
+            let rects = overlaps.map(other => {
+                const ox = Math.max(other._rect.left, r.left) - r.left;
+                const oy = Math.max(other._rect.top, r.top) - r.top;
+                const ox2 = Math.min(other._rect.left + other._rect.width, r.left + r.width) - r.left;
+                const oy2 = Math.min(other._rect.top + other._rect.height, r.top + r.height) - r.top;
+                return { x: ox, y: oy, w: ox2 - ox, h: oy2 - oy };
+            });
+
+            const w = Math.round(r.width);
+            const h = Math.round(r.height);
+
+            let holes = rects.map(hr =>
+                `<rect x='${Math.round(hr.x)}' y='${Math.round(hr.y)}' width='${Math.round(hr.w)}' height='${Math.round(hr.h)}' fill='black'/>`
+            ).join("");
+
+            const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}'><rect width='${w}' height='${h}' fill='white'/>${holes}</svg>`;
+
+            const encoded = `url("data:image/svg+xml,${svg.replace(/</g, '%3C').replace(/>/g, '%3E').replace(/#/g, '%23').replaceAll("\"", "'").replaceAll("\n", "")}")`;
+
+            style.innerHTML += `.bug-report-overlay-box-${box.unique} { mask-image: ${encoded}; mask-mode: luminance; mask-size: 100% 100%; mask-repeat: no-repeat; mask-position: 0 0; }`;
         }
     };
+
 
     updateBoxPositions();
     let loop = setInterval(updateBoxPositions, 100);
@@ -408,3 +498,12 @@ function ReportOverlay(cb) {
 setTimeout(() => {
     //ReportOverlay(Bug);
 }, 500);
+
+document.getElementById("bug-reporter-bug").addEventListener("click", () => {
+    document.querySelector("[dropdown='bugs']").dropdown.close();
+    ReportOverlay(Bug, "bug");
+})
+document.getElementById("bug-reporter-feedback").addEventListener("click", () => {
+    document.querySelector("[dropdown='bugs']").dropdown.close();
+    ReportOverlay(Feedback, "feedback");
+})

@@ -20,10 +20,10 @@ $medals = \Data\Medals::GetAll();
 
         const slug = medal.Link.replace(".png", "");
         const imagePaths = [
-            `/assets/osu/web/${slug}.png`,
-            `/assets/osu/web/${slug}@2x.png`,
-            `/assets/osu/client/${slug}.png`,
-            //`/assets/osu/client/${slug}@2x.png`
+            `/assets/osu/assets/medals/output/web/${slug}.png`,
+            `/assets/osu/assets/medals/output/web/${slug}@2x.png`,
+            `/assets/osu/assets/medals/output/client/${slug}.png`,
+            //`/assets/osu/assets/medals/output/client/${slug}@2x.png`
         ];
         const imageNames = [
             'web',

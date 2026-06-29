@@ -411,7 +411,7 @@ export const columnTypes = {
     },
     "medal": (data) => {
         let el = D2.CustomPlus("a", "coltype-medal", {href: "/medals/" + encodeURIComponent(data.content.Name)}, () => {
-            D2.Image("medal", "/assets/osu/web/" + data.content.Link)
+            D2.Image("medal", "/assets/osu/assets/medals/output/web/" + data.content.Link)
             D2.Div("medal-name", () => {
                 D2.Text("h3", data.content.Name);
                 if(data.content.Description) D2.Text("p", data.content.Description);
