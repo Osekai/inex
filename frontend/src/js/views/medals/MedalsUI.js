@@ -307,6 +307,10 @@ export class MedalsUI {
 
         var img = document.getElementById("medal_image");
         img.setAttribute("src", medal.Link);
+
+
+        var img2 = document.getElementById("background-medal");
+        img2.setAttribute("src", medal.Link);
         //img.onload = () => {
         //    var rgb = getAverageRGB(img);
         //    var hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);

@@ -3,6 +3,7 @@
 import {D2} from "./d2";
 import {Overlay} from "../ui/overlay";
 import {deleteFromDB, getFromDB, openDB, putInDB} from "./indexeddb";
+import {PushToast} from "../ui/toasts";
 
 const DEFAULT_RETRY_COUNT = 0;
 const DEFAULT_CACHE_TTL = 5; // seconds

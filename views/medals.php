@@ -56,6 +56,8 @@ if ($cur_medal == null) {
         <div class="main-inner">
             <div class="bg-outer">
                 <div class="bg"></div>
+
+                <medal-icon id="background-medal" src="all-secret-jackpot" class="no-triangles"></medal-icon>
             </div>
             <div class="homepage" id="medal-home">
                 <div class="hp-navbar">

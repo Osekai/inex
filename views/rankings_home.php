@@ -7,14 +7,14 @@ Embed::SetDescription("the best place to find alternative osu! rankings for meda
 ?>
 <div class="page-container-inner rankings-home">
     <div>
-        <div class="welcomepanel">
+        <div class="welcomepanel" bug="rankings/home/welcome">
             <img src="/public/img/branding/app/rankings.svg">
             <h2>Welcome to</h2>
             <h1>Osekai Rankings!</h1>
             <p>Osekai Rankings is a place to find alternative rankings for osu! medals, ranked maps, and more!</p>
         </div>
 
-        <div class="panel" id="addpanel">
+        <div class="panel" id="addpanel" bug="rankings/home/add">
             <h1>Add A User</h1>
             <div class="divider"></div>
             <p>Add someone to Osekai - they'll take 1-5 days to show up in the rankings!</p>
@@ -30,7 +30,7 @@ Embed::SetDescription("the best place to find alternative osu! rankings for meda
             <warning>Please do not spam lots of users! If you have lots of people to add, contact us!</warning>
         </div>
     </div>
-    <div id="rankings-home-panels">
+    <div id="rankings-home-panels" bug="rankings/home/panels">
 
     </div>
 </div>

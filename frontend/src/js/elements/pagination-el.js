@@ -141,6 +141,7 @@ class PaginationEl extends HTMLElement {
 
     key = "";
     connectedCallback() {
+        this.setAttribute("bug", "pagination");
         this.key = this.getAttribute("link-id");
     }
 

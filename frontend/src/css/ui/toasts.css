@@ -8,27 +8,50 @@
     pointer-events: none;
     z-index: 50001;
     align-items: center;
+
+}
+@keyframes slideup {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
 }
 .toasts__toast {
     pointer-events: all;
     margin-bottom: 8px;
+    background: var(--col-l2);
+    box-shadow: 0px 5px 20px #0002;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    width: 600px;
+    max-width: 90vw;
+    transition: all 0.4s ease;
+    cursor: pointer;
+    animation: slideup 0.4s ease;
+}
+.toasts__loader {
+    height: 4px;
+    background: hsl(var(--hue), 97%, 68%);
+}
+.toasts__toast-inner {
+
     display: flex;
     align-items: center;
     padding: 15px 15px;
-    background: hsla(var(--hue), calc(31% * var(--sat)), 30%, 90%);
-
-
-    border-radius: 900px;
     padding-right: 18px;
-    max-width: 300px;
-    width: 100%;
-    transition: all 0.2s ease;
-    cursor: pointer;
-
+    gap: 5px;
 }
 
-.toasts__toast svg {
-    font-size: 40px;
+.toasts__toast .buttons {
+    margin: -10px;
+    margin-left: 0px;
+    margin-left: auto;
+}
+.toasts__toast .buttons .button {
+    background: var(--col-l1);
+}
+.toasts__toast i {
+    font-size: 20px;
     margin-right: 8px;
     color: hsl(var(--hue), 97%, 68%);
 }

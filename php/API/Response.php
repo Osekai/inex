@@ -10,7 +10,7 @@ class Response
     public $message = "";
     public $content = [];
 
-    public function __construct(bool $success = true, string $message = "", $content = [])
+    public function __construct($success = true, string $message = "", $content = [])
     {
         $this->success = $success;
         $this->message = $message;

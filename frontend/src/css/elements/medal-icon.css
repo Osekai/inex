@@ -1,18 +1,23 @@
 medal-icon {
     aspect-ratio: 1/1;
-
+    transform: scale(0.99);
     position: relative;
-    svg {
+
+    .base-wrapper, .icon-wrapper {
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
-        object-fit: contain;
+        translate: -50% -50%;
         width: calc(100% - 2px);
         height: calc(100% - 2px);
+    }
+
+    svg {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
 
         &.icon {
-
             --hex-inset: 5%;
             --hex-inner: calc(100% - var(--hex-inset));
             --hex-mid-high: calc(25% + var(--hex-inset) * 0.5);
@@ -26,9 +31,19 @@ medal-icon {
                     var(--hex-inset) var(--hex-mid-high)
             );
         }
+    }
+}
 
-        &.base {
-            opacity: 1;
+
+medal-icon.no-triangles {
+    .base {
+        g {
+            path:first-child {
+                opacity: 0;
+            }
+            g {
+                opacity: 0;
+            }
         }
     }
 }

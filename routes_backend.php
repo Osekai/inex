@@ -1,12 +1,15 @@
 <?php
 if (!isset($router)) die("Do not call this directly!");
 
+use Ampra\IO;
 use Data\Comments;
 use Data\Medals\MedalsBeatmaps;
 use Data\OsekaiUsers;
 use Data\Post\Edit;
 use Data\Post\Gallery;
 use Data\Votes;
+use Database\Connection;
+use Database\Session;
 
 if (!function_exists('json_validate')) {
     /**
@@ -32,6 +35,86 @@ if (!function_exists('json_validate')) {
     }
 }
 
+function StartAPI() {
+    function api_error($errno, $errstr, $errfile, $errline)
+    {
+        $critical_errors = E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR;
+
+        if (!($errno & $critical_errors)) {
+            return false;
+        }
+
+        $url = $_SERVER['REQUEST_URI'] ?? '';
+        $method = $_SERVER['REQUEST_METHOD'] ?? '';
+
+        IO::Send("/sysops/alert", [
+            "title" => "Critical Error Detected in API",
+            "description" =>
+                "**errno:** `$errno`\n" .
+                "**file:** `$errfile`\n" .
+                "**line:** `$errline`\n" .
+                "**request:** `$method $url`\n" .
+                "**message**: ```$errstr```".
+                "**time:** " . date('c')
+        ]);
+
+        ob_get_flush();
+        echo (new \API\Response(-1, "Unknown Error", [
+            "errno" => $errno,
+            "errstr" => $errstr,
+            "errfile" => $errfile,
+            "errline" => $errline
+        ]))->ReturnJson();
+        exit;
+    }
+
+    function api_fatal()
+    {
+        $error = error_get_last();
+
+        if ($error !== null) {
+            $errno  = $error['type'];
+            $errstr  = $error['message'];
+            $errfile = $error['file'];
+            $errline = $error['line'];
+
+            $fatal_errors = E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR;
+
+            if ($errno & $fatal_errors) {
+                $url    = $_SERVER['REQUEST_URI'] ?? '';
+                $method = $_SERVER['REQUEST_METHOD'] ?? '';
+
+                IO::Send("/sysops/alert", [
+                    "title" => "Fatal Error Detected in API",
+                    "description" =>
+                        "**errno:** `$errno`\n" .
+                        "**file:** `$errfile`\n" .
+                        "**line:** `$errline`\n" .
+                        "**request:** `$method $url`\n" .
+                        "**message**: ```$errstr```" .
+                        "**time:** " . date('c')
+                ]);
+
+                // discard partial output, then send clean JSON
+                if (ob_get_level() > 0) ob_end_clean();
+
+                header('Content-Type: application/json');
+                echo (new \API\Response(-1, "Fatal Error", [
+                    "errno"   => $errno,
+                    "errstr"  => $errstr,
+                    "errfile" => $errfile,
+                    "errline" => $errline
+                ]))->ReturnJson();
+            }
+        }
+    }
+
+
+    register_shutdown_function("api_fatal");
+    set_error_handler('api_error');
+}
+$path = $_SERVER['REQUEST_URI'];
+if (str_starts_with($path, "/api/")) StartAPI();
 
 $router->post("/api/usersettings/set", function () {
     if (!checkPermRequirement("account.edit"))
@@ -176,4 +259,124 @@ $router->all("/api/notifications", function () {
 
 $router->all("/api/notifications/readall", function () {
     Data\Notifications\Utils::SetRead(json_decode($_POST['items']));
+});
+
+
+/// ======================
+/// Error Reporting
+/// ======================
+///
+
+$router->post("/api/js_error", function () {
+    $msg = $_REQUEST['message'] ?? '';
+    $url = $_REQUEST['url'] ?? '';
+    $line = $_REQUEST['line'] ?? '';
+    $col = $_REQUEST['col'] ?? '';
+    $stack = $_REQUEST['stack'] ?? '';
+    $href = $_REQUEST['href'] ?? '';
+    $path = $_REQUEST['path'] ?? '';
+    $search = $_REQUEST['search'] ?? '';
+    $hash = $_REQUEST['hash'] ?? '';
+    $referrer = $_REQUEST['referrer'] ?? '';
+    $userAgent = $_REQUEST['userAgent'] ?? '';
+    $platform = $_REQUEST['platform'] ?? '';
+    $lang = $_REQUEST['lang'] ?? '';
+    $time = $_REQUEST['time'] ?? date('c');
+
+    IO::Send("/sysops/alert", [
+        "title" => "⚠️ FRONTEND Error Detected by " . Session::UserData()['id'],
+        "description" => implode("\n", [
+            "# **Page Info**",
+            "href: `$href`",
+            "path: `$path`",
+            "search: `$search `",
+            "hash: `$hash `",
+            "referrer: `$referrer`",
+            "",
+            "# **Error Details**",
+            "url: `$url`",
+            "line: `$line`, col: `$col`",
+            "message:\n```$msg```",
+            $stack ? "stack:\n```$stack```" : "",
+            "",
+            "# **Client Info**",
+            "userAgent: `$userAgent`",
+            "platform: `$platform`",
+            "lang: `$lang`",
+            "time: $time"
+        ])
+    ]);
+});
+
+$router->post("/api/feedback/bug", function () {
+    // https://github.com/anthera-art/web/blob/main/routing/backend.php#L946
+    if(!Session::LoggedIn()) return;
+    $nullableFloat = fn($key) => isset($_POST[$key]) && $_POST[$key] !== '' ? (float)$_POST[$key] : null;
+    $nullableInt = fn($key) => isset($_POST[$key]) && $_POST[$key] !== '' ? (int)$_POST[$key] : null;
+    $nullableBool = fn($key) => isset($_POST[$key]) && $_POST[$key] !== '' ? filter_var($_POST[$key], FILTER_VALIDATE_BOOLEAN) : null;
+    $str = fn($key, $default = '') => trim($_POST[$key] ?? $default);
+
+    // TODO: we probably shouldn't send *all* of this, lol - bit too much info for osekai (fine for anthera)
+    $item = [
+        "UserAgent" => $_SERVER['HTTP_USER_AGENT'] ?? $str('userAgent'),
+        "Url" => $str('url'),
+        "Referrer" => $str('referrer'),
+        "Viewport" => $str('viewport'),
+        "Screen" => $str('screen'),
+        "DevicePixelRatio" => $nullableFloat('devicePixelRatio'),
+        "ColorDepth" => $nullableInt('colorDepth'),
+        "Language" => $str('language'),
+        "Timezone" => $str('timezone'),
+        "Memory" => $nullableFloat('memory'),
+        "Cores" => $nullableInt('cores'),
+        "Online" => $nullableBool('online'),
+        "Problem" => $str('problem'),
+        "Reproduce" => $str('reproduce'),
+        "Expected" => $str('expected'),
+        "Priority" => $str('priority', 'medium'),
+        "Type" => $str('type', 'unknown'),
+        "TypeReadable" => $str('readableType', $str('type', 'unknown')),
+        "Timestamp" => date('c'),
+        "UserTimestamp" => $str('timestamp'),
+        "Secret" => md5(str_replace('-', '', bin2hex(openssl_random_pseudo_bytes(16)))),
+        "Creator" => Session::UserData()['id']
+    ];
+    print_r($_FILES);
+
+    Connection::insert("UserFeedback_Bug", $item);
+
+    $item["UserData"] = [
+        "id" => Session::UserData()['id'],
+        "username" => Session::UserData()['username'],
+    ];
+
+    IO::Send("/feedback/bug", $item);
+});
+
+$router->post("/api/feedback/feedback", function () {
+    // https://github.com/anthera-art/web/blob/main/routing/backend.php#L986
+    if(!Session::LoggedIn()) return;
+    $str = fn($key, $default = '') => trim($_POST[$key] ?? $default);
+    $nullableFloat = fn($key) => isset($_POST[$key]) && $_POST[$key] !== '' ? (float)$_POST[$key] : null;
+
+    $item = [
+        "Feedback" => $str('feedback'),
+        "Rating" => $nullableFloat('rating'),
+        "Priority" => $str('priority', 'medium'),
+        "Type" => $str('type', 'unknown'),
+        "TypeReadable" => $str('readableType', $str('type', 'unknown')),
+        "Timestamp" => date('c'),
+        "UserTimestamp" => $str('timestamp'),
+        "Secret" => md5(str_replace('-', '', bin2hex(openssl_random_pseudo_bytes(16)))),
+        "Creator" => Session::UserData()['id']
+    ];
+
+    Connection::insert("UserFeedback_Feedback", $item);
+
+    $item["UserData"] = [
+        "id" => Session::UserData()['id'],
+        "username" => Session::UserData()['username'],
+    ];
+
+    IO::Send("/feedback/feedback", $item);
 });

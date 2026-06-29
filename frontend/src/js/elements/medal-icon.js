@@ -19,11 +19,39 @@ class MedalIcon extends HTMLElement {
     async load(key) {
         if (key.endsWith(".png")) key = key.substring(0, key.length - 4);
         this.innerHTML = "";
+
         const iconData = await MedalIcons.GetIconWithBase(key);
 
+        // generate a unique prefix for this instance's svg ids
+        const uid = `medal-${Math.random().toString(36).slice(2, 8)}`;
+
         const parse = (svgString) => {
+            // collect all ids first
+            const ids = [...svgString.matchAll(/\bid="([^"]+)"/g)].map(m => m[1]);
+
+            // rewrite each id and all its references in one pass per id
+            let rewritten = svgString;
+            for (const id of ids) {
+                const newId = `${uid}-${id}`;
+                // replace the definition
+                rewritten = rewritten.replace(
+                    new RegExp(`\\bid="${id}"`, 'g'),
+                    `id="${newId}"`
+                );
+                // replace all url(#id) references
+                rewritten = rewritten.replace(
+                    new RegExp(`url\\(#${id}\\)`, 'g'),
+                    `url(#${newId})`
+                );
+                // replace all href="#id" references
+                rewritten = rewritten.replace(
+                    new RegExp(`href="#${id}"`, 'g'),
+                    `href="#${newId}"`
+                );
+            }
+
             const tmp = document.createElement("div");
-            tmp.innerHTML = svgString;
+            tmp.innerHTML = rewritten;
             return tmp.querySelector("svg");
         };
 
@@ -31,22 +59,37 @@ class MedalIcon extends HTMLElement {
         const icon = parse(iconData.svg);
 
         this.innerHTML = "";
-        if (base) this.appendChild(base);
-        if (icon) this.appendChild(icon);
+
 
         base.classList.add("base");
         icon.classList.add("icon");
-
         this.base = base;
         this.icon = icon;
 
+        base.removeAttribute("width");
+        base.removeAttribute("height");
+        icon.removeAttribute("width");
+        icon.removeAttribute("height");
+
+        if (base) {
+            let baseWrapper = document.createElement("div");
+            baseWrapper.classList.add("base-wrapper");
+            baseWrapper.appendChild(base);
+            this.appendChild(baseWrapper);
+        }
+        if (icon) {
+            let iconWrapper = document.createElement("div");
+            iconWrapper.classList.add("icon-wrapper");
+            iconWrapper.appendChild(icon);
+            this.appendChild(iconWrapper);
+        }
 
         this.dispatchEvent(new Event("load"));
     }
 
     getColour() {
         // this is slightly silly and could be precomputed easily but it's safer this way
-        
+
         let paths = this.base.querySelectorAll("path");
         let first = paths[0];
 

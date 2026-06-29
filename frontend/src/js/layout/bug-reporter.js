@@ -3,7 +3,7 @@
 import {LoaderOverlay} from "../ui/loader-overlay";
 import {D2} from "../utils/d2";
 import {Overlay} from "../ui/overlay";
-import {DoRequestWithFile} from "../utils/requests";
+import {DoRequest, DoRequestWithFile} from "../utils/requests";
 
 import "../../css/layout/bug-reporter.css"
 
@@ -128,16 +128,29 @@ async function Bug(type, readableType) {
         let loader = new LoaderOverlay("Sending bug report");
         let priority = inner.querySelector('input[name="bug-priority"]:checked')?.value ?? "medium";
 
-        await DoRequestWithFile("POST", "/api/feedback/bug", {
-            problem: describeInput.value,
-            reproduce: reproduceInput.value,
-            expected: expectedInput.value,
-            priority,
-            type,
-            readableType,
-            timestamp: new Date().toISOString(),
-            ...extraInfo
-        });
+        try {
+            await DoRequest("POST", "/api/feedback/bug", {
+                problem: describeInput.value,
+                reproduce: reproduceInput.value,
+                expected: expectedInput.value,
+                priority,
+                type,
+                readableType,
+                timestamp: new Date().toISOString(),
+                ...extraInfo
+            });
+        } catch {
+            loader.remove();
+            inner.innerHTML = "";
+            inner.appendChild(D2.Text("h1", "Error sending bug report"));
+            inner.appendChild(D2.Text("p", "There was an error sending your bug report. Please try again later."));
+            let close = D2.Button("Close", "cta");
+            close.addEventListener("click", () => {
+                overlay.remove();
+            })
+            inner.appendChild(close);
+            return;
+        }
         loader.remove();
 
         inner.innerHTML = "";
@@ -398,6 +411,7 @@ function ReportOverlay(cb, type = "bug") {
             }
 
             box.box.style.display = "";
+
 
             let r = box.section.getBoundingClientRect();
             r = JSON.parse(JSON.stringify(r));

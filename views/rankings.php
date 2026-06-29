@@ -54,25 +54,25 @@ switch($ranking) {
 <div class="rankings__outer">
     <div class="list__area">
 
-        <div class="list__bar" id="categories-outer">
+        <div class="list__bar" id="categories-outer" bug="rankings/categories">
             <div class="pages" id="pages">
 
             </div>
         </div>
         <div class="list__bar-outer">
             <div class="list__bar list__bar-options">
-                <div id="ranking-options-area">
+                <div id="ranking-options-area" bug="rankings/options">
 
                 </div>
                 <pagination-el link-id="ranking"></pagination-el>
-                <div>
+                <div bug="rankings/search">
                     <searchable-dropdown id="searchtype-dropdown"></searchable-dropdown>
                     <input type="text" class="input" placeholder="Search" id="search-bar">
                 </div>
             </div>
         </div>
         <div  class="list__content">
-            <div id="ranking-table-area">
+            <div id="ranking-table-area" bug="rankings/table">
 
             </div>
             <pagination-el link-id="ranking" primary></pagination-el>

@@ -125,10 +125,10 @@ export default class IO {
                 `- **User Agent:** ${data.UserAgent || "N/A"}`
             );
             const issueLabels = encodeURIComponent("bug");
-            const githubUrl = `https://github.com/anthera-art/issues/issues/new?title=${issueTitle}&body=${issueBody}&labels=${issueLabels}`;
+            const githubUrl = `https://github.com/osekai/inex/issues/new?title=${issueTitle}&body=${issueBody}&labels=${issueLabels}`;
 
             const embed = new EmbedBuilder()
-                .setTitle("🐛 Bug Report in " + data.TypeReadable + " from " + data.UserData.Tag)
+                .setTitle("🐛 Bug Report in " + data.TypeReadable + " from " + data.UserData.username)
                 .setDescription(`**Problem**\n${data.Problem || "N/A"}`)
                 .addFields(
                     { name: "Type", value: data.Type || "N/A", inline: true },
@@ -138,13 +138,12 @@ export default class IO {
                     { name: "URL", value: data.Url || "N/A", inline: true },
                     { name: "Viewport", value: data.Viewport || "N/A", inline: true },
                     { name: "Screen", value: data.Screen || "N/A", inline: true },
-                    { name: "GitHub Issue", value: `[Create Issue](${githubUrl})`, inline: false },
-                    { name: "Creator", value: `[${data.UserData.Name} (@${data.UserData.Tag})](https://anthera.art/@${data.UserData.Tag})`, inline: true }
+                    { name: "GitHub Issue", value: `[Create Issue](${githubUrl})`, inline: true },
+                    { name: "Creator", value: `[${data.UserData.username}](https://osu.ppu.sh/users/${data.UserData.id})`, inline: true }
                 )
                 .setFooter({ text: data.UserAgent || "N/A" })
                 .setTimestamp()
-                .setImage(Config.phpConfig.S3_URL_PATH + "feedback/" + data.Secret + ".png?time=1")
-                .setThumbnail(data.UserPFP)
+                .setThumbnail("https://a.ppy.sh/" + data.UserData.id)
                 .setColor(0xFF2335);
 
             setTimeout(async () => {
@@ -167,19 +166,20 @@ export default class IO {
                 critical: 0xED3D3D,
             };
 
+            console.log(data);
+
             const embed = new EmbedBuilder()
-                .setTitle("💬 Feedback for " + data.TypeReadable + " from " + data.UserData.Tag)
+                .setTitle("💬 Feedback for " + data.TypeReadable + " from " + data.UserData.username)
                 .setDescription(data.Feedback || "N/A")
                 .addFields(
                     { name: "Type", value: data.Type || "N/A", inline: true },
                     { name: "Priority", value: data.Priority || "N/A", inline: true },
                     { name: "Rating", value: stars, inline: true },
                     { name: "Submitted", value: `<t:${Math.floor(new Date(data.Timestamp).getTime() / 1000)}:R>`, inline: true },
-                    { name: "Creator", value: `[${data.UserData.Name} (@${data.UserData.Tag})](https://anthera.art/@${data.UserData.Tag})`, inline: true }
+                    { name: "Creator", value: `[${data.UserData.username}](https://osu.ppu.sh/users/${data.UserData.id})`, inline: true }
                 )
                 .setTimestamp()
-                .setImage(Config.phpConfig.S3_URL_PATH + "feedback/" + data.Secret + ".png?time=1")
-                .setThumbnail(data.UserPFP)
+                .setThumbnail("https://a.ppy.sh/" + data.UserData.id)
                 .setColor(priorityColours[data.Priority?.toLowerCase()] ?? 0xFF2335);
 
             setTimeout(async () => {

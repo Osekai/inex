@@ -70,7 +70,7 @@ namespace Database {
 
         public static function insert(string $string, array $item)
         {
-            self::getConnecgtion();
+            self::getConnection();
             self::$db->insert($string, $item);
         }
     }

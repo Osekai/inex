@@ -69,7 +69,7 @@ class PrepareLocalization extends AbstractRunner
 
             $inThisFile = [];
             $contents = file_get_contents($file->getPathname());
-            $contents = $clean = preg_replace('/\/\/[^\n]*|\/\*.*?\*\/|<!--.*?-->/s', '', $contents);
+            $contents = preg_replace('/(?<!:)\/\/[^\n]*|\/\*.*?\*\/|<!--.*?-->/s', '', $contents);
 
             // {{home/header.h1 | Default text}} in PHP templates/attributes
             preg_match_all('/\{\{([a-zA-Z0-9_.\/-]+)\s*\|\s*([^}]+?)\s*\}\}/', $contents, $matches, PREG_SET_ORDER);
@@ -78,9 +78,9 @@ class PrepareLocalization extends AbstractRunner
             }
 
             // <p langkey="home/header.h1">Default text</p> in HTML
-            preg_match_all('/langkey=["\']([a-zA-Z0-9_.\/-]+)["\']\s*>([^<]+)</', $contents, $matches, PREG_SET_ORDER);
+            preg_match_all('/<([a-zA-Z0-9]+)[^>]*langkey=["\']([a-zA-Z0-9_.\/-]+)["\'][^>]*>(.*?)<\/\1>/s', $contents, $matches, PREG_SET_ORDER);
             foreach ($matches as $match) {
-                $inThisFile[$match[1]] = preg_replace('/\s+/', ' ', trim($match[2]));
+                $inThisFile[$match[2]] = preg_replace('/\s+/', ' ', trim($match[3]));
             }
 
             // Trans('home/header.h1', 'Default text') in JS

@@ -77,7 +77,7 @@
             <img src="/public/img/home/apps/profiles.png">
             <div>
                 <h1>Osekai <strong>Profiles</strong></h1>
-                <p langkey="home/explore.badges.h1">Get in-depth information about your osu! profile, map out your past in a timeline, and create future
+                <p langkey="home/explore.profiles.h1">Get in-depth information about your osu! profile, map out your past in a timeline, and create future
                     goals!</p>
                 <a href="https://osekai.net/profiles" class="button" langkey="home/explore.profiles.cta">Explore Profiles</a>
             </div>

@@ -73,7 +73,7 @@ export function SetMedal(inputMedal, setUrl = false, scrollTo = false) {
     MedalsUI.LoadMedal(currentMedal,scrollTo);
     for(var button of document.querySelectorAll("[medal-button-id]")) {
         
-        if(button.getAttribute("medal-button-id") === currentMedal.Medal_ID) {
+        if(button.getAttribute("medal-button-id") == currentMedal.Medal_ID) {
             button.classList.add("active");
         } else {
             button.classList.remove("active");
