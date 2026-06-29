@@ -15,7 +15,7 @@ if ($cur_medal == null) {
 } else {
     \Site\Embed::$title = "Osekai Medals / " . $cur_medal['Name'];
     \Site\Embed::$description = Sanitize::HTML($cur_medal['Description']);
-    \Site\Embed::SetImage("/assets/osu/assets/medals/output/web/" . $cur_medal['Link']);
+    \Site\Embed::SetImage("/assets/medals/web/" . $cur_medal['Link']);
 }
 ?>
 <script>
@@ -84,7 +84,7 @@ if ($cur_medal == null) {
                         foreach ($new as $medal) {
                             ?>
                             <a class="medal-card" medal-button="<?= $medal['Medal_ID'] ?>">
-                                <img src="/assets/osu/assets/medals/output/web/<?= $medal['Link'] ?>">
+                                <img src="/assets/medals/web/<?= $medal['Link'] ?>">
                                 <h1><?= $medal['Name'] ?></h1>
                                 <h2><?= $medal['Description'] ?></h2>
                             </a>

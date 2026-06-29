@@ -130,7 +130,7 @@ class MedalsBeatmaps
             ->setDescription($data['reason'])
             ->setUrl(URL . "/medals/" . urlencode($medalInfo['Name']))
             ->setFooterText($medalInfo['Name'])
-            ->setFooterIcon(URL . "/assets/osu/assets/medals/output/web/" . $medalInfo['Link']);
+            ->setFooterIcon(URL . "/assets/medals/web/" . $medalInfo['Link']);
 
         $webhook = new DiscordWebhook(MOD_WEBHOOK);
         $messageData = $webhook->send($message);
