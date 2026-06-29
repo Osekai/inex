@@ -49,18 +49,18 @@ use Database\Session; ?>
         </div>
         <div class="navbar-right">
             <div class="navbar-pfp-container">
-                <a dropdown-button="bugs" tooltip="suggestions / bugs"
-                   class="navbar-right-button"><i data-lucide="bug"></i></a>
-                <div dropdown-mode="legacy" dropdown="bugs"
-                     class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
-                    <h1 langkey="navbar/bugs.h1">Help us make Osekai better</h1>
-                    <div id="bug-reporter-bug" langkey="navbar/bugs.bug" class="button">Report a bug</div>
-                    <div id="bug-reporter-feedback" langkey="navbar/bugs.feedback" class="button">Feature request / Other feedback</div>
-                </div>
+
                 <?php
                 if (Session::LoggedIn()) {
                     ?>
-
+                    <a dropdown-button="bugs" tooltip="suggestions / bugs"
+                       class="navbar-right-button"><i data-lucide="bug"></i></a>
+                    <div dropdown-mode="legacy" dropdown="bugs"
+                         class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
+                        <h1 langkey="navbar/bugs.h1">Help us make Osekai better</h1>
+                        <div id="bug-reporter-bug" langkey="navbar/bugs.bug" class="button">Report a bug</div>
+                        <div id="bug-reporter-feedback" langkey="navbar/bugs.feedback" class="button">Feature request / Other feedback</div>
+                    </div>
                     <a class="navbar-right-button" tooltip="settings" dropdown-button="settings-dropdown">
                         <i data-lucide="cog"></i>
                     </a>
@@ -85,6 +85,12 @@ use Database\Session; ?>
                         <div id="notifications" class="notification-list"></div>
                     </div>
                     <?php
+                } else {
+                    ?>
+                <a tooltip="report a bug" class="navbar-right-button" href="https://github.com/Osekai/inex/issues/new/">
+                    <i data-lucide="bug"></i>
+                </a>
+                <?php
                 }
                 ?>
 

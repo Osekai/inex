@@ -93,17 +93,33 @@ class MedalsBeatmaps
             array_unshift($inp, Session::UserData()['id']);
         }
 
-        return new Response(true, "beatmaps", Connection::execSelect("
-    SELECT Medals_Beatmaps.*, Beatmaps_Data.*, COUNT(Common_Votes.User_ID) AS VoteCount"
-            . (Session::LoggedIn() ? ", (SELECT COUNT(Common_Votes.User_ID) 
+
+        $data = Connection::execSelect("
+    SELECT Medals_Beatmaps.*, Beatmaps_Data.*, COUNT(Common_Votes.User_ID) AS VoteCount,
+     JSON_OBJECT(
+             'User_ID', Beatmap_Submitted_User_ID,
+             'Username', Merged_Users.Name
+             ) AS `User`
+             FROM Medals_Beatmaps "
+            . (Session::LoggedIn() ? ", (SELECT COUNT(Common_Votes.User_ID)
  FROM Common_Votes 
  WHERE Common_Votes.User_ID = ? 
  AND Common_Votes.Target_Table = 'Medals_Beatmaps' 
  AND Common_Votes.Target_ID = Medals_Beatmaps.ID) AS HasVoted " : "") .
-            " FROM Medals_Beatmaps 
+            "
     LEFT JOIN Beatmaps_Data ON Medals_Beatmaps.Beatmap_ID = Beatmaps_Data.Beatmap_ID
     LEFT JOIN Common_Votes ON Common_Votes.Target_Table = 'Medals_Beatmaps' AND Common_Votes.Target_ID = Medals_Beatmaps.ID
-    WHERE Medals_Beatmaps.Medal_ID = ? AND Medals_Beatmaps.Deleted = 0" . ($single == null ? "" : " AND Medals_Beatmaps.Beatmap_ID = ? ") . " GROUP BY Medals_Beatmaps.Beatmap_ID  ORDER BY VoteCount DESC, Medals_Beatmaps.ID DESC", $vars, $inp));
+    LEFT JOIN Merged_Users ON Beatmap_Submitted_User_ID = Merged_Users.User_ID
+    WHERE Medals_Beatmaps.Medal_ID = ? AND Medals_Beatmaps.Deleted = 0" . ($single == null ? "" : " AND Medals_Beatmaps.Beatmap_ID = ? ") . " 
+    GROUP BY Medals_Beatmaps.Beatmap_ID  ORDER BY VoteCount DESC, Medals_Beatmaps.ID DESC", $vars, $inp);
+
+        foreach($data as &$d) {
+            $d['User'] = json_decode($d['User'], true);
+            if($d['User']['User_ID'] < 2) {
+                $d['User'] = null;
+            }
+        }
+        return new Response(true, "beatmaps", $data);
     }
 
     public static function ReportBeatmap($id, $data)

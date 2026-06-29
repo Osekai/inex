@@ -56,6 +56,7 @@ function toFormData(data) {
 }
 
 function appendCompress(url, method, body) {
+    return [url, body];
     // always add compress to the url for get requests
     if (method === "GET") {
         return [url + (url.includes("?") ? "&" : "?") + "compress", body];

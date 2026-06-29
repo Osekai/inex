@@ -512,11 +512,13 @@ setTimeout(() => {
     //ReportOverlay(Bug);
 }, 500);
 
-document.getElementById("bug-reporter-bug").addEventListener("click", () => {
-    document.querySelector("[dropdown='bugs']").dropdown.close();
-    ReportOverlay(Bug, "bug");
-})
-document.getElementById("bug-reporter-feedback").addEventListener("click", () => {
-    document.querySelector("[dropdown='bugs']").dropdown.close();
-    ReportOverlay(Feedback, "feedback");
-})
+if(loggedIn) {
+    document.getElementById("bug-reporter-bug").addEventListener("click", () => {
+        document.querySelector("[dropdown='bugs']").dropdown.close();
+        ReportOverlay(Bug, "bug");
+    })
+    document.getElementById("bug-reporter-feedback").addEventListener("click", () => {
+        document.querySelector("[dropdown='bugs']").dropdown.close();
+        ReportOverlay(Feedback, "feedback");
+    })
+}
