@@ -110,7 +110,7 @@ export function InputTextarea(text: string, type = "", content = "") {
     if (type == "code") {
         input = document.createElement("advanced-code-field");
         input.addEventListener("finishevent", () => {
-            // @ts-ignore
+            
             input.setValue(content);
         })
     } else {
@@ -128,10 +128,10 @@ export function InputTextarea(text: string, type = "", content = "") {
         element: container,
         value: () => {
             if(type == "code") {
-                // @ts-ignore
+                
                 return input.getValue();
             }
-            // @ts-ignore
+            
             return input.value
         }
     };
@@ -182,11 +182,11 @@ export function InputWaiter(text: string, type = "", content = "", callback = ()
 }, hitCallback = () => {
 }) {
     var object = Object.assign(document.createElement("input-waiter"), {"placeholder": text, "value": content});
-    // @ts-ignore
+    
     object.input.value = content;
-    // @ts-ignore
+    
     object.doneCallback = callback;
-    // @ts-ignore
+    
     object.hitCallback = hitCallback;
     return object;
 
@@ -203,7 +203,7 @@ export function RoleBadge(role: any) {
     var div = Div("div", "role-badge");
     const parts = role.Name_Short.split(" ");
 
-    // @ts-ignore
+    
     parts.forEach(part => {
         if (part.startsWith("icon:")) {
             div.appendChild(LucideIcon(part.replace("icon:", "")));

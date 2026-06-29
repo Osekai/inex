@@ -72,7 +72,7 @@ export function SetMedal(inputMedal, setUrl = false, scrollTo = false) {
     MedalData.CurrentMedal = currentMedal.Medal_ID;
     MedalsUI.LoadMedal(currentMedal,scrollTo);
     for(var button of document.querySelectorAll("[medal-button-id]")) {
-        // @ts-ignore
+        
         if(button.getAttribute("medal-button-id") === currentMedal.Medal_ID) {
             button.classList.add("active");
         } else {
@@ -96,7 +96,7 @@ async function Load() {
     })
     GetMedalFromUrl();
 
-    // @ts-ignore
+    
     if(loggedIn) {
         document.getElementById("medal_beatmaps_add").addEventListener("click", () => {
             var panel = Div("div", "basic-modal basic-modal-input");

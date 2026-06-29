@@ -5,7 +5,7 @@ export class Medal {
     constructor(medal: any) {
         this.Beatmaps = [];
         for (var x in medal) {
-            // @ts-ignore
+            
             this[x] = medal[x];
         }
     }

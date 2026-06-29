@@ -169,9 +169,9 @@ class CommentsSection extends HTMLElement {
         report.addEventListener("click", () => {
             reportOverlay("Report " + comment.Username + "'s comment", async (value) => {
                 await DoRequest("POST", `/api/comments/${comment.ID}/report`, {
-                    // @ts-ignore
+                    
                     "reporter_name": userData.username,
-                    // @ts-ignore
+                    
                     "reporter_id": userData.id,
                     "reason": value,
                     "url": location.href

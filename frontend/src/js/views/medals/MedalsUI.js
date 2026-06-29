@@ -22,7 +22,7 @@ import {Graph} from "../../ui/graph";
 
 
 export class MedalsUI {
-    // @ts-ignore
+    
     static AddBeatmap(beatmap, grid) {
         var outer = Div("div", "beatmap");
 
@@ -100,9 +100,9 @@ export class MedalsUI {
         report.addEventListener("click", () => {
             reportOverlay("Report " + beatmap.Song_Title, async (value) => {
                 await DoRequest("POST", `/api/medals/beatmaps/${beatmap.ID}/report`, {
-                    // @ts-ignore
+                    
                     "reporter_name": userData.username,
-                    // @ts-ignore
+                    
                     "reporter_id": userData.id,
                     "reason": value
                 })
@@ -134,7 +134,7 @@ export class MedalsUI {
                 modal.close();
             })], new ModalIcon("alert-triangle", "#ff623e"));
         }
-        // @ts-ignore
+        
         if (loggedIn && beatmap.Beatmap_Submitted_User_ID === userData.id) {
             var _delete = Button("Delete", "warning icon-button");
             extrabutton_dropdown.appendChild(_delete);
@@ -211,21 +211,21 @@ export class MedalsUI {
             if (medal.BeatmapsType == "packs") {
                 document.getElementById("medal_beatmaps_add").classList.add("hidden");
             }
-            // @ts-ignore
+            
             for (var beatmap of medal.Beatmaps) {
                 if (medal.BeatmapsType == "beatmaps")
                     beatmapGrid.appendChild(MedalsUI.AddBeatmap(beatmap, beatmapGrid));
                 if (medal.BeatmapsType == "packs")
                     beatmapGrid.appendChild(MedalsUI.AddPack(beatmap));
             }
-            // @ts-ignore
+            
             if (medal.Beatmaps.length < 3) {
                 beatmapGrid.classList.add("large");
             } else {
                 beatmapGrid.classList.remove("large");
             }
 
-            // @ts-ignore
+            
             if (medal.Beatmaps.length == 0 && medal.Is_Restricted == 1) {
                 document.getElementById("medal_beatmaps_panel").classList.add("hidden");
             } else {
@@ -269,7 +269,7 @@ export class MedalsUI {
     }
 
     static CheckObtainedFilter() {
-        // @ts-ignore
+        
         if (!loggedIn) return;
         if (MedalData.ObtainedFilterActive()) {
             document.getElementById("medal-page").classList.add("filter-obtained");
@@ -285,7 +285,7 @@ export class MedalsUI {
         document.getElementById("medal-info").classList.remove("_hidden");
 
 
-        // @ts-ignore
+        
         document.getElementById("medal_beatmaps").innerHTML = "";
         document.getElementById("medal_beatmaps").appendChild(CenteredLoader());
 
@@ -310,9 +310,9 @@ export class MedalsUI {
         //img.onload = () => {
         //    var rgb = getAverageRGB(img);
         //    var hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-        //    // @ts-ignore
+        //    
         //    document.getElementById("main-col").style.setProperty("--hue", hsl[0] * 360);
-        //    // @ts-ignore
+        //    
         //    document.getElementById("main-col").style.setProperty("--sat", hsl[1] * 3);
         //};
         img.addEventListener("load", () => {
@@ -337,7 +337,7 @@ export class MedalsUI {
         document.getElementById("medal_first_achieved_by_link").href = "https://osu.ppy.sh/u/" + medal.First_Achieved_User_ID;
 
         if (medal.Solution !== null) {
-            // @ts-ignore
+            
             document.getElementById("medal_solution").innerHTML = marked.parse(medal.Solution);
         } else {
             document.getElementById("medal_solution").innerHTML = "Unknown";

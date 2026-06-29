@@ -1,4 +1,4 @@
-// @ts-ignore
+
 import {Embed, EmbedBuilder, Message} from "discord.js";
 
 export class Embedder {

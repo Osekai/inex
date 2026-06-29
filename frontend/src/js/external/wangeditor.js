@@ -33,7 +33,7 @@
     function globalThisPolyfill() {
         // 部分浏览器不支持 globalThis
         if (typeof globalThis === 'undefined') {
-            // @ts-ignore
+            
             window.globalThis = window;
         }
     }
@@ -327,7 +327,7 @@
 
 
     function get(thing, prop) {
-        // @ts-ignore
+        
         return getArchtype(thing) === 2
             /* Map */
             ? thing.get(prop) : thing[prop];
@@ -440,7 +440,7 @@
 
         if (!plugin) {
             die(18, pluginKey);
-        } // @ts-ignore
+        } 
 
 
         return plugin;
@@ -481,7 +481,7 @@
 
     function revokeScope(scope) {
         leaveScope(scope);
-        scope.drafts_.forEach(revokeDraft); // @ts-ignore
+        scope.drafts_.forEach(revokeDraft); 
 
         scope.drafts_ = null;
     }
@@ -761,7 +761,7 @@
 
             if (state.copy_[prop] === value && // special case: NaN
                 typeof value !== "number" && ( // special case: handle new props with value 'undefined'
-                    value !== undefined || prop in state.copy_)) return true; // @ts-ignore
+                    value !== undefined || prop in state.copy_)) return true; 
 
             state.copy_[prop] = value;
             state.assigned_[prop] = true;
@@ -776,7 +776,7 @@
             } else {
                 // if an originally not assigned property was deleted
                 delete state.assigned_[prop];
-            } // @ts-ignore
+            } 
 
 
             if (state.copy_) delete state.copy_[prop];
@@ -813,7 +813,7 @@
 
     var arrayTraps = {};
     each$1(objectTraps, function (key, fn) {
-        // @ts-ignore
+        
         arrayTraps[key] = function () {
             arguments[0] = arguments[0][0];
             return fn.apply(this, arguments);
@@ -1222,13 +1222,13 @@
                     enumerable: enumerable,
                     get: function get() {
                         var state = this[DRAFT_STATE];
-                        assertUnrevoked(state); // @ts-ignore
+                        assertUnrevoked(state); 
 
                         return objectTraps.get(state, prop);
                     },
                     set: function set(value) {
                         var state = this[DRAFT_STATE];
-                        assertUnrevoked(state); // @ts-ignore
+                        assertUnrevoked(state); 
 
                         objectTraps.set(state, prop, value);
                     }
@@ -1616,7 +1616,7 @@
                                 // if value is an object, then it's assigned by reference
                                 // in the following add or remove ops, the value field inside the patch will also be modifyed
                                 // so we use value from the cloned patch
-                                // @ts-ignore
+                                
                                 return base[key] = value;
                         }
 
@@ -1726,7 +1726,7 @@
                 this.constructor = d;
             }
 
-            d.prototype = ( // @ts-ignore
+            d.prototype = ( 
                 __.prototype = b.prototype, new __());
         }
 
@@ -1895,7 +1895,7 @@
         }(Map);
 
         function proxyMap_(target, parent) {
-            // @ts-ignore
+            
             return new DraftMap(target, parent);
         }
 
@@ -2024,7 +2024,7 @@
         }(Set);
 
         function proxySet_(target, parent) {
-            // @ts-ignore
+            
             return new DraftSet(target, parent);
         }
 
