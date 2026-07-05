@@ -24,7 +24,7 @@ export * from './js/elements.js';
 export * from './js/ui/otabs.js';
 export * from "./js/utils/array.js";
 export * from "./js/graphics/gradient-block.js";
-
+export * from "./js/ui/aos.js"
 const simpleicons = [siDiscord, siTwitter, siTwitch, siPatreon, siGithub, siYoutube, siOsu];
 
 var aCreateIcons = null;
@@ -160,3 +160,4 @@ function InitializeAlerts() {
     }
 }
 InitializeAlerts();
+

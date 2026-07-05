@@ -106,10 +106,7 @@ body {
 .page-container-inner {
     transition: all 2s ease;
 }
-body:not(:has(.lottie-doner)) .page-container-inner {
-    opacity: 0;
-    transform: translateY(20px);
-}
+
 .navbar {
     background: #0004;
     backdrop-filter: blur(40px) !important;
@@ -344,6 +341,151 @@ body:not(:has(.lottie-doner)) .page-container-inner {
                     }
                 }
             }
+        }
+    }
+}
+
+
+
+.team-section {
+    margin-bottom: 40px;
+    margin-top: 20px;
+    > h1 {
+        font-size: 40px;
+        font-weight: 200;
+        margin-bottom: 10px;
+    }
+}
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 12px;
+    .member-card {
+        border-radius: var(--border-radius);
+        background: var(--col-l3);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 140px;
+        .header {
+            width: 100%;
+            position: relative;
+            height: 100px;
+
+            overflow: hidden;
+            img {
+                position: absolute;
+                top: 0; left: 0; bottom: 0; right: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                filter: blur(32px);
+                transform: scale(1.2);
+            }
+        }
+
+        .top {
+            position: relative;
+            z-index: 2;
+            padding: 16px;
+            padding-bottom: 0px;
+            margin-top: -90px;
+            >img {
+                border-radius: 64px;
+                width: 100px;
+            }
+            h1 {
+                font-size: 32px;
+                font-weight: 200;
+            }
+            p {
+                font-size: 16px;
+                font-weight: 300;
+                margin-top: -6px;
+                margin-bottom: 6px;
+            }
+
+            .inactive-text {
+                position: absolute;
+                top: 110px;
+                right: 16px;
+                background: var(--col-l4);
+                padding: 6px 12px;
+                border-radius: 90px;
+                font-size: 16px;
+                font-weight: 500;
+                color: var(--col-text-l2);
+            }
+        }
+
+        .middle {
+            padding: 0px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            h1 {
+                font-size: 20px;
+                font-weight: 500;
+            }
+            p {
+                font-size: 16px;
+            }
+        }
+        .links {
+            margin-top: auto;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            a {
+                display: flex;
+            }
+        }
+
+        &.inactive {
+            .header {
+                filter: grayscale(1);
+                opacity: 0.3;
+            }
+            .top {
+                img {
+                    outline: 3px solid #666;
+                }
+            }
+            background: var(--col-d2);
+        }
+    }
+}
+
+.donator-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+    .donator-card {
+        border-radius: var(--border-radius);
+        background: var(--col-l2);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        color: inherit;
+        img {
+            height: 64px;
+            border-radius: var(--border-radius);
+        }
+        h1 {
+            font-size: 16px;
+            margin-left: 12px;
+            font-weight: 600;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        p {
+            margin-left: auto;
+            margin-right: 12px;
+            font-weight: 300;
         }
     }
 }

@@ -1,0 +1,23 @@
+
+[data-aos-type="slide-up"]    { transform: scale(0.95) translateY(calc(230px  * var(--aos-mult))); }
+[data-aos-type="slide-down"]  { transform: scale(0.95) translateY(calc(-230px * var(--aos-mult)) ); }
+[data-aos-type="slide-left"]  { transform: scale(0.95) translateX(calc(230px  * var(--aos-mult))); }
+[data-aos-type="slide-right"] { transform: scale(0.95) translateX(calc(-230px * var(--aos-mult))); }
+
+[data-aos] {
+    --aos-mult: 1;
+    opacity: 0;
+}
+
+[data-aos].aos-ready {
+    transition: opacity var(--aos-duration, 1s) cubic-bezier(0,.42,.25,1),
+    transform var(--aos-duration, 1s) cubic-bezier(0,.62,.25,1);
+    transition-delay: var(--aos-delay, 0ms);
+}
+
+[data-aos].aos-visible {
+    opacity: 1;
+    transform: none;
+}
+
+
