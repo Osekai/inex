@@ -36,7 +36,18 @@ class Localization
             $key = $node->getAttribute('langkey');
             $parts = explode('/', $key, 2);
             $translated = $this->Translate($parts[0], $parts[1] ?? $parts[0]);
-            if ($translated) $node->nodeValue = $translated;
+            if ($translated) {
+                $translated = Sanitize::HTML($translated, true);
+
+                while ($node->firstChild) {
+                    $node->removeChild($node->firstChild);
+                }
+
+                $fragment = $dom->createDocumentFragment();
+                // appendXML expects well-formed XML, so entity-encode first
+                $fragment->appendXML($translated);
+                $node->appendChild($fragment);
+            }
         }
 
         return $dom->saveHTML();
