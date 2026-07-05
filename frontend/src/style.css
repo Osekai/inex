@@ -311,3 +311,172 @@ theme-picker {
         }
     }
 }
+
+
+
+
+.markdown {
+    side-box {
+
+        float: right;
+    }
+    unicorn-player {
+        max-width: 100%;
+        * {
+            max-width: 100%;
+        }
+        canvas {
+            max-width: 100%;
+        }
+    }
+
+    line-height: 1.4;
+    position: relative;
+    font-size: 18px;
+    color: #ddd;
+
+
+    img {
+        max-width: 100%;
+        border: 1px solid #1a1a1a;
+    }
+    figure {
+        padding: 10px;
+        background: #0a0a0a;
+        border: 1px solid #222;
+        margin-bottom: 12px;
+        border-left: 4px solid var(--accent);
+        figcaption {
+            color: #eee;
+            margin: 4px;
+            font-size: 18px;
+        }
+    }
+
+    h1 {
+        font-size: 40px;
+        margin-top: 25px;
+        margin-bottom: 12px;
+        color: #fff;
+    }
+
+    h2 {
+        margin-top: 10px;
+        margin-bottom: 6px;
+        font-size: 30px;
+        color: #fff;
+    }
+
+    h3 {
+        font-size: 20px;
+        margin-top: 8px;
+        margin-bottom: 6px;
+        font-weight: 800;
+        color: #eee;
+    }
+
+    h4 {
+        font-size: 20px;
+        margin-top: 8px;
+        margin-bottom: 6px;
+        color: #eee;
+    }
+
+    p {
+        margin: 14px 0px;
+    }
+
+    table {
+        margin: 8px 0px;
+        border-collapse: collapse;
+    }
+
+    iframe {
+        width: 100%;
+        border: none;
+        filter: drop-shadow(0px 5px 15px #0004);
+    }
+
+    th, td {
+        padding: 8px;
+        border: 1px solid #333;
+    }
+
+    ul, ol {
+        margin: 10px 0px;
+        margin-left: 16px;
+    }
+
+    ul li, ol li {
+        margin: 5px 0px;
+    }
+
+    hr {
+        background: #333;
+        border: none;
+        height: 2px;
+        margin: 30px 0px;
+    }
+
+    blockquote {
+        padding: 8px 20px;
+        margin: 6px 0px;
+        border-left: 2px solid var(--accent);
+        background: #1a1a1a;
+        border-top-left-radius: 16px;
+        color: #bbb;
+    }
+
+    track-player {
+        margin-top: 2px;
+        margin-bottom: 12px;
+    }
+
+    .album {
+        display: flex;
+        align-items: flex-start;
+        line-height: 1;
+        margin-top: 10px;
+        margin-bottom: 12px;
+        background: #1a1a1a;
+
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        > div {
+            padding: 20px;
+        }
+
+        img {
+            height: 140px;
+        }
+
+        h2 {
+            font-size: 36px;
+            margin-bottom: 5px;
+        }
+
+        p {
+            font-size: 15px;
+            margin-top: 16px;
+            color: #999;
+        }
+
+        span {
+            font-size: 20px;
+            color: #ccc;
+        }
+    }
+
+    &.fancier {
+        h1 {
+            font-size: 90px;
+            color: var(--accent);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 32px;
+        }
+    }
+}

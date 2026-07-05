@@ -113,3 +113,21 @@ $router->post('/poll/1', function () {
 
 
 
+$router->get('/legal/privacy', function () {
+    DrawViewWithTemplate("privacy", "page");
+});
+
+
+
+$router->get('/legal/contact', function () {
+    DrawViewWithTemplate("contact", "page");
+});
+
+
+
+$router->get('/guidelines', function () {
+    DrawViewWithTemplate("communityguidelines", "page");
+});
+
+
+

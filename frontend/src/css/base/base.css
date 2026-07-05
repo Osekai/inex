@@ -16,6 +16,10 @@ body {
     display: flex;
 }
 
+.page-padder {
+    flex: 1;
+}
+
 /*[aria-hidden="true"] { visibility: hidden; }*/
 
 .skip-link {

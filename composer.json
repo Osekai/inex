@@ -25,7 +25,7 @@
   ],
   "require": {
     "bramus/router": "~1.6",
-    "ezyang/htmlpurifier": "^4.16",
+    "ezyang/htmlpurifier": "^4.19",
     "enqueue/simple-client": "^0.10.0@dev",
     "enqueue/fs": "^0.10.0@dev",
     "queue-interop/queue-interop": "^0.8.1",
@@ -45,6 +45,7 @@
     "atakde/discord-webhook-php": "dev-master",
     "jfcherng/php-diff": "v6.x-dev",
     "ext-zlib": "*",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "league/commonmark": "^2.9@dev"
   }
 }

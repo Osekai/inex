@@ -17,8 +17,9 @@
     <div class="footer-bottom">
         <div class="footer-left">
             <div>
-                <a href="https://osekai.net/legal/privacy">Privacy Policy</a>
-                <a href="https://osekai.net/legal/contact">Contact Us</a>
+                <a href="/legal/privacy">Privacy Policy</a>
+                <a href="/legal/contact">Contact Us</a>
+                <a href="/guidelines">Community Guidelines</a>
             </div>
             <div>
                 <a href="https://github.com/osekai/inex">Source Code</a>
