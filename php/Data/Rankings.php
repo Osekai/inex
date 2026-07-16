@@ -111,6 +111,46 @@ ORDER BY Rankings_Users.Count_Medals DESC, Rarest_Medal_Frequency ASC";
                 $sql = "SELECT * FROM Rankings_Users $whereClause ORDER BY Count_Badges DESC";
                 break;
 
+            case "playtime":
+                if (!isset($options['type'])) return ["error" => "No 'type' specified - must be 'total' or 'stdev'"];
+                if ($options['type'] === "total") {
+                    $sql = "SELECT *, (COALESCE(Play_Time_Catch/60,0) + COALESCE(Play_Time_Mania/60,0) + COALESCE(Play_Time_Taiko/60,0) + COALESCE(Play_Time_Standard/60,0)) AS Play_Time_Total FROM Rankings_Users $whereClause ORDER BY Play_Time_Total DESC";
+                } else {
+                    // sample stdev (n-1) across the 4 mode playtimes, mirroring the std_dev() logic used for Level/Accuracy stdev
+                    $sql = "
+SELECT *,
+    GREATEST(
+        Play_Time_Total - 2 * SQRT(
+            (
+                POW(COALESCE(Play_Time_Catch/60,0)    - Play_Time_Mean, 2) +
+                POW(COALESCE(Play_Time_Mania/60,0)    - Play_Time_Mean, 2) +
+                POW(COALESCE(Play_Time_Taiko/60,0)    - Play_Time_Mean, 2) +
+                POW(COALESCE(Play_Time_Standard/60,0) - Play_Time_Mean, 2)
+            ) / 3
+        ),
+        0
+    ) AS Play_Time_Stdev
+FROM (
+    SELECT *,
+        (
+            COALESCE(Play_Time_Catch/60,0) +
+            COALESCE(Play_Time_Mania/60,0) +
+            COALESCE(Play_Time_Taiko/60,0) +
+            COALESCE(Play_Time_Standard/60,0)
+        ) AS Play_Time_Total,
+        (
+            COALESCE(Play_Time_Catch/60,0) +
+            COALESCE(Play_Time_Mania/60,0) +
+            COALESCE(Play_Time_Taiko/60,0) +
+            COALESCE(Play_Time_Standard/60,0)
+        ) / 4 AS Play_Time_Mean
+    FROM Rankings_Users
+    $whereClause
+) AS PlayTimeWithMean
+ORDER BY Play_Time_Stdev DESC";
+                }
+                break;
+
             default:
                 return ["error" => "No ranking type specified for " . $rankingType];
         }
@@ -249,7 +289,7 @@ ORDER BY Rankings_Users.Count_Medals DESC, Rarest_Medal_Frequency ASC";
             }
         }
 
-        return new Response(true, "ok", ["data" => $data, "max" => $totalCount]);
+        return new Response(true, "ok", ["data" => $data, "max" => $totalCount, "sql" => $rankedSQL, "params" => $allParams, "types" => $allTypes]);
     }
 
     public static function AddUser(mixed $id)

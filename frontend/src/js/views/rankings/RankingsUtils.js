@@ -1,5 +1,6 @@
 import {D2} from "../../utils/d2";
 import {Clubs} from "../../utils/clubs";
+import {formatPlayTime} from "../../utils/time";
 
 export const helpers = {
     "stdev": {
@@ -377,6 +378,49 @@ export const types = {
                     return {
                         "label": "badges",
                         "content": data.Count_Badges + " badges"
+                    }
+                }
+            }
+        ]
+    },
+
+    "playtime": {
+        "category": "All Mode",
+        "name": "Playtime",
+        "icon": "clock-o",
+        "searchable": [
+            "Username",
+            "User ID",
+            "Country"
+        ],
+        "options": {
+            "type": helpers.stdev
+        },
+        "columns": [
+            helpers.user,
+            {
+                "type": "text",
+                "data": (data, options) => {
+                    return {
+                        "label": "playtime",
+                        "content": options.type === "total"
+                            ? formatPlayTime(data.Play_Time_Total)
+                            : Math.round(data.Play_Time_Stdev / 60) + " hours"
+                    }
+                }
+            },
+            {
+                "type": "scoreGraph",
+                "data": (data, options) => {
+                    return {
+                        "type": options.type,
+                        "values": {
+                            "standard": Math.round(data.Play_Time_Standard/60/60),
+                            "taiko": Math.round(data.Play_Time_Taiko/60/60),
+                            "mania": Math.round(data.Play_Time_Mania/60/60),
+                            "catch": Math.round(data.Play_Time_Catch/60/60)
+                        },
+                        "prefix": "hours"
                     }
                 }
             }

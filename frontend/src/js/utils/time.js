@@ -13,3 +13,17 @@ export function UTCify(date) {
     if (date.includes("T") || date.endsWith("Z")) return new Date(date);
     return new Date(date.replace(" ", "T") + "Z");
 }
+
+export function formatPlayTime(minutes) {
+    const totalMinutes = Math.round(minutes);
+    const days = Math.floor(totalMinutes / (60 * 24));
+    const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+    const mins = totalMinutes % 60;
+
+    const parts = [];
+    if (days > 0) parts.push(`${days} day${days !== 1 ? "s" : ""}`);
+    if (hours > 0) parts.push(`${hours} hour${hours !== 1 ? "s" : ""}`);
+    if (mins > 0 || parts.length === 0) parts.push(`${mins} minute${mins !== 1 ? "s" : ""}`);
+
+    return parts.join(", ");
+}

@@ -201,7 +201,14 @@
     color: var(--col-l2);
 }
 
-
+.list__bar {
+    height: auto;
+    padding: 10px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
 .list__bar .pages {
     display: flex;
     align-items: center;
