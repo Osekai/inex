@@ -95,32 +95,48 @@ async function Load() {
         outer.setAttribute("otab-default", "stdev")
         outer.setAttribute("otab-no-history", "lol")
     }
+
+
+    /// === medals ===
+
+    profiles.Statistics.Medals.Quick = {
+        "Percentage": Math.round(profiles.User.user_achievements.length / profiles.Medals.length * 10000)/100,
+    }
+    profiles.Statistics.Medals.Quick["Club"] = Clubs2.Get(profiles.Statistics.Medals.Quick["Percentage"]); // done out of scope so we can reference the percentage
+
+    let medalProgressBar = () => {
+        let el = D2.Div("club-progress-bar", () => {
+            let progress =  profiles.Statistics.Medals.TotalAchieved / profiles.Statistics.Medals.TotalReleased;
+            D2.CustomPlus("div", "progress-bar-inner", {"style": `width: ${progress * 100}%`}, () => {})
+        })
+        el.classList.add(profiles.Statistics.Medals.Quick["Club"].cssClass);
+        return el;
+    }
+
     for(let el of document.querySelectorAll("[pr-el=panel-medals]")) {
-        let percentage = profiles.User.user_achievements.length / profiles.Medals.length;
-        percentage = Math.round(percentage * 10000)/100;
         let stats = profiles.Statistics.Medals;
-        let club = Clubs2.Get(percentage)
-        let outer = D2.Div("panel-stats panel-medals-outer " + club.cssClass, () => {
-            D2.Image("rank-image", "/public/img/clubs/" + club.rank + ".png", "medal")
+        let outer = D2.Div("panel-stats panel-medals-outer " + stats.Quick.Club.cssClass, () => {
+            D2.Image("rank-image", "/public/img/clubs/" + stats.Quick.Club.rank + ".png", "medal")
             D2.Text("p", "Medals");
-            D2.StyledText("h1", `<strong>${club.rank}% Club</strong>`);
+            D2.StyledText("h1", `<strong>${stats.Quick.Club.rank}% Club</strong>`);
             // we don't have this data yet
             D2.StyledText("h2", `<strong>#${stats.Ranks.Global}</strong> Global`)
             let country = D2.StyledText("h3", `<strong>#${stats.Ranks.Country}</strong> Country`);
             D2.Div("footerarea", () => {
-                D2.StyledText("p", `<strong>${stats.TotalAchieved} medals</strong> (${percentage}%)`);
+                D2.StyledText("p", `<strong>${stats.TotalAchieved} medals</strong> (${stats.Quick.Percentage}%)`);
                 // TODO: progress bar
                 let currentMedals = profiles.User.user_achievements.length;
-                let nextClub = club.Next();
-                let vx = D2.StyledText("p", (nextClub.GetCount(stats.TotalReleased) - stats.TotalAchieved) + " until ", "next-medals");
-                vx.appendChild(D2.Image("rank-image-small", `/public/img/clubs/${nextClub.rank}.png`))
-                vx.setAttribute("tooltip", (nextClub.GetCount(stats.TotalReleased) - stats.TotalAchieved) + " medals to go until you get to " + nextClub.rank + "% club!");
+                let nextClub = stats.Quick.Club.Next();
+                if(nextClub !== null) {
+                    let vx = D2.StyledText("p", (nextClub.GetCount(stats.TotalReleased) - stats.TotalAchieved) + " until ", "next-medals");
+                    vx.appendChild(D2.Image("rank-image-small", `/public/img/clubs/${nextClub.rank}.png`))
+                    vx.setAttribute("tooltip", (nextClub.GetCount(stats.TotalReleased) - stats.TotalAchieved) + " medals to go until you get to " + nextClub.rank + "% club!");
+                } else {
+                    let vx = D2.Text("p", "At the top.");
+                }
             })
 
-            D2.Div("progress-bar", () => {
-                let progress =  stats.TotalAchieved / stats.TotalReleased;
-                D2.CustomPlus("div", "progress-bar-inner", {"style": `width: ${progress * 100}%`}, () => {})
-            })
+            medalProgressBar()
         });
         el.innerHTML = "";
         el.appendChild(outer);
@@ -128,6 +144,79 @@ async function Load() {
 
 
 
+    function tab_Medals() {
+        let stats = profiles.Statistics.Medals;
+
+        for(let el of document.querySelectorAll("[pr-el=medals-club-badge]")) {
+            el.src = `/public/img/clubs/${stats.Quick.Club.rank}.png`;
+        }
+        for(let el of document.querySelectorAll("[pr-el=medals-club-class]")) {
+            el.classList.add(stats.Quick.Club.cssClass);
+        }
+        for(let el of document.querySelectorAll("[pr-el=medals-club-name]")) {
+            el.innerText = stats.Quick.Club.name;
+        }
+
+        for(let el of document.querySelectorAll("[pr-el=medals-club-next-badge]")) {
+            let nextClub = stats.Quick.Club.Next();
+            if(nextClub !== null) {
+                el.src = `/public/img/clubs/${nextClub.rank}.png`;
+            } else {
+                el.src = "/public/img/clubs/0.png";
+            }
+        }
+        for(let el of document.querySelectorAll("[pr-el=medals-club-next-class]")) {
+            let nextClub = stats.Quick.Club.Next();
+            if(nextClub !== null) {
+                el.classList.add(nextClub.cssClass);
+            }
+        }
+        for(let el of document.querySelectorAll("[pr-el=medals-club-next-name]")) {
+            let nextClub = stats.Quick.Club.Next();
+            if(nextClub !== null) {
+                el.innerText = nextClub.name;
+            }
+        }
+        for(let el of document.querySelectorAll("[pr-el=medals-club-next-togo]")) {
+            let nextClub = stats.Quick.Club.Next();
+            if(nextClub !== null) {
+                let currentMedals = profiles.User.user_achievements.length;
+                let nextMedals = nextClub.GetCount(stats.TotalReleased);
+                el.innerText = (nextMedals - currentMedals);
+            } else {
+                el.innerText = "";
+            }
+        }
+
+        for(let el of document.querySelectorAll("[pr-el=medals-percentage]")) {
+            el.innerText = stats.Quick.Percentage + "%";
+        }
+        for(let el of document.querySelectorAll("[pr-el=medals-total-achieved]")) {
+            el.innerText = stats.TotalAchieved;
+        }
+        for(let el of document.querySelectorAll("[pr-el=medals-total-released]")) {
+            el.innerText = stats.TotalReleased;
+        }
+
+
+
+
+        for(let el of document.querySelectorAll("[pr-el=medals-global-rank]")) {
+            el.innerText = "#"+stats.Ranks.Global;
+        }
+        for(let el of document.querySelectorAll("[pr-el=medals-country-rank]")) {
+            el.innerText = "#"+stats.Ranks.Country;
+        }
+
+
+
+        for(let el of document.querySelectorAll("[pr-el=medals-progressbar]")) {
+            el.innerHTML = "";
+            el.appendChild(medalProgressBar());
+        }
+    }
+
+    tab_Medals()
 
 
 

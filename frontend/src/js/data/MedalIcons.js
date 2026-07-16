@@ -22,7 +22,6 @@ export class MedalIcons {
         let icon = icons["medals"][name];
         let base = icons["bases"][icon.colour];
         icon.base = base;
-        console.log(icon);
         return icon;
     }
 }

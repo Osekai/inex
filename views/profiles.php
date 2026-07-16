@@ -1,6 +1,6 @@
 <?php
-if(INSTANCE !== "dev") {
-    echo "<script>window.location.href = 'https://osekai.net/profiles?user=".$args[0]."';</script>";
+if (INSTANCE !== "dev") {
+    echo "<script>window.location.href = 'https://osekai.net/profiles?user=" . $args[0] . "';</script>";
     exit;
 }
 ?>
@@ -40,7 +40,6 @@ if(INSTANCE !== "dev") {
         </div>
     </div>
     <div class="panel hidden">
-        <div id="medal-graph"></div>
     </div>
     <div class="page-container-inner main-profile">
         <div class="tabs">
@@ -56,8 +55,46 @@ if(INSTANCE !== "dev") {
             <div otab-name="profile">
                 <p>profile</p>
             </div>
-            <div otab-name="medals">
-                <p>medals</p>
+            <div otab-name="medals" pr-el="medals-club-class">
+                <div class="medals-top-panel panel">
+                    <div class="content">
+                        <div class="top">
+                            <img pr-el="medals-club-badge">
+                            <div>
+                                <h1 pr-el="medals-club-name"></h1>
+                                <h3>
+                                    <span pr-el="medals-total-achieved"></span>/<span
+                                            pr-el="medals-total-released"></span>
+                                    medals achieved
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="ranks">
+                            <div>
+                                <i data-lucide="globe"></i>
+                                Global <span pr-el="medals-global-rank"></span>
+                            </div>
+                            <div>
+                                <img pr-el="flag">
+                                Country <span pr-el="medals-country-rank"></span>
+                            </div>
+                        </div>
+                        <div class="bottom">
+                            <div class="next-content">
+                                <div class="left">
+                                    <h4 pr-el="medals-percentage"></h4> Achieved
+                                </div>
+                                <div class="right">
+                                    <h4 pr-el="medals-club-next-togo"></h4> medals until
+                                    <img pr-el="medals-club-next-badge">
+                                    <span pr-el="medals-club-next-name"></span>
+                                </div>
+                            </div>
+                            <div pr-el="medals-progressbar"></div>
+                        </div>
+                    </div>
+                    <div id="medal-graph"></div>
+                </div>
             </div>
             <div otab-name="banners">
                 <p>banners</p>

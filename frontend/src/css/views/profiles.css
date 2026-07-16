@@ -238,40 +238,48 @@
                 margin-left: 8px;
             }
         }
-        .progress-bar {
+        .club-progress-bar {
             position: absolute;
             bottom: -4px;
             left: 20px;
             right: 20px;
-            height: 4px;
-            border-radius: 90px;
+
             outline: 5px solid var(--col-l2);
-            background-image: url("/public/img/clubbar.svg");
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            display: flex;
-            align-content: center;
-            justify-content: flex-start;
-            >div {
-                background: var(--maincol);
-                height: 7px;
-                margin-top: -2px;
-                z-index: 9;
-                border-radius: 9px;
-                outline: 2px solid var(--col-l2);
-                position: relative;
-                &:before {
-                    content: "";
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background: linear-gradient(to right, #fff0, #fff);
-                    mix-blend-mode: overlay;
-                    opacity: 0.4;
-                }
-            }
+
+        }
+
+    }
+}
+
+.club-progress-bar {
+    border-radius: 90px;
+    background-image: url("/public/img/clubbar.svg");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    display: flex;
+    align-content: center;
+    justify-content: flex-start;
+    height: 4px;
+    position: relative;
+
+    >div {
+        background: var(--maincol);
+        height: 7px;
+        margin-top: -2px;
+        z-index: 9;
+        border-radius: 9px;
+        outline: 2px solid var(--col-l2);
+        position: relative;
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, #fff0, #fff);
+            mix-blend-mode: overlay;
+            opacity: 0.4;
         }
     }
 }
@@ -281,10 +289,14 @@
     display: flex;
     flex-direction: column;
     >.tabs {
+        margin-bottom: 24px;
         display: flex;
+        gap: 8px;
         >* {
-            background: var(--col-l2);
-            padding: 24px;
+            background: color-mix(in srgb, var(--col-l5) 40%, transparent);
+            backdrop-filter: blur(10px);
+            padding: 14px 30px;
+            border-radius: var(--border-radius);
             &.otab-button-active {
                 background: var(--col-l90);
                 color: var(--col-l2);
@@ -295,4 +307,126 @@
             margin-left: auto;
         }
     }
+}
+
+
+.medals-top-panel {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch    ;
+    padding: 0px;
+    outline: 1px solid var(--col-l3);
+
+    background: linear-gradient(170deg,
+        color-mix(in srgb, var(--maincol) 30%, transparent),
+    color-mix(in srgb, var(--maincol) 0%, transparent) 70%
+    ), var(--col-l2);
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+
+
+        >.top {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            img {
+                width: 100px;
+            }
+            >div {
+                margin-left: 20px;
+                h1 {
+                    font-size: 34px;
+                    font-weight: 300;
+                    color: var(--maincol);
+                }
+                h3 {
+                    font-size: 21px;
+                    font-weight: 500;
+                    color: var(--col-text-l1);
+                    span {
+                        font-weight: 700;
+                    }
+                }
+                h4 {
+                    font-size: 18px;
+                    font-weight: 400;
+                    color: var(--col-text-l1);
+                }
+            }
+        }
+
+        >.ranks {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            >div {
+                display: flex;
+                align-items: center;
+                gap: 3px;
+                font-size: 20px;
+                span {
+                    font-weight: 900;
+                }
+            }
+            i {
+                font-size: 50px;
+            }
+            img {
+                height: 30px;
+                border-radius: 10px;
+            }
+
+            i, img {
+                margin-right: 6px;
+            }
+        }
+
+        >.bottom {
+            margin-top: auto;
+
+            >.next-content {
+                display: flex;
+                align-items: center;
+                margin-bottom: 8px;
+                * {
+                    font-size: 17px;
+                }
+                .left {
+                    white-space: nowrap;
+                    display: flex;
+                    gap: 4px;
+                }
+                .right {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    h4 {
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+                    }
+
+                    img {
+                        height: 36px;
+                    }
+                }
+            }
+        }
+        flex: 1;
+        max-width: 500px;
+    }
+    #medal-graph {
+        flex: 1;
+
+        .graph-outer {
+            background: color-mix(in srgb, var(--col-d0) 30%, transparent);
+            border-radius: 0px;
+            outline: 0px solid red;
+            border: 0px solid red;
+        }
+    }
+    overflow: hidden;
 }

@@ -67,7 +67,7 @@ function getSections(is) {
     return resp;
 }
 
-function setSections(is, p) {
+function setSections(is, p, history = true) {
     console.log("writing to history", is, p);
     console.trace();
     var sections = window.location.pathname.split("/");
@@ -82,7 +82,12 @@ function setSections(is, p) {
 
     // Preserve existing query params and hash
     var newPath = sections.join("/") + window.location.search + window.location.hash;
-    window.history.pushState({ url: newPath }, null, newPath);
+
+    if (history) {
+        window.history.pushState({url: newPath}, null, newPath);
+    } else {
+        window.history.replaceState({url: newPath}, null, newPath);
+    }
 }
 
 function removeSection(is, keyToRemove) {

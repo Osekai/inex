@@ -60,8 +60,14 @@ export function SetMedal(inputMedal, setUrl = false, scrollTo = false) {
     } else {
         document.getElementById("medal-page").classList.remove("home");
     }
+    let isnumber = false;
+    if(parseInt(inputMedal) == inputMedal) {
+        inputMedal = parseInt(inputMedal);
+    }
     if (typeof (inputMedal) !== "number") {
         inputMedal = decodeURI(inputMedal.replace("_", " "));
+    } else {
+        isnumber = true;
     }
 
     var currentMedal = MedalUtils.GetMedalFromName(inputMedal); // will check ID afterward in case
@@ -78,6 +84,11 @@ export function SetMedal(inputMedal, setUrl = false, scrollTo = false) {
         } else {
             button.classList.remove("active");
         }
+    }
+    if(isnumber) {
+        // update URL to name
+        console.log("hi");
+        setSections(`/medals/{medal}`, {"medal": currentMedal.Name}, false)
     }
 }
 
