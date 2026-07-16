@@ -1,69 +1,85 @@
+import { computePosition, offset, flip, shift, autoUpdate } from "@floating-ui/dom";
+
+// maps this project's position names to floating-ui placements
+const PLACEMENT_MAP = {
+    bottomright: "bottom-end",
+    bottomleft: "bottom-start",
+    topright: "top-end",
+    topleft: "top-start",
+};
+
 export function createDropdown(button, dropdown, position = "bottomright") {
-    var special_id = "ed" + Math.round(Math.random() * 99999999); // :/
-    dropdown.classList.add(special_id);
-    button.classList.add(special_id);
+    let opened = false;
+    let stopAutoUpdate = null;
 
-    var opened = false;
+    dropdown.style.position = "fixed";
+    dropdown.style.top = "0";
+    dropdown.style.left = "0";
 
-    var toggleOpen = () => {
-        console.log(opened);
-        if (opened === false) {
-            opened = true;
-            dropdown.classList.add("dropdown-open");
-            positionDropdown();
-        } else {
-            opened = false;
-            dropdown.classList.remove("dropdown-open");
+    const placement = PLACEMENT_MAP[position] || "bottom-end";
+
+    const positionDropdown = () => {
+        computePosition(button, dropdown, {
+            placement,
+            strategy: "fixed",
+            middleware: [offset(4), flip(), shift({ padding: 8 })],
+        }).then(({ x, y }) => {
+            dropdown.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    };
+
+    const close = () => {
+        if (!opened) return;
+        opened = false;
+        dropdown.classList.remove("dropdown-open");
+        dropdown.removeAttribute("data-dropdown-open");
+        document.removeEventListener("click", handleOutsideClick);
+        document.removeEventListener("keydown", handleEscape);
+        if (stopAutoUpdate) {
+            stopAutoUpdate();
+            stopAutoUpdate = null;
         }
-    }
+    };
 
+    const open = () => {
+        if (opened) return;
 
-    var positionDropdown = () => {
-        const buttonRect = button.getBoundingClientRect(); // Button relative to the viewport
-        const containerRect = dropdown.offsetParent.getBoundingClientRect(); // Nearest positioned ancestor
+        document.querySelectorAll("[data-dropdown-open]").forEach((el) => {
+            if (el !== dropdown) {
+                el.dispatchEvent(new CustomEvent("dropdown:force-close"));
+            }
+        });
+        opened = true;
+        dropdown.classList.add("dropdown-open");
+        dropdown.setAttribute("data-dropdown-open", "");
 
-        // Calculate the offset relative to the container
-        const topOffset = buttonRect.top - containerRect.top;
-        const leftOffset = buttonRect.left - containerRect.left;
-        const rightOffset = containerRect.right - buttonRect.right;
-        const bottomOffset = containerRect.bottom - buttonRect.bottom;
+        stopAutoUpdate = autoUpdate(button, dropdown, positionDropdown);
+        setTimeout(() => {
+            document.addEventListener("click", handleOutsideClick);
+            document.addEventListener("keydown", handleEscape);
+        }, 0);
+    };
 
-        // Reset any previously set styles
-        dropdown.style.top = '';
-        dropdown.style.left = '';
-        dropdown.style.right = '';
-        dropdown.style.bottom = '';
+    const toggleOpen = () => (opened ? close() : open());
 
-        // Set position based on the specified alignment
-        if (position === "bottomright") {
-            dropdown.style.top = `${topOffset + button.offsetHeight}px`;
-            dropdown.style.right = `${rightOffset}px`;
-        } else if (position === "bottomleft") {
-            dropdown.style.top = `${topOffset + button.offsetHeight}px`;
-            dropdown.style.left = `${leftOffset}px`;
-        } else if (position === "topright") {
-            dropdown.style.bottom = `${bottomOffset + button.offsetHeight}px`;
-            dropdown.style.right = `${rightOffset}px`;
-        } else if (position === "topleft") {
-            dropdown.style.bottom = `${bottomOffset + button.offsetHeight}px`;
-            dropdown.style.left = `${leftOffset}px`;
+    const handleOutsideClick = (e) => {
+        if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+            close();
         }
-    }
+    };
 
+    const handleEscape = (e) => {
+        if (e.key === "Escape") close();
+    };
 
-    document.addEventListener("click", (e) => {
-        if (e.target === button || e.target === dropdown || e.target.closest("." + special_id) !== null) {
-
-        } else {
-            if (opened) toggleOpen();
-        }
-    })
-
-    button.addEventListener("click", () => {
-        toggleOpen()
-    })
-    dropdown.addEventListener("click", (e) => {
-        // Prevent closing when clicking inside the dropdown
+    button.addEventListener("click", (e) => {
         e.stopPropagation();
+        toggleOpen();
     });
+
+    dropdown.addEventListener("click", (e) => e.stopPropagation());
+
+    dropdown.addEventListener("dropdown:force-close", close);
+
+    return () => close();
 }

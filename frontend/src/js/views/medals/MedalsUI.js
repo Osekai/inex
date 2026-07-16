@@ -1,13 +1,11 @@
 // @flow
 import {Medal} from "./Medal";
 import {MedalData} from "./MedalData";
-import {AntheraIcon, Button, Div, LucideIcon, Text} from "../../utils/dom";
-import {getAverageRGB, rgbToHsl} from "../../utils/colour";
+import {AntheraIcon, Div, LucideIcon, Text} from "../../utils/dom";
 import {marked} from "marked";
-import CommentsSection from "../../elements/comments-section";
 import {DoRequest} from "../../utils/requests";
 import {GetMod} from "../../utils/osu/mods";
-import {TimeTransform_MM_SS} from "../../utils/time";
+import {TimeTransform_MM_SS, UTCify} from "../../utils/time";
 import {createDropdown} from "../../ui/ultra-dropdown";
 import {Modal, ModalButton, ModalIcon} from "../../ui/overlay";
 import {PushToast} from "../../ui/toasts";
@@ -19,143 +17,154 @@ import {timeAgo} from "../../utils/timeago";
 import {SetMedal} from "../medals";
 import {D2} from "../../utils/d2";
 import {Graph} from "../../ui/graph";
+import TimeAgo from "javascript-time-ago";
 
 
 export class MedalsUI {
-    
+    static extra_AdoptionGraph = null;
+
     static AddBeatmap(beatmap, grid) {
-        var outer = Div("div", "beatmap");
+        var votebutton, extrabutton, dropdown;
 
-        var top = Div("a", "top");
-        var top_top = Div("div", "top-top");
-        var top_bottom = Div("div", "top-bottom");
-        top.appendChild(top_top);
-        top.appendChild(top_bottom);
+        let today = new Date();
+        let submitted = UTCify(beatmap.Beatmap_Submitted_Date);
 
-        top.href = `https://osu.ppy.sh/b/${beatmap.Beatmap_ID}`;
-        top.target = "_blank";
+        let months = (today.getFullYear() - submitted.getFullYear()) * 12
+            + (today.getMonth() - submitted.getMonth());
 
-        top_top.appendChild(Text("h3", beatmap.Song_Artist));
-        top_bottom.appendChild(Text("h1", beatmap.Song_Title));
-
-        top_top.appendChild(Text("h1", beatmap.Difficulty_Name));
-        top_bottom.appendChild(Text("h3", "mapped by " + beatmap.Mapper_Name));
-
-        outer.appendChild(top);
-
-        var bottom = Div("div", "bottom");
-
-        //var submissiondate = Text("h4", timeAgo.format(new Date(beatmap.Beatmap_Submitted_Date)));
-        //bottom.appendChild(submissiondate);
-        //submissiondate.setAttribute("tooltip", beatmap.Beatmap_Submitted_Date);
-
-
-        var note = Text("h4", beatmap.Note);
-        bottom.appendChild(note);
-
-        note.addEventListener("click", () => {
-            note.classList.toggle("expanded");
-        })
-
-
-        var votebutton = Div("div", "pill-button")
-        bottom.appendChild(votebutton);
-        votebutton.classList.add("vote-button")
-        votebutton.innerText = beatmap.VoteCount;
-
-        if (beatmap.HasVoted === 1) votebutton.classList.add("active");
-
-        votebutton.addEventListener("click", async () => {
-            votebutton.classList.add("loading");
-            var data = await DoRequest("POST", "/api/vote/Medals_Beatmaps/" + beatmap.ID)
-            if (data.message === "vote_add") {
-                votebutton.classList.add("active");
-                beatmap.VoteCount++;
-            } else if (data.message === "vote_remove") {
-                votebutton.classList.remove("active");
-                beatmap.VoteCount--;
-            }
-            votebutton.innerText = beatmap.VoteCount;
-            votebutton.classList.remove("loading");
-        })
-
-        let download = D2.Link("", "pill-button square dark", `osu://b/${beatmap.Beatmap_ID}`)
-        download.appendChild(LucideIcon("download"));
-        bottom.appendChild(download);
-
-
-        var extrabutton = Div("div", "pill-button dark")
-        bottom.appendChild(extrabutton);
-        extrabutton.classList.add("square")
-        extrabutton.appendChild(LucideIcon("ellipsis"));
-
-
-        var extrabutton_dropdown = Div("div", "dropdown-content");
-        grid.appendChild(extrabutton_dropdown);
-
-        createDropdown(extrabutton, extrabutton_dropdown);
-
-        var report = Button("Report", "icon-button");
-        extrabutton_dropdown.appendChild(report);
-        report.addEventListener("click", () => {
-            reportOverlay("Report " + beatmap.Song_Title, async (value) => {
-                await DoRequest("POST", `/api/medals/beatmaps/${beatmap.ID}/report`, {
-                    
-                    "reporter_name": userData.username,
-                    
-                    "reporter_id": userData.id,
-                    "reason": value
-                })
-                PushToast({
-                    "theme": "success",
-                    content: "Thanks for the report! We'll look into it soon!"
-                })
-            })
-        })
-        report.prepend(LucideIcon("triangle-alert"));
-
+        let outdated = months > 36;
 
         var del = async (admin = false) => {
-            var modal = new Modal("Are you sure you want to delete this post?", "This cannot be undone!", [new ModalButton("Delete", async () => {
-                var url = `/api/medals/beatmaps/${beatmap.ID}/` + (admin == true ? "admindelete" : "delete");
-                var loader = new LoaderOverlay("Deleting");
-                var r = await DoRequest('POST', url);
-                loader.overlay.remove();
-                if (r.success) {
-                    outer.remove();
-                } else {
-                    PushToast({
-                        theme: "error",
-                        content: r.message
+            var modal = new Modal("Are you sure you want to delete this post?", "This cannot be undone!", [
+                new ModalButton("Delete", async () => {
+                    var url = `/api/medals/beatmaps/${beatmap.ID}/` + (admin === true ? "admindelete" : "delete");
+                    var loader = new LoaderOverlay("Deleting");
+                    var r = await DoRequest('POST', url);
+                    loader.overlay.remove();
+                    if (r.success) {
+                        outer.remove();
+                    } else {
+                        PushToast({
+                            theme: "error",
+                            content: r.message
+                        });
+                    }
+                    modal.overlay.remove();
+                }),
+                new ModalButton("Cancel", () => {
+                    modal.close();
+                })
+            ], new ModalIcon("alert-triangle", "#ff623e"));
+        };
+
+        var outer = D2.Div("beatmap", () => {
+            if(outdated) {
+                console.log("old lol");
+                D2.Div("outdated", () => {
+                    D2.Icon("alert-triangle", "warning");
+                    D2.Text("p", "This beatmap was submitted " + timeAgo.format(submitted) + ". It may not work anymore!")
+                });
+            }
+
+            D2.DivLink(`https://osu.ppy.sh/b/${beatmap.Beatmap_ID}`, "top", () => {
+                D2.Div("top-top", () => {
+                    D2.Text("h3", beatmap.Song_Artist);
+                    D2.Text("h1", beatmap.Difficulty_Name);
+                });
+                D2.Div("top-bottom", () => {
+                    D2.Text("h1", beatmap.Song_Title);
+                    D2.Text("h3", "mapped by " + beatmap.Mapper_Name);
+                });
+            }).target = "_blank";
+
+            D2.Div("bottom", () => {
+                var note = D2.Text("h4", beatmap.Note);
+                note.addEventListener("click", () => {
+                    note.classList.toggle("expanded");
+                });
+
+                votebutton = D2.Div("pill-button vote-button", beatmap.VoteCount.toString());
+                if (beatmap.HasVoted === 1) votebutton.classList.add("active");
+                votebutton.addEventListener("click", async () => {
+                    votebutton.classList.add("loading");
+                    var data = await DoRequest("POST", "/api/vote/Medals_Beatmaps/" + beatmap.ID);
+                    if (data.message === "vote_add") {
+                        votebutton.classList.add("active");
+                        beatmap.VoteCount++;
+                    } else if (data.message === "vote_remove") {
+                        votebutton.classList.remove("active");
+                        beatmap.VoteCount--;
+                    }
+                    votebutton.innerText = beatmap.VoteCount;
+                    votebutton.classList.remove("loading");
+                });
+
+                D2.DivLink(`osu://b/${beatmap.Beatmap_ID}`, "pill-button square dark", () => {
+                    D2.LucideIcon("download");
+                });
+
+                extrabutton = D2.Div("pill-button dark square", () => {
+                    D2.LucideIcon("ellipsis");
+                });
+            });
+
+            dropdown = D2.Div("dropdown-content", () => {
+
+                if(beatmap.User.Username !== "")
+                D2.DivLink(`https://osu.ppy.sh/u/${beatmap.User.User_ID}`, "uploader", () => {
+                    console.log(beatmap);
+                    D2.Image("img", "https://a.ppy.sh/" + beatmap.User.User_ID);
+                    D2.Div("", () => {
+
+                        D2.StyledText("h3", `Submitted by <strong>${beatmap.User.Username}</strong>`);
+                        D2.Text("p", timeAgo.format(new Date(UTCify(beatmap.Beatmap_Submitted_Date))));
                     })
+                })
+                if (loggedIn && beatmap.Beatmap_Submitted_User_ID === userData.id) {
+                    let del = D2.CustomPlus("button", "button  icon-button", {}, () => {
+                        D2.LucideIcon("trash");
+                        D2.Text("span", "Delete");
+                    });
+                    del.addEventListener("click", async () => {
+                        await del();
+                    });
                 }
-                modal.overlay.remove();
-            }), new ModalButton("Cancel", () => {
-                modal.close();
-            })], new ModalIcon("alert-triangle", "#ff623e"));
-        }
-        
-        if (loggedIn && beatmap.Beatmap_Submitted_User_ID === userData.id) {
-            var _delete = Button("Delete", "warning icon-button");
-            extrabutton_dropdown.appendChild(_delete);
-            _delete.prepend(LucideIcon("trash"));
-            _delete.addEventListener("click", async () => {
-                await del();
-            });
-        }
-        if (PermissionChecker("medals.beatmaps.delete.any")) {
-            var adm_delete = Button("AdminDelete", "warning icon-button");
 
-            extrabutton_dropdown.appendChild(adm_delete);
-            adm_delete.prepend(LucideIcon("zap"));
-            adm_delete.addEventListener("click", async () => {
-                await del(true);
-            });
-        }
+                let report = D2.CustomPlus("button", "button icon-button", {}, () => {
+                    D2.LucideIcon("triangle-alert");
+                    D2.Text("span", "Report");
+                });
+                report.addEventListener("click", () => {
+                    reportOverlay("Report " + beatmap.Song_Title, async (value) => {
+                        await DoRequest("POST", `/api/medals/beatmaps/${beatmap.ID}/report`, {
+                            "reporter_name": userData.username,
+                            "reporter_id": userData.id,
+                            "reason": value
+                        });
+                        PushToast({
+                            "theme": "success",
+                            content: "Thanks for the report! We'll look into it soon!"
+                        });
+                    });
+                });
 
-        outer.appendChild(bottom);
+                if (PermissionChecker("medals.beatmaps.delete.any")) {
+                    let adm_delete = D2.CustomPlus("button", "button icon-button", {}, () => {
+                        D2.LucideIcon("zap");
+                        D2.Text("span", "AdminDelete");
+                    });
+                    adm_delete.addEventListener("click", async () => {
+                        await del(true);
+                    });
+                }
+            })
 
-        outer.style.setProperty("--bg", "url(\"https://assets.ppy.sh/beatmaps/" + beatmap.Beatmapset_ID + "/covers/cover.jpg\")")
+            createDropdown(extrabutton, dropdown);
+        });
+
+
+
+        outer.style.setProperty("--bg", "url(\"https://assets.ppy.sh/beatmaps/" + beatmap.Beatmapset_ID + "/covers/cover.jpg\")");
 
         return outer;
     }
@@ -211,21 +220,21 @@ export class MedalsUI {
             if (medal.BeatmapsType == "packs") {
                 document.getElementById("medal_beatmaps_add").classList.add("hidden");
             }
-            
+
             for (var beatmap of medal.Beatmaps) {
                 if (medal.BeatmapsType == "beatmaps")
                     beatmapGrid.appendChild(MedalsUI.AddBeatmap(beatmap, beatmapGrid));
                 if (medal.BeatmapsType == "packs")
                     beatmapGrid.appendChild(MedalsUI.AddPack(beatmap));
             }
-            
+
             if (medal.Beatmaps.length < 3) {
                 beatmapGrid.classList.add("large");
             } else {
                 beatmapGrid.classList.remove("large");
             }
 
-            
+
             if (medal.Beatmaps.length == 0 && medal.Is_Restricted == 1) {
                 document.getElementById("medal_beatmaps_panel").classList.add("hidden");
             } else {
@@ -234,7 +243,6 @@ export class MedalsUI {
         }
     }
 
-    static extra_AdoptionGraph = null;
     static async LoadExtra(medal: Medal) {
         MedalsUI.extra_AdoptionGraph?.remove();
 
@@ -246,12 +254,12 @@ export class MedalsUI {
         let adoptionData = [];
 
         let maxAdoption = 0;
-        for(let adopt of extraData.content.Graphs.Adoption) {
-            if(adopt.Total > maxAdoption) maxAdoption = adopt.Total;
+        for (let adopt of extraData.content.Graphs.Adoption) {
+            if (adopt.Total > maxAdoption) maxAdoption = adopt.Total;
         }
         let offset = medal.Count_Achieved_By / maxAdoption;
 
-        for(let adopt of extraData.content.Graphs.Adoption) {
+        for (let adopt of extraData.content.Graphs.Adoption) {
             adoptionData.push({
                 date: adopt.Date,
                 value: Math.round(adopt.Total * offset),
@@ -269,7 +277,7 @@ export class MedalsUI {
     }
 
     static CheckObtainedFilter() {
-        
+
         if (!loggedIn) return;
         if (MedalData.ObtainedFilterActive()) {
             document.getElementById("medal-page").classList.add("filter-obtained");
@@ -285,7 +293,6 @@ export class MedalsUI {
         document.getElementById("medal-info").classList.remove("_hidden");
 
 
-        
         document.getElementById("medal_beatmaps").innerHTML = "";
         document.getElementById("medal_beatmaps").appendChild(CenteredLoader());
 
@@ -341,7 +348,7 @@ export class MedalsUI {
         document.getElementById("medal_first_achieved_by_link").href = "https://osu.ppy.sh/u/" + medal.First_Achieved_User_ID;
 
         if (medal.Solution !== null) {
-            
+
             document.getElementById("medal_solution").innerHTML = marked.parse(medal.Solution);
         } else {
             document.getElementById("medal_solution").innerHTML = "Unknown";

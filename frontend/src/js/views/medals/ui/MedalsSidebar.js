@@ -178,6 +178,7 @@ export class MedalsSidebar {
             let medalButton = Div("button", "medals__medal-button");
 
             let newIcon = document.createElement("medal-icon");
+            newIcon.setAttribute("fancy", "false");
             newIcon.setAttribute("src", medal.Link);
             medalButton.prepend(newIcon);
 

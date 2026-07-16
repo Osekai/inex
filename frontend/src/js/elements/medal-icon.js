@@ -1,19 +1,21 @@
 import '../../css/elements/medal-icon.css'
 import {MedalIcons} from "../data/MedalIcons";
 import {rgbToHsl} from "../utils/colour";
+import {D2} from "../utils/d2";
 
 
 class MedalIcon extends HTMLElement {
 
     base;
     icon;
+    fancy = true;
 
     constructor() {
         super();
     }
 
     static get observedAttributes() {
-        return ["src"];
+        return ["src", "fancy"];
     }
 
     async load(key) {
@@ -55,7 +57,10 @@ class MedalIcon extends HTMLElement {
             return tmp.querySelector("svg");
         };
 
-        const base = parse(iconData.base.svg);
+        let base = D2.Image("", "/assets/medals/bases/" + iconData.colour + ".png", "base");
+        if(this.fancy) {
+            base = parse(iconData.base.svg);
+        }
         const icon = parse(iconData.svg);
 
         this.innerHTML = "";
@@ -111,6 +116,10 @@ class MedalIcon extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         if (name === "src") {
             this.load(newValue);
+        }
+        if (name === "fancy") {
+            this.fancy = newValue == "true";
+            this.load(this.getAttribute("src"));
         }
     }
 

@@ -466,13 +466,17 @@ body {
     align-items: stretch;
     background-position: center !important;
     background-size: cover !important;
+    transition: all 0.2s ease;
 }
 #medal_beatmaps.large .beatmap {
     background: linear-gradient(to bottom, #fff0 20%, color-mix(in srgb, var(--col-d2) 80%, transparent) 70%), var(--bg);
 
 }
 .beatmap:has(.top:hover) {
-    filter: brightness(1.2);
+    background: linear-gradient(to bottom,
+    color-mix(in srgb, var(--col-d2) 60%, transparent),
+    color-mix(in srgb, var(--col-l2) 30%, transparent)),
+    var(--bg);
 }
 .beatmap .top {
     color: inherit;
@@ -517,7 +521,21 @@ body {
 .beatmap .vote-button:before {
     content: "+";
 }
-
+.beatmap .outdated {
+    background: linear-gradient(to right, #ff234f66, #ff234f22);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    padding: 5px 17px;
+    gap: 4px;
+    svg {
+        height: 15px;
+        width: auto;
+    }
+}
+.beatmap:has(.outdated) {
+    outline: 2px solid #ff234f33;
+}
 .beatmap .top,
 .beatmap .bottom {
     padding: 15px 17px;
@@ -530,6 +548,34 @@ body {
 .beatmap .top > div, .beatmap .bottom {
     display: flex;
     align-items: center;
+}
+
+.beatmap .dropdown-content {
+    max-width: 300px;
+
+    .uploader {
+        color: inherit;
+        display: flex;
+        padding: 12px;
+        align-items: center;
+        gap: 6px;
+        img {
+            height: 48px;
+            border-radius: 100px;
+        }
+        h3 {
+            font-size: 18px;
+            font-weight: 400;
+            strong {
+                font-weight: 600;
+            }
+        }
+        p {
+            font-size: 14px;
+            font-weight: 300;
+            opacity: 0.7;
+        }
+    }
 }
 
 .beatmap .top h1 {

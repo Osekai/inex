@@ -121,7 +121,16 @@ class MedalsBeatmaps
             if($d['User']['User_ID'] < 2) {
                 $d['User'] = null;
             }
+
+            $months_old = (strtotime('now') - strtotime($d['Beatmap_Submitted_Date'])) / (60 * 60 * 24 * 30);
+            $d['Score'] = $d['VoteCount'] - ($months_old / 6);
         }
+        unset($d);
+
+        usort($data, function($a, $b) {
+            return $b['Score'] <=> $a['Score'];
+        });
+
         return new Response(true, "beatmaps", $data);
     }
 
