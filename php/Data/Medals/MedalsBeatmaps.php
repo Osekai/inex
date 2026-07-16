@@ -2,6 +2,7 @@
 
 namespace Data\Medals;
 
+use Ampra\IO;
 use API\Response;
 use Data\Beatmaps;
 use Data\Medals;
@@ -94,7 +95,7 @@ class MedalsBeatmaps
         }
 
 
-        $data = Connection::execSelect("
+        $query = "
     SELECT Medals_Beatmaps.*, Beatmaps_Data.*, COUNT(Common_Votes.User_ID) AS VoteCount,
      JSON_OBJECT(
              'User_ID', Beatmap_Submitted_User_ID,
@@ -111,7 +112,13 @@ class MedalsBeatmaps
     LEFT JOIN Common_Votes ON Common_Votes.Target_Table = 'Medals_Beatmaps' AND Common_Votes.Target_ID = Medals_Beatmaps.ID
     LEFT JOIN Merged_Users ON Beatmap_Submitted_User_ID = Merged_Users.User_ID
     WHERE Medals_Beatmaps.Medal_ID = ? AND Medals_Beatmaps.Deleted = 0" . ($single == null ? "" : " AND Medals_Beatmaps.Beatmap_ID = ? ") . " 
-    GROUP BY Medals_Beatmaps.Beatmap_ID  ORDER BY VoteCount DESC, Medals_Beatmaps.ID DESC", $vars, $inp);
+    GROUP BY Medals_Beatmaps.Beatmap_ID  ORDER BY VoteCount DESC, Medals_Beatmaps.ID DESC";
+        IO::Send("/sysops/alert", [
+            "title" => "log",
+            "description" => "Query: ```" . $query . "```\n" . "Vars: ```" . $vars . "```\n" . "Input: ```" . json_encode($inp) . "```"
+        ]);
+
+        $data = Connection::execSelect($query, $vars, $inp);
 
         foreach($data as &$d) {
             $d['User'] = json_decode($d['User'], true);
