@@ -110,16 +110,20 @@ export class MedalsUI {
 
             dropdown = D2.Div("dropdown-content", () => {
 
-                if(beatmap.User !== null && beatmap.User.Username !== "")
-                D2.DivLink(`https://osu.ppy.sh/u/${beatmap.User.User_ID}`, "uploader", () => {
-                    console.log(beatmap);
-                    D2.Image("img", "https://a.ppy.sh/" + beatmap.User.User_ID);
-                    D2.Div("", () => {
+                try {
+                    if (beatmap.User !== null && beatmap.User.Username !== "")
+                        D2.DivLink(`https://osu.ppy.sh/u/${beatmap.User.User_ID}`, "uploader", () => {
+                            console.log(beatmap);
+                            D2.Image("img", "https://a.ppy.sh/" + beatmap.User.User_ID);
+                            D2.Div("", () => {
 
-                        D2.StyledText("h3", `Submitted by <strong>${beatmap.User.Username}</strong>`);
-                        D2.Text("p", timeAgo.format(new Date(UTCify(beatmap.Beatmap_Submitted_Date))));
-                    })
-                })
+                                D2.StyledText("h3", `Submitted by <strong>${beatmap.User.Username}</strong>`);
+                                D2.Text("p", timeAgo.format(new Date(UTCify(beatmap.Beatmap_Submitted_Date))));
+                            })
+                        })
+                } catch {
+                    // TODO: worakround for cras, actually check this later
+                }
                 if (loggedIn && beatmap.Beatmap_Submitted_User_ID === userData.id) {
                     let del = D2.CustomPlus("button", "button  icon-button", {}, () => {
                         D2.LucideIcon("trash");
