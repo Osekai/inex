@@ -100,23 +100,19 @@ class MedalsBeatmaps
      JSON_OBJECT(
              'User_ID', Beatmap_Submitted_User_ID,
              'Username', Merged_Users.Name
-             ) AS `User`
-             FROM Medals_Beatmaps "
+             ) AS `User`"
             . (Session::LoggedIn() ? ", (SELECT COUNT(Common_Votes.User_ID)
  FROM Common_Votes 
  WHERE Common_Votes.User_ID = ? 
  AND Common_Votes.Target_Table = 'Medals_Beatmaps' 
  AND Common_Votes.Target_ID = Medals_Beatmaps.ID) AS HasVoted " : "") .
             "
+    FROM Medals_Beatmaps
     LEFT JOIN Beatmaps_Data ON Medals_Beatmaps.Beatmap_ID = Beatmaps_Data.Beatmap_ID
     LEFT JOIN Common_Votes ON Common_Votes.Target_Table = 'Medals_Beatmaps' AND Common_Votes.Target_ID = Medals_Beatmaps.ID
     LEFT JOIN Merged_Users ON Beatmap_Submitted_User_ID = Merged_Users.User_ID
     WHERE Medals_Beatmaps.Medal_ID = ? AND Medals_Beatmaps.Deleted = 0" . ($single == null ? "" : " AND Medals_Beatmaps.Beatmap_ID = ? ") . " 
     GROUP BY Medals_Beatmaps.Beatmap_ID  ORDER BY VoteCount DESC, Medals_Beatmaps.ID DESC";
-        IO::Send("/sysops/alert", [
-            "title" => "log",
-            "description" => "Query: ```" . $query . "```\n" . "Vars: ```" . $vars . "```\n" . "Input: ```" . json_encode($inp) . "```"
-        ]);
 
         $data = Connection::execSelect($query, $vars, $inp);
 
