@@ -110,7 +110,7 @@ export class MedalsUI {
 
             dropdown = D2.Div("dropdown-content", () => {
 
-                if(beatmap.User.Username !== "")
+                if(beatmap.User !== null && beatmap.User.Username !== "")
                 D2.DivLink(`https://osu.ppy.sh/u/${beatmap.User.User_ID}`, "uploader", () => {
                     console.log(beatmap);
                     D2.Image("img", "https://a.ppy.sh/" + beatmap.User.User_ID);
