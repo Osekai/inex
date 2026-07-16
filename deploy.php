@@ -57,49 +57,29 @@ echo "Artifact ID: $artifactId\n";
 
 // Step 3: Get the real artifact download URL
 $downloadUrl = "https://api.github.com/repos/$repoOwner/$repoName/actions/artifacts/$artifactId/zip";
+$zipPath = './artifact.zip';
+
 $ch = curl_init($downloadUrl);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);  // Do not follow yet
-curl_setopt($ch, CURLOPT_HEADER, true);
-curl_setopt($ch, CURLOPT_NOBODY, true);
+$fp = fopen($zipPath, 'wb');
+curl_setopt($ch, CURLOPT_FILE, $fp);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     "Authorization: token $githubToken",
     "User-Agent: PHP",
     "Accept: application/vnd.github.v3+json"
 ]);
-$response = curl_exec($ch);
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-$redirectUrl = null;
-
-// Extract redirect URL from headers
-if ($httpCode === 302) {
-    preg_match('/^Location:\s*(.*)$/mi', $response, $matches);
-    if (!empty($matches[1])) {
-        $redirectUrl = trim($matches[1]);
-    }
-}
-
-curl_close($ch);
-
-if (!$redirectUrl) {
-    die("Failed to get redirect URL for artifact download.\n");
-}
-
-echo "Redirect URL found: $redirectUrl\n";
-
-// Step 4: Download the artifact
-$zipPath = './artifact.zip';
-$ch = curl_init($redirectUrl);
-$fp = fopen($zipPath, 'wb');
-curl_setopt($ch, CURLOPT_FILE, $fp);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);  // Follow final redirect
 curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$curlError = curl_error($ch);
 curl_close($ch);
 fclose($fp);
 
 if ($httpCode !== 200) {
-    die("Failed to download artifact. HTTP Code: $httpCode\n");
+    // clean up the partial/empty file so it doesn't confuse the next run
+    if (file_exists($zipPath)) {
+        unlink($zipPath);
+    }
+    die("Failed to download artifact. HTTP Code: $httpCode" . ($curlError ? " | cURL error: $curlError" : "") . "\n");
 }
 
 echo "Artifact downloaded successfully to $zipPath.\n";
