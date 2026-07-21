@@ -654,6 +654,8 @@ body {
                 margin-left: auto;
                 font-size: 18px;
                 font-weight: 200;
+                user-select: text;
+                cursor: text;
             }
         }
         &:has(*.header) {
@@ -664,6 +666,10 @@ body {
             .header {
                 background: color-mix(in srgb, var(--col-l4) 50%, transparent);
 
+            }
+            .inner {
+                -webkit-user-drag: none;
+                user-drag: none;
             }
             .inner:has(*.graph-outer) {
                 padding: 0px;
