@@ -799,6 +799,24 @@ body {
 .medal__info-text h1 {
     font-size: 26px;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    >div {
+        background: var(--col-sat-3);
+        width: 24px;
+        height: 24px;
+        border-radius: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        svg {
+            width: 18px;
+            height: auto;
+            stroke: white;
+            stroke-width: 4px;
+        }
+    }
 }
 .medal__info-text h2 {
     font-size: 21px;

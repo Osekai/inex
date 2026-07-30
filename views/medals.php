@@ -114,7 +114,12 @@ if ($cur_medal == null) {
                             <medal-icon id="medal_image" src="all-secret-jackpot"></medal-icon>
                             <div class="medal__info-text">
                                 <div>
-                                    <h1 id="medal_name"></h1>
+                                    <h1>
+                                        <div id="medal_obtained">
+                                            <i data-lucide="check"></i>
+                                        </div>
+                                        <span id="medal_name"></span>
+                                    </h1>
                                     <h2 id="medal_description"></h2>
                                     <h3 id="medal_instructions"></h3>
                                 </div>
