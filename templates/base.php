@@ -50,6 +50,9 @@ if (Site::$base_loaded == false) {
         <?php
     }
     ?>
+    <style>
+        <?= LOADER_CSS_DELAYS ?>
+    </style>
     <meta name="darkreader-lock">
 
     <?php

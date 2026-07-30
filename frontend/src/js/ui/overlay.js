@@ -12,7 +12,6 @@ export class Overlay {
         document.body.appendChild(this.overlay);
 
         this.overlay.addEventListener("click", (e) => {
-            console.log(e);
             if(e.target == this.overlay && this.allowclickoff) this.remove();
         })
     }
@@ -78,7 +77,6 @@ export class Modal {
     }
 
     close() {
-        console.log("closing ?");
         this.overlay.overlay.remove();
     }
 }

@@ -34,11 +34,11 @@ function getLoaderEl() {
 }
 
 function showLoader() {
-    getLoaderEl()?.classList.remove("hidden");
+    getLoaderEl()?.classList.remove("loader-hidden");
 }
 
 function hideLoader() {
-    getLoaderEl()?.classList.add("hidden");
+    getLoaderEl()?.classList.add("loader-hidden");
 }
 
 function toFormData(data) {
@@ -159,6 +159,7 @@ function sleep(ms) {
 }
 
 // ─── core request ─────────────────────────────────────────────────────────────
+
 
 /**
  * @param {string} method

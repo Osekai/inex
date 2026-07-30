@@ -182,10 +182,8 @@ class ImageArea extends HTMLElement {
             });
 
             this.addEventListener("click", function () {
-                console.log(this.files);
                 if(this.files.length === 0)  fileInput.click();
                 if(this.dragWhenSet === true) {
-                    console.log("probably")
                     fileInput.click();
                 }
             });

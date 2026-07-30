@@ -19,6 +19,7 @@ class MedalIcon extends HTMLElement {
     }
 
     async load(key) {
+        if (!key) return;
         if (key.endsWith(".png")) key = key.substring(0, key.length - 4);
         this.innerHTML = "";
 
@@ -57,8 +58,10 @@ class MedalIcon extends HTMLElement {
             return tmp.querySelector("svg");
         };
 
+        let baseIsImage = true;
         let base = D2.Image("", "/assets/medals/bases/" + iconData.colour + ".png", "base");
         if(this.fancy) {
+            baseIsImage = false;
             base = parse(iconData.base.svg);
         }
         const icon = parse(iconData.svg);
@@ -89,7 +92,16 @@ class MedalIcon extends HTMLElement {
             this.appendChild(iconWrapper);
         }
 
-        this.dispatchEvent(new Event("load"));
+        if (!baseIsImage) {
+            this.dispatchEvent(new Event("load"));
+        } else {
+            if (base.complete) {
+                this.dispatchEvent(new Event("load"));
+            } else {
+                base.addEventListener("load", () => this.dispatchEvent(new Event("load")), { once: true });
+                base.addEventListener("error", () => this.dispatchEvent(new Event("load")), { once: true });
+            }
+        }
     }
 
     getColour() {

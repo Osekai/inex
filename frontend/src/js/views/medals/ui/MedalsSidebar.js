@@ -4,6 +4,7 @@ import {MedalData} from "../MedalData";
 import {SetMedal} from "../../medals";
 import {GamemodeToName} from "../../../utils/osu/gamemode";
 import {GetSetting, OnChangeSetting} from "../../../utils/usersettings";
+import {D2} from "../../../utils/d2";
 
 String.prototype.includes_nl = function (text) {
     return this.toLowerCase().includes(text.toLowerCase());
@@ -124,7 +125,6 @@ export class MedalsSidebar {
                         for (let mod of mods) {
                             if (!attrValue.includes(mod.toLowerCase())) {
                                 show = false;
-                                console.log("matching", mod, "to", attrValue, "fail");
                                 break; // Exit the loop early if any mod fails
                             }
                         }
@@ -195,6 +195,9 @@ export class MedalsSidebar {
 
             if (medal.Obtained) {
                 medalButton.classList.add("obtained");
+                medalButton.appendChild(D2.Div("obtained-badge", () => {
+                    D2.LucideIcon("check");
+                }))
             }
 
 

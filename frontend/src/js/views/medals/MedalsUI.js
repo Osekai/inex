@@ -60,10 +60,9 @@ export class MedalsUI {
 
         var outer = D2.Div("beatmap",  () => {
             let medaldata = MedalUtils.GetCurrentMedal()
-            console.log("hi", medaldata);
             if(outdated && medaldata.Is_Restricted == 0) {
                 // if it's restricted that means that medal can only work on *specific* beatmaps, no matter how old the submission lol
-                console.log("old lol");
+
                 D2.Div("outdated", () => {
                     D2.Icon("alert-triangle", "warning");
                     D2.Text("p", "This beatmap was submitted " + timeAgo.format(submitted) + ". It may not work anymore!")
@@ -117,7 +116,6 @@ export class MedalsUI {
                 try {
                     if (beatmap.User !== null && beatmap.User.Username !== "")
                         D2.DivLink(`https://osu.ppy.sh/u/${beatmap.User.User_ID}`, "uploader", () => {
-                            console.log(beatmap);
                             D2.Image("img", "https://a.ppy.sh/" + beatmap.User.User_ID);
                             D2.Div("", () => {
 
@@ -255,8 +253,6 @@ export class MedalsUI {
         MedalsUI.extra_AdoptionGraph?.remove();
 
         let extraData = await DoRequest("GET", `/api/medals/${medal.Medal_ID}/extra`);
-        console.log("???", extraData);
-
         let adoptionGraphContainer = document.getElementById("medal_adoption_graph");
         adoptionGraphContainer.innerHTML = "";
         let adoptionData = [];
@@ -324,8 +320,7 @@ export class MedalsUI {
         img.setAttribute("src", medal.Link);
 
 
-        var img2 = document.getElementById("background-medal");
-        img2.setAttribute("src", medal.Link);
+
         //img.onload = () => {
         //    var rgb = getAverageRGB(img);
         //    var hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
@@ -344,9 +339,6 @@ export class MedalsUI {
         document.getElementById("medal_name").innerText = medal.Name;
         document.getElementById("medal_description").innerText = medal.Description;
         document.getElementById("medal_instructions").innerHTML = medal.Instructions; // instructions have <i> sometimes
-
-        console.log(medal);
-
 
         document.getElementById("medal_release_date_ago").innerText = timeAgo.format(new Date(medal.Date_Released));
         document.getElementById("medal_release_date").innerText = new Date(medal.Date_Released.replace(" 00:00:00", "")).toLocaleDateString();

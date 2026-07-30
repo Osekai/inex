@@ -21,6 +21,9 @@ if ($cur_medal == null) {
 <script>
     const medals_preload = <?= json_encode($medals) ?>;
 </script>
+<div class="medals__loader">
+    <?= LOADER ?>
+</div>
 <div class="medals__page home" id="medal-page">
     <div class="sidebar">
         <div class="sidebar-md-toolbar">
@@ -56,8 +59,6 @@ if ($cur_medal == null) {
         <div class="main-inner">
             <div class="bg-outer">
                 <div class="bg"></div>
-
-                <medal-icon id="background-medal" src="all-secret-jackpot" class="no-triangles"></medal-icon>
             </div>
             <div class="homepage" id="medal-home">
                 <div class="hp-navbar">

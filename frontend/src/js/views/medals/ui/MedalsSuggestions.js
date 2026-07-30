@@ -31,7 +31,6 @@ export class MedalsSuggestions {
         grid.innerHTML = "";
         for(let suggestion of suggestions.content) {
             let medal = await MedalData.GetMedalFromID(suggestion.Medal)
-            console.log(medal);
 
             let img, solution;
 

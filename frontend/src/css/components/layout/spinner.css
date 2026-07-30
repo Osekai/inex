@@ -1,4 +1,3 @@
-
 .spinner {
     --spinner-size: 6;
     --ring-size: 25;
@@ -7,11 +6,13 @@
     height: 0.6em;
     border-radius: 50%;
 }
+
 .loader-centered {
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 .loader-centered .spinner {
     --ring-size: 20;
     --spinner-size: 4;
@@ -24,46 +25,15 @@
     --ring-size: 20;
 }
 
-.spinner .line1,
-.spinner .line2,
-.spinner .line3 {
-    fill: none;
-    stroke: var(--col-sat-2);
-    stroke-width: var(--ring-size);
-    stroke-linecap: round;
-    transform-origin: 50% 50%;
-    transform: rotate3d(0, 0, 1, 0deg);
-    animation: 2156ms spinner-arc ease-in-out infinite, 1829ms spinner-rotate linear infinite;
+.spinner .spoke {
+    animation: spoke-fade 0.9s linear infinite;
 }
 
-.spinner .line1 {
-    opacity: 0.5;
-}
-
-.spinner .line2 {
-    stroke: var(--col-sat-2);
-    animation-delay: -0.4s;
-}
-
-.spinner .line3 {
-    display: none;
-}
-
-
-@keyframes spinner-rotate {
-    to {
-        transform: rotate3d(0, 0, 1, 360deg);
+@keyframes spoke-fade {
+    0% {
+        fill: color-mix(in srgb, var(--col-sat-1) 25%, transparent);
     }
-}
-
-@keyframes spinner-arc {
-    from {
-        stroke-dasharray: 0 150;
-        stroke-dashoffset: 0;
-    }
-
-    to {
-        stroke-dasharray: 40 150;
-        stroke-dashoffset: -140;
+    100% {
+        fill: color-mix(in srgb, var(--col-sat-2) 50%, white);
     }
 }

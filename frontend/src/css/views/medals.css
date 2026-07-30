@@ -63,6 +63,7 @@ body {
 }
 
 .medals__medal-button {
+    position: relative;
     aspect-ratio: 110/118;
     width: 60px;
     height: auto;
@@ -70,6 +71,30 @@ body {
 
     .icon, .base {
         transition: all 0.1s ease;
+    }
+
+
+    .obtained-badge {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        height: 22px;
+        width: 22px;
+        background: white;
+        border-radius: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 2px 2px 4px #0002;
+
+        svg {
+            stroke: var(--col-sat-1);
+            height: 13px;
+            margin-top: 2px;
+            margin-left: 1px;
+            width: auto;
+            stroke-width: 4px;
+        }
     }
 }
 .medals__medal-button.active {
@@ -417,7 +442,6 @@ body {
 .medals__page .main .panel {
     background: color-mix(in srgb, var(--col-l2) 40%, transparent);
     border: 1px solid #fff1;
-    backdrop-filter: blur(4px);
 }
 
 .medals__page .main-left {
@@ -950,6 +974,7 @@ body {
     opacity: 0.5;
     filter: grayscale(1);
 }
+
 .filter-obtained .medals__medal-button.obtained:hover {
     filter: grayscale(0.5);
 }
@@ -1016,4 +1041,26 @@ body {
 #medal_beatmaps .pack .main .left > div * {
     font-size: 17px;
     margin-right: 10px;
+}
+.medals__page {
+    transition: opacity 0.5s ease !important;
+}
+.medals__loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100% - var(--navbar-height));
+    width: 100%;
+    position: absolute;
+    transition: all 0.2s ease;
+    opacity: 0;
+}
+body:not(.medals-loaded) {
+    .medals__page {
+        opacity: 0;
+        pointer-events: none;
+    }
+    .medals__loader {
+        opacity: 1;
+    }
 }

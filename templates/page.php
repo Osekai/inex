@@ -145,6 +145,9 @@ use Database\Session; ?>
     <div class="navbar-trim">
 
     </div>
+    <div class="loader-trim" id="request-loader">
+
+    </div>
 </div>
 <div dropdown-mode="legacy" dropdown="apps-dropdown" class="apps-dropdown navbar-apps-dropdown">
     <?php foreach ($nav as $url => $item) { ?>

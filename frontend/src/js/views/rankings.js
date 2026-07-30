@@ -166,7 +166,7 @@ async function LoadPage(page = 0, fromPagination = true) {
     }
 
     const data = response.content.data;
-    console.log(response.content.max)
+
     if (data.length === 0) {
         tableArea.innerHTML = "";
         tableArea.appendChild(D2.Div("ranking-empty", () => {

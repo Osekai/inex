@@ -4,23 +4,20 @@ import {getSections, setSections} from "../utils/urlQuery";
 import {DoRequest} from "../utils/requests";
 import {MedalUtils} from "./medals/MedalUtils";
 import {MedalData} from "./medals/MedalData";
-import {AntheraIcon, Button, Div, Image, Input, LucideIcon, Text} from "../utils/dom";
+import {Button, Div, Input, LucideIcon, Text} from "../utils/dom";
 
 import "../../css/views/medals.css";
-import {Medal} from "./medals/Medal";
-import {Misc} from "../utils/misc";
 import {Overlay} from "../ui/overlay";
 import {PushToast} from "../ui/toasts";
 import {MedalsSidebar} from "./medals/ui/MedalsSidebar";
-import {Currency} from "lucide";
-import {GetSetting, OnChangeSetting} from "../utils/usersettings";
+import {OnChangeSetting} from "../utils/usersettings";
 import {Initialize} from "./medals/MedalsAdmin";
 import {PermissionChecker} from "../utils/permissionChecker";
 import {MedalsSuggestions} from "./medals/ui/MedalsSuggestions";
 
 export * from "./medals/SolutionElements.js";
 
-if(PermissionChecker("medal.edit", false)) {
+if (PermissionChecker("medal.edit", false)) {
     Initialize();
 }
 
@@ -28,6 +25,7 @@ function GetMedalFromUrl() {
 
     SetMedal(decodeURIComponent((getSections(`/medals/{medal}`))['medal']), false, true);
 }
+
 document.getElementById("back").addEventListener("click", () => {
     SetMedal("", true);
 });
@@ -37,7 +35,6 @@ window.addEventListener("popstate", () => {
 })
 
 
-
 /**
  * Sets medal based on input
  * @param inputMedal : string/number Medal name OR Medal ID (ID preferred)
@@ -45,23 +42,23 @@ window.addEventListener("popstate", () => {
  * @param scrollTo
  */
 export function SetMedal(inputMedal, setUrl = false, scrollTo = false) {
-    if(inputMedal == null || inputMedal === "" || typeof(inputMedal) == "undefined" || inputMedal === "undefined") {
+    if (inputMedal == null || inputMedal === "" || typeof (inputMedal) == "undefined" || inputMedal === "undefined") {
         document.getElementById("medal-home").classList.remove("_hidden");
         document.getElementById("medal-info").classList.add("_hidden");
 
 
         document.getElementById("medal-page").classList.add("home");
-        if((getSections(`/medals/{medal}`))['medal'] != null)
-        setSections("/medals/{medal}", {"medal": ""});
+        if ((getSections(`/medals/{medal}`))['medal'] != null)
+            setSections("/medals/{medal}", {"medal": ""});
 
-        if(document.querySelector(".medals__medal-button.active")) document.querySelector(".medals__medal-button.active").classList.remove("active");
+        if (document.querySelector(".medals__medal-button.active")) document.querySelector(".medals__medal-button.active").classList.remove("active");
 
         return;
     } else {
         document.getElementById("medal-page").classList.remove("home");
     }
     let isnumber = false;
-    if(parseInt(inputMedal) == inputMedal) {
+    if (parseInt(inputMedal) == inputMedal) {
         inputMedal = parseInt(inputMedal);
     }
     if (typeof (inputMedal) !== "number") {
@@ -76,23 +73,23 @@ export function SetMedal(inputMedal, setUrl = false, scrollTo = false) {
         setSections(`/medals/{medal}`, {"medal": currentMedal.Name})
     }
     MedalData.CurrentMedal = currentMedal.Medal_ID;
-    MedalsUI.LoadMedal(currentMedal,scrollTo);
-    for(var button of document.querySelectorAll("[medal-button-id]")) {
-        
-        if(button.getAttribute("medal-button-id") == currentMedal.Medal_ID) {
+    MedalsUI.LoadMedal(currentMedal, scrollTo);
+    for (var button of document.querySelectorAll("[medal-button-id]")) {
+
+        if (button.getAttribute("medal-button-id") == currentMedal.Medal_ID) {
             button.classList.add("active");
         } else {
             button.classList.remove("active");
         }
     }
-    if(isnumber) {
+    if (isnumber) {
         // update URL to name
-        console.log("hi");
         setSections(`/medals/{medal}`, {"medal": currentMedal.Name}, false)
     }
 }
 
 var sidebar = null;
+
 async function Load() {
     await MedalData.GetMedals();
     sidebar = new MedalsSidebar();
@@ -107,8 +104,8 @@ async function Load() {
     })
     GetMedalFromUrl();
 
-    
-    if(loggedIn) {
+
+    if (loggedIn) {
         document.getElementById("medal_beatmaps_add").addEventListener("click", () => {
             var panel = Div("div", "basic-modal basic-modal-input");
             var overlay = new Overlay(panel)
@@ -129,13 +126,19 @@ async function Load() {
                     "url": input.value,
                     "note": note.value
                 })
-                if(resp.success === true) {
+                if (resp.success === true) {
                     overlay.remove();
-                    PushToast({"theme": "success", content: "Added beatmap!"});
+                    PushToast({
+                        "theme": "success",
+                        content: "Added beatmap!"
+                    });
                     var grid = document.getElementById("medal_beatmaps");
                     grid.prepend(MedalsUI.AddBeatmap(resp.content, grid));
                 } else {
-                    PushToast({"theme": "error", content: resp.message});
+                    PushToast({
+                        "theme": "error",
+                        content: resp.message
+                    });
                 }
             })
             cancel.addEventListener("click", () => {
@@ -152,6 +155,31 @@ async function Load() {
     } else {
         document.getElementById("medal_beatmaps_add").classList.add("disabled");
     }
+
+
+
+    const medals = MedalData.GetMedalsSync();
+    const loadPromises = [];
+
+    for (let _medal in medals) {
+        let medal = medals[_medal];
+        let newIcon = document.createElement("medal-icon");
+        newIcon.setAttribute("fancy", "false");
+        newIcon.setAttribute("src", medal.Link);
+
+        // wait for this icon to finish loading (or fail) before counting it as done
+        const iconLoaded = new Promise((resolve) => {
+            newIcon.addEventListener("load", resolve, { once: true });
+            newIcon.addEventListener("error", resolve, { once: true });
+        });
+        loadPromises.push(iconLoaded);
+
+        document.body.appendChild(newIcon); // don't forget to actually add it somewhere
+    }
+
+    Promise.all(loadPromises).then(() => {
+        document.body.classList.add("medals-loaded");
+    });
 }
 
 Load().then(r => {
@@ -160,7 +188,7 @@ Load().then(r => {
 
 var filterbutton = document.getElementById("filter-button");
 filterbutton.addEventListener("click", () => {
-    if(MedalData.ObtainedFilterActive()) {
+    if (MedalData.ObtainedFilterActive()) {
         MedalData.SetObtainedFilterActive(false);
     } else {
         MedalData.SetObtainedFilterActive(true);

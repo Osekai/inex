@@ -54,9 +54,9 @@ class CommentsSection extends HTMLElement {
 
                 if (replyingTo != null) data.replyingTo = replyingTo.ID;
 
-
+                button.classList.add("loading");
                 const commentJson = await DoRequest("POST", `/api/comments/${this.section}/${this.ref}/send`, data);
-
+                button.classList.remove("loading");
 
                 const comment = this.createComment(commentJson["content"], !replyingTo);
                 if (replyingTo == null) {

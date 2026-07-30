@@ -197,7 +197,7 @@ function renderVisibleItems(newStyle = false) {
     }
 
     var {rowHeight, itemsPerRow} = getRowInfo();
-    console.log("row height " + rowHeight);
+
     if (rowHeight == null) {
         reprocessAfterwards = true;
         rowHeight = 20; // fix it in a sec
@@ -255,7 +255,6 @@ function renderVisibleItems(newStyle = false) {
         grid.appendChild(el);
     }
     if (reprocessAfterwards) {
-        console.log("again again!");
         document.querySelectorAll(".badges__badge img")[0].addEventListener("load", () => {
             renderVisibleItems();
         })
@@ -333,7 +332,6 @@ async function init() {
 
 var searchBar: HTMLInputElement = document.getElementById("badge_search");
 const search = debounce(() => {
-    console.log("gm");
     searchText = searchBar.value;
     renderVisibleItems();
     grid.classList.remove("searchbegin");
