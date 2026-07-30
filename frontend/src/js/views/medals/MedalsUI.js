@@ -18,6 +18,7 @@ import {SetMedal} from "../medals";
 import {D2} from "../../utils/d2";
 import {Graph} from "../../ui/graph";
 import TimeAgo from "javascript-time-ago";
+import {MedalUtils} from "./MedalUtils";
 
 
 export class MedalsUI {
@@ -57,8 +58,11 @@ export class MedalsUI {
             ], new ModalIcon("alert-triangle", "#ff623e"));
         };
 
-        var outer = D2.Div("beatmap", () => {
-            if(outdated) {
+        var outer = D2.Div("beatmap",  () => {
+            let medaldata = MedalUtils.GetCurrentMedal()
+            console.log("hi", medaldata);
+            if(outdated && medaldata.Is_Restricted == 0) {
+                // if it's restricted that means that medal can only work on *specific* beatmaps, no matter how old the submission lol
                 console.log("old lol");
                 D2.Div("outdated", () => {
                     D2.Icon("alert-triangle", "warning");
