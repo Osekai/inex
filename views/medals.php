@@ -167,7 +167,7 @@ if ($cur_medal == null) {
                 <div class="main-right">
                     <div class="panel">
                         <div class="panel-header">
-                            <h1>Extra Info</h1>ext
+                            <h1>Extra Info</h1>
                         </div>
                         <div class="divider"></div>
                         <div class="medal__extra-info col-reset">
