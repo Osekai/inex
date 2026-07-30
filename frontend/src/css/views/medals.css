@@ -852,6 +852,19 @@ body {
     height: 18px;
     width: 18px;
 }
+
+.medal__info-toolbar {
+    position: sticky;
+    background: var(--col-l2);
+    margin-left: -20px;
+    margin-top: -20px;
+    width: calc(100% + 40px);
+    top: 0;
+    left: 0;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    z-index: 92;
+}
 .medal__info-upper {
     display: flex;
     align-items: center;

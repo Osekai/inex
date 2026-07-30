@@ -106,10 +106,10 @@ if ($cur_medal == null) {
                 </div>
             </div>
             <div class="scrollable _hidden" id="medal-info">
+                <div class="mobile medal__info-toolbar">
+                    <button id="back" class="button pill-button"><i data-lucide="chevron-left"></i> Back</button>
+                </div>
                 <div class="main-left">
-                    <div class="mobile medal__info-toolbar">
-                        <button id="back" class="button pill-button"><i data-lucide="chevron-left"></i> Back</button>
-                    </div>
                     <div class="panel medal__info">
                         <div class="medal__info-upper" bug="medals/info/info">
                             <medal-icon id="medal_image" src="all-secret-jackpot"></medal-icon>
