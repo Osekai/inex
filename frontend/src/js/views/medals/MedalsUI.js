@@ -340,6 +340,12 @@ export class MedalsUI {
         document.getElementById("medal_description").innerText = medal.Description;
         document.getElementById("medal_instructions").innerHTML = medal.Instructions; // instructions have <i> sometimes
 
+        if(medal.Obtained) {
+            document.getElementById("medal_obtained").classList.remove("hidden");
+        } else {
+            document.getElementById("medal_obtained").classList.add("hidden");
+        }
+
         document.getElementById("medal_release_date_ago").innerText = timeAgo.format(new Date(medal.Date_Released));
         document.getElementById("medal_release_date").innerText = new Date(medal.Date_Released.replace(" 00:00:00", "")).toLocaleDateString();
         document.getElementById("medal_first_achieved_date").innerText = new Date(medal.First_Achieved_Date).toLocaleString();
@@ -348,7 +354,6 @@ export class MedalsUI {
         document.getElementById("medal_first_achieved_by_link").href = "https://osu.ppy.sh/u/" + medal.First_Achieved_User_ID;
 
         if (medal.Solution !== null) {
-
             document.getElementById("medal_solution").innerHTML = marked.parse(medal.Solution);
         } else {
             document.getElementById("medal_solution").innerHTML = "Unknown";
