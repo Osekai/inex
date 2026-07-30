@@ -90,8 +90,6 @@ body {
         svg {
             stroke: var(--col-sat-1);
             height: 13px;
-            margin-top: 2px;
-            margin-left: 1px;
             width: auto;
             stroke-width: 4px;
         }
@@ -683,7 +681,22 @@ body {
         &:has(*.header) {
             padding: 0px;
             .header, .inner {
-                padding: 14px;
+                padding: 12px 14px;
+                transition: all 0.1s ease;
+                max-height: 400px;
+                overflow-y: auto;
+                overflow-x: hidden;
+
+                button {
+                    margin-left: auto;
+                    padding: 5px 10px;
+                    border-radius: 100px;
+                    background: var(--col-l5);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                }
             }
             .header {
                 background: color-mix(in srgb, var(--col-l4) 50%, transparent);
@@ -700,6 +713,62 @@ body {
                     width: 100%;
                     border-radius: 0px;
                     background: transparent;
+                }
+            }
+
+            &.collapsed {
+                .inner {
+                    max-height: 0px;
+                    padding-top: 0px;
+                    padding-bottom: 0px;
+                }
+                .header button svg {
+                    transform: rotate(180deg);
+                }
+            }
+        }
+
+        .extrainfo-playerlist {
+            padding: 0px !important;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0;
+            >.info {
+                padding: 14px;
+                background: var(--col-l1);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+            }
+            >.list {
+                a {
+                    color: inherit;
+                    padding: 8px 14px;
+                    border-bottom: 1px solid var(--col-l5);
+                    display: flex;
+                    align-items: center;
+
+                    img {
+                        height: 32px;
+                        margin-right: 12px;
+                    }
+                    >div {
+                        flex: 1;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+
+                        p {
+                            text-align: right;
+                        }
+                    }
+                }
+                .button {
+                    margin-left: 14px;
+                    margin-top: 5px;
+                    margin-bottom: 14px;
                 }
             }
         }

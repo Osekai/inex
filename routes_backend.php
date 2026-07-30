@@ -148,7 +148,9 @@ $router->all("/api/medals/{id}/save", function ($id) {
 $router->all("/api/medals/{id}/extra", function ($id) {
     echo \Data\Medals::GetExtraData($id)->ReturnJson();
 });
-
+$router->all("/api/medals/{id}/extra/owners", function ($id) {
+    echo \Data\Medals::GetMedalOwners($id, $_REQUEST['page'])->ReturnJson();
+});
 /// =====================
 /// Medals Beatmaps
 /// =====================

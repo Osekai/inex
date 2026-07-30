@@ -13,12 +13,13 @@ import {reportOverlay} from "../../ui/reportOverlay";
 import {LoaderOverlay} from "../../ui/loader-overlay";
 import {PermissionChecker} from "../../utils/permissionChecker";
 import {CenteredLoader} from "../../utils/loaderUtils";
-import {timeAgo} from "../../utils/timeago";
+import {timeAgo, timeAgoLarge} from "../../utils/timeago";
 import {SetMedal} from "../medals";
 import {D2} from "../../utils/d2";
 import {Graph} from "../../ui/graph";
 import TimeAgo from "javascript-time-ago";
 import {MedalUtils} from "./MedalUtils";
+import {GetSetting, SetSettings} from "../../utils/usersettings";
 
 
 export class MedalsUI {
@@ -249,7 +250,39 @@ export class MedalsUI {
         }
     }
 
+
+    static extraPrepared = false;
+    static async PrepareExtra() {
+        if (MedalsUI.extraPrepared) return;
+        MedalsUI.extraPrepared = true;
+
+        let state = GetSetting("medals-extra-state", {}, true);
+
+        for(let el of document.querySelectorAll("[extra-info-panel]")) {
+            let key = el.getAttribute("extra-info-panel");
+
+            let button = el.querySelector("[selector='collapse']")
+            button.addEventListener("click", async () => {
+                el.classList.toggle("collapsed");
+                state[key] = el.classList.contains("collapsed");
+                await SetSettings("medals-extra-state", state, true);
+            })
+
+            let data = state[key];
+            if (typeof(data) !== "undefined") {
+                console.log("?", data);
+                if(data === true) {
+                    el.classList.add("collapsed");
+                } else {
+                    el.classList.remove("collapsed");
+                }
+            }
+        }
+
+        await SetSettings("medals-extra-state", state, true);
+    }
     static async LoadExtra(medal: Medal) {
+        await MedalsUI.PrepareExtra();
         MedalsUI.extra_AdoptionGraph?.remove();
 
         let extraData = await DoRequest("GET", `/api/medals/${medal.Medal_ID}/extra`);
@@ -278,6 +311,54 @@ export class MedalsUI {
         MedalsUI.extra_AdoptionGraph.load(adoptionData);
 
         document.getElementById("medal_adoption_users").innerText = medal.Count_Achieved_By;
+
+
+        document.getElementById("medal_users_real_total").innerText = maxAdoption;
+        document.getElementById("medal_users_osu_total").innerText = medal.Count_Achieved_By;
+
+        let page = 1;
+        let list = document.getElementById("medal_users_list");
+        list.innerHTML = "";
+
+
+        function ownerPanel(owner) {
+            let panel = D2.DivLink("https://osu.ppy.sh/u/" + owner.User_ID, "medal-owner", () => {
+                D2.Image("img", "https://a.ppy.sh/" + owner.User_ID);
+                D2.Div("info", () => {
+                    D2.StyledText("h3", owner.Name);
+
+                    let achievedDate = new Date(UTCify(owner.Achieved_At));
+
+                    let date = D2.Text("p", achievedDate.toLocaleDateString("en-GB", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric"
+                    }));
+                    date.setAttribute("tooltip", "Achieved at " + new Date(UTCify(owner.Achieved_At)).toLocaleString());
+                })
+            })
+            return panel;
+        }
+        for(let owner of extraData.content.Owners) {
+            let panel = ownerPanel(owner);
+            list.appendChild(panel);
+        }
+
+        let loadMore = D2.Button("Load More", "cta");
+        loadMore.addEventListener("click", async () => {
+            loadMore.classList.add("loading");
+            let more = await DoRequest("POST", `/api/medals/${medal.Medal_ID}/extra/owners`, {
+                "page": page
+            });
+            page++;
+            for(let owner of more.content) {
+                let panel = ownerPanel(owner);
+                list.appendChild(panel);
+            }
+            loadMore.classList.remove("loading");
+            list.appendChild(loadMore);
+        })
+        list.appendChild(loadMore);
     }
 
     static CheckObtainedFilter() {

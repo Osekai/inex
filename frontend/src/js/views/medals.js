@@ -158,6 +158,8 @@ async function Load() {
 
 
 
+
+
     const medals = MedalData.GetMedalsSync();
     const loadPromises = [];
 

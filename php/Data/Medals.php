@@ -338,6 +338,18 @@ class Medals
         return new Response(true, "Success", $readableMedalScores);
     }
 
+
+    public static function GetMedalOwners($id, $page = 0, $limit = 100) {
+        $offset = $page * $limit;
+        $owners = Connection::execSelect("
+        SELECT * FROM Rankings_Users_Medals 
+        LEFT JOIN Merged_Users ON Merged_Users.User_ID = Rankings_Users_Medals.User_ID
+        WHERE Rankings_Users_Medals.Medal_ID = ?
+        ORDER BY Rankings_Users_Medals.Achieved_At
+        LIMIT ?, ?
+        ", "iii", [$id, $offset, $limit]);
+        return new Response(true, "Success", $owners);
+    }
     public static function GetExtraData($id)
     {
         $adoption_graph = Connection::execSelect("SELECT
@@ -353,10 +365,15 @@ ORDER BY Date ASC;", "i", [$id]);
             $cumulative += $row['Users_Earned'];
             $row['Total'] = $cumulative;
         }
+
+        $ownersFirstPage = Medals::GetMedalOwners($id)->content;
+
         return new Response(true, "Success", [
             "Graphs" => [
                 "Adoption" => $adoption_graph
-            ]
+            ],
+            "Owners" => $ownersFirstPage,
+
         ]);
     }
 }

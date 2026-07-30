@@ -35,7 +35,8 @@ if ($cur_medal == null) {
             <?php
             if (\Database\Session::LoggedIn()) {
                 ?>
-                <button class="button square" tooltip="Mark Completed Medals" id="filter-button" bug="medals/search_filter"><i
+                <button class="button square" tooltip="Mark Completed Medals" id="filter-button"
+                        bug="medals/search_filter"><i
                             data-lucide="filter"></i>
                 </button>
             <?php } else { ?>
@@ -64,10 +65,10 @@ if ($cur_medal == null) {
                 <div class="hp-navbar">
                     <img src="/public/img/branding/app-fill/medals.svg">
                     <h1>Welcome back to Osekai Medals<?php
-                    if(\Database\Session::LoggedIn()) {
-                        echo ", " . \Database\Session::UserData()['username'];
-                    }
-                    ?>!
+                        if (\Database\Session::LoggedIn()) {
+                            echo ", " . \Database\Session::UserData()['username'];
+                        }
+                        ?>!
                     </h1>
                 </div>
                 <?php
@@ -78,23 +79,23 @@ if ($cur_medal == null) {
                         $new[] = $medal;
                     }
                 }
-                if($new !== []) {
+                if ($new !== []) {
                     ?>
-                <div class="homepage-panel" bug="medals/home/new">
-                    <h1>New Medals are here!</h1>
-                    <div class="medals-grid">
-                        <?php
-                        foreach ($new as $medal) {
-                            ?>
-                            <a class="medal-card" medal-button="<?= $medal['Medal_ID'] ?>">
-                                <img src="/assets/medals/web/<?= $medal['Link'] ?>">
-                                <h1><?= $medal['Name'] ?></h1>
-                                <h2><?= $medal['Description'] ?></h2>
-                            </a>
-                        <?php } ?>
+                    <div class="homepage-panel" bug="medals/home/new">
+                        <h1>New Medals are here!</h1>
+                        <div class="medals-grid">
+                            <?php
+                            foreach ($new as $medal) {
+                                ?>
+                                <a class="medal-card" medal-button="<?= $medal['Medal_ID'] ?>">
+                                    <img src="/assets/medals/web/<?= $medal['Link'] ?>">
+                                    <h1><?= $medal['Name'] ?></h1>
+                                    <h2><?= $medal['Description'] ?></h2>
+                                </a>
+                            <?php } ?>
+                        </div>
                     </div>
-                </div>
-                <?php
+                    <?php
                 }
                 ?>
                 <div class="homepage-panel" bug="medals/home/suggestions">
@@ -166,20 +167,28 @@ if ($cur_medal == null) {
                 <div class="main-right">
                     <div class="panel">
                         <div class="panel-header">
-                            <h1>Extra Info</h1>
+                            <h1>Extra Info</h1>ext
                         </div>
                         <div class="divider"></div>
                         <div class="medal__extra-info col-reset">
-                            <div bug="medals/info/stats/release">
-                                <h3>Release Date</h3>
-                                <div>
+                            <div bug="medals/info/stats/release" extra-info-panel="release">
+                                <div class="header">
+                                    <h3>Release Date</h3>
+                                    <button selector="collapse">
+                                        <i data-lucide="chevron-down"></i>
+                                    </button>
+                                </div>
+                                <div class="inner">
                                     <h1 id="medal_release_date"></h1>
                                     <h2 id="medal_release_date_ago"></h2>
                                 </div>
                             </div>
-                            <div class="fab" bug="medals/info/stats/first_achieved">
+                            <div class="fab" bug="medals/info/stats/first_achieved" extra-info-panel="first">
                                 <div class="header">
                                     <h3>First Achieved By</h3>
+                                    <button selector="collapse">
+                                        <i data-lucide="chevron-down"></i>
+                                    </button>
                                 </div>
                                 <a target="_blank" id="medal_first_achieved_by_link" class="inner">
                                     <img id="medal_first_achieved_by_pfp">
@@ -187,13 +196,39 @@ if ($cur_medal == null) {
                                     <h2 id="medal_first_achieved_date"></h2>
                                 </a>
                             </div>
-                            <div bug="medals/info/stats/adoption">
+                            <div bug="medals/info/stats/adoption" extra-info-panel="adoption">
                                 <div class="header">
                                     <h3>Medal Adoption</h3>
                                     <p><span id="medal_adoption_users"></span> users</p>
+                                    <button selector="collapse">
+                                        <i data-lucide="chevron-down"></i>
+                                    </button>
                                 </div>
                                 <div class="inner" id="medal_adoption_graph">
 
+                                </div>
+                            </div>
+                            <div bug="medals/info/stats/users" extra-info-panel="users" class="collapsed">
+                                <div class="header">
+                                    <h3>Medal Owners</h3>
+                                    <button selector="collapse">
+                                        <i data-lucide="chevron-down"></i>
+                                    </button>
+                                </div>
+                                <div class="inner extrainfo-playerlist">
+                                    <div class="info">
+                                        <p>
+                                            This list contains <span id="medal_users_real_total"></span> out of <span
+                                                    id="medal_users_osu_total"></span> users who has this medal.
+                                        </p>
+                                        <div tooltip="Osekai can only track the data of so many users without processing times going through the roof. Beacuse of this, we can't always show every user which has a medal.">
+
+                                            <i data-lucide="info"></i>
+                                        </div>
+                                    </div>
+                                    <div class="list" id="medal_users_list">
+
+                                    </div>
                                 </div>
                             </div>
                         </div>

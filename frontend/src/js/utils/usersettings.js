@@ -10,11 +10,9 @@ async function SetSettings(key, value, local = false) {
     if(typeof(userSettings) == "undefined" || userSettings == null) {
         userSettings = {};
     }
-
     if(local) {
-        var valueParsed = value;
-        if(IsJsonString(valueParsed)) valueParsed = JSON.parse(valueParsed);
-        localStorage.setItem(key, value);
+        // always store as JSON so GetSetting can safely JSON.parse it back
+        localStorage.setItem(key, JSON.stringify(value));
         if(typeof window.localSetAlerts[key] !== "undefined") {
             for(var item of window.localSetAlerts[key]) {
                 item(value);
