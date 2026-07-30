@@ -344,7 +344,7 @@ class Medals
         $owners = Connection::execSelect("
         SELECT * FROM Rankings_Users_Medals 
         LEFT JOIN Merged_Users ON Merged_Users.User_ID = Rankings_Users_Medals.User_ID
-        WHERE Rankings_Users_Medals.Medal_ID = ?
+        WHERE Rankings_Users_Medals.Medal_ID = ? AND Merged_Users.Name IS NOT NULL AND Merged_Users.Name != ''
         ORDER BY Rankings_Users_Medals.Achieved_At
         LIMIT ?, ?
         ", "iii", [$id, $offset, $limit]);
