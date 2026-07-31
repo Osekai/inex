@@ -117,7 +117,15 @@ class Setup
     }
 </style>
 <?php
-        if(!defined(DEV) || DEV) {
+        $isDev = true;
+        try {
+            if (DEV !== false) {
+                $isDev = false;
+            }
+        } catch (\Throwable $th) {
+            //
+        }
+        if($isDev) {
             echo "<div>";
             echo "<span class='eyebrow'>uh oh</span>";
             echo "<h1>$title</h1>";
