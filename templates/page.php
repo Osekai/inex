@@ -1,11 +1,11 @@
 <?php
 
 $nav = [
-        '/' => ['label' => 'home', 'icon' => '/public/img/branding/app/home.svg'],
-        '/medals' => ['label' => 'medals', 'icon' => '/public/img/branding/app/medals.svg'],
-        '/badges' => ['label' => 'badges', 'icon' => '/public/img/branding/app/badges.svg'],
-        '/rankings' => ['label' => 'rankings', 'icon' => '/public/img/branding/app/rankings.svg'],
-        'https://osekai.net/profiles' => ['label' => 'profiles', 'icon' => '/public/img/branding/app/profiles.svg'],
+    '/' => ['label' => 'home', 'icon' => '/public/img/branding/app/home.svg'],
+    '/medals' => ['label' => 'medals', 'icon' => '/public/img/branding/app/medals.svg'],
+    '/badges' => ['label' => 'badges', 'icon' => '/public/img/branding/app/badges.svg'],
+    '/rankings' => ['label' => 'rankings', 'icon' => '/public/img/branding/app/rankings.svg'],
+    'https://osekai.net/profiles' => ['label' => 'profiles', 'icon' => '/public/img/branding/app/profiles.svg'],
 ];
 
 $current = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') ?: '/';
@@ -19,13 +19,30 @@ foreach ($nav as $url => $item) {
 }
 
 
-$unreadNotifs=  0;
-if(\Database\Session::LoggedIn()) {
+$unreadNotifs = 0;
+if (\Database\Session::LoggedIn()) {
     $unreadNotifs = Data\Notifications\Utils::UnreadCount();
 }
 
 use Database\Session; ?>
 
+<div dropdown-mode="legacy" dropdown="settings-dropdown" class="settings-popup">
+    <div>
+        <div class="header">
+            <div>
+
+                <i data-lucide="cog" class="close-button"></i>
+                <h1>Settings</h1>
+            </div>
+            <button dropdown-button="settings-popup">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div id="settings-v2-outer" class="settings">
+
+        </div>
+    </div>
+</div>
 <div class="navbar" bug="navbar" bug-name="Navbar">
     <a class="skip-link" href='#main'>Skip to content</a>
     <div class="navbar-upper">
@@ -59,15 +76,18 @@ use Database\Session; ?>
                          class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
                         <h1 langkey="navbar/bugs.h1">Help us make Osekai better</h1>
                         <div id="bug-reporter-bug" langkey="navbar/bugs.bug" class="button">Report a bug</div>
-                        <div id="bug-reporter-feedback" langkey="navbar/bugs.feedback" class="button">Feature request / Other feedback</div>
+                        <div id="bug-reporter-feedback" langkey="navbar/bugs.feedback" class="button">Feature request /
+                            Other feedback
+                        </div>
                     </div>
                     <a class="navbar-right-button" tooltip="settings" dropdown-button="settings-dropdown">
                         <i data-lucide="cog"></i>
                     </a>
-                    <a class="navbar-right-button" tooltip="notifications" id="notif-button" dropdown-button="notifs-dropdown">
+                    <a class="navbar-right-button" tooltip="notifications" id="notif-button"
+                       dropdown-button="notifs-dropdown">
                         <i data-lucide="bell"></i>
                         <?php
-                        if($unreadNotifs > 0) {
+                        if ($unreadNotifs > 0) {
                             ?>
                             <div class="notification-pill" id="notif-pill">
                                 <?= $unreadNotifs ?>
@@ -77,7 +97,8 @@ use Database\Session; ?>
                         ?>
                     </a>
 
-                    <div dropdown-mode="legacy" dropdown="notifs-dropdown" id="notifications-overlay" class="notifications-overlay">
+                    <div dropdown-mode="legacy" dropdown="notifs-dropdown" id="notifications-overlay"
+                         class="notifications-overlay">
                         <h1>
                             <i data-lucide="bell"></i>
                             Notifications
@@ -87,14 +108,15 @@ use Database\Session; ?>
                     <?php
                 } else {
                     ?>
-                <a tooltip="report a bug" class="navbar-right-button" href="https://github.com/Osekai/inex/issues/new/">
-                    <i data-lucide="bug"></i>
-                </a>
-                <?php
+                    <a tooltip="report a bug" class="navbar-right-button"
+                       href="https://github.com/Osekai/inex/issues/new/">
+                        <i data-lucide="bug"></i>
+                    </a>
+                    <?php
                 }
                 ?>
 
-                <div dropdown-mode="legacy" dropdown="settings-dropdown"
+                <div dropdown-mode="legacy" dropdown="settings-dropdown-old"
                      class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
                     <h1 langkey="navbar/settings.h1">Settings</h1>
                     <label setting-item="medals.hideUnachievedMedals" class="toggle-text navbar-pfp-dropdown-item"
@@ -102,6 +124,13 @@ use Database\Session; ?>
                         <input type="checkbox" class="checkbox" id="checkbox">
                         <p langkey="navbar/settings.hideobtained.title">Completely hide obtained medals</p>
                         <small langkey="navbar/settings.hideobtained.flair">Only enabled when filter is on</small>
+                    </label>
+
+                    <label setting-item="global.profileLinks" class="navbar-pfp-dropdown-item">
+                        <p>Where to go when clicking on a profile?</p>
+                        <fieldset>
+
+                        </fieldset>
                     </label>
                 </div>
             </div>
@@ -115,7 +144,8 @@ use Database\Session; ?>
                     <?php
                     if (Session::LoggedIn()) {
                         ?>
-                        <a class="navbar-pfp-dropdown-header" href="https://osekai.net/profiles?user=<?= Session::UserData()['id'] ?>">
+                        <a class="navbar-pfp-dropdown-header"
+                           href="https://osekai.net/profiles?user=<?= Session::UserData()['id'] ?>">
                             <img src="<?= Database\Session::UserData()['avatar_url'] ?>"
                                  alt="Your Profile Picture">
                             <div>

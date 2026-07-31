@@ -34,6 +34,10 @@ fieldset {
     border-radius: var(--border-radius);
     overflow: hidden;
     margin: 8px 0px;
+    outline: 1px solid var(--col-l5);
+    &:hover {
+        outline: 1px solid var(--col-l6);
+    }
 }
 
 fieldset div {
@@ -43,6 +47,7 @@ fieldset div {
     pointer-events: none;
     display: flex;
     align-items: center;
+    min-width: 100px;
 }
 
 fieldset input {
@@ -55,6 +60,9 @@ fieldset input {
     width: 100%;
     height: 100%;
     pointer-events: all;
+    &:hover {
+        background-color: var(--col-l3);
+    }
 }
 fieldset label {
     position: relative;
@@ -72,8 +80,8 @@ fieldset label svg {
     width: 16px;
 }
 fieldset input:checked {
-    background-color: var(--col-l5);
+    background-color: var(--col-sat-1);
 }
 fieldset input:checked ~ label {
-    font-weight: 900;
+    font-weight: 500;
 }

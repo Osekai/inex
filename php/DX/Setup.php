@@ -117,7 +117,7 @@ class Setup
     }
 </style>
 <?php
-        if(DEV) {
+        if(!isset(DEV) || DEV) {
             echo "<div>";
             echo "<span class='eyebrow'>uh oh</span>";
             echo "<h1>$title</h1>";

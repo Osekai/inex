@@ -10,6 +10,7 @@ import {InitDropdowns} from "./js/ui/dropdown";
 import LoadMore from "./js/ui/notifications";
 import {LoadOTabs} from "./js/ui/otabs";
 import {D2} from "./js/utils/d2";
+import {Navbar, Settings} from "./js/layout/navbar";
 
 
 window.loader = createLazyLoadInstance();
@@ -102,7 +103,7 @@ if (loggedIn) {
 }
 
 
-for (var item of document.querySelectorAll("[setting-item]")) {
+/*for (var item of document.querySelectorAll("[setting-item]")) {
     var input = item.querySelector("input");
     var name = item.getAttribute("setting-item");
 
@@ -112,7 +113,7 @@ for (var item of document.querySelectorAll("[setting-item]")) {
             SetSettings(name, input.checked, true)
         })
     }
-}
+}*/
 window.debug = renderDebugTimings;
 
 let notifButton = document.getElementById("notif-button");
@@ -161,3 +162,4 @@ function InitializeAlerts() {
 }
 InitializeAlerts();
 
+new Navbar();
