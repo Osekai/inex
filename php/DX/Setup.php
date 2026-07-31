@@ -117,13 +117,7 @@ class Setup
     }
 </style>
 <?php
-        $isDev = false;
-        try {
-            $isDev = DEV;
-        } catch (\Throwable $th) {
-            // no config so we're probably dev
-            $isDev = true;
-        }
+        $isDev = defined('\DEV') ? constant('\DEV') : true;
         if($isDev) {
             echo "<div>";
             echo "<span class='eyebrow'>uh oh</span>";
