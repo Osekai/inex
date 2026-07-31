@@ -117,13 +117,12 @@ class Setup
     }
 </style>
 <?php
-        $isDev = true;
+        $isDev = false;
         try {
-            if (DEV !== false) {
-                $isDev = false;
-            }
+            $isDev = DEV;
         } catch (\Throwable $th) {
-            //
+            // no config so we're probably dev
+            $isDev = true;
         }
         if($isDev) {
             echo "<div>";
