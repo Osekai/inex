@@ -123,6 +123,17 @@ LEFT JOIN (
     WHERE u.ID = ?
 ", "i", [$id])[0];
 
+        foreach($medals as &$medal) {
+            $medal['Obtained'] = false;
+            $medal['Obtained_Date'] = null;
+            foreach($user['user_achievements'] as $achievement) {
+                if($achievement['achievement_id'] == $medal['Medal_ID']) {
+                    $medal['Obtained'] = true;
+                    $medal['Obtained_Date'] = $achievement['achieved_at'];
+                }
+            }
+        }
+
         return new Response(true, "ok", [
             "User" => $user,
             "Medals" => $medals,
@@ -140,7 +151,7 @@ LEFT JOIN (
                     "Ranks" => [
                         "Global" => $osekaiUser['Rank_Medals_Global'],
                         "Country" => $osekaiUser['Rank_Medals_Country'],
-                    ]
+                    ],
                 ],
                 "AllMode" => [
                     "Stdev" => [

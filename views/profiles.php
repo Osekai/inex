@@ -1,6 +1,7 @@
 <?php
 if (INSTANCE !== "dev") {
-    echo "<script>window.location.href = 'https://osekai.net/profiles?user=" . $args[0] . "';</script>";
+    // we're off for now
+    header("Location: https://osekai.net/profiles?user=" . $args[0]);
     exit;
 }
 ?>
@@ -94,6 +95,31 @@ if (INSTANCE !== "dev") {
                         </div>
                     </div>
                     <div id="medal-graph"></div>
+                </div>
+                <div class="medals-favourite">
+                    <a class="medal-item" pr-el="medal-rarest-link">
+                        <medal-icon pr-el="medal-rarest-icon"></medal-icon>
+                        <div>
+                            <p><i data-lucide="gem"></i> Rarest Medal</p>
+                            <h1 pr-el="medal-rarest-name"></h1>
+                            <div>
+                                <h4>Achieved <span pr-el="medal-rarest-achieved-date"></span></h4>
+                                /
+                                <h4><span pr-el="medal-rarest-percentage"></span>% of users have this medal!</h4>
+                            </div>
+                        </div>
+                    </a>
+                    <a class="medal-item" pr-el="medal-favourite-link">
+                        <medal-icon pr-el="medal-favourite-icon"></medal-icon>
+                        <div>
+                            <p><i data-lucide="star"></i> Favourite Medal</p>
+                            <h1 pr-el="medal-favourite-name"></h1>
+                        </div>
+                        <button pr-el="medal-favourite-button" class="button">
+                            <i data-lucide="star"></i>
+                            Change your Favourite Medal
+                        </button>
+                    </a>
                 </div>
             </div>
             <div otab-name="banners">

@@ -57,7 +57,7 @@ function showBadge(badge, el = null, updateSection = true) {
     var list = document.getElementById("badge-users-list");
     list.innerHTML = "";
     for(let user of badge.Users) {
-        var userObj = D2.CustomPlus("a", "badge__user", { "href": "https://osekai.net/profiles?user=" + user.User_ID },() => {
+        var userObj = D2.CustomPlus("a", "badge__user", { "href": "/profiles/" + user.User_ID },() => {
             D2.Image("", "https://a.ppy.sh/" + user.User_ID);
             D2.Text("h3", user.Username);
         })

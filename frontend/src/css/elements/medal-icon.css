@@ -2,6 +2,7 @@ medal-icon {
     aspect-ratio: 1/1;
     transform: scale(0.99);
     position: relative;
+    display: flex;
 
     .base-wrapper, .icon-wrapper {
         position: absolute;

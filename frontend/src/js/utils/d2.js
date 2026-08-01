@@ -333,4 +333,11 @@ export class D2 {
             D2.Text("p", "Loading...");
         })
     }
+
+    static MedalIcon(src) {
+        const el = document.createElement("medal-icon");
+        el.setAttribute("src", src);
+        if (D2._currentParent) D2._currentParent.appendChild(el);
+        return el;
+    }
 }

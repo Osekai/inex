@@ -1,11 +1,11 @@
 <?php
 
 $nav = [
-    '/' => ['label' => 'home', 'icon' => '/public/img/branding/app/home.svg'],
+    //'/' => ['label' => 'home', 'icon' => '/public/img/branding/app/home.svg'],
     '/medals' => ['label' => 'medals', 'icon' => '/public/img/branding/app/medals.svg'],
     '/badges' => ['label' => 'badges', 'icon' => '/public/img/branding/app/badges.svg'],
     '/rankings' => ['label' => 'rankings', 'icon' => '/public/img/branding/app/rankings.svg'],
-    'https://osekai.net/profiles' => ['label' => 'profiles', 'icon' => '/public/img/branding/app/profiles.svg'],
+    '/profiles' => ['label' => 'profiles', 'icon' => '/public/img/branding/app/profiles.svg'],
 ];
 
 $current = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') ?: '/';
@@ -145,7 +145,7 @@ use Database\Session; ?>
                     if (Session::LoggedIn()) {
                         ?>
                         <a class="navbar-pfp-dropdown-header"
-                           href="https://osekai.net/profiles?user=<?= Session::UserData()['id'] ?>">
+                           href="/profiles/<?= Session::UserData()['id'] ?>">
                             <img src="<?= Database\Session::UserData()['avatar_url'] ?>"
                                  alt="Your Profile Picture">
                             <div>
@@ -155,7 +155,7 @@ use Database\Session; ?>
                                 </h1>
                             </div>
                         </a>
-                        <a href="https://osekai.net/profiles?user=<?= Session::UserData()['id'] ?>"
+                        <a href="/profiles/<?= Session::UserData()['id'] ?>"
                            class="navbar-pfp-dropdown-item"><i data-lucide="user"></i>Your profile</a>
                         <a href="https://osu.ppy.sh/u/<?= Session::UserData()['id'] ?>"
                            class="navbar-pfp-dropdown-item"><i data-lucide="user"></i>Your profile on osu!</a>
