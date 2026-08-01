@@ -432,7 +432,7 @@ export const types = {
 
 export const columnTypes = {
     "user": (data) => {
-        return D2.CustomPlus("a", "coltype-user", {href: "https://osu.ppy.sh/u/" + data.content.ID}, () => {
+        return D2.CustomPlus("a", "coltype-user", {href: "/profiles/" + data.content.ID}, () => {
             D2.Image("pfp", "https://a.ppy.sh/" + data.content.ID);
             D2.Image("flag", "/assets/flags/1x1/" + data.content.Country.toLowerCase() + ".svg");
             D2.Text("p", data.content.Name);

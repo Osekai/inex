@@ -194,7 +194,7 @@ use Data\Home\Member;
             <?php
             foreach ($legacyDonators as $donator) {
                 ?>
-            <a class="donator-card" href="https://osu.ppy.sh/u/<?= $donator[0] ?>">
+            <a class="donator-card" href="/profiles/<?= $donator[0] ?>">
                 <img src="https://a.ppy.sh/<?= $donator[0] ?>">
                 <h1><?= $donator[1] ?></h1>
                 <p>€<?= $donator[2] ?></p>

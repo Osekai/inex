@@ -116,7 +116,7 @@ export class MedalsUI {
 
                 try {
                     if (beatmap.User !== null && beatmap.User.Username !== "")
-                        D2.DivLink(`https://osu.ppy.sh/u/${beatmap.User.User_ID}`, "uploader", () => {
+                        D2.DivLink(`/profiles/${beatmap.User.User_ID}`, "uploader", () => {
                             D2.Image("img", "https://a.ppy.sh/" + beatmap.User.User_ID);
                             D2.Div("", () => {
 
@@ -323,7 +323,7 @@ export class MedalsUI {
 
 
         function ownerPanel(owner) {
-            let panel = D2.DivLink("https://osu.ppy.sh/u/" + owner.User_ID, "medal-owner", () => {
+            let panel = D2.DivLink("/profiles/" + owner.User_ID, "medal-owner", () => {
                 D2.Image("img", "https://a.ppy.sh/" + owner.User_ID);
                 D2.Div("info", () => {
                     D2.StyledText("h3", owner.Name);
@@ -435,7 +435,7 @@ export class MedalsUI {
         document.getElementById("medal_first_achieved_date").innerText = new Date(medal.First_Achieved_Date).toLocaleString();
         document.getElementById("medal_first_achieved_by").innerText = medal.First_Achieved_Username;
         document.getElementById("medal_first_achieved_by_pfp").src = "https://a.ppy.sh/" + medal.First_Achieved_User_ID;
-        document.getElementById("medal_first_achieved_by_link").href = "https://osu.ppy.sh/u/" + medal.First_Achieved_User_ID;
+        document.getElementById("medal_first_achieved_by_link").href = "/profiles/" + medal.First_Achieved_User_ID;
 
         if (medal.Solution !== null) {
             document.getElementById("medal_solution").innerHTML = marked.parse(medal.Solution);
