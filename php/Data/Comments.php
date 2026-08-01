@@ -81,9 +81,10 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
         $query = "
 SELECT Common_Comments.*, 
 System_Users.Name AS Username,
+Rankings_Users.Count_Medals AS Medals,
 GROUP_CONCAT(DISTINCT System_Roles_Assignments.Role_ID SEPARATOR ',') AS Roles,
-    COUNT(DISTINCT Children.ID) as Replies,  
-    COUNT(DISTINCT Common_Votes.User_ID) AS VoteCount " .
+(SELECT COUNT(*) FROM Common_Comments AS Children WHERE Children.Parent_Comment_ID = Common_Comments.ID) AS Replies,
+(SELECT COUNT(*) FROM Common_Votes WHERE Common_Votes.Target_Table = 'Common_Comments' AND Common_Votes.Target_ID = Common_Comments.ID) AS VoteCount " .
             (Session::LoggedIn() ? ", 
     (SELECT COUNT(Common_Votes.User_ID) 
     FROM Common_Votes 
@@ -93,10 +94,8 @@ GROUP_CONCAT(DISTINCT System_Roles_Assignments.Role_ID SEPARATOR ',') AS Roles,
             " FROM Common_Comments 
             
 LEFT JOIN System_Roles_Assignments ON System_Roles_Assignments.User_ID = Common_Comments.User_ID
-LEFT JOIN Common_Comments AS Children ON Children.Parent_Comment_ID = Common_Comments.ID
 LEFT JOIN System_Users ON System_Users.User_ID = Common_Comments.User_ID
-LEFT JOIN Common_Votes ON Common_Votes.Target_Table = 'Common_Comments' 
-AND Common_Votes.Target_ID = Common_Comments.ID
+LEFT JOIN Rankings_Users ON Rankings_Users.ID = Common_Comments.User_ID
 WHERE Common_Comments.Target_ID = ? 
 AND Common_Comments.Deleted = 0
 AND Common_Comments.Target_Table = ? " .

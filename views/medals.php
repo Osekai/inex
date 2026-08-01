@@ -19,7 +19,7 @@ if ($cur_medal == null) {
 }
 ?>
 <script>
-    const medals_preload = <?= json_encode($medals) ?>;
+    const medals_preload = medals;
 </script>
 <div class="medals__loader">
     <?= LOADER ?>

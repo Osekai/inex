@@ -7,6 +7,7 @@ class Club {
         this.rank = rank;
         this.#idx = idx;
         this.cssClass = rank > 0 ? `col${rank}club` : "colnoclub";
+        this.icon = `/public/img/clubs/${rank}.png`;
     }
 
     Next() {
@@ -20,6 +21,8 @@ class Club {
     GetCount(existing) {
         return Math.ceil(existing * (this.rank / 100));
     }
+
+
 }
 
 export class Clubs2 {

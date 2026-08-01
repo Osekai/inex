@@ -10,7 +10,7 @@ export class Settings {
             "description": "Hide medals that you haven't achieved yet. Only enabled when local page filter is on.",
             "local": true,
         },
-        /*"global.profileLinks": {
+        "global.profileLinks": {
             "type": "option",
             "default": "osekai",
             "options": {
@@ -25,7 +25,7 @@ export class Settings {
             "description": "Where to go when visiting a player link",
             "optionType": "fieldset",
             "local": true,
-        }*/
+        }
     }
     inputs = {
         "boolean": (callback, defaultValue) => {

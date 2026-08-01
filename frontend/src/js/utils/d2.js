@@ -49,9 +49,10 @@ export class D2 {
         return el;
     }
 
-    static Image(className, src, children) {
+    static Image(className, src, children, alt = "") {
         const img = D2._createElement("img", className, children);
         img.src = src;
+        img.alt = alt;
         return img;
     }
     static LazyImage(className, src, baseSrc, children) {
@@ -85,7 +86,7 @@ export class D2 {
         return el;
     }
 
-    static Text(tag, text, className = "") {
+    static Text(tag, text = "", className = "") {
         const el = document.createElement(tag);
         el.innerText = text;
         if (className) el.className = className;

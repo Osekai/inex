@@ -173,4 +173,12 @@ LEFT JOIN (
             ]
         ]);
     }
+
+    public static function GetSmall($id)
+    {
+        $user = Connection::execSelect("SELECT * FROM Merged_Users 
+         LEFT JOIN Rankings_Users ON Merged_Users.User_ID = Rankings_Users.ID
+         WHERE User_ID = ?", "i", [$id])[0];
+        return new Response(true, "ok", $user);
+    }
 }

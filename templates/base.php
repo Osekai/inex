@@ -24,6 +24,7 @@ if (Site::$base_loaded == false) {
         const mods = <?= json_encode(\Database\Connection::execSimpleSelect("SELECT * FROM Common_Mods", "2mods", 9999)) ?>;
         const roles = <?= json_encode(\Database\Connection::execSimpleSelect("SELECT * FROM System_Roles_Roles", "roles", 9999)) ?>;
         const alerts = <?= json_encode(\Database\Connection::execSimpleSelect("SELECT * FROM System_Alerts WHERE Start_At <= now() AND End_At >= now()")) ?>;
+        const medals = <?= json_encode(\Data\Medals::GetAll()) ?>;
     </script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">

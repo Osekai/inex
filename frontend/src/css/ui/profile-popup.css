@@ -1,0 +1,98 @@
+@keyframes skeleton {
+    0% {
+        background-position: 0% 0;
+    }
+    100% {
+        background-position: 100% 0;
+    }
+}
+.profile-popup {
+    display: flex;
+    flex-direction: column;
+    color: inherit;
+    background: var(--col-l2);
+    padding: 4px;
+
+    max-width: 350px;
+    width: 50vw;
+    border-radius: var(--border-radius);
+    outline: 1px solid var(--col-l5);
+
+    &:hover {
+        outline: 1px solid var(--col-l6);
+        cursor: pointer;
+        background: var(--col-l3);
+    }
+    .profile-header {
+        display: flex;
+        align-items: center;
+        background: var(--col-l5);
+        padding: 8px;
+        border-radius: calc(var(--border-radius) - 4px);
+        margin-bottom: 4px;
+        .pfp {
+            height: 56px;
+            width: 56px;
+            border-radius: 32px;
+            margin-right: 8px;
+        }
+        .flag {
+            height: 24px;
+            margin-left: auto;
+            border-radius: 4px;
+            margin-right: 12px;
+        }
+    }
+    .profile-medals {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        border-radius: calc(var(--border-radius) - 4px);
+        background: linear-gradient(to right,
+            color-mix(in srgb, var(--maincol) 20%, transparent),
+        color-mix(in srgb, var(--maincol) 0%, transparent)
+        );
+        padding: 8px;
+        img {
+            height: 48px;
+        }
+        p {
+            font-size: 13px;
+            font-weight: 300;
+        }
+        h3 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+    }
+
+    &:not(.loaded) {
+        p, h3, h2, h1 {
+            width: 180px;
+            height: 15px;
+            border-radius: 9px;
+            margin: 2px 0px;
+        }
+        p, h3, h2, h1, img {
+            background: linear-gradient(to right, #fff2, #fff1, #fff2, #fff1, #fff2);
+            border-radius: 9px;
+            background-size: 200% 100%;
+            animation: skeleton 1.5s infinite linear;
+        }
+    }
+}
+.tippy-box:has(.profile-popup) {
+    background: transparent !important;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    .tippy-arrow {
+        display: none;
+    }
+    .tippy-content {
+        padding: 0px;
+        margin: 0px;
+    }
+}

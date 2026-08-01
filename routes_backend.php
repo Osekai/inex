@@ -250,9 +250,13 @@ $router->all("/api/rankings/add", function () {
 /// Profiles
 /// =====================
 
+$router->all("/api/profiles/quick/{id}", function ($id) {
+    echo \Data\Profiles::GetSmall($id)->ReturnJson();
+});
 $router->all("/api/profiles/{id}", function ($id) {
     echo \Data\Profiles::Get($id)->ReturnJson();
 });
+
 
 
 $router->all("/api/notifications", function () {

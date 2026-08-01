@@ -6,6 +6,7 @@
 @import url("./ui/toasts.css");
 @import url("./ui/tabs.css");
 @import url("./ui/role-badge.css");
+@import url("./ui/profile-popup.css");
 
 a {
     color: var(--col-text-l25);

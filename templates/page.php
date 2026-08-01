@@ -155,9 +155,9 @@ use Database\Session; ?>
                                 </h1>
                             </div>
                         </a>
-                        <a href="/profiles/<?= Session::UserData()['id'] ?>"
+                        <a no-url-replace href="/profiles/<?= Session::UserData()['id'] ?>"
                            class="navbar-pfp-dropdown-item"><i data-lucide="user"></i>Your profile</a>
-                        <a href="https://osu.ppy.sh/u/<?= Session::UserData()['id'] ?>"
+                        <a no-url-replace href="https://osu.ppy.sh/u/<?= Session::UserData()['id'] ?>"
                            class="navbar-pfp-dropdown-item"><i data-lucide="user"></i>Your profile on osu!</a>
                         <a href="/logout" class="navbar-pfp-dropdown-item"><i data-lucide="log-out"></i>Log Out</a>
                     <?php } else {

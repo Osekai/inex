@@ -13,6 +13,7 @@ import {Modal, ModalButton, ModalIcon} from "../ui/overlay";
 import {CommaSeparatedRolesToRoleArray} from "../utils/groups";
 import {makeLinksClickable} from "../utils/makeLinksClickable";
 import {CenteredLoader} from "../utils/loaderUtils";
+import {Clubs2} from "../utils/Clubs2";
 
 class CommentsSection extends HTMLElement {
 
@@ -110,13 +111,26 @@ class CommentsSection extends HTMLElement {
 
 
         var name = Div("div", "name");
-        name.appendChild(Image("https://a.ppy.sh/" + comment.User_ID));
+        var nameInner = Div("a", "name-inner");
+
+        nameInner.appendChild(Image("https://a.ppy.sh/" + comment.User_ID));
         var nameText = Text("h1", comment.Username);
         if (comment.Username == "") {
             nameText.innerHTML = "Unknown User";
             nameText.prepend(LucideIcon("circle-help"))
         }
-        name.appendChild(nameText);
+
+        console.log(comment);
+        let medalPercentage = comment.Medals / medals.content.length * 100;
+        let club = Clubs2.Get(medalPercentage)
+        let image = Image(club.icon, "club-icon");
+
+
+        nameInner.appendChild(nameText);
+        name.appendChild(nameInner);
+        nameInner.appendChild(image);
+
+        nameInner.href = "/profiles/" + comment.User_ID;
 
         if (comment.Roles != null) {
             var groupsDiv = Div("div", "groups");
