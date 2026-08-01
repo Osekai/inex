@@ -282,6 +282,7 @@ export class MedalsUI {
         await SetSettings("medals-extra-state", state, true);
     }
     static async LoadExtra(medal: Medal) {
+        document.getElementById("extra-loader").classList.remove("hidden");
         await MedalsUI.PrepareExtra();
         MedalsUI.extra_AdoptionGraph?.remove();
 
@@ -359,6 +360,8 @@ export class MedalsUI {
             list.appendChild(loadMore);
         })
         list.appendChild(loadMore);
+
+        document.getElementById("extra-loader").classList.add("hidden");
     }
 
     static CheckObtainedFilter() {

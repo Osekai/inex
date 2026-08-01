@@ -1,9 +1,9 @@
-@custom-media --mobile (max-width: 800px);
-@custom-media --desktop (min-width: 801px);
+@custom-media --mobile (max-width: 900px);
+@custom-media --desktop (min-width: 901px);
 
 
-@custom-media --mobile-tablet (max-width: 800px);
-@custom-media --desktop-tablet (min-width: 801px);
+@custom-media --mobile-tablet (max-width: 900px);
+@custom-media --desktop-tablet (min-width: 901px);
 
 @import url("./css/base/base.css");
 @import url("./css/components/components.css");

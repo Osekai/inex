@@ -34,7 +34,7 @@ use Database\Session; ?>
                 <i data-lucide="cog" class="close-button"></i>
                 <h1>Settings</h1>
             </div>
-            <button dropdown-button="settings-popup">
+            <button dropdown-button="settings-dropdown">
                 <i data-lucide="x"></i>
             </button>
         </div>

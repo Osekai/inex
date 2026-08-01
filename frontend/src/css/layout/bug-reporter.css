@@ -219,7 +219,7 @@
         margin-bottom: 8px;
     }
 }
-@media (max-width: 800px) {
+@media (max-width: 900px) {
     .overlay:has(.bug-report-modal) {
         flex-direction: column-reverse !important;
     }

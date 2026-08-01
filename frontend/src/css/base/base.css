@@ -56,7 +56,10 @@ body {
 ::-webkit-scrollbar-corner {
     background: #000;
 }
-
+body {
+    scrollbar-width: thin; /* auto | thin | none */
+    scrollbar-color: var(--col-l5) transparent; /* thumb track */
+}
 
 
 .alerts {

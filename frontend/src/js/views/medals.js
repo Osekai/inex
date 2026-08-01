@@ -86,6 +86,9 @@ export function SetMedal(inputMedal, setUrl = false, scrollTo = false) {
         // update URL to name
         setSections(`/medals/{medal}`, {"medal": currentMedal.Name}, false)
     }
+
+    // scroll to top
+    document.getElementById("main-col").scrollTop = 0;
 }
 
 var sidebar = null;

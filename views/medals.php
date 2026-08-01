@@ -166,6 +166,9 @@ if ($cur_medal == null) {
                 </div>
                 <div class="main-right">
                     <div class="panel">
+                        <div class="loader-overlay" id="extra-loader">
+                            <?= LOADER ?>
+                        </div>
                         <div class="panel-header">
                             <h1>Extra Info</h1>
                         </div>

@@ -29,7 +29,6 @@ class CommentsSection extends HTMLElement {
     lastCommentBar = null;
 
     commentBar(replyingTo = null, hideParents = null, callback = null) {
-
         // note! : please pass in as Comment object and not ID!
         const outer = new Div("div", "comment-input");
         outer.setAttribute("bug", "comments/input");
@@ -37,27 +36,22 @@ class CommentsSection extends HTMLElement {
             const input = document.createElement("textarea");
             input.rows = 1;
             outer.appendChild(input);
-
             const button = Button(LucideIcon("send"));
             outer.appendChild(button);
-
             input.classList.add("input");
             input.classList.add("lighter");
             input.setAttribute("placeholder", "Leave a " + (replyingTo == null ? "comment" : "reply"));
 
-
-            button.addEventListener("click", async () => {
+            // pulled out so both the button and ctrl+enter can trigger it
+            const send = async () => {
                 if (input.value == "") return;
                 const data = {
                     "content": input.value
                 };
-
                 if (replyingTo != null) data.replyingTo = replyingTo.ID;
-
                 button.classList.add("loading");
                 const commentJson = await DoRequest("POST", `/api/comments/${this.section}/${this.ref}/send`, data);
                 button.classList.remove("loading");
-
                 const comment = this.createComment(commentJson["content"], !replyingTo);
                 if (replyingTo == null) {
                     // we're toplevel, don't want to replace
@@ -71,10 +65,18 @@ class CommentsSection extends HTMLElement {
                 input.innerHTML = ""
                 input.innerText = ""
                 input.value = ""
-            })
+            };
+
+            button.addEventListener("click", send);
+
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    send();
+                }
+            });
 
             outer.hideParents = hideParents;
-
             if (replyingTo != null) {
                 if (this.lastCommentBar != null) {
                     this.lastCommentBar.hideParents();

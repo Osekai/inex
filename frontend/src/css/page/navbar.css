@@ -324,7 +324,7 @@ body {
 
 }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
     .navbar-pfp-dropdown {
         right: 15px;
         left: 15px;

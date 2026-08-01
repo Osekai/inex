@@ -79,7 +79,7 @@
     opacity: 0.5;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
     .footer-inner .footer-bottom .footer-left {
         flex-direction: column;
     }

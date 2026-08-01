@@ -37,3 +37,19 @@
         fill: color-mix(in srgb, var(--col-sat-2) 50%, white);
     }
 }
+
+.loader-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(2px);
+    transition: opacity 0.2s ease-in-out;
+    &.hidden {
+        position: absolute !important;
+    }
+}
