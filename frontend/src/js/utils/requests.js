@@ -349,3 +349,5 @@ export function BustCache(method, url, data = null) {
     // fire and forget is fine here
     openDB().then(db => deleteFromDB(db, cacheKey(method, url, data)));
 }
+
+hideLoader(); // prepare
