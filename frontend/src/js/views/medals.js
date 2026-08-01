@@ -168,6 +168,7 @@ async function Load() {
         let newIcon = document.createElement("medal-icon");
         newIcon.setAttribute("fancy", "false");
         newIcon.setAttribute("src", medal.Link);
+        newIcon.setAttribute("preload-remove", "yeah ok");
 
         // wait for this icon to finish loading (or fail) before counting it as done
         const iconLoaded = new Promise((resolve) => {
@@ -181,6 +182,9 @@ async function Load() {
 
     Promise.all(loadPromises).then(() => {
         document.body.classList.add("medals-loaded");
+        for (let a of document.querySelectorAll("[preload-remove]")) {
+            a.remove();
+        }
     });
 }
 

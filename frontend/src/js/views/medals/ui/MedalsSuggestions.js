@@ -44,7 +44,7 @@ export class MedalsSuggestions {
                         instructions.innerHTML = medal.Instructions;
                     })
                 })
-                solution = D2.Div("markdown medal__info-solution", () => {
+                solution = D2.Div("medal__info-solution", () => {
 
                 })
             })

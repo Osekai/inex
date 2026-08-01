@@ -62,6 +62,13 @@ body {
     margin-top: 20px;
 }
 
+.medals__medal-gamemodesection.hidden {
+    height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
 .medals__medal-button {
     position: relative;
     aspect-ratio: 110/118;
@@ -273,7 +280,7 @@ body {
 
                     z-index: 2;
                 }
-                >.markdown {
+                >.medal__info-solution {
                     margin-top: auto;
                 }
                 >.info {
