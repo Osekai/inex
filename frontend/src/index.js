@@ -79,12 +79,154 @@ import("lucide").then(({
 });
 
 
-let profileUrlList = [];
+class ProfileLink {
+    constructor(element, userId) {
+        this.element = element;
+        this.userId = userId;
+        this.deactivated = false;
 
+        this.els = {};
+        this.tippyInstance = null;
+        this.hrefObserver = null;
+        this.popupContent = null;
+
+        this._setup();
+    }
+
+
+    _update() {
+        if (this.deactivated) return;
+        let value = GetSetting("global.profileLinks", "osekai", true);
+        let newHref;
+        if (value === "osekai") {
+            newHref = "/profiles/" + this.userId;
+        } else if (value === "osu") {
+            newHref = "https://osu.ppy.sh/users/" + this.userId;
+        } else {
+            return;
+        }
+        this.lastWrittenHref = newHref;
+        this.element.setAttribute("href", newHref);
+    }
+    _setup() {
+        this._update();
+        OnChangeSetting("global.profileLinks", () => {
+            if (this.deactivated) return;
+            this._update();
+        });
+
+        this.element.target = "_blank";
+
+        if (!this.element.hasAttribute("no-url-popup")) {
+            this._buildPopupSkeleton();
+            this._setupTippy();
+        }
+
+        this.hrefObserver = new MutationObserver(() => this._onHrefMutated());
+        this.hrefObserver.observe(this.element, { attributes: true, attributeFilter: ["href"] });
+    }
+
+    _buildPopupSkeleton() {
+        let els = {};
+        let popupContent = D2.CustomPlus("a", "profile-popup", {}, () => {
+            els["header"] = D2.Div("profile-header", () => {
+                els["avatar"] = D2.Image("pfp");
+                els["name"] = D2.Text("h2");
+                els["flag"] = D2.Image("flag");
+            });
+            els["medals"] = D2.Div("profile-medals", () => {
+                D2.Div("", () => {
+                    els["medals-percentage"] = D2.Text("p");
+                    els["medals-clubname"] = D2.Text("h3");
+                });
+                els["medals-club"] = D2.Image("");
+            });
+        });
+
+        this.els = els;
+        this.popupContent = popupContent;
+
+        // point tippy at the new content node if it already exists
+        if (this.tippyInstance) {
+            this.tippyInstance.setContent(popupContent);
+        }
+    }
+
+    _setupTippy() {
+        this.tippyInstance = tippy(this.element, {
+            content: this.popupContent,
+            allowHTML: false,
+            interactive: true,
+            interactiveBorder: 10,
+            appendTo: () => document.body,
+            placement: "top",
+            delay: [100, 0],
+            onShow: (instance) => {
+                if (this.deactivated) return false;
+                this._loadPopupData();
+            },
+        });
+    }
+
+    async _loadPopupData() {
+        let userId = this.userId;
+        let data = await DoRequest("POST", "/api/profiles/quick/" + userId);
+        if (this.deactivated) return;
+        if (userId !== this.userId) return;
+
+        let profile = data.content;
+        let els = this.els;
+
+        this.popupContent.classList.add("loaded");
+        els["avatar"].src = "https://a.ppy.sh/" + profile.User_ID;
+        els["name"].innerText = profile.Name;
+        els["flag"].src = "/assets/flags/4x3/" + profile.Country_Code.toLowerCase() + ".svg";
+
+        let userMedals = profile.Count_Medals;
+        let percentage = ((userMedals / medals.content.length) * 100).toFixed(2);
+        els["medals-percentage"].innerText = `${percentage}% medals (${userMedals}/${medals.content.length})`;
+
+        let club = Clubs2.Get(percentage);
+        els["medals-club"].src = club.icon;
+        els["medals-clubname"].innerText = club.name;
+        els["medals"].classList.add(club.cssClass);
+
+        this.popupContent.href = "/profiles/" + userId;
+    }
+
+    _onHrefMutated() {
+        if (this.deactivated) return;
+        let current = this.element.getAttribute("href");
+        if (current == null) return;
+        if (current === this.lastWrittenHref) return;
+
+        let newUserId = current.split("/").pop();
+        if (!newUserId || newUserId === this.userId) return;
+
+        this.userId = newUserId;
+
+        // rebuild the popup from scratch so it's back to a clean skeleton
+        if (this.popupContent) {
+            this._buildPopupSkeleton();
+        }
+
+        this._update();
+    }
+
+    deactivate() {
+        if (this.deactivated) return;
+        this.deactivated = true;
+
+        if (this.hrefObserver) this.hrefObserver.disconnect();
+        if (this.tippyInstance) this.tippyInstance.destroy();
+    }
+}
+
+let profileUrlList = []; // array of ProfileLink instances
 
 function profileUrls() {
     for (let element of document.querySelectorAll("a")) {
-        if (profileUrlList.includes(element)) continue;
+        if (profileUrlList.some(p => p.element === element)) continue;
         if (element.hasAttribute("no-url-replace")) continue;
         let href = element.getAttribute("href");
         if (href == null) continue;
@@ -92,87 +234,7 @@ function profileUrls() {
             let split = href.split("/");
             if (split.length < 2) continue;
             let userId = split[2];
-            console.log("link goes to " + userId);
-            profileUrlList.push(element);
-            element.target = "_blank";
-            let update = () => {
-                let value = GetSetting("global.profileLinks", "osekai", true);
-                console.log(value);
-                if (value === "osekai") {
-                    element.setAttribute("href", "/profiles/" + userId);
-                } else if (value === "osu") {
-                    element.setAttribute("href", "https://osu.ppy.sh/users/" + userId);
-                }
-            }
-            OnChangeSetting("global.profileLinks", (value) => {
-                update();
-            })
-            update();
-
-            if(element.hasAttribute("no-url-popup")) {
-                continue;
-            }
-
-            // build the custom popup element
-            let els = {};
-            let popupContent = D2.CustomPlus("a", "profile-popup", {}, () => {
-                els["header"] = D2.Div("profile-header", () => {
-                    els["avatar"] = D2.Image("pfp");
-                    els["name"] = D2.Text("h2");
-                    els["flag"] = D2.Image("flag");
-                })
-                els["medals"] = D2.Div("profile-medals", () => {
-                    D2.Div("", () => {
-                        els["medals-percentage"] = D2.Text("p")
-                        els["medals-clubname"] = D2.Text("h3")
-                    })
-                    els["medals-club"] = D2.Image("")
-                })
-            })
-
-
-            tippy(element, {
-                content: popupContent,
-                allowHTML: false, // not needed since we're passing a DOM node
-                interactive: true, // lets the mouse move onto the popup without it closing
-                interactiveBorder: 10, // forgiving hover gap between the link and popup
-                appendTo: () => document.body, // avoids clipping/overflow issues from parent containers
-                placement: "top",
-                delay: [
-                    100,
-                    0
-                ], // slight delay before showing, instant hide
-                onShow(instance) {
-                    (async () => {
-                        //await new Promise(resolve => setTimeout(resolve, 2000));
-                        let data = await DoRequest("POST", "/api/profiles/quick/" + userId);
-                        let profile = data.content;
-
-                        popupContent.classList.add("loaded");
-
-                        els["avatar"].src = "https://a.ppy.sh/" + profile.User_ID;
-                        els["name"].innerText = profile.Name;
-                        els["flag"].src = "/assets/flags/4x3/" + profile.Country_Code.toLowerCase() + ".svg";
-
-                        let userMedals = profile.Count_Medals;
-                        let percentage = ((userMedals / medals.content.length) * 100).toFixed(2);
-                        els["medals-percentage"].innerText = `${percentage}% medals (${userMedals}/${medals.content.length})`;
-
-                        let club = Clubs2.Get(percentage);
-                        els["medals-club"].src = club.icon;
-                        els["medals-clubname"].innerText = club.name;
-
-                        els["medals"].classList.add(club.cssClass);
-
-                        popupContent.href = "/profiles/" + userId;
-                        popupContent.setAttribute("no-url-popup", "ok");
-                    })();
-                },
-            });
-
-            if(Math.random() < 0.1) {
-                //element._tippy.show();
-            }
+            profileUrlList.push(new ProfileLink(element, userId));
         }
     }
 }
