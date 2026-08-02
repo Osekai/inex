@@ -254,7 +254,7 @@ $router->all("/api/profiles/quick/{id}", function ($id) {
     echo \Data\Profiles::GetSmall($id)->ReturnJson();
 });
 $router->all("/api/profiles/{id}", function ($id) {
-    echo \Data\Profiles::Get($id)->ReturnJson();
+    echo \Data\Profiles::Get($id, $_REQUEST['gamemode'])->ReturnJson();
 });
 
 

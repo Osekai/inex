@@ -8,10 +8,13 @@ import {D2} from "../utils/d2";
 import {Clubs2} from "../utils/Clubs2";
 import {UTCify} from "../utils/time";
 import {Overlay} from "../ui/overlay";
+import {setSections} from "../utils/urlQuery";
 
 
 class Profiles {
 
+    profile = null;
+    gamemode = null;
     constructor() {
         // holds the parsed api response once Load() succeeds
         this.profile = null;
@@ -24,7 +27,8 @@ class Profiles {
     }
 
     async Load() {
-        let response = await DoRequest("POST", "/api/profiles/" + profileID)
+        let currentGamemode = gamemode;
+        let response = await DoRequest("POST", "/api/profiles/" + profileID + "/" + currentGamemode)
         console.log(response);
         if (response == null || response.success == false || typeof (response.content) == "undefined") {
             console.error(response.message);
@@ -36,15 +40,30 @@ class Profiles {
             ]);
             return;
         }
+        if(currentGamemode == "") {
+            currentGamemode = response.content.User.playmode;
+        }
         //renderDebugTimings(response.timings);
         this.profile = response.content;
         document.getElementById("json-test").innerHTML = JSON.stringify(this.profile.Statistics, null, 2);
+
+        // update url to match gamemode
+        if(gamemode == "")
+        setSections("/profiles/{profile}/{gamemode}", {
+            "profile": profileID,
+            "gamemode": currentGamemode
+        }, false)
+
+        this.gamemode = currentGamemode;
 
         this.Render_Header();
         this.Render_PanelAllMode();
         this.Render_PanelMedals();
         this.Tab_Medals();
         this.Render_MedalGraph();
+
+        document.getElementById("comments").loadComments(this.profile.User.id);
+
     }
 
     Render_Header() {
@@ -70,7 +89,7 @@ class Profiles {
         }
 
         for (let el of document.querySelectorAll("[pr-el=gamemode-icon]")) {
-            el.className = "icon-gamemode-" + profile.User.playmode;
+            el.className = "icon-gamemode-" + this.gamemode;
         }
         for (let el of document.querySelectorAll("[pr-el=gamemode-rank]")) {
             el.innerText = profile.User.statistics.global_rank;

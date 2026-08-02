@@ -54,9 +54,13 @@ $router->get('/badges/{badge}/', function ($badge) {
 $router->get('/profiles', function () {
     DrawViewWithTemplate("profiles_home", "page");
 });
-$router->get('/profiles/{user}/', function ($user) {
-    DrawViewWithTemplate("profiles", "page", $user);
+$router->get('/profiles/{user}/{gamemode}', function ($user, $gamemode) {
+    DrawViewWithTemplate("profiles", "page", $user, $gamemode);
 });
+$router->get('/profiles/{user}/', function ($user) {
+    DrawViewWithTemplate("profiles", "page", $user, "");
+});
+
 
 $router->get('/rankings', function () {
     DrawViewWithTemplate("rankings_home", "page");

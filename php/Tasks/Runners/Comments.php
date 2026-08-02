@@ -8,10 +8,15 @@ class Comments extends AbstractRunner
 {
     public function etirun($args): void
     {
+        echo "hi";
         $types = [
-            "medals" => [
-                "column" => "MedalID",
-                "target_table" => "Medals_Data"
+            //"medals" => [
+            //    "column" => "MedalID",
+            //    "target_table" => "Medals_Data"
+            //],
+            "profiles" => [
+                "column" => "ProfileID",
+                "target_table" => "Profiles_Data"
             ]
         ];
         $type = $types[$args[0]];
@@ -39,5 +44,6 @@ class Comments extends AbstractRunner
         $posts = $this->table('Common_Comments');
         $posts->insert($newComments)
             ->saveData();
+        echo "Inserted " . count($newComments) . " comments\n";
     }
 }

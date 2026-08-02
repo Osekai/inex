@@ -17,7 +17,7 @@ class Comments
     {
         if (!Session::LoggedIn()) return new Response(false, "logged out");
 
-        $valid_tables = ["Medals_Data", "Custom"];
+        $valid_tables = ["Medals_Data", "Profiles_Data", "Custom"];
         if (!in_array($table, $valid_tables)) return new Response(false, "invalid_table");
 
         if (\CheckTargetValidity::Check($table, $id) == null) return new Response(false, "invalid_id");
@@ -55,7 +55,7 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
 
     public static function Get(mixed $id, mixed $table, $parent = null, $single = null)
     {
-        $valid_tables = ["Medals_Data"];
+        $valid_tables = ["Medals_Data", "Profiles_Data"];
         if (!in_array($table, $valid_tables)) return new Response(false, "invalid_table");
 
         if (\CheckTargetValidity::Check($table, $id) == null) return new Response(false, "invalid_id");

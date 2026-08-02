@@ -6,7 +6,8 @@ if (INSTANCE !== "dev") {
 }
 ?>
 <script>
-    const profileID = <?= json_encode($args[0]) ?>
+    const profileID = <?= json_encode($args[0]) ?>;
+    const gamemode = <?= json_encode($args[1]) ?>;
 </script>
 
 <div class="header-img" id="profiles-header-img">
@@ -54,7 +55,40 @@ if (INSTANCE !== "dev") {
         </div>
         <div class="pages">
             <div otab-name="profile">
-                <p>profile</p>
+                <div class="left">
+                    <div class="panel">
+                        <h1>Info</h1>
+                        <p>Joined osu! <strong pr-el="stats-osu-join-date"></strong></p>
+                        <p>Joined Osekai <strong pr-el="stats-osekai-join-date"></strong></p>
+                        <h1>Contributions</h1>
+                        <p>
+                            <i data-lucide="message-circle"></i>
+                            <strong pr-el="stats-comments"></strong> comments
+                        </p>
+                        <h3><img src="/public/img/branding/app/medals.svg"> Medals</h3>
+                        <p>
+                            <i data-lucide="map"></i>
+                            <strong pr-el="stats-medals-beatmaps"></strong> beatmaps
+                        </p>
+                        <p>
+                            <i data-lucide="list-plus"></i>
+                            <strong pr-el="stats-medals-upvotes"></strong> beatmap upvotes
+                        </p>
+
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h1>Comments</h1>
+                            <div class="left sort-toggle" id="comments_dropdown">loading</div>
+                        </div>
+                        <div class="divider"></div>
+                        <comments-section dropdown="comments_dropdown" section="Profiles_Data" ref="334"
+                                          id="comments" pr-el="comments"></comments-section>
+                    </div>
+                </div>
+                <div class="right">
+
+                </div>
             </div>
             <div otab-name="medals" pr-el="medals-club-class">
                 <div class="medals-top-panel panel">

@@ -9,10 +9,10 @@ use Debug\Timings;
 
 class Profiles
 {
-    static function Get($id) {
+    static function Get($id, $gamemode = "") {
         $x = new Timings("profiles_fetch");
         $user = \Caching::Layer("profiles_user_fetch_" . $id, function() use ($id) {
-            return User::GetUser($id);
+            return User::GetUser($id, $gamemode);
         });
         $x->finish();
 
@@ -92,19 +92,21 @@ class Profiles
 
 
         $osekaiUser = Connection::execSelect("
-    SELECT 
-        u.*,
-        r.Rank_Medals_Global,
-        r.Rank_Medals_Country,
-        r.Rank_PP_Total_Global,
-        r.Rank_PP_Total_Country,
-        r.Rank_PP_Stdev_Global,
-        r.Rank_PP_Stdev_Country
-    FROM Rankings_Users u
+        SELECT
+    u.*,
+    r.Rank_Medals_Global,
+    r.Rank_Medals_Country,
+    r.Rank_PP_Total_Global,
+    r.Rank_PP_Total_Country,
+    r.Rank_PP_Stdev_Global,
+    r.Rank_PP_Stdev_Country,
+    COALESCE(s.Stats_Comment_Count, 0) AS Stats_Comment_Count,
+    COALESCE(s.Stats_Vote_Count, 0)    AS Stats_Vote_Count,
+    COALESCE(s.Stats_Beatmap_Count, 0) AS Stats_Beatmap_Count
+FROM Rankings_Users u
 LEFT JOIN (
     SELECT
         ru.ID,
-        ru.Country_Code,
         ROW_NUMBER() OVER (
             ORDER BY ru.Count_Medals DESC, md.Count_Achieved_By ASC
         ) AS Rank_Medals_Global,
@@ -112,16 +114,28 @@ LEFT JOIN (
             PARTITION BY ru.Country_Code
             ORDER BY ru.Count_Medals DESC, md.Count_Achieved_By ASC
         ) AS Rank_Medals_Country,
-        ROW_NUMBER() OVER (ORDER BY ru.PP_Total DESC)                           AS Rank_PP_Total_Global,
-        ROW_NUMBER() OVER (PARTITION BY ru.Country_Code ORDER BY ru.PP_Total DESC) AS Rank_PP_Total_Country,
-        ROW_NUMBER() OVER (ORDER BY ru.PP_Stdev DESC)                           AS Rank_PP_Stdev_Global,
-        ROW_NUMBER() OVER (PARTITION BY ru.Country_Code ORDER BY ru.PP_Stdev DESC) AS Rank_PP_Stdev_Country
+        ROW_NUMBER() OVER (ORDER BY ru.PP_Total DESC) AS Rank_PP_Total_Global,
+        ROW_NUMBER() OVER (
+            PARTITION BY ru.Country_Code ORDER BY ru.PP_Total DESC
+        ) AS Rank_PP_Total_Country,
+        ROW_NUMBER() OVER (ORDER BY ru.PP_Stdev DESC) AS Rank_PP_Stdev_Global,
+        ROW_NUMBER() OVER (
+            PARTITION BY ru.Country_Code ORDER BY ru.PP_Stdev DESC
+        ) AS Rank_PP_Stdev_Country
     FROM Rankings_Users ru
     LEFT JOIN Medals_Data md ON md.Medal_ID = ru.Rarest_Medal_ID
     WHERE ru.Is_Restricted = 0
 ) AS r ON r.ID = u.ID
-    WHERE u.ID = ?
-", "i", [$id])[0];
+LEFT JOIN (
+    SELECT
+        User_ID,
+        (SELECT COUNT(*) FROM Common_Comments WHERE Common_Comments.User_ID = x.User_ID)  AS Stats_Comment_Count,
+        (SELECT COUNT(*) FROM Common_Votes    WHERE Common_Votes.User_ID    = x.User_ID)  AS Stats_Vote_Count,
+        (SELECT COUNT(*) FROM Medals_Beatmaps WHERE Medals_Beatmaps.Beatmap_Submitted_User_ID = x.User_ID) AS Stats_Beatmap_Count
+    FROM (SELECT ? AS User_ID) x
+) AS s ON s.User_ID = u.ID
+WHERE u.ID = ?;
+", "ii", [$id, $id])[0];
 
         foreach($medals as &$medal) {
             $medal['Obtained'] = false;
@@ -137,6 +151,17 @@ LEFT JOIN (
         return new Response(true, "ok", [
             "User" => $user,
             "Medals" => $medals,
+            "Osekai" => [
+                "Statistics" => [
+                    "Global" => [
+                        "Comments" => $osekaiUser['Stats_Comment_Count'],
+                    ],
+                    "Medals" => [
+                        "Beatmaps" => $osekaiUser['Stats_Beatmap_Count'],
+                        "Votes" => $osekaiUser['Stats_Vote_Count'],
+                    ]
+                ]
+            ],
             "Graphs" => [
                 "MedalPercentageOverTime" => [
                     "Relative" => $graph_medalPercentageOverTimeRelative,
