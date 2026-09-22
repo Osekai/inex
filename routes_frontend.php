@@ -134,4 +134,6 @@ $router->get('/guidelines', function () {
 });
 
 
-
+$router->get('/scoretest', function () {
+    DrawViewWithTemplate("scoretester", "page");
+});
