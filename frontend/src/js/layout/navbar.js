@@ -6,8 +6,8 @@ export class Settings {
         "medals.hideUnachievedMedals": {
             "type": "boolean",
             "default": false,
-            "title": "Hide unachieved medals",
-            "description": "Hide medals that you haven't achieved yet. Only enabled when local page filter is on.",
+            "title": "Hide filtered medals",
+            "description": "Hide medals that you've already achieved. Only enabled when medals filter is on.",
             "local": true,
         },
         "global.profileLinks": {
