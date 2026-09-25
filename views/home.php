@@ -14,9 +14,7 @@ use Data\Home\Member;
     <div class="content">
         <div class="logo">
             <div id="logo-anim"></div>
-            <h1>INEX</h1>
         </div>
-        <p langkey="home/header.h1">The next generation of Osekai</p>
     </div>
 </div>
 
@@ -108,13 +106,13 @@ use Data\Home\Member;
     ];
     $staff = [
         new Member(18152711, "MegaMix_Craft", ""),
+        new Member(10238680, "chromb", ""),
         new Member(16487835, "ILuvSkins", "Snapshots Manager"),
         new Member(12453848, "glassive", "Community Manager"),
         (new Member(1699875, "Remyria", "Community Manager"))->SetActive(false),
     ];
 
     $moderators = [
-        new Member(10238680, "chromb", "Moderator"),
         new Member(7279762, "Coppertine", "Moderator"),
         new Member(13175102, "bentokage", "Moderator"),
         new Member(14889628, "Tomy", "Moderator"),

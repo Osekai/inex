@@ -43,8 +43,8 @@ anim.addEventListener("config_ready", () => {
     document.getElementById("home-welcome").classList.add("lottie-running");
     setTimeout(() => {
         document.getElementById("home-welcome").classList.add("lottie-done");
-    }, 700)
+    }, 200)
     setTimeout(() => {
         document.getElementById("home-welcome").classList.add("lottie-doner");
-    }, 2100)
+    }, 800)
 })
