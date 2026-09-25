@@ -70,6 +70,11 @@ use Database\Session; ?>
                 <?php
                 if (Session::LoggedIn()) {
                     ?>
+
+                    <a class="navbar-right-button" id="process-state-button" tooltip="process state"
+                       dropdown-button="process-dropdown">
+                        <div class="radial-progress"></div>
+                    </a>
                     <a dropdown-button="bugs" tooltip="suggestions / bugs"
                        class="navbar-right-button"><i data-lucide="bug"></i></a>
                     <div dropdown-mode="legacy" dropdown="bugs"
@@ -132,6 +137,10 @@ use Database\Session; ?>
 
                         </fieldset>
                     </label>
+                </div>
+                <div dropdown-mode="legacy" dropdown="process-dropdown"
+                     class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden" id="process-state-ui">
+
                 </div>
             </div>
             <div class="navbar-pfp-container">

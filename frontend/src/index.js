@@ -13,7 +13,7 @@ import {D2} from "./js/utils/d2";
 import {Navbar} from "./js/layout/navbar";
 import {DoRequest} from "./js/utils/requests";
 import {Clubs2} from "./js/utils/Clubs2";
-
+import {io} from "socket.io-client";
 
 window.loader = createLazyLoadInstance();
 
@@ -342,3 +342,74 @@ function InitializeAlerts() {
 InitializeAlerts();
 
 new Navbar();
+
+if (window.be.dev) {
+    let socket = io("http://localhost:35569", {});
+    socket.connect();
+    let loaders = [];
+
+    let errorOverlay = null;
+    socket.on("css_reload", () => {
+        if(errorOverlay) {
+            errorOverlay.remove();
+            errorOverlay = null;
+        }
+
+        let stylesheets = document.querySelectorAll("link[rel=stylesheet]");
+
+        stylesheets.forEach((oldLink) => {
+            let url = new URL(oldLink.href);
+            url.searchParams.set("v", Date.now()); // monotonic, and readable if you ever inspect it
+
+            let newLink = document.createElement("link");
+            newLink.rel = "stylesheet";
+            newLink.href = url.toString();
+
+            // swap only once the new stylesheet has actually loaded, so both
+            // are briefly present instead of a gap with neither
+            newLink.onload = () => oldLink.remove();
+            newLink.onerror = () => newLink.remove(); // compile error etc — keep the old one showing
+
+            oldLink.after(newLink);
+        });
+
+        for (let loader of loaders) {
+            loader.remove();
+        }
+        loaders = [];
+    });
+
+    socket.on("js_reload", () => {
+        console.log("js reload");
+        window.onbeforeunload = null;
+        location.reload();
+    })
+
+    socket.on("css_reloading", () => {
+        let lod = new LoaderOverlay("Fetching updates from server");
+        loaders.push(lod);
+        lod.overlay.overlay.style.maxHeight = "200px";
+        lod.overlay.overlay.style.bottom = "0";
+        lod.overlay.overlay.style.top = "auto";
+    });
+
+    socket.on("compile_error", (err) => {
+        if(errorOverlay) {
+            errorOverlay.remove();
+            errorOverlay = null;
+        }
+        let element = D2.CustomPlus("pre", "")
+        element.innerHTML = ansiConvert.toHtml(err);
+        element.style.background = "#1a1a1a";
+        element.style.padding = "12px";
+        element.style.whiteSpace = "pre-wrap";
+        element.style.fontFamily = "monospace";
+        element.style.maxWidth = "800px";
+
+        let ok = D2.Lumen.Button("ok", "", "", () => {
+            ok.remove();
+            errorOverlay = null;
+        })
+        errorOverlay = new Overlay(element);
+    })
+}

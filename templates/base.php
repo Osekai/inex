@@ -18,6 +18,7 @@ if (Site::$base_loaded == false) {
         const loaderSmall = `<?= LOADER_SMALL ?>`;
     </script>
     <script>
+        window.be = {};
         const pageName = '<?= $name ?>';
         var userSettings = <?= json_encode(Data\Settings::Get()) ?>;
         const loggedIn = <?= json_encode(Database\Session::LoggedIn()) ?>;
@@ -25,6 +26,9 @@ if (Site::$base_loaded == false) {
         const roles = <?= json_encode(\Database\Connection::execSimpleSelect("SELECT * FROM System_Roles_Roles", "roles", 9999)) ?>;
         const alerts = <?= json_encode(\Database\Connection::execSimpleSelect("SELECT * FROM System_Alerts WHERE Start_At <= now() AND End_At >= now()")) ?>;
         const medals = <?= json_encode(\Data\Medals::GetAll()) ?>;
+
+        window.be.SCRIPTS_API_URL = '<?= SCRIPTS_API_URL ?>';
+        window.be.dev = <?= INSTANCE == "dev" ? "true" : "false" ?>
     </script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">

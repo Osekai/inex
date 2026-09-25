@@ -12,7 +12,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "generate-icon-fonts": "npx fantasticon --descent 33 ./icons -o ./src/fonts/iconfont",
-    "dev": "webpack --mode development --watch"
+    "dev": "node scripts/dev.js"
   },
   "keywords": [],
   "author": "",
@@ -60,6 +60,8 @@
     "popper.js": "^1.16.1",
     "postcss-loader": "^8.1.1",
     "simple-icons": "^11.11.0",
+    "socket.io": "^4.8.4",
+    "socket.io-client": "^4.8.4",
     "thememirror": "^2.0.1",
     "three": "^0.162.0",
     "tippy": "^0.0.0",
