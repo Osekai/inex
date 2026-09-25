@@ -82,6 +82,104 @@ body {
     justify-content: center;
     border-radius: 90px;
     margin-right: 8px;
+
+    &#process-state-button {
+        >div {
+            --size: 22px;
+            --thickness: 3px;
+            width: var(--size);
+            height: var(--size);
+            border-radius: 50%;
+            background: conic-gradient(var(--col-sat-3), var(--progress), color-mix(in srgb, var(--col-sat-3) 25%, transparent) 0);
+            /* cut out the middle so it's a ring, not a pie */
+            mask: radial-gradient(farthest-side, transparent calc(100% - var(--thickness)), #000 calc(100% - var(--thickness) + 1px));
+        }
+    }
+}
+
+#process-state-ui {
+    width: 100%;
+    max-width: 500px !important;
+    outline: 1px solid var(--col-l5);
+    overflow: hidden;
+    .process-state-user {
+        display: flex;
+        align-items: center;
+        padding: 10px 18px;
+        gap: 8px;
+        background: var(--col-d1);
+        img {
+            height: 32px;
+            border-radius: 90px;
+        }
+        h1 {
+            font-size: 20px;
+        }
+        small {
+            font-size: 18px;
+            opacity: 0.6;
+            margin-left: auto;
+        }
+    }
+    .process-state-next {
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        .process-state-ring {
+            --size: 80px;
+            --thickness: 6px;
+            width: var(--size);
+            height: var(--size);
+            min-width: var(--size);
+            min-height: var(--size);
+            border-radius: 50%;
+            background: conic-gradient(var(--col-sat-3), var(--progress), color-mix(in srgb, var(--col-sat-3) 25%, transparent) 0);
+            /* cut out the middle so it's a ring, not a pie */
+            mask: radial-gradient(farthest-side, transparent calc(100% - var(--thickness)), #000 calc(100% - var(--thickness) + 1px));
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--col-text-l1);
+        }
+        h2 {
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--col-text-l2);
+            span {
+                font-weight: 900;
+                color: var(--col-text-l1);
+            }
+        }
+        small {
+            color: var(--col-text-l3);
+            font-size: 14px;
+            opacity: 0.8;
+            margin-left: auto;
+            span {
+                font-weight: 400;
+                color: var(--col-text-l2);
+            }
+        }
+    }
+    .process-state-outer>.info {
+        padding: 10px 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--col-l3);
+        svg {
+            height: 48px;
+            width: auto;
+            stroke: var(--col-text-l2);
+        }
+        p {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--col-text-l2);
+        }
+    }
 }
 
 .navbar-right-button:hover {

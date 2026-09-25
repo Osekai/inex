@@ -1,8 +1,35 @@
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
+import { round } from 'javascript-time-ago/steps'
 
 TimeAgo.addDefaultLocale(en)
+
+// run fn over a label that's either a string or a { one, other, ... } object
+const mapLabel = (labels, fn) =>
+    typeof labels === 'string'
+        ? fn(labels)
+        : Object.fromEntries(Object.entries(labels).map(([k, v]) => [k, fn(v)]))
+
+const approxLabels = Object.fromEntries(
+    Object.entries(en.long).map(([unit, labels]) => {
+        // seconds stay exact, "in around 5 seconds" sounds silly
+        if (unit === 'second' || typeof labels === 'string') return [unit, labels]
+        return [unit, {
+            ...labels,
+            future: mapLabel(labels.future, (s) => s.replace(/^in /, 'in around ')),
+            past: mapLabel(labels.past, (s) => `around ${s}`),
+        }]
+    })
+)
+
+TimeAgo.addLabels('en', 'approx', approxLabels)
+
 export const timeAgo = new TimeAgo('en-US')
+
+export function timeAgoApprox(date) {
+    return timeAgo.format(date, { steps: round, labels: 'approx' })
+}
+
 
 export function timeAgoLarge(date) {
     const target = date instanceof Date ? date : new Date(date)
