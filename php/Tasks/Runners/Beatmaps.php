@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tasks\Runners;
 
+use Database\Connection;
 use Tasks\AbstractRunner;
 
 
@@ -96,4 +97,6 @@ class Beatmaps extends AbstractRunner
         $posts->insert($a_data)
             ->saveData();
     }
+
+
 }

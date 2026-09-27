@@ -4,12 +4,15 @@ namespace Data;
 
 use API\Osu\User;
 use API\Response;
+use Data\Profiles\Goals;
 use Database\Connection;
 use Debug\Timings;
 
 class Profiles
 {
     static function Get($id, $gamemode = "") {
+        if(is_object($id)) return new Response(true, "Probably already a user", $id);
+
         $x = new Timings("profiles_fetch");
         $user = \Caching::Layer("profiles_user_fetch_" . $id, function() use ($id) {
             return User::GetUser($id, $gamemode);
@@ -148,7 +151,7 @@ WHERE u.ID = ?;
             }
         }
 
-        return new Response(true, "ok", [
+        $data = [
             "User" => $user,
             "Medals" => $medals,
             "Osekai" => [
@@ -196,7 +199,9 @@ WHERE u.ID = ?;
 
                 ]
             ]
-        ]);
+        ];
+        $data['Goals'] = Goals::Get($data, true);
+        return new Response(true, "ok", $data);
     }
 
     public static function GetSmall($id)

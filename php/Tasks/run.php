@@ -30,6 +30,7 @@ AddRunner("eti_beatmaps", new Runners\Beatmaps());
 AddRunner("eti_comments", new Runners\Comments());
 AddRunner("eti_votes", new Runners\Votes());
 AddRunner("eti_members", new Runners\Members());
+AddRunner("eti_profiles", new Runners\Profiles());
 
 AddRunner("eti_roleassignments", new Runners\RoleAssignments());
 
@@ -39,6 +40,8 @@ AddRunner("beatmappacks", new Runners\BeatmapPacks());
 AddRunner("preparelocalization", new Runners\PrepareLocalization());
 
 AddRunner("views", new Runners\Views());
+
+
 
 
 if (count($argv) < 3) {

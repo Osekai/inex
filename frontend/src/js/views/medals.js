@@ -62,7 +62,7 @@ export function SetMedal(inputMedal, setUrl = false, scrollTo = false) {
         inputMedal = parseInt(inputMedal);
     }
     if (typeof (inputMedal) !== "number") {
-        inputMedal = decodeURI(inputMedal.replace("_", " "));
+        inputMedal = decodeURI(inputMedal.replace("_", " ").replace("+", " "));
     } else {
         isnumber = true;
     }

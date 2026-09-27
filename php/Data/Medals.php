@@ -341,6 +341,7 @@ class Medals
 
     public static function GetMedalOwners($id, $page = 0, $limit = 100) {
         $offset = $page * $limit;
+
         $owners = Connection::execSelect("
         SELECT * FROM Rankings_Users_Medals 
         LEFT JOIN Merged_Users ON Merged_Users.User_ID = Rankings_Users_Medals.User_ID
@@ -348,6 +349,7 @@ class Medals
         ORDER BY Rankings_Users_Medals.Achieved_At
         LIMIT ?, ?
         ", "iii", [$id, $offset, $limit]);
+
         return new Response(true, "Success", $owners);
     }
     public static function GetExtraData($id)
