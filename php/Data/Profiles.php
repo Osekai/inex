@@ -105,7 +105,8 @@ class Profiles
     r.Rank_PP_Stdev_Country,
     COALESCE(s.Stats_Comment_Count, 0) AS Stats_Comment_Count,
     COALESCE(s.Stats_Vote_Count, 0)    AS Stats_Vote_Count,
-    COALESCE(s.Stats_Beatmap_Count, 0) AS Stats_Beatmap_Count
+    COALESCE(s.Stats_Beatmap_Count, 0) AS Stats_Beatmap_Count,
+    Joined_At
 FROM Rankings_Users u
 LEFT JOIN (
     SELECT
@@ -134,7 +135,8 @@ LEFT JOIN (
         User_ID,
         (SELECT COUNT(*) FROM Common_Comments WHERE Common_Comments.User_ID = x.User_ID)  AS Stats_Comment_Count,
         (SELECT COUNT(*) FROM Common_Votes    WHERE Common_Votes.User_ID    = x.User_ID)  AS Stats_Vote_Count,
-        (SELECT COUNT(*) FROM Medals_Beatmaps WHERE Medals_Beatmaps.Beatmap_Submitted_User_ID = x.User_ID) AS Stats_Beatmap_Count
+        (SELECT COUNT(*) FROM Medals_Beatmaps WHERE Medals_Beatmaps.Beatmap_Submitted_User_ID = x.User_ID) AS Stats_Beatmap_Count,
+        (SELECT System_Users.Joined_Date FROM System_Users WHERE System_Users.User_ID = x.User_ID) AS Joined_At
     FROM (SELECT ? AS User_ID) x
 ) AS s ON s.User_ID = u.ID
 WHERE u.ID = ?;
@@ -163,7 +165,8 @@ WHERE u.ID = ?;
                         "Beatmaps" => $osekaiUser['Stats_Beatmap_Count'],
                         "Votes" => $osekaiUser['Stats_Vote_Count'],
                     ]
-                ]
+                ],
+                "Joined" => $osekaiUser['Joined_At'],
             ],
             "Graphs" => [
                 "MedalPercentageOverTime" => [

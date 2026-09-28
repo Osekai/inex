@@ -9,6 +9,7 @@ import {Clubs2} from "../utils/Clubs2";
 import {UTCify} from "../utils/time";
 import {Overlay} from "../ui/overlay";
 import {setSections} from "../utils/urlQuery";
+import {timeAgo} from "../utils/timeago";
 
 
 class Profiles {
@@ -24,6 +25,12 @@ class Profiles {
     Am_User() {
         if (!loggedIn) return false;
         return userData.id == this.profile.User.id;
+    }
+
+    static El(sel, cb) {
+        for (let el of document.querySelectorAll(sel)) {
+            cb(el);
+        }
     }
 
     async Load() {
@@ -71,35 +78,50 @@ class Profiles {
 
         document.getElementById("profiles-header-img").appendChild(D2.Image("", profile.User.cover_url))
         document.getElementById("profiles-header-img").appendChild(D2.Image("blurred", profile.User.cover_url))
-
-        for (let el of document.querySelectorAll("[pr-el=pfp]")) {
+        
+        Profiles.El("[pr-el=pfp]", (el) => {
             el.src = profile.User.avatar_url;
-        }
-        for (let el of document.querySelectorAll("[pr-el=link-osu]")) {
+        })
+        Profiles.El("[pr-el=link-osu]", (el) => {
             el.href = "https://osu.ppy.sh/users/" + profile.User.id;
-        }
-        for (let el of document.querySelectorAll("[pr-el=username]")) {
+        });
+        Profiles.El("[pr-el=username]", (el) => {
             el.innerText = profile.User.username;
-        }
-        for (let el of document.querySelectorAll("[pr-el=flag]")) {
+        });
+        Profiles.El("[pr-el=flag]", (el) => {
             el.src = "/assets/flags/4x3/" + profile.User.country.code.toLowerCase() + ".svg";
-        }
-        for (let el of document.querySelectorAll("[pr-el=country]")) {
+        });
+        Profiles.El("[pr-el=country]", (el) => {
             el.innerText = profile.User.country.name;
-        }
-
-        for (let el of document.querySelectorAll("[pr-el=gamemode-icon]")) {
+        });
+        Profiles.El("[pr-el=gamemode-icon]", (el) => {
             el.className = "icon-gamemode-" + this.gamemode;
-        }
-        for (let el of document.querySelectorAll("[pr-el=gamemode-rank]")) {
+        });
+        Profiles.El("[pr-el=gamemode-rank]", (el) => {
             el.innerText = profile.User.statistics.global_rank;
-        }
+        });
+
+        Profiles.El("[pr-el=osekai-statistics-global-comments]", (el) => {
+            el.innerText = profile.Osekai.Statistics.Global.Comments;
+        })
+        Profiles.El("[pr-el=osekai-statistics-medals-beatmaps]", (el) => {
+            el.innerText = profile.Osekai.Statistics.Medals.Beatmaps;
+        })
+        Profiles.El("[pr-el=osekai-statistics-medals-votes]", (el) => {
+            el.innerText = profile.Osekai.Statistics.Medals.Votes;
+        })
+        Profiles.El("[pr-el=osekai-statistics-joined-osu]", (el) => {
+            el.innerText = timeAgo.format(UTCify(profile.User.join_date));
+        })
+        Profiles.El("[pr-el=osekai-statistics-joined-osekai]", (el) => {
+            el.innerText = timeAgo.format(UTCify(profile.Osekai.Joined));
+        })
     }
 
     Render_PanelAllMode() {
         let profile = this.profile;
 
-        for (let el of document.querySelectorAll("[pr-el=panel-allmode]")) {
+        Profiles.El("[pr-el=panel-allmode]", (el) => {
             // we don't have this data yet
             let outer = D2.Div("panel-stats panel-allmode-outer", () => {
                 D2.Div("toolbar-area", () => {
@@ -141,7 +163,7 @@ class Profiles {
             outer.setAttribute("otab-container", "allmode-switcher")
             outer.setAttribute("otab-default", "stdev")
             outer.setAttribute("otab-no-history", "lol")
-        }
+        });
     }
 
     // shared between Render_PanelMedals and Tab_Medals, so it lives on the class
@@ -165,7 +187,7 @@ class Profiles {
         }
         profile.Statistics.Medals.Quick["Club"] = Clubs2.Get(profile.Statistics.Medals.Quick["Percentage"]); // done out of scope so we can reference the percentage
 
-        for (let el of document.querySelectorAll("[pr-el=panel-medals]")) {
+        Profiles.El("[pr-el=panel-medals]", (el) => {
             let stats = profile.Statistics.Medals;
             let outer = D2.Div("panel-stats panel-medals-outer " + stats.Quick.Club.cssClass, () => {
                 D2.Image("rank-image", "/public/img/clubs/" + stats.Quick.Club.rank + ".png", "medal")
@@ -192,44 +214,48 @@ class Profiles {
             });
             el.innerHTML = "";
             el.appendChild(outer);
-        }
+        });
     }
 
     Tab_Medals() {
         let profile = this.profile;
         let stats = profile.Statistics.Medals;
 
-        for (let el of document.querySelectorAll("[pr-el=medals-club-badge]")) {
+   
+        Profiles.El("[pr-el=medals-club-badge]", (el) => {
             el.src = `/public/img/clubs/${stats.Quick.Club.rank}.png`;
-        }
-        for (let el of document.querySelectorAll("[pr-el=medals-club-class]")) {
-            el.classList.add(stats.Quick.Club.cssClass);
-        }
-        for (let el of document.querySelectorAll("[pr-el=medals-club-name]")) {
-            el.innerText = stats.Quick.Club.name;
-        }
+        })
 
-        for (let el of document.querySelectorAll("[pr-el=medals-club-next-badge]")) {
+        Profiles.El("[pr-el=medals-club-class]", (el) => {
+            el.classList.add(stats.Quick.Club.cssClass);
+        })
+ 
+        Profiles.El("[pr-el=medals-club-name]", (el) => {
+            el.innerText = stats.Quick.Club.name;
+        })
+
+        Profiles.El("[pr-el=medals-club-next-badge]", (el) => {
             let nextClub = stats.Quick.Club.Next();
             if (nextClub !== null) {
                 el.src = `/public/img/clubs/${nextClub.rank}.png`;
             } else {
                 el.src = "/public/img/clubs/0.png";
             }
-        }
-        for (let el of document.querySelectorAll("[pr-el=medals-club-next-class]")) {
+        })
+
+        Profiles.El("[pr-el=medals-club-next-class]", (el) => {
             let nextClub = stats.Quick.Club.Next();
             if (nextClub !== null) {
                 el.classList.add(nextClub.cssClass);
             }
-        }
-        for (let el of document.querySelectorAll("[pr-el=medals-club-next-name]")) {
+        });
+        Profiles.El("[pr-el=medals-club-next-name]", (el) => {
             let nextClub = stats.Quick.Club.Next();
             if (nextClub !== null) {
                 el.innerText = nextClub.name;
             }
-        }
-        for (let el of document.querySelectorAll("[pr-el=medals-club-next-togo]")) {
+        });
+        Profiles.El("[pr-el=medals-club-next-togo]", (el) => {
             let nextClub = stats.Quick.Club.Next();
             if (nextClub !== null) {
                 let currentMedals = profile.User.user_achievements.length;
@@ -238,31 +264,31 @@ class Profiles {
             } else {
                 el.innerText = "";
             }
-        }
+        });
 
-        for (let el of document.querySelectorAll("[pr-el=medals-percentage]")) {
+        Profiles.El("[pr-el=medals-percentage]", (el) => {
             el.innerText = stats.Quick.Percentage + "%";
-        }
-        for (let el of document.querySelectorAll("[pr-el=medals-total-achieved]")) {
+        });
+        Profiles.El("[pr-el=medals-total-achieved]", (el) => {
             el.innerText = stats.TotalAchieved;
-        }
-        for (let el of document.querySelectorAll("[pr-el=medals-total-released]")) {
+        });
+        Profiles.El("[pr-el=medals-total-released]", (el) => {
             el.innerText = stats.TotalReleased;
-        }
+        });
 
 
-        for (let el of document.querySelectorAll("[pr-el=medals-global-rank]")) {
+        Profiles.El("[pr-el=medals-global-rank]", (el) => {
             el.innerText = "#" + stats.Ranks.Global;
-        }
-        for (let el of document.querySelectorAll("[pr-el=medals-country-rank]")) {
+        });
+        Profiles.El("[pr-el=medals-country-rank]", (el) => {
             el.innerText = "#" + stats.Ranks.Country;
-        }
+        });
 
 
-        for (let el of document.querySelectorAll("[pr-el=medals-progressbar]")) {
+        Profiles.El("[pr-el=medals-progressbar]", (el) => {
             el.innerHTML = "";
             el.appendChild(this.MedalProgressBar());
-        }
+        });
 
         let topFreq = 100;
         let rarestMedal = null;
@@ -274,23 +300,23 @@ class Profiles {
         }
 
 
-        for (let el of document.querySelectorAll("[pr-el=medal-rarest-icon]")) {
+        Profiles.El("[pr-el=medal-rarest-icon]", (el) => {
             el.setAttribute("src", rarestMedal.Link);
-        }
-        for (let el of document.querySelectorAll("[pr-el=medal-rarest-name]")) {
+        });
+        Profiles.El("[pr-el=medal-rarest-name]", (el) => {
             el.innerText = rarestMedal.Name;
-        }
-        for (let el of document.querySelectorAll("[pr-el=medal-rarest-percentage]")) {
+        });
+        Profiles.El("[pr-el=medal-rarest-percentage]", (el) => {
             el.innerText = Math.round(rarestMedal.Frequency * 100 * 100) / 100;
-        }
-        for (let el of document.querySelectorAll("[pr-el=medal-rarest-link]")) {
+        });
+        Profiles.El("[pr-el=medal-rarest-link]", (el) => {
             el.href = "/medals/" + rarestMedal.Medal_ID;
-        }
-        for (let el of document.querySelectorAll("[pr-el=medal-rarest-achieved-date]")) {
+        });
+        Profiles.El("[pr-el=medal-rarest-achieved-date]", (el) => {
             el.innerText = (new Date(UTCify(rarestMedal.Obtained_Date))).toLocaleDateString();
-        }
+        });
 
-        for (let el of document.querySelectorAll("[pr-el=medal-favourite-button]")) {
+        Profiles.El("[pr-el=medal-favourite-button]", (el) => {
             if (!this.Am_User()) {
                 el.style.display = "none";
             } else {
@@ -298,7 +324,7 @@ class Profiles {
                     this.FavouriteMedal_Change();
                 })
             }
-        }
+        });
         this.FavouriteMedal_Set(20); // temp, can't store anywhere yet
     }
 

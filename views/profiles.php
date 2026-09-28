@@ -54,27 +54,32 @@ if (INSTANCE !== "dev") {
             </a>
         </div>
         <div class="pages">
-            <div otab-name="profile">
+            <div otab-name="profile" class="profile-page">
                 <div class="left">
-                    <div class="panel">
+                    <div class="panel panel-profile-stats">
                         <h1>Info</h1>
-                        <p>Joined osu! <strong pr-el="stats-osu-join-date"></strong></p>
-                        <p>Joined Osekai <strong pr-el="stats-osekai-join-date"></strong></p>
-                        <h1>Contributions</h1>
-                        <p>
-                            <i data-lucide="message-circle"></i>
-                            <strong pr-el="stats-comments"></strong> comments
-                        </p>
+                        <p>this panel looks shit i know, i'll do it later</p>
+                        <div class="divider"></div>
+                        <p>Joined osu! <strong pr-el="osekai-statistics-joined-osu"></strong></p>
+                        <p>Joined Osekai <strong pr-el="osekai-statistics-joined-osekai"></strong></p>
+                        <h2><i data-lucide="smile"></i> Contributions</h2>
+                        <div class="contribution-grid">
+                            <p>
+                                <i data-lucide="message-circle"></i>
+                                <strong pr-el="osekai-statistics-global-comments"></strong> comments
+                            </p>
+                        </div>
                         <h3><img src="/public/img/branding/app/medals.svg"> Medals</h3>
-                        <p>
-                            <i data-lucide="map"></i>
-                            <strong pr-el="stats-medals-beatmaps"></strong> beatmaps
-                        </p>
-                        <p>
-                            <i data-lucide="list-plus"></i>
-                            <strong pr-el="stats-medals-upvotes"></strong> beatmap upvotes
-                        </p>
-
+                        <div class="contribution-grid">
+                            <p>
+                                <i data-lucide="map"></i>
+                                <strong pr-el="osekai-statistics-medals-beatmaps"></strong> beatmaps
+                            </p>
+                            <p>
+                                <i data-lucide="list-plus"></i>
+                                <strong pr-el="osekai-statistics-medals-votes"></strong> beatmap upvotes
+                            </p>
+                        </div>
                     </div>
                     <div class="panel">
                         <div class="panel-header">
@@ -87,7 +92,30 @@ if (INSTANCE !== "dev") {
                     </div>
                 </div>
                 <div class="right">
-
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h1>Timeline</h1>
+                            <div class="lumen-button sm pill"><i data-lucide="plus"></i> Add timeline point</div>
+                        </div>
+                        <div class="divider"></div>
+                        <div id="timeline"></div>
+                    </div>
+                    <div class="panel">
+                        <h1>Goals</h1>
+                        <div class="divider"></div>
+                        <div id="goals"></div>
+                        <div class="divider basic"></div>
+                        <div class="goal-input">
+                            <div>
+                                <searchable-dropdown></searchable-dropdown>
+                                <input type="number" placeholder="Amount" class="input">
+                                <div class="dropdown"><i class="icon-gamemode-taiko"></i></div>
+                            </div>
+                            <div class="button-row">
+                                <button class="lumen-button border primary left">Add Goal</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div otab-name="medals" pr-el="medals-club-class">
