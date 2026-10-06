@@ -164,6 +164,7 @@ function renderVisibleItems(newStyle = false) {
         }
 
         if (sorting === "date_achieved") {
+            if(a.First_Date_Awarded == null || b.First_Date_Awarded == null) return 1;
             const dateA = Date.parse(a.First_Date_Awarded.replace(" ", "T"));
             const dateB = Date.parse(b.First_Date_Awarded.replace(" ", "T"));
             return dateA - dateB;

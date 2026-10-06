@@ -73,7 +73,7 @@ body {
 
 .navbar {
     background: #0004;
-    backdrop-filter: blur(40px) !important;
+    backdrop-filter: blur(10px) !important;
 }
 
 .welcome-to-osekai {

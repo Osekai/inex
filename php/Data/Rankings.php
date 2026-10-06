@@ -11,29 +11,12 @@ class Rankings
 {
     static function GenerateSQL($rankingType, $options)
     {
-        $whereClause = "";
+        // where/extra_conditions used to be taken from $options here, but
+        // nothing internal sets them and the route passes user input straight
+        // in, so they were a sql injection into the where clause. removed.
+        $whereClause = "WHERE Rankings_Users.Is_Restricted = 0";
         $params = [];
         $paramTypes = "";
-
-        // handle dynamic where conditions
-        if (!empty($options['where']) && is_array($options['where'])) {
-            $conditions = [];
-            foreach ($options['where'] as $col => $val) {
-                $conditions[] = "$col = ?";
-                $params[] = $val;
-                $paramTypes .= is_int($val) ? "i" : "s";
-            }
-            $whereClause = "WHERE " . implode(" AND ", $conditions);
-        } else {
-            $whereClause = "WHERE Rankings_Users.Is_Restricted = 0";
-        }
-
-        // optional extra conditions passed in via options
-        if (!empty($options['extra_conditions']) && is_array($options['extra_conditions'])) {
-            foreach ($options['extra_conditions'] as $condition) {
-                $whereClause .= " AND $condition";
-            }
-        }
 
         $sql = "";
 

@@ -49,7 +49,10 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
     public static function GetOne($id)
     {
         $comment = Connection::execSelect("SELECT * FROM Common_Comments WHERE ID = ? AND Deleted = 0", "i", [$id]);
-        if (count($comment) > 0) return $comment[0];
+        if (count($comment) > 0) {
+            $comment[0]['Text'] = \Sanitize::HTML($comment[0]['Text'], true);
+            return $comment[0];
+        }
         return null;
     }
 
@@ -106,7 +109,11 @@ GROUP BY Common_Comments.ID
 ORDER BY Is_Pinned DESC, VoteCount DESC, Replies DESC";
 
 
-        return new Response(true, "ok", Connection::execSelect($query, $types, $values));
+        $data = Connection::execSelect($query, $types, $values);
+        foreach ($data as &$d) {
+            $d['Text'] = \Sanitize::HTML($d['Text'], true);
+        }
+        return new Response(true, "ok", $data);
     }
 
     public static function Report($id, $data)

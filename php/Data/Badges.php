@@ -23,7 +23,7 @@ SELECT Badges_Data.*,
     MIN(Badges_Users.Date_Awarded) AS First_Date_Awarded,
     Badges_Users.Description AS Description
 FROM Badges_Data 
-        LEFT JOIN Badges_Users ON Badges_Data.ID = Badges_Users.Badge_ID
+        INNER JOIN Badges_Users ON Badges_Data.ID = Badges_Users.Badge_ID
         LEFT JOIN (
             SELECT ID, MIN(Name) AS Name, Country_Code
             FROM Rankings_Users

@@ -348,6 +348,9 @@ body {
         >div {
             transform: translateY(10px);
         }
+        * {
+            pointer-events: none;
+        }
     }
 
     transition: all 0.4s ease;

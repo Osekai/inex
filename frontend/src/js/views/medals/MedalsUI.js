@@ -128,11 +128,11 @@ export class MedalsUI {
                     // TODO: worakround for cras, actually check this later
                 }
                 if (loggedIn && beatmap.Beatmap_Submitted_User_ID === userData.id) {
-                    let del = D2.CustomPlus("button", "button  icon-button", {}, () => {
+                    let del_button = D2.CustomPlus("button", "button  icon-button", {}, () => {
                         D2.LucideIcon("trash");
                         D2.Text("span", "Delete");
                     });
-                    del.addEventListener("click", async () => {
+                    del_button.addEventListener("click", async () => {
                         await del();
                     });
                 }
