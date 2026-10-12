@@ -300,9 +300,9 @@ export class MedalsSidebar {
         function checkSection(classname) {
             for (var sect of document.querySelectorAll(classname)) {
                 if ((sect.querySelectorAll(".visible").length + sect.querySelectorAll(".noobtain-visible").length) === 0) {
-                    sect.classList.add("hidden");
+                    sect.classList.add("full-hidden");
                 } else {
-                    sect.classList.remove("hidden");
+                    sect.classList.remove("full-hidden");
                 }
             }
         }
