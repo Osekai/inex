@@ -7,6 +7,7 @@ import {RoleBadge} from "./js/utils/dom";
 import {GetSetting, OnChangeSetting} from "./js/utils/usersettings";
 import {renderDebugTimings} from "./js/layout/debug";
 import {InitDropdowns} from "./js/ui/dropdown";
+import {InitDragScroll} from "./js/ui/dragscroll";
 import LoadMore from "./js/ui/notifications";
 import {LoadOTabs} from "./js/ui/otabs";
 import {D2} from "./js/utils/d2";
@@ -16,6 +17,7 @@ import {Clubs2} from "./js/utils/Clubs2";
 import {io} from "socket.io-client";
 
 window.loader = createLazyLoadInstance();
+InitDragScroll();
 
 export * from './js/external.js';
 export * from './js/utils/usersettings.js';

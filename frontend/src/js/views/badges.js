@@ -95,6 +95,7 @@ function updateAscend() {
         ascendButton.appendChild(LucideIcon("arrow-up-a-z"));
         SetTooltip(ascendButton, "Descending", "bottom");
     }
+    listDirty = true;
     renderVisibleItems();
 }
 
@@ -109,53 +110,42 @@ ascendButton.addEventListener("click", () => {
     updateAscend();
 })
 
-function getRowInfo() {
+// measures the real row pitch (height + gap) and how many items fit per row
+function measureRows() {
+    const children = grid.children;
+    if (children.length === 0) return false;
 
+    const firstTop = children[0].offsetTop;
+    let itemsPerRow = 0;
+    let rowPitch = null;
 
-    try {
-        const badges = document.querySelectorAll(".badges__badge");
-        let minHeight = Infinity;
-        let firstRowY = null;
-        let itemsPerRow = 0;
-
-        badges.forEach((badge, index) => {
-            const rect = badge.getBoundingClientRect();
-            const height = rect.height;
-
-            if (height < minHeight) {
-                minHeight = height;
-            }
-
-            if (firstRowY === null) {
-                firstRowY = rect.top;
-                itemsPerRow = 1;
-            } else if (rect.top === firstRowY) {
-                itemsPerRow++;
-            }
-        });
-
-        const rowHeight = (minHeight === Infinity ? null : minHeight);
-        if (rowHeight !== null) saveRowHeight = rowHeight;
-        if (itemsPerRow > 0) saveItemsPerRow = itemsPerRow;
-
-        return {rowHeight, itemsPerRow};
-
-    } catch {
-        return {rowHeight: null, itemsPerRow: null};
+    for (let child of children) {
+        if (child.offsetTop === firstTop) {
+            itemsPerRow++;
+        } else {
+            rowPitch = child.offsetTop - firstTop;
+            break;
+        }
     }
+
+    // only one row rendered, fall back to height + gap
+    if (rowPitch === null) {
+        const gap = parseFloat(getComputedStyle(grid).rowGap) || 0;
+        rowPitch = children[0].offsetHeight + gap;
+    }
+
+    const changed = rowPitch !== saveRowHeight || itemsPerRow !== saveItemsPerRow;
+    saveRowHeight = rowPitch;
+    saveItemsPerRow = itemsPerRow;
+    return changed;
 }
 
-function getRowHeight() {
-    var {rowHeight, itemsPerRow} = getRowInfo();
-    return rowHeight;
-}
+var cleanedItems = [];
+var listDirty = true;
 
-
-function renderVisibleItems(newStyle = false) {
-    if (items == null) return; // waiting!
-
-    var cleanedItems = [];
-    var _cleanedItems = items.sort((_a, _b) => {
+// sort + filter, only when sort/dir/search/items actually change
+function rebuildList() {
+    items.sort((_a, _b) => {
         var a = _a;
         var b = _b;
         if (dir === "desc") {
@@ -181,94 +171,137 @@ function renderVisibleItems(newStyle = false) {
         return 0; // Fallback in case no condition matches
     });
 
-
-    for (var item of _cleanedItems) {
+    cleanedItems = [];
+    for (var item of items) {
         if (searchText == "" || item.Name.toLowerCase().includes(searchText) || item.Description.toLowerCase().includes(searchText)) {
             cleanedItems.push(item);
         }
     }
 
-    var reprocessAfterwards = false;
+    listDirty = false;
+    lastStartIdx = -1; // force a dom update
+}
 
+// badge elements are built once and reused while scrolling
+var elementCache = new Map();
+
+function getBadgeElement(item) {
+    if (elementCache.has(item)) {
+        return elementCache.get(item);
+    }
+
+    const el = DOM.Div('div', 'badges__badge');
+
+    el.appendChild(DOM.Image(item.Image_URL))
+    if (currentDisplayType !== "compact") {
+        //el.appendChild(DOM.Text("h4", item.RealName))
+        el.appendChild(DOM.Text("h1", item.Description))
+
+        el.appendChild(D2.Div("", () => {
+            D2.Text("h3", "first awarded " + new Date(item.First_Date_Awarded).toISOString().slice(0, 10));
+            D2.Text("h3", " - " + item.Users.length + " player" + (item.Users.length === 1 ? "" : "s"));
+        }))
+    }
+
+    el.addEventListener("click", () => {
+        if(item === currentBadge) {
+            showBadge(null, null, true);
+            return;
+        }
+        showBadge(item, el);
+    })
+
+    elementCache.set(item, el);
+    return el;
+}
+
+var lastStartIdx = -1;
+var lastEndIdx = -1;
+
+function renderVisibleItems(newStyle = false, isRemeasure = false) {
+    if (items == null) return; // waiting!
 
     if (newStyle == true) {
         saveRowHeight = null;
         saveItemsPerRow = null;
+        elementCache.clear();
+        lastStartIdx = -1;
         grid.innerHTML = "";
     }
 
-    var {rowHeight, itemsPerRow} = getRowInfo();
-
-    if (rowHeight == null) {
-        reprocessAfterwards = true;
-        rowHeight = 20; // fix it in a sec
-        itemsPerRow = 10;
-    }
-
-    const scrollTop = window.scrollY;
-    const windowHeight = window.innerHeight;
-
-    const totalRows = Math.ceil(cleanedItems.length / itemsPerRow);
-    const fullHeight = totalRows * rowHeight;
-    spacer.style.height = `${fullHeight}px`;
-
-    // Start row now considers topBuffer
-    const startRow = Math.max(0, Math.floor((scrollTop - (topBuffer * rowHeight)) / rowHeight));
-    const visibleRows = Math.ceil(windowHeight / rowHeight) + buffer;
-    const startIdx = startRow * itemsPerRow;
-    const endIdx = Math.min(startIdx + visibleRows * itemsPerRow, cleanedItems.length);
-
-    const visibleItems = cleanedItems.slice(startIdx, endIdx);
-    grid.style.transform = `translateY(${startRow * rowHeight}px)`;
-    grid.innerHTML = '';
+    if (listDirty) rebuildList();
 
     for (var i in displayTypes) {
         grid.classList.remove(i);
     }
     grid.classList.add(currentDisplayType);
 
-    for (let item of visibleItems) {
-        const el = DOM.Div('div', 'badges__badge');
+    let rowHeight = saveRowHeight;
+    let itemsPerRow = saveItemsPerRow;
+    let needsMeasure = false;
 
-        el.appendChild(DOM.Image(item.Image_URL))
-        if (currentDisplayType !== "compact") {
-            //el.appendChild(DOM.Text("h4", item.RealName))
-            el.appendChild(DOM.Text("h1", item.Description))
+    if (rowHeight == null || itemsPerRow == null) {
+        needsMeasure = true;
+        rowHeight = displayTypes[currentDisplayType].supposedHeight;
+        itemsPerRow = 1;
+    }
 
-            el.appendChild(D2.Div("", () => {
-                D2.Text("h3", "first awarded " + new Date(item.First_Date_Awarded).toISOString().slice(0, 10));
-                D2.Text("h3", " - " + item.Users.length + " player" + (item.Users.length === 1 ? "" : "s"));
-            }))
+    // scroll position relative to the top of the grid, not the page
+    const spacerTop = spacer.getBoundingClientRect().top + window.scrollY;
+    const scrollTop = Math.max(0, window.scrollY - spacerTop);
+    const windowHeight = window.innerHeight;
 
-        }
+    const totalRows = Math.ceil(cleanedItems.length / itemsPerRow);
+    spacer.style.height = `${totalRows * rowHeight}px`;
+
+    const startRow = Math.max(0, Math.floor(scrollTop / rowHeight) - topBuffer);
+    const visibleRows = Math.ceil(windowHeight / rowHeight) + topBuffer + buffer;
+    const startIdx = startRow * itemsPerRow;
+    const endIdx = Math.min(startIdx + visibleRows * itemsPerRow, cleanedItems.length);
+
+    // same range as last time, nothing to do
+    if (startIdx === lastStartIdx && endIdx === lastEndIdx && !needsMeasure) return;
+    lastStartIdx = startIdx;
+    lastEndIdx = endIdx;
+
+    const visibleElements = [];
+    for (let item of cleanedItems.slice(startIdx, endIdx)) {
+        const el = getBadgeElement(item);
         if (item === currentBadge) {
             el.classList.add("active");
+        } else {
+            el.classList.remove("active");
         }
-
-        el.addEventListener("click", () => {
-            if(item === currentBadge) {
-                showBadge(null, null, true);
-                return;
-            }
-            showBadge(item, el);
-        })
-
-        grid.appendChild(el);
+        visibleElements.push(el);
     }
-    if (reprocessAfterwards) {
-        document.querySelectorAll(".badges__badge img")[0].addEventListener("load", () => {
-            renderVisibleItems();
-        })
+
+    grid.style.transform = `translateY(${startRow * rowHeight}px)`;
+    grid.replaceChildren(...visibleElements);
+
+    // only measure when we don't know the numbers yet (first render, resize, display change)
+    // remeasuring while scrolling makes the spacer height jump around
+    if (needsMeasure && measureRows() && !isRemeasure) {
+        lastStartIdx = -1;
+        renderVisibleItems(false, true);
     }
 }
 
+var scrollQueued = false;
 window.addEventListener('scroll', () => {
-    requestAnimationFrame(renderVisibleItems);
-});
+    if (scrollQueued) return;
+    scrollQueued = true;
+    requestAnimationFrame(() => {
+        scrollQueued = false;
+        renderVisibleItems();
+    });
+}, { passive: true });
 
-window.addEventListener('resize', () => {
+window.addEventListener('resize', debounce(() => {
+    // column count can change, so remeasure
+    saveRowHeight = null;
+    saveItemsPerRow = null;
     renderVisibleItems();
-});
+}, 50));
 
 var firstGo = false;
 
@@ -323,6 +356,7 @@ async function init() {
 
     items = await DoRequest("POST", "/api/badges/get_all");
     items = items.content;
+    listDirty = true;
     renderVisibleItems();
     checkHistory();
     grid.classList.add("loaded");
@@ -333,7 +367,8 @@ async function init() {
 
 var searchBar: HTMLInputElement = document.getElementById("badge_search");
 const search = debounce(() => {
-    searchText = searchBar.value;
+    searchText = searchBar.value.toLowerCase();
+    listDirty = true;
     renderVisibleItems();
     grid.classList.remove("searchbegin");
 }, 100);

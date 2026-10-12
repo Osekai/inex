@@ -27,8 +27,37 @@ export class MedalsSuggestions {
             grid.appendChild(D2.Text("p", "Get 60 medals first, and then we'll have some to show you!"));
             return;
         }
+        let loaded = false;
+
+        let loaderTexts = document.getElementById("loader-funny-text");
+        let getMessage = () => {
+            if(loaded == true) return;
+            let funny = [
+                "Matching Hexagons...",
+                "Finding the best match for you...",
+                "Your medal date awaits...",
+                "Checking your best scores...",
+                "Checking your worst scores...",
+                "Fun awaits!",
+                "Finding your least favourite medals...",
+                "Planning your medal getaway",
+                "This is hard..."
+            ]
+            loaderTexts.prepend(D2.Text("h1", funny[Math.floor(Math.random() * funny.length)]));
+            let offset = 0;
+            for(let child of loaderTexts.children) {
+                child.style.setProperty("--offset", offset);
+                offset++;
+            }
+        }
+        let loop = setInterval(() => {
+            getMessage();
+        }, 3600);
+        getMessage();
+
         let suggestions = await DoRequest("POST", "/api/medals/suggestions");
         grid.innerHTML = "";
+        let offset = 0;
         for(let suggestion of suggestions.content) {
             let medal = await MedalData.GetMedalFromID(suggestion.Medal)
 
@@ -59,6 +88,8 @@ export class MedalsSuggestions {
             button.addEventListener("click", () => {
                 MedalsUI.LoadMedalQuick(medal);
             })
+            button.style.setProperty("--offset", offset);
+            offset++;
         }
     }
 }
