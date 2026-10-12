@@ -50,11 +50,16 @@ export class D2 {
         return el;
     }
 
-    static Image(className, src, children, alt = "") {
+    static Image(className, src, children, alt = "", lazyload = false) {
         const img = D2._createElement("img", className, children);
         // an unset src would request "undefined" relative to the current page
         if (src) {
-            img.src = src;
+            if (lazyload) {
+                img.setAttribute("data-src", src);
+                img.classList.add("lazy");
+            } else {
+                img.src = src;
+            }
         }
         img.alt = alt;
         return img;

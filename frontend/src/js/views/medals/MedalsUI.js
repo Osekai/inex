@@ -116,7 +116,7 @@ export class MedalsUI {
                 try {
                     if (beatmap.User !== null && beatmap.User.Username !== "")
                         D2.DivLink(`/profiles/${beatmap.User.User_ID}`, "uploader", () => {
-                            D2.Image("img", "https://a.ppy.sh/" + beatmap.User.User_ID);
+                            D2.Image("img", "https://a.ppy.sh/" + beatmap.User.User_ID, null, "", true);
                             D2.Div("", () => {
 
                                 D2.StyledText("h3", `Submitted by <strong>${beatmap.User.Username}</strong>`);
@@ -325,7 +325,7 @@ export class MedalsUI {
 
         function ownerPanel(owner) {
             let panel = D2.DivLink("/profiles/" + owner.User_ID, "medal-owner", () => {
-                D2.Image("img", "https://a.ppy.sh/" + owner.User_ID);
+                D2.Image("img", "https://a.ppy.sh/" + owner.User_ID, null, "", true);
                 D2.Div("info", () => {
                     D2.StyledText("h3", owner.Name);
 

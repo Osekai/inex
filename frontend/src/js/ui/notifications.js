@@ -124,7 +124,7 @@ function GenerateNotification(raw) {
     var notif_upper = Div("div", "notification-upper");
     var notif_extra = Div("div", "notification-extra");
 
-    var imagei = Image("https://a.ppy.sh/" + n.SenderID, "backdrop");
+    var imagei = Image("https://a.ppy.sh/" + n.SenderID, "backdrop", true);
     notif_upper.appendChild(imagei);
 
     var useExtra = false;
@@ -146,7 +146,7 @@ function GenerateNotification(raw) {
 
     function ReplyThingy(user_id, content) {
         var div = Div("div", "notification-extra-comment");
-        div.appendChild(Image("https://a.ppy.sh/" + user_id, "pfp"));
+        div.appendChild(Image("https://a.ppy.sh/" + user_id, "pfp", true));
         div.appendChild(Text("p", content));
         return div;
     }

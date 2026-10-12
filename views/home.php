@@ -193,7 +193,7 @@ use Data\Home\Member;
             foreach ($legacyDonators as $donator) {
                 ?>
             <a class="donator-card" href="/profiles/<?= $donator[0] ?>">
-                <img src="https://a.ppy.sh/<?= $donator[0] ?>">
+                <img src="https://a.ppy.sh/<?= $donator[0] ?>" loading="lazy">
                 <h1><?= $donator[1] ?></h1>
                 <p>€<?= $donator[2] ?></p>
             </a>

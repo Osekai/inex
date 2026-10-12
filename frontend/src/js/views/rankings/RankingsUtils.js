@@ -440,8 +440,8 @@ export const types = {
 export const columnTypes = {
     "user": (data) => {
         return D2.CustomPlus("a", "coltype-user", {href: "/profiles/" + data.content.ID}, () => {
-            D2.Image("pfp", "https://a.ppy.sh/" + data.content.ID);
-            D2.Image("flag", "/assets/flags/1x1/" + data.content.Country.toLowerCase() + ".svg");
+            D2.Image("pfp", "https://a.ppy.sh/" + data.content.ID, null, "", true);
+            D2.Image("flag", "/assets/flags/1x1/" + data.content.Country.toLowerCase() + ".svg", null, "", true);
             D2.Text("p", data.content.Name);
         })
     },
@@ -462,7 +462,7 @@ export const columnTypes = {
     },
     "medal": (data) => {
         let el = D2.CustomPlus("a", "coltype-medal", {href: "/medals/" + encodeURIComponent(data.content.Name)}, () => {
-            D2.Image("medal", "/assets/medals/web/" + data.content.Link)
+            D2.Image("medal", "/assets/medals/web/" + data.content.Link, null, "", true)
             D2.Div("medal-name", () => {
                 D2.Text("h3", data.content.Name);
                 if(data.content.Description) D2.Text("p", data.content.Description);

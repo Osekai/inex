@@ -58,7 +58,7 @@ function showBadge(badge, el = null, updateSection = true) {
     list.innerHTML = "";
     for(let user of badge.Users) {
         var userObj = D2.CustomPlus("a", "badge__user", { "href": "/profiles/" + user.User_ID },() => {
-            D2.Image("", "https://a.ppy.sh/" + user.User_ID);
+            D2.Image("", "https://a.ppy.sh/" + user.User_ID, null, "", true);
             D2.Text("h3", user.Username);
 
             const awarded = UTCify(user.Date_Awarded);

@@ -113,7 +113,7 @@ class CommentsSection extends HTMLElement {
         var name = Div("div", "name");
         var nameInner = Div("a", "name-inner");
 
-        nameInner.appendChild(Image("https://a.ppy.sh/" + comment.User_ID));
+        nameInner.appendChild(Image("https://a.ppy.sh/" + comment.User_ID, "", true));
         var nameText = Text("h1", comment.Username);
         if (comment.Username == "") {
             nameText.innerHTML = "Unknown User";
@@ -123,7 +123,7 @@ class CommentsSection extends HTMLElement {
         console.log(comment);
         let medalPercentage = comment.Medals / medals.content.length * 100;
         let club = Clubs2.Get(medalPercentage)
-        let image = Image(club.icon, "club-icon");
+        let image = Image(club.icon, "club-icon", true);
 
 
         nameInner.appendChild(nameText);
