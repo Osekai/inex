@@ -178,55 +178,58 @@ class Medals
     {
         $userid = Session::UserData()['id'];
 
-        // IMPORTANT: this takes like, 10 seconds!
-        $user = OsekaiUsers::GetUser($userid, "osu");
-        $osuUser = $user;
-        $catchUser = OsekaiUsers::GetUser($userid, "fruits");
-        $taikoUser = OsekaiUsers::GetUser($userid, "taiko");
-        $maniaUser = OsekaiUsers::GetUser($userid, "mania");
-        //echo "<pre>" . json_encode($user, JSON_PRETTY_PRINT) . "</pre>";
+        $rankingUser = Connection::execSelect(
+                "SELECT Play_Time_Standard, Play_Time_Catch, Play_Time_Taiko, Play_Time_Mania FROM Rankings_Users WHERE ID = ?",
+                "i",
+                [$userid]
+        );
+        if (count($rankingUser) === 0) {
+            echo "You're not in the rankings yet, add yourself and check back in a few days!";
+            return;
+        }
+        $rankingUser = $rankingUser[0];
 
         $hits = [
-                "osu" =>   $osuUser  ['statistics']['play_time'],
-                "catch" => $catchUser['statistics']['play_time'],
-                "taiko" => $taikoUser['statistics']['play_time'],
-                "mania" => $maniaUser['statistics']['play_time'],
+                "osu" => (int)$rankingUser['Play_Time_Standard'],
+                "catch" => (int)$rankingUser['Play_Time_Catch'],
+                "taiko" => (int)$rankingUser['Play_Time_Taiko'],
+                "mania" => (int)$rankingUser['Play_Time_Mania'],
         ];
 
-
-        $userMedalIds = array_column($user['user_achievements'], 'achievement_id');
+        $userMedals = Connection::execSelect("SELECT Medal_ID FROM Rankings_Users_Medals WHERE User_ID = ?", "i", [$userid]);
+        $userMedalIds = array_map('intval', array_column($userMedals, 'Medal_ID'));
         $ourCount = count($userMedalIds);
 
         $placeholders = implode(',', array_fill(0, count($userMedalIds), '?'));
-        $types = 'i' . str_repeat('i', count($userMedalIds));
+        $types = 'i' . str_repeat('i', count($userMedalIds) * 2);
 
 
         if ($ourCount < 60) {
             echo "You need at least 60 medals to get suggestions!";
             return;
         }
-        $scores = Caching::Layer("medala_suggestions_" . $userid, function () use ($types, $ourCount, $userMedalIds, $placeholders) {
-            $scores = [];
-            Connection::execSelectStream(
-                    "SELECT rum.User_ID, rum.Medal_ID
-         FROM Rankings_Users_Medals rum
-         INNER JOIN Rankings_Users ru ON ru.ID = rum.User_ID AND ru.Count_Medals >= ?
-         WHERE rum.User_ID IN (
-             SELECT User_ID
-             FROM Rankings_Users_Medals
-             WHERE Medal_ID IN ($placeholders)
-             GROUP BY User_ID
+        $scores = Caching::Layer("medala_suggestions2_" . $userid, function () use ($types, $ourCount, $userMedalIds, $placeholders) {
+            $rows = Connection::execSelect(
+                    "SELECT rum.Medal_ID, COUNT(*) AS Co_Occurrence
+         FROM (
+             SELECT um.User_ID
+             FROM Rankings_Users_Medals um
+             INNER JOIN Rankings_Users ru ON ru.ID = um.User_ID AND ru.Count_Medals >= ?
+             WHERE um.Medal_ID IN ($placeholders)
+             GROUP BY um.User_ID
              HAVING COUNT(*) >= 60
-         )",
+         ) similar_users
+         INNER JOIN Rankings_Users_Medals rum ON rum.User_ID = similar_users.User_ID
+         WHERE rum.Medal_ID NOT IN ($placeholders)
+         GROUP BY rum.Medal_ID",
                     $types,
-                    array_merge([$ourCount - 20], $userMedalIds),
-                    function ($row) use (&$scores, $userMedalIds) {
-                        $medalId = $row['Medal_ID'];
-                        if (!in_array($medalId, $userMedalIds)) {
-                            $scores[$medalId] = ($scores[$medalId] ?? 0) + 1;
-                        }
-                    }
+                    array_merge([$ourCount - 20], $userMedalIds, $userMedalIds)
             );
+
+            $scores = [];
+            foreach ($rows as $row) {
+                $scores[$row['Medal_ID']] = (int)$row['Co_Occurrence'];
+            }
             return $scores;
         }, 3600); // cache for 1 hour
 
@@ -245,6 +248,7 @@ class Medals
         $freqMap = array_column($frequencies, 'Frequency', 'Medal_ID');
 
         $medals = Medals::GetAll();
+        $medalsById = array_column($medals->content, null, 'Medal_ID');
         foreach ($scores as $medalId => $coOccurrence) {
             // main scoring algo
             $freq = $freqMap[$medalId] ?? 1;
@@ -253,11 +257,10 @@ class Medals
             $scores[$medalId] = $coOccurrence * pow((float)$freq, 0.9);
             $scores[$medalId] = $scores[$medalId] * 500;
 
-            $medal = null;
-            foreach ($medals->content as $medalData) {
-                if ($medalData['Medal_ID'] == $medalId) {
-                    $medal = $medalData;
-                }
+            $medal = $medalsById[$medalId] ?? null;
+            if ($medal === null) {
+                unset($scores[$medalId]);
+                continue;
             }
 
             // if it's an FC it's probably hard
@@ -324,15 +327,11 @@ class Medals
         $topMedals = array_slice($scores, 0, 20, true);
 
         $readableMedalScores = [];
-        foreach ($topMedals as $medalId => &$score) {
-            foreach ($medals->content as $medal) {
-                if ($medal['Medal_ID'] == $medalId) {
-                    $readableMedalScores[] = [
-                            "Medal" => (int)$medal['Medal_ID'],
-                            "Score" => round($score, 4)
-                    ];
-                }
-            }
+        foreach ($topMedals as $medalId => $score) {
+            $readableMedalScores[] = [
+                    "Medal" => (int)$medalId,
+                    "Score" => round($score, 4)
+            ];
         }
 
         return new Response(true, "Success", $readableMedalScores);
