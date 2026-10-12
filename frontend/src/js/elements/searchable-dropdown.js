@@ -15,6 +15,7 @@ class SearchableDropdown extends HTMLElement {
         this.items = [];
         this.keyname = "name";
         this.arrowKeyDirector = null;
+        this.searchable = false;
     }
 
     create(
@@ -85,7 +86,9 @@ class SearchableDropdown extends HTMLElement {
                     bubbles: true,
                     composed: true
                 }));
-            }
+            },
+            undefined,
+            { searchType: "find", typeahead: !this.searchable }
         );
 
         arrowKeyDirector.Set(filteredItems, keyname, false, Defaultselected);
@@ -97,6 +100,9 @@ class SearchableDropdown extends HTMLElement {
 
         this.dropdownContent = dropdownContent;
         this.arrowKeyDirector = arrowKeyDirector;
+        if(!this.searchable) {
+            this.dropdownContent.classList.add("no-search");
+        }
     }
 
     setIgnoredIDs(key, value) {

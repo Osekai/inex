@@ -2,7 +2,7 @@
 @import url("footer.css");
 body {
     --page-width: 1500px;
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 
 

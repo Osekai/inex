@@ -116,3 +116,17 @@ searchable-dropdown {
     color: inherit;
     outline: 0px solid white !important;
 }
+
+.dropdown-content.no-search {
+    .dropdown-search-container {
+        pointer-events: none;
+        opacity: 0;
+        position: absolute;
+    }
+}
+.dropdown-inner p {
+    transition: opacity 0.2s ease;
+}
+.dropdown-inner p.typeahead-dim {
+    opacity: 0.5;
+}

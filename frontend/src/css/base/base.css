@@ -7,7 +7,7 @@
 }
 html {
     height: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 body {
     font-family: "Outfit", sans-serif;
@@ -15,7 +15,7 @@ body {
     background-color: var(--col-base);
     min-height: 100%;
     display: flex;
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 
 .page-padder {

@@ -1,11 +1,11 @@
 @font-face {
   font-family: "icons";
-  src: url('icons.eot?t=1791813330360'); /* IE9*/
-  src: url('icons.eot?t=1791813330360#iefix') format('embedded-opentype') /* IE6-IE8 */,
-  url('icons.woff2?t=1791813330360') format('woff2'),
-  url('icons.woff?t=1791813330360') format('woff'),
-  url('icons.ttf?t=1791813330360') format('truetype'),
-  url('icons.svg?t=1791813330360') format('svg');
+  src: url('icons.eot?t=1791813461100'); /* IE9*/
+  src: url('icons.eot?t=1791813461100#iefix') format('embedded-opentype') /* IE6-IE8 */,
+  url('icons.woff2?t=1791813461100') format('woff2'),
+  url('icons.woff?t=1791813461100') format('woff'),
+  url('icons.ttf?t=1791813461100') format('truetype'),
+  url('icons.svg?t=1791813461100') format('svg');
 }
 
 [class^="icon-"], [class*=" icon-"] {
@@ -23,10 +23,16 @@
 .icon-gamemode-mania::before { content: "\ea03"; }
 .icon-gamemode-osu::before { content: "\ea04"; }
 .icon-gamemode-taiko::before { content: "\ea05"; }
-.icon-logo-osekai::before { content: "\ea06"; }
-.icon-omh::before { content: "\ea07"; }
-.icon-tp-bluesky::before { content: "\ea08"; }
-.icon-tp-discord::before { content: "\ea09"; }
-.icon-tp-twitter::before { content: "\ea0a"; }
+.icon-goals-badges::before { content: "\ea06"; }
+.icon-goals-level::before { content: "\ea07"; }
+.icon-goals-medals::before { content: "\ea08"; }
+.icon-goals-pp::before { content: "\ea09"; }
+.icon-goals-rank::before { content: "\ea0a"; }
+.icon-goals-ss::before { content: "\ea0b"; }
+.icon-logo-osekai::before { content: "\ea0c"; }
+.icon-omh::before { content: "\ea0d"; }
+.icon-tp-bluesky::before { content: "\ea0e"; }
+.icon-tp-discord::before { content: "\ea0f"; }
+.icon-tp-twitter::before { content: "\ea10"; }
 
 
