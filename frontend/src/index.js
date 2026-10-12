@@ -253,9 +253,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (aCreateIcons != null) aCreateIcons();
         for (var element of document.querySelectorAll("[tooltip]")) {
             var text = element.getAttribute("tooltip");
-            tippy(element, {
-                content: text
-            });
+            if (element._tippy) {
+                element._tippy.setContent(text);
+            } else {
+                tippy(element, {
+                    content: text
+                });
+            }
             element.removeAttribute("tooltip");
         }
         window.loader.update();

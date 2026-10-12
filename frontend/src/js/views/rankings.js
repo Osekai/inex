@@ -111,6 +111,14 @@ function createTableBody(columns, data) {
                 let el = columnTypes[colDef.type](colData);
                 if(colDef.fill === true) td.classList.add("fill");
                 td.appendChild(el);
+
+                // the header row is hidden on mobile, so text columns show their label inline instead
+                if (colDef.type === "text" || colDef.type === "text-short") {
+                    const label = (colData.label ?? "").trim();
+                    if (label !== "" && !String(colData.content).toLowerCase().includes(label.toLowerCase())) {
+                        td.dataset.label = label;
+                    }
+                }
             } else {
                 td.textContent = "Unknown column type";
             }
@@ -392,7 +400,12 @@ function setActiveCategory(rankingType) {
     });
 
     document.querySelector(`[page-button="${rankingType}"]`).classList.add("active");
+    document.getElementById("pages-toggle-text").innerText = types[rankingType].category + " / " + types[rankingType].name;
 }
+
+document.getElementById("pages-toggle").addEventListener("click", () => {
+    document.getElementById("categories-outer").classList.toggle("pages-open");
+});
 
 async function Start() {
     const categories = buildCategoryStructure();

@@ -3,8 +3,7 @@ import {DoRequest} from "../utils/requests";
 import * as DOM from "../utils/dom";
 import {LucideIcon} from "../utils/dom";
 import {getParam, getSections, insertParam, removeParam, removeSection, setSections} from "../utils/urlQuery";
-import {timeAgo} from "../utils/timeago";
-import {SetTooltip} from "../utils/tooltip";
+import {UTCify} from "../utils/time";
 import {debounce} from "../utils/debounce";
 import {D2} from "../utils/d2";
 
@@ -51,8 +50,9 @@ function showBadge(badge, el = null, updateSection = true) {
 
 
     document.getElementById("badge-users").innerText = badge.Users.length;
-    document.getElementById("badge-achieved").innerText = timeAgo.format(new Date(badge.First_Date_Awarded));
-    SetTooltip(document.getElementById("badge-achieved"), badge.First_Date_Awarded, "bottom");
+    const firstAwarded = UTCify(badge.First_Date_Awarded);
+    document.getElementById("badge-achieved").innerText = D2.TimeRelative(firstAwarded);
+    document.getElementById("badge-achieved").setAttribute("tooltip", D2.TimeFull(firstAwarded, {time: "seconds"}));
 
     var list = document.getElementById("badge-users-list");
     list.innerHTML = "";
@@ -60,6 +60,10 @@ function showBadge(badge, el = null, updateSection = true) {
         var userObj = D2.CustomPlus("a", "badge__user", { "href": "/profiles/" + user.User_ID },() => {
             D2.Image("", "https://a.ppy.sh/" + user.User_ID);
             D2.Text("h3", user.Username);
+
+            const awarded = UTCify(user.Date_Awarded);
+            const date = D2.Text("p", D2.TimeFull(awarded), "awarded");
+            date.setAttribute("tooltip", D2.TimeFull(awarded, {time: "seconds"}));
         })
         list.appendChild(userObj);
     }
@@ -67,34 +71,47 @@ function showBadge(badge, el = null, updateSection = true) {
     document.getElementById("badge-sidebar").classList.add("open");
 }
 
-const sortDefaults = {
-    "date_achieved": "desc",
-    "name": "asc",
-    "player_count": "desc",
+const sortTypes = {
+    "date_achieved": {
+        "defaultDir": "desc",
+        "asc": {"icon": "arrow-down-narrow-wide", "label": "Oldest first"},
+        "desc": {"icon": "arrow-down-wide-narrow", "label": "Newest first"},
+    },
+    "name": {
+        "defaultDir": "asc",
+        "asc": {"icon": "arrow-down-a-z", "label": "A to Z"},
+        "desc": {"icon": "arrow-down-z-a", "label": "Z to A"},
+    },
+    "player_count": {
+        "defaultDir": "desc",
+        "asc": {"icon": "arrow-down-0-1", "label": "Fewest players first"},
+        "desc": {"icon": "arrow-down-1-0", "label": "Most players first"},
+    },
 };
 var sorting = getParam("sort", "date_achieved");
-var dir = getParam("dir", sortDefaults[sorting] ?? "asc");
+if (!sortTypes[sorting]) {
+    sorting = "date_achieved";
+}
+var dir = getParam("dir", sortTypes[sorting].defaultDir);
+if (dir !== "asc" && dir !== "desc") {
+    dir = sortTypes[sorting].defaultDir;
+}
 var searchText = "";
 
 var ascendButton = document.getElementById("ascend-button");
 
 function updateAscend() {
     ascendButton.innerHTML = "";
-    const defaultDir = sortDefaults[sorting] ?? "asc";
+    const sortType = sortTypes[sorting];
 
-    if (dir === defaultDir) {
+    if (dir === sortType.defaultDir) {
         removeParam("dir");
     } else {
         insertParam("dir", dir, false);
     }
 
-    if (dir == "asc") {
-        ascendButton.appendChild(LucideIcon("arrow-down-a-z"));
-        SetTooltip(ascendButton, "Ascending", "bottom");
-    } else {
-        ascendButton.appendChild(LucideIcon("arrow-up-a-z"));
-        SetTooltip(ascendButton, "Descending", "bottom");
-    }
+    ascendButton.appendChild(LucideIcon(sortType[dir].icon));
+    ascendButton.setAttribute("tooltip", sortType[dir].label);
     listDirty = true;
     renderVisibleItems();
 }
@@ -198,7 +215,7 @@ function getBadgeElement(item) {
         el.appendChild(DOM.Text("h1", item.Description))
 
         el.appendChild(D2.Div("", () => {
-            D2.Text("h3", "first awarded " + new Date(item.First_Date_Awarded).toISOString().slice(0, 10));
+            D2.Text("h3", "first awarded " + D2.TimeFull(UTCify(item.First_Date_Awarded)));
             D2.Text("h3", " - " + item.Users.length + " player" + (item.Users.length === 1 ? "" : "s"));
         }))
     }
@@ -328,7 +345,7 @@ async function init() {
         let div = DOM.Div("button", "display-toggle");
         let icon = DOM.LucideIcon(displayTypes[type].icon);
         div.appendChild(icon);
-        SetTooltip(div, displayTypes[type].name);
+        div.setAttribute("tooltip", displayTypes[type].name);
         displayTypes[type].element = div;
 
         div.addEventListener("click", () => {
@@ -393,7 +410,7 @@ function galleryCreateSortDropdown() {
         if (i === "date_achieved") removeParam("sort"); // default
         else insertParam("sort", i.Key, false);
         sorting = i.Key;
-        dir = sortDefaults[sorting] ?? "asc";
+        dir = sortTypes[sorting].defaultDir;
         updateAscend();
     });
 }

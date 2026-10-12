@@ -13,7 +13,6 @@ import {reportOverlay} from "../../ui/reportOverlay";
 import {LoaderOverlay} from "../../ui/loader-overlay";
 import {PermissionChecker} from "../../utils/permissionChecker";
 import {CenteredLoader} from "../../utils/loaderUtils";
-import {timeAgo, timeAgoLarge} from "../../utils/timeago";
 import {SetMedal} from "../medals";
 import {D2} from "../../utils/d2";
 import {Graph} from "../../ui/graph";
@@ -66,7 +65,7 @@ export class MedalsUI {
 
                 D2.Div("outdated", () => {
                     D2.Icon("alert-triangle", "warning");
-                    D2.Text("p", "This beatmap was submitted " + timeAgo.format(submitted) + ". It may not work anymore!")
+                    D2.Text("p", "This beatmap was submitted " + D2.TimeRelative(submitted) + ". It may not work anymore!")
                 });
             }
 
@@ -121,7 +120,9 @@ export class MedalsUI {
                             D2.Div("", () => {
 
                                 D2.StyledText("h3", `Submitted by <strong>${beatmap.User.Username}</strong>`);
-                                D2.Text("p", timeAgo.format(new Date(UTCify(beatmap.Beatmap_Submitted_Date))));
+                                const submittedDate = UTCify(beatmap.Beatmap_Submitted_Date);
+                                const submittedText = D2.Text("p", D2.TimeRelative(submittedDate));
+                                submittedText.setAttribute("tooltip", D2.TimeFull(submittedDate, {time: "minutes"}));
                             })
                         })
                 } catch {
@@ -328,14 +329,10 @@ export class MedalsUI {
                 D2.Div("info", () => {
                     D2.StyledText("h3", owner.Name);
 
-                    let achievedDate = new Date(UTCify(owner.Achieved_At));
+                    let achievedDate = UTCify(owner.Achieved_At);
 
-                    let date = D2.Text("p", achievedDate.toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric"
-                    }));
-                    date.setAttribute("tooltip", "Achieved at " + new Date(UTCify(owner.Achieved_At)).toLocaleString());
+                    let date = D2.Text("p", D2.TimeFull(achievedDate));
+                    date.setAttribute("tooltip", "Achieved at " + D2.TimeFull(achievedDate, {time: "seconds"}));
                 })
             })
             return panel;
@@ -430,9 +427,11 @@ export class MedalsUI {
             document.getElementById("medal_obtained").classList.add("hidden");
         }
 
-        document.getElementById("medal_release_date_ago").innerText = timeAgo.format(new Date(medal.Date_Released));
-        document.getElementById("medal_release_date").innerText = new Date(medal.Date_Released.replace(" 00:00:00", "")).toLocaleDateString();
-        document.getElementById("medal_first_achieved_date").innerText = new Date(medal.First_Achieved_Date).toLocaleString();
+        // parse as local midnight, utc would show the day before for anyone west of uk
+        const releaseDate = new Date(medal.Date_Released.replace(" ", "T"));
+        document.getElementById("medal_release_date_ago").innerText = D2.TimeRelative(releaseDate);
+        document.getElementById("medal_release_date").innerText = D2.TimeFull(releaseDate);
+        document.getElementById("medal_first_achieved_date").innerText = D2.TimeFull(UTCify(medal.First_Achieved_Date), {time: "seconds"});
         document.getElementById("medal_first_achieved_by").innerText = medal.First_Achieved_Username;
         document.getElementById("medal_first_achieved_by_pfp").src = "https://a.ppy.sh/" + medal.First_Achieved_User_ID;
         document.getElementById("medal_first_achieved_by_link").href = "/profiles/" + medal.First_Achieved_User_ID;

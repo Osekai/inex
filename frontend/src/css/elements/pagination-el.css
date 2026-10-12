@@ -25,3 +25,21 @@ pagination-el > div > div.selected {
     font-weight: 800;
     color: var(--topcol);
 }
+pagination-el .pagination-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    pagination-el {
+        gap: 4px;
+    }
+    pagination-el > div > div {
+        margin: 0px 2px;
+    }
+}

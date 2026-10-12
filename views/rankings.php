@@ -55,6 +55,11 @@ switch($ranking) {
     <div class="list__area">
 
         <div class="list__bar" id="categories-outer" bug="rankings/categories">
+            <button class="pages-toggle" id="pages-toggle">
+                <i data-lucide="menu"></i>
+                <span id="pages-toggle-text">Rankings</span>
+                <i data-lucide="chevron-down"></i>
+            </button>
             <div class="pages" id="pages">
 
             </div>
@@ -65,9 +70,12 @@ switch($ranking) {
 
                 </div>
                 <pagination-el link-id="ranking"></pagination-el>
-                <div bug="rankings/search">
+                <div bug="rankings/search" class="rankings-search-combo">
                     <searchable-dropdown id="searchtype-dropdown"></searchable-dropdown>
-                    <input type="text" class="input" placeholder="Search" id="search-bar">
+                    <div class="input-icon-container">
+                        <i data-lucide="search"></i>
+                        <input type="text" class="input" placeholder="Search" id="search-bar">
+                    </div>
                 </div>
             </div>
         </div>

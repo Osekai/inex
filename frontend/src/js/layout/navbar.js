@@ -2,7 +2,6 @@ import {D2} from "../utils/d2";
 import {GetSetting, SetSettings} from "../utils/usersettings";
 import {DoRequest} from "../utils/requests";
 import {Polling} from "../utils/polling";
-import {timeAgo, timeAgoApprox} from "../utils/timeago";
 import {UTCify} from "../utils/time";
 
 export class Settings {
@@ -151,11 +150,11 @@ export class Process {
 
             this.elements['text-best'].innerText = "Best case you'll be processed ";
             this.elements['text-worse'].innerText = "Worst case you'll be processed ";
-            this.elements['text-worse'].appendChild(D2.Text("span", timeAgoApprox(new Date(UTCify(state.data.due)))));
-            this.elements['text-best'].appendChild(D2.Text("span", timeAgoApprox(new Date(UTCify(state.data.estimatedNext)))));
+            this.elements['text-worse'].appendChild(D2.Text("span", D2.TimeRelative(UTCify(state.data.due), {mode: "approx"})));
+            this.elements['text-best'].appendChild(D2.Text("span", D2.TimeRelative(UTCify(state.data.estimatedNext), {mode: "approx"})));
 
             this.elements['text-last'].innerText = "Last processed ";
-            this.elements['text-last'].appendChild(D2.Text("span", timeAgo.format(new Date(UTCify(state.data.lastProcessed)))));
+            this.elements['text-last'].appendChild(D2.Text("span", D2.TimeRelative(UTCify(state.data.lastProcessed))));
         });
 
         this.polling = polling;
@@ -170,7 +169,9 @@ export class Process {
 export class Navbar {
     constructor() {
         this.settings = new Settings();
-        this.process = new Process();
+        if (loggedIn) {
+            this.process = new Process();
+        }
     }
 }
 

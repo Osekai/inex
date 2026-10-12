@@ -29,7 +29,10 @@ if($args[0] == null) {
 
                     </button>
                 </div>
-                <input type="text" class="input" placeholder="Search Badges" id="badge_search" bug="badges/searchbar">
+                <div class="input-icon-container">
+                    <i data-lucide="search"></i>
+                    <input type="text" class="input" placeholder="Search Badges" id="badge_search" bug="badges/searchbar">
+                </div>
                 <div id="display_toggle" class="badges__display-toggles" bug="badges/display-toggles">
 
                 </div>
@@ -45,7 +48,7 @@ if($args[0] == null) {
         <div class="badges__sidebar-inner">
             <div class="badges__sidebar_toolbar">
                 <button class="button icon-button" id="close-sidebar">
-                    <i data-lucide="chevron-left"></i>
+                    <i data-lucide="chevron-right"></i>
                     Close
                 </button>
             </div>

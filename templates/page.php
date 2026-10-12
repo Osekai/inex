@@ -60,7 +60,7 @@ use Database\Session; ?>
             </div>
             <div class="navbar-links mobile">
                 <div class="navbar-burger" dropdown-button="apps-dropdown">
-                    <i data-lucide="menu"></i> Apps
+                    <i data-lucide="menu"></i>
                 </div>
             </div>
         </div>

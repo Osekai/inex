@@ -2,6 +2,13 @@ import {D2} from "../../utils/d2";
 import {Clubs} from "../../utils/clubs";
 import {formatPlayTime} from "../../utils/time";
 
+function formatNumber(value, decimals = 0) {
+    return Number(value).toLocaleString(undefined, {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+    });
+}
+
 export const helpers = {
     "stdev": {
         "type": "toggle",
@@ -59,7 +66,7 @@ export const types = {
                 "data": (data) => {
                     return {
                         "label": "Medals",
-                        "content": data.Count_Medals + " medals"
+                        "content": formatNumber(data.Count_Medals) + " medals"
                     }
                 }
             },
@@ -133,7 +140,7 @@ export const types = {
                 "data": (data) => {
                     return {
                         "label": "users",
-                        "content": data.Count_Achieved_By
+                        "content": formatNumber(data.Count_Achieved_By)
                     }
                 }
             }
@@ -160,7 +167,7 @@ export const types = {
                 "data": (data, options) => {
                     return {
                         "label": (options.type === "total" ? "total pp" : "standard deviated pp"),
-                        "content": (options.type === "total" ? data.PP_Total : data.PP_Stdev),
+                        "content": formatNumber(options.type === "total" ? data.PP_Total : data.PP_Stdev) + "pp",
                         "labelPosition": "after"
                     }
                 }
@@ -170,7 +177,7 @@ export const types = {
                 "data": (data, options) => {
                     return {
                         "label": (options.type === "total" ? "standard deviated pp" : "total pp"),
-                        "content": (options.type === "total" ? data.PP_Stdev : data.PP_Total),
+                        "content": formatNumber(options.type === "total" ? data.PP_Stdev : data.PP_Total) + "pp",
                         "labelPosition": "after"
                     }
                 }
@@ -213,7 +220,7 @@ export const types = {
                 "data": (data, options) => {
                     return {
                         "label": (options.type === "total" ? "total level" : "standard deviated level"),
-                        "content": (options.type === "total" ? data.Level_Total : data.Level_Stdev),
+                        "content": formatNumber(options.type === "total" ? data.Level_Total : data.Level_Stdev, 2),
                         "labelPosition": "after"
                     }
                 }
@@ -257,7 +264,7 @@ export const types = {
                     let label = (options.type === "total" ? "total accuracy" : "standard deviated accuracy");
                     return {
                         "label": label,
-                        "content": (options.type === "total" ? data.Accuracy_Total : data.Accuracy_Stdev) + label
+                        "content": (options.type === "total" ? data.Accuracy_Total : data.Accuracy_Stdev)
                     }
                 }
             },
@@ -296,7 +303,7 @@ export const types = {
                 "data": (data) => {
                     return {
                         "label": "replays watched",
-                        "content": data.Count_Replays_Watched + " replays watched"
+                        "content": formatNumber(data.Count_Replays_Watched) + " replays watched"
                     }
                 }
             }
@@ -329,7 +336,7 @@ export const types = {
                 "data": (data, options) => {
                     return {
                         "label": (options.type === "ranked" ? "ranked maps" : "loved maps"),
-                        "content": (options.type === "ranked" ? data.Count_Maps_Ranked + " ranked maps" : data.Count_Maps_Loved + " loved maps")
+                        "content": (options.type === "ranked" ? formatNumber(data.Count_Maps_Ranked) + " ranked maps" : formatNumber(data.Count_Maps_Loved) + " loved maps")
                     }
                 }
             }
@@ -353,7 +360,7 @@ export const types = {
                 "data": (data) => {
                     return {
                         "label": "subscribers",
-                        "content": data.Count_Subscribers + " subscribers"
+                        "content": formatNumber(data.Count_Subscribers) + " subscribers"
                     }
                 }
             }
@@ -377,7 +384,7 @@ export const types = {
                 "data": (data) => {
                     return {
                         "label": "badges",
-                        "content": data.Count_Badges + " badges"
+                        "content": formatNumber(data.Count_Badges) + " badges"
                     }
                 }
             }
@@ -405,7 +412,7 @@ export const types = {
                         "label": "playtime",
                         "content": options.type === "total"
                             ? formatPlayTime(data.Play_Time_Total)
-                            : Math.round(data.Play_Time_Stdev / 60) + " hours"
+                            : formatNumber(data.Play_Time_Stdev / 60) + " hours"
                     }
                 }
             },
@@ -544,7 +551,11 @@ export const columnTypes = {
                 let pct = (weights[k] / total) * 100
                 let bar = D2.Div(cls)
                 bar.style.width = pct + "%"
-                bar.setAttribute("tooltip", `${v[k]} ${data.prefix}`)
+                if (data.prefix === "pp") {
+                    bar.setAttribute("tooltip", formatNumber(v[k]) + "pp")
+                } else {
+                    bar.setAttribute("tooltip", `${v[k]} ${data.prefix}`)
+                }
             }
         })
     },

@@ -1,6 +1,6 @@
 import '../../css/elements/pagination-el.css'
 
-import {Button, Div, Text} from "../utils/dom";
+import {Button, Div, LucideIcon, Text} from "../utils/dom";
 import {getParam, insertParam} from "../utils/urlQuery";
 
 class PaginationEl extends HTMLElement {
@@ -44,7 +44,10 @@ class PaginationEl extends HTMLElement {
         currentPage++;
         maxPages++;
 
-        const numButtons = 7; // Number of buttons to show
+        let numButtons = 7;
+        if (window.innerWidth < 600) {
+            numButtons = 5;
+        }
         const halfNumButtons = Math.floor(numButtons / 2);
 
         let startPage = currentPage - halfNumButtons;
@@ -108,8 +111,12 @@ class PaginationEl extends HTMLElement {
         this.maxPages = Math.ceil(max_count / limit) - 1;
         this.innerHTML = "";
 
-        var next = Button("next");
-        var prev = Button("prev");
+        var next = Button(LucideIcon("chevron-right"));
+        var prev = Button(LucideIcon("chevron-left"));
+        next.classList.add("pagination-arrow");
+        prev.classList.add("pagination-arrow");
+        next.setAttribute("aria-label", "Next page");
+        prev.setAttribute("aria-label", "Previous page");
 
 
         var pushpage = (dir) => {

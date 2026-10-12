@@ -101,7 +101,19 @@ if ($cur_medal == null) {
                 <div class="homepage-panel" bug="medals/home/suggestions">
                     <h1>Our recommendations for you</h1>
                     <div class="recommendations-grid" id="recommendations-grid">
-                        <?= LOADER ?>
+                        <?php
+                        for($x = 0; $x < 10; $x++) {
+                            ?>
+                            <div class="medal-suggestion placeholder"></div>
+                        <?php
+                        }
+                        ?>
+                        <div class="recommendation-loader-overlay">
+                            <?= LOADER ?>
+                            <div id="loader-funny-text">
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -261,6 +261,10 @@
                 font-weight: 600;
                 margin-left: 8px;
             }
+            .awarded {
+                margin-left: auto;
+                opacity: 0.6;
+            }
         }
     }
 }

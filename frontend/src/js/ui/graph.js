@@ -377,7 +377,7 @@ export class Graph {
             vLine.setAttribute("class", "graph-grid-line graph-grid-line--vertical");
             svg.appendChild(vLine);
 
-            const lbl = D2.Text("span", new Date(ts).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }), "graph-x-label");
+            const lbl = D2.Text("span", D2.TimeFull(new Date(ts), {style: "short"}), "graph-x-label");
             lbl.style.left = xOf(ts) + "px";
             this.xAxisInner.appendChild(lbl);
         }

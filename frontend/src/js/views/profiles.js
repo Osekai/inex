@@ -9,7 +9,6 @@ import {Clubs2} from "../utils/Clubs2";
 import {UTCify} from "../utils/time";
 import {Overlay} from "../ui/overlay";
 import {setSections} from "../utils/urlQuery";
-import {timeAgo} from "../utils/timeago";
 
 
 class Profiles {
@@ -111,10 +110,10 @@ class Profiles {
             el.innerText = profile.Osekai.Statistics.Medals.Votes;
         })
         Profiles.El("[pr-el=osekai-statistics-joined-osu]", (el) => {
-            el.innerText = timeAgo.format(UTCify(profile.User.join_date));
+            el.innerText = D2.TimeRelative(UTCify(profile.User.join_date));
         })
         Profiles.El("[pr-el=osekai-statistics-joined-osekai]", (el) => {
-            el.innerText = timeAgo.format(UTCify(profile.Osekai.Joined));
+            el.innerText = D2.TimeRelative(UTCify(profile.Osekai.Joined));
         })
     }
 
@@ -313,7 +312,7 @@ class Profiles {
             el.href = "/medals/" + rarestMedal.Medal_ID;
         });
         Profiles.El("[pr-el=medal-rarest-achieved-date]", (el) => {
-            el.innerText = (new Date(UTCify(rarestMedal.Obtained_Date))).toLocaleDateString();
+            el.innerText = D2.TimeFull(UTCify(rarestMedal.Obtained_Date));
         });
 
         Profiles.El("[pr-el=medal-favourite-button]", (el) => {

@@ -4,7 +4,6 @@ import {Div, LucideIcon, Text, Image} from "../utils/dom.js";
 
 import '../../css/ui/notifications.css'
 import DOMPurify from "dompurify";
-import {timeAgo} from "../utils/timeago";
 import {D2} from "../utils/d2";
 
 var offset = 0;
@@ -138,7 +137,10 @@ function GenerateNotification(raw) {
     var lower = Text("small", type.GetDescription(title, reftype, n));
     texts.appendChild(titletxt);
     texts.appendChild(lower);
-    texts.appendChild(Text("h6", timeAgo.format(new Date(n.Date + " UTC"))));
+    const notifDate = new Date(n.Date + " UTC");
+    const notifDateText = Text("h6", D2.TimeRelative(notifDate));
+    notifDateText.setAttribute("tooltip", D2.TimeFull(notifDate, {time: "minutes"}));
+    texts.appendChild(notifDateText);
     notif_upper.appendChild(icon);
     notif_upper.appendChild(texts);
 

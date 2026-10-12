@@ -2,7 +2,7 @@ import '../../css/elements/comments-section.css'
 
 import {DoRequest} from "../utils/requests";
 import {Button, Div, Image, LucideIcon, RoleBadge, Text} from "../utils/dom";
-import {timeAgo} from "../utils/timeago";
+import {D2} from "../utils/d2";
 import bbCodeParser from 'js-bbcode-parser';
 import {createDropdown} from "../ui/ultra-dropdown";
 import {reportOverlay} from "../ui/reportOverlay";
@@ -141,7 +141,9 @@ class CommentsSection extends HTMLElement {
             name.appendChild(groupsDiv);
         }
 
-        name.appendChild(Text("h3", timeAgo.format(new Date(comment.Date))));
+        const commentDate = Text("h3", D2.TimeRelative(comment.Date));
+        commentDate.setAttribute("tooltip", D2.TimeFull(comment.Date, {time: "minutes"}));
+        name.appendChild(commentDate);
 
         var content = Div("div", "content");
         content.innerHTML = bbCodeParser.parse(comment.Text.replace("\n", "<br>"));

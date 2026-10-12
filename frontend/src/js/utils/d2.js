@@ -1,5 +1,6 @@
 import {getMousePosition} from "./mouse";
 import {IconButton} from "./dom";
+import {timeAgo, timeAgoApprox, timeAgoLarge} from "./timeago";
 
 export class D2 {
     static _currentParent = null;
@@ -333,6 +334,53 @@ export class D2 {
             D2.Loader(true);
             D2.Text("p", "Loading...");
         })
+    }
+
+    static _toDate(time) {
+        if (time instanceof Date) {
+            return time;
+        }
+        return new Date(time);
+    }
+
+    // mode: "default", "approx" ("in around 2 hours") or "large" ("4 years 2 months ago")
+    static TimeRelative(time, settings = {}) {
+        const date = D2._toDate(time);
+
+        if (settings.mode === "approx") {
+            return timeAgoApprox(date);
+        }
+        if (settings.mode === "large") {
+            return timeAgoLarge(date);
+        }
+        return timeAgo.format(date);
+    }
+
+    // uses the visitor's regional format
+    // time: "none", "minutes" or "seconds" - style: "numeric" (22/08/2012) or "short" (22 Aug 2012)
+    static TimeFull(time, settings = {}) {
+        const date = D2._toDate(time);
+        const options = {};
+
+        if (settings.style === "short") {
+            options.day = "numeric";
+            options.month = "short";
+            options.year = "numeric";
+        } else {
+            options.day = "2-digit";
+            options.month = "2-digit";
+            options.year = "numeric";
+        }
+
+        if (settings.time === "minutes" || settings.time === "seconds") {
+            options.hour = "2-digit";
+            options.minute = "2-digit";
+        }
+        if (settings.time === "seconds") {
+            options.second = "2-digit";
+        }
+
+        return date.toLocaleString(undefined, options);
     }
 
     static MedalIcon(src) {
