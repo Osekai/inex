@@ -52,7 +52,10 @@ export class D2 {
 
     static Image(className, src, children, alt = "") {
         const img = D2._createElement("img", className, children);
-        img.src = src;
+        // an unset src would request "undefined" relative to the current page
+        if (src) {
+            img.src = src;
+        }
         img.alt = alt;
         return img;
     }
