@@ -1,0 +1,14 @@
+.banner {
+    background: white;
+    color: black;
+}
+
+body {
+    height: fit-content !important;
+}
+html {
+    height: fit-content !important;
+}
+:root {
+    background: black;
+}

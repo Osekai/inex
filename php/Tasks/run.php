@@ -41,6 +41,8 @@ AddRunner("preparelocalization", new Runners\PrepareLocalization());
 
 AddRunner("views", new Runners\Views());
 
+AddRunner("profilesbannersthemes", new Runners\ProfilesBannersThemes());
+
 
 
 

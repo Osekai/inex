@@ -1,0 +1,51 @@
+{
+  "key": "eclipse",
+  "name": "Eclipse Banner",
+  "category": "Medals",
+  "resolution": [
+    1400,
+    250
+  ],
+  "settings": {
+    "backgroundType": {
+      "type": "select",
+      "options": {
+        "club": {
+          "name": "Club"
+        },
+        "gradient": {
+          "name": "Gradient"
+        }
+      },
+      "default": "club",
+      "output": {
+        "type": "class"
+      }
+    },
+    "backgroundGradient": {
+      "type": "colour-gradient",
+      "default": [
+        "#ffaa66",
+        "#ff66aa"
+      ],
+      "showOn": {
+        "backgroundType": "gradient"
+      },
+      "output": {
+        "type": "variable"
+      },
+      "backgroundGradientAngle": {
+        "type": "number",
+        "default": 0,
+        "min": 0,
+        "max": 360,
+        "showOn": {
+          "backgroundType": "gradient"
+        },
+        "output": {
+          "type": "variable"
+        }
+      }
+    }
+  }
+}

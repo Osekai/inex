@@ -7,6 +7,46 @@ const node_modules = "./node_modules";
 
 module.exports = GenerateConfig();
 
+// turns 1000bpx into calc(1000 * 100vw / <theme width>) for profiles dyn themes
+function bpxPlugin() {
+    const themesPath = path.resolve(srcPath, '../../frontend/profiles-banners/');
+    const widthCache = {};
+
+    return {
+        postcssPlugin: 'bpx',
+        Declaration(decl, { result }) {
+            if (!decl.value.includes('bpx')) return;
+
+            const file = decl.source && decl.source.input.file;
+            if (!file) return;
+
+            const relative = path.relative(themesPath, file);
+            if (relative.startsWith('..')) {
+                throw decl.error('bpx used outside of a profiles dyn theme');
+            }
+
+            const folder = relative.split(path.sep)[0];
+            const metaPath = path.resolve(themesPath, folder, 'meta.json');
+
+            // so changing meta.json triggers a rebuild
+            result.messages.push({ type: 'dependency', plugin: 'bpx', file: metaPath });
+
+            if (widthCache[folder] === undefined) {
+                if (!fs.existsSync(metaPath)) {
+                    throw decl.error('no meta.json found for theme ' + folder);
+                }
+                const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+                widthCache[folder] = meta.resolution[0];
+            }
+
+            const width = widthCache[folder];
+            decl.value = decl.value.replace(/(-?\d*\.?\d+)bpx\b/g, (match, number) => {
+                return 'calc(' + number + ' * 100vw / ' + width + ')';
+            });
+        }
+    };
+}
+
 function GenerateConfig() {
     const isProduction = process.env["ANTHERA_PRODUCTION"] === "true";
 
@@ -47,6 +87,7 @@ function GenerateConfig() {
                             options: {
                                 postcssOptions: {
                                     plugins: [
+                                        bpxPlugin(),
                                         require('postcss-custom-media')({
                                             customMedia: {
                                                 '--mobile': '(min-width: 601px)',
@@ -131,6 +172,20 @@ function getEntryPoints() {
                 entryPoints[distName] = path.resolve(viewsPath, file);
             }
         });
+    }
+
+    var profilesDynThemes = path.resolve(srcPath, '../../frontend/profiles-banners/');
+    console.log(profilesDynThemes);
+    if (fs.existsSync(profilesDynThemes)) {
+        for(let folder of fs.readdirSync(profilesDynThemes)) {
+            console.log(folder);
+            if(folder.startsWith('.')) continue;
+            let jsPath = path.resolve(profilesDynThemes, folder, folder + '.js');
+            if(!fs.existsSync(jsPath)) continue;
+            console.log(jsPath);
+
+            entryPoints["pb-" + folder] = jsPath;
+        }
     }
 
     return entryPoints;

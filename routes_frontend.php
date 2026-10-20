@@ -1,15 +1,14 @@
 <?php
 
-use Ampra\IO;
-use Database\Connection;
-use Database\Session;
+use Data\Profiles\Banners;
 
-if(!isset($router)) die("Do not call this directly!");
+if (!isset($router)) die("Do not call this directly!");
 
 function BasePage($name)
 {
     DrawViewWithTemplate($name, "page");
 }
+
 function Page($name)
 {
     return function () use ($name) {
@@ -17,6 +16,7 @@ function Page($name)
         BasePage($name);
     };
 }
+
 function LoginPage($name)
 {
     return function () use ($name) {
@@ -27,9 +27,7 @@ function LoginPage($name)
 }
 
 
-
 // Basic //
-
 
 
 $router->get('/', function () {
@@ -53,6 +51,36 @@ $router->get('/badges/{badge}/', function ($badge) {
 
 $router->get('/profiles', function () {
     DrawViewWithTemplate("profiles_home", "page");
+});
+$router->get('/profiles/banner/{id}/html', function ($id) {
+    $bannerData = Banners::GetBanner($id);
+    if ($bannerData === null) return;
+    Site::$profiles_banner = $bannerData;
+
+    // we don't like the template rendering since it's old and doesn't let us do our fuckery so we do it ourselves
+
+    $qu = $bannerData->content['User'];
+    $elements = [
+        "pb-pfp" => <<< HTML
+ <img src="https://a.ppy.sh/{$qu['User']['id']}" class="pb-pfp">
+HTML,
+        "pb-gamemode-icon" => <<< HTML
+<i class="icon-gamemode-{$qu['User']['playmode']}"></i>
+HTML
+
+    ];
+
+
+    ob_start();
+    include "frontend/profiles-banners/" . $bannerData->content['Theme']['Key'] . "/" . $bannerData->content['Theme']['Key'] . ".php";
+    $page = ob_get_contents();
+    ob_end_clean();
+
+    foreach ($elements as $key => $value) {
+        $page = str_replace("<$key></$key>", $value, $page);
+    }
+
+    include "templates/profiles_banner.php";
 });
 $router->get('/profiles/{user}/{gamemode}', function ($user, $gamemode) {
     DrawViewWithTemplate("profiles", "page", $user, $gamemode);
@@ -95,15 +123,15 @@ $router->get('/snapshots', function () {
 
 });
 $router->get('/snapshots/all', function () {
-    if(!\Data\OsekaiUsers::HasPermission("snapshots.admin")) exit;
+    if (!\Data\OsekaiUsers::HasPermission("snapshots.admin")) exit;
     DrawViewWithTemplate("snapshots_admin", "page");
 });
 $router->get('/snapshots/upload', function () {
-    if(!\Data\OsekaiUsers::HasPermission("snapshots.admin.upload")) exit;
+    if (!\Data\OsekaiUsers::HasPermission("snapshots.admin.upload")) exit;
     DrawViewWithTemplate("snapshots_admin_upload", "page");
 });
 $router->get('/snapshots/edit/{ver}', function ($ver) {
-    if(!\Data\OsekaiUsers::HasPermission("snapshots.admin.edit")) exit;
+    if (!\Data\OsekaiUsers::HasPermission("snapshots.admin.edit")) exit;
     DrawViewWithTemplate("snapshots_admin_ver", "page", $ver);
 });
 
@@ -116,17 +144,14 @@ $router->post('/poll/1', function () {
 });
 
 
-
 $router->get('/legal/privacy', function () {
     DrawViewWithTemplate("privacy", "page");
 });
 
 
-
 $router->get('/legal/contact', function () {
     DrawViewWithTemplate("contact", "page");
 });
-
 
 
 $router->get('/guidelines', function () {
