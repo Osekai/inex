@@ -130,7 +130,7 @@ class ProfileLink {
 
     _buildPopupSkeleton() {
         let els = {};
-        let popupContent = D2.CustomPlus("a", "profile-popup", {}, () => {
+        let popupContent = D2.CustomPlus("a", "profile-popup", { "no-url-popup": "" }, () => {
             els["header"] = D2.Div("profile-header", () => {
                 els["avatar"] = D2.Image("pfp");
                 els["name"] = D2.Text("h2");

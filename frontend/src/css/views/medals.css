@@ -712,6 +712,7 @@ body {
 }
 .beatmap .bottom h4.expanded {
     white-space: inherit;
+    overflow-wrap: anywhere;
 }
 
 .medal__extra-info {

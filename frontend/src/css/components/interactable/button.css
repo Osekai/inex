@@ -19,6 +19,11 @@
     align-items: center;
 }
 
+/* iconfont matches any icon- class, beat its specificity */
+.button.icon-button {
+    font-family: inherit !important;
+}
+
 .icon-button i {
     font-size: 22px;
     margin-right: 8px;

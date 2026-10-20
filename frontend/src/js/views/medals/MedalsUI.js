@@ -18,6 +18,7 @@ import {D2} from "../../utils/d2";
 import {Graph} from "../../ui/graph";
 import TimeAgo from "javascript-time-ago";
 import {MedalUtils} from "./MedalUtils";
+import {makeLinksClickable} from "../../utils/makeLinksClickable";
 import {GetSetting, SetSettings} from "../../utils/usersettings";
 
 
@@ -82,7 +83,9 @@ export class MedalsUI {
 
             D2.Div("bottom", () => {
                 var note = D2.Text("h4", beatmap.Note);
-                note.addEventListener("click", () => {
+                makeLinksClickable(note);
+                note.addEventListener("click", (e) => {
+                    if (e.target.closest("a")) return;
                     note.classList.toggle("expanded");
                 });
 

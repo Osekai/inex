@@ -25,10 +25,11 @@ SELECT Badges_Data.*,
 FROM Badges_Data 
         INNER JOIN Badges_Users ON Badges_Data.ID = Badges_Users.Badge_ID
         LEFT JOIN (
-            SELECT ID, MIN(Name) AS Name, Country_Code
+            SELECT ID, MIN(Name) AS Name, Country_Code, MAX(Is_Restricted) AS Is_Restricted
             FROM Rankings_Users
             GROUP BY ID
         ) Merged_Users_Deduped ON Merged_Users_Deduped.ID = Badges_Users.User_ID
+WHERE COALESCE(Merged_Users_Deduped.Is_Restricted, 0) = 0
 GROUP BY Badges_Data.ID
 ORDER BY First_Date_Awarded DESC
         ");

@@ -101,13 +101,13 @@ class CommentsSection extends HTMLElement {
 
 
         var recalcReplyHeight = () => {
-            var height = 0;
-            for (var child of replyContainer.children) {
-                let childHeight = child.getBoundingClientRect().height;
-                height += childHeight;
-            }
-            replyContainer.style.setProperty("--reply-height", height + "px");
+            // scrollHeight includes the margins between replies
+            replyContainer.style.setProperty("--reply-height", replyContainer.scrollHeight + "px");
         }
+
+        var replyResizeObserver = new ResizeObserver(() => {
+            recalcReplyHeight();
+        });
 
 
         var name = Div("div", "name");
@@ -332,7 +332,9 @@ class CommentsSection extends HTMLElement {
                     }))["content"];
 
                     for (let reply of replies) {
-                        replyContainer.appendChild(this.createComment(reply, false))
+                        let replyEl = this.createComment(reply, false);
+                        replyContainer.appendChild(replyEl);
+                        replyResizeObserver.observe(replyEl);
                     }
                     replies_opened = true;
                     recalcReplyHeight();
