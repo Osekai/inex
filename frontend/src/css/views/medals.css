@@ -1362,3 +1362,57 @@ body:not(.medals-loaded) {
 .medals__page .main-right {
     min-width: 0;
 }
+
+@keyframes spin3d {
+    0% {
+        opacity: 0;
+        transform: rotateY(360deg) perspective(1000px) rotateX(20deg) rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(0deg) perspective(1000px) rotateX(0deg) rotateY(0deg);
+        opacity: 1;
+    }
+}
+@keyframes slide-in {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0%);
+    }
+}
+@keyframes slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}
+@keyframes slide-down {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+}
+.medals__page > .main.animate {
+    medal-icon {
+        animation: spin3d 2s cubic-bezier(0.249, 0.026, 0.031, 0.995);
+    }
+    .medal__info-text {
+        animation: slide-in 2s cubic-bezier(0.249, 0.026, 0.031, 0.995);
+    }
+    animation: slide-up 0.5s ease;
+}
+.medals__page > .main:not(.animate) {
+    animation: slide-down 0.3s ease;
+    animation-fill-mode: forwards;
+}

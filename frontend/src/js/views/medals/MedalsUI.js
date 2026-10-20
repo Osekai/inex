@@ -16,7 +16,6 @@ import {CenteredLoader} from "../../utils/loaderUtils";
 import {SetMedal} from "../medals";
 import {D2} from "../../utils/d2";
 import {Graph} from "../../ui/graph";
-import TimeAgo from "javascript-time-ago";
 import {MedalUtils} from "./MedalUtils";
 import {makeLinksClickable} from "../../utils/makeLinksClickable";
 import {GetSetting, SetSettings} from "../../utils/usersettings";
@@ -24,6 +23,7 @@ import {GetSetting, SetSettings} from "../../utils/usersettings";
 
 export class MedalsUI {
     static extra_AdoptionGraph = null;
+    static extraPrepared = false;
 
     static AddBeatmap(beatmap, grid) {
         var votebutton, extrabutton, dropdown;
@@ -59,9 +59,9 @@ export class MedalsUI {
             ], new ModalIcon("alert-triangle", "#ff623e"));
         };
 
-        var outer = D2.Div("beatmap",  () => {
+        var outer = D2.Div("beatmap", () => {
             let medaldata = MedalUtils.GetCurrentMedal()
-            if(outdated && medaldata.Is_Restricted == 0) {
+            if (outdated && medaldata.Is_Restricted == 0) {
                 // if it's restricted that means that medal can only work on *specific* beatmaps, no matter how old the submission lol
 
                 D2.Div("outdated", () => {
@@ -174,7 +174,6 @@ export class MedalsUI {
         });
 
 
-
         outer.style.setProperty("--bg", "url(\"https://assets.ppy.sh/beatmaps/" + beatmap.Beatmapset_ID + "/covers/cover.jpg\")");
 
         return outer;
@@ -254,15 +253,13 @@ export class MedalsUI {
         }
     }
 
-
-    static extraPrepared = false;
     static async PrepareExtra() {
         if (MedalsUI.extraPrepared) return;
         MedalsUI.extraPrepared = true;
 
         let state = GetSetting("medals-extra-state", {}, true);
 
-        for(let el of document.querySelectorAll("[extra-info-panel]")) {
+        for (let el of document.querySelectorAll("[extra-info-panel]")) {
             let key = el.getAttribute("extra-info-panel");
 
             let button = el.querySelector("[selector='collapse']")
@@ -273,9 +270,9 @@ export class MedalsUI {
             })
 
             let data = state[key];
-            if (typeof(data) !== "undefined") {
+            if (typeof (data) !== "undefined") {
                 console.log("?", data);
-                if(data === true) {
+                if (data === true) {
                     el.classList.add("collapsed");
                 } else {
                     el.classList.remove("collapsed");
@@ -285,6 +282,7 @@ export class MedalsUI {
 
         await SetSettings("medals-extra-state", state, true);
     }
+
     static async LoadExtra(medal: Medal) {
         document.getElementById("extra-loader").classList.remove("hidden");
         await MedalsUI.PrepareExtra();
@@ -340,7 +338,8 @@ export class MedalsUI {
             })
             return panel;
         }
-        for(let owner of extraData.content.Owners) {
+
+        for (let owner of extraData.content.Owners) {
             let panel = ownerPanel(owner);
             list.appendChild(panel);
         }
@@ -352,7 +351,7 @@ export class MedalsUI {
                 "page": page
             });
             page++;
-            for(let owner of more.content) {
+            for (let owner of more.content) {
                 let panel = ownerPanel(owner);
                 list.appendChild(panel);
             }
@@ -385,7 +384,18 @@ export class MedalsUI {
         }
     }
 
-    static LoadMedal(medal: Medal, scrollTo = false) {
+    static async LoadMedal(medal: Medal, scrollTo = false) {
+        //document.getElementById("main-col").classList.remove("animate");
+        //await (async () => {
+        //    let promise = new Promise((resolve, reject) => {
+        //        setTimeout(() => {
+        //            resolve();
+        //        }, 301);
+        //    });
+        //    await promise;
+        //})();
+        document.getElementById("main-col").classList.add("animate");
+
         document.getElementById("medal-home").classList.add("_hidden");
         document.getElementById("medal-info").classList.remove("_hidden");
 
@@ -433,7 +443,7 @@ export class MedalsUI {
         document.getElementById("medal_description").innerText = medal.Description;
         document.getElementById("medal_instructions").innerHTML = medal.Instructions; // instructions have <i> sometimes
 
-        if(medal.Obtained) {
+        if (medal.Obtained) {
             document.getElementById("medal_obtained").classList.remove("hidden");
         } else {
             document.getElementById("medal_obtained").classList.add("hidden");
@@ -492,6 +502,8 @@ export class MedalsUI {
                 mods.appendChild(pill);
             }
         }
+
+
     }
 
     static LoadMedalQuick(medal) {
