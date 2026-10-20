@@ -5,6 +5,7 @@ namespace Data;
 use API\Osu\User;
 use API\Response;
 use Data\Profiles\Goals;
+use Data\Profiles\Timeline;
 use Database\Connection;
 use Debug\Timings;
 
@@ -212,6 +213,7 @@ WHERE u.ID = ?;
             ]
         ];
         $data['Goals'] = Goals::Get($data, true);
+        $data['Timeline'] = Timeline::Get($data['User']['id']);
         return new Response(true, "ok", $data);
     }
 

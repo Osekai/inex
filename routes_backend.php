@@ -268,6 +268,15 @@ $router->post("/api/profiles/goals/add", function () {
 $router->post("/api/profiles/goals/([^/]+)/delete", function ($id) {
     echo \Data\Profiles\Goals::Delete($id)->ReturnJson();
 });
+$router->post("/api/profiles/timeline/add", function () {
+    echo \Data\Profiles\Timeline::Add($_POST['date'] ?? '', $_POST['note'] ?? '', $_POST['mode'] ?? '')->ReturnJson();
+});
+$router->post("/api/profiles/timeline/([^/]+)/edit", function ($id) {
+    echo \Data\Profiles\Timeline::Edit($id, $_POST['date'] ?? '', $_POST['note'] ?? '')->ReturnJson();
+});
+$router->post("/api/profiles/timeline/([^/]+)/delete", function ($id) {
+    echo \Data\Profiles\Timeline::Delete($id)->ReturnJson();
+});
 $router->all("/api/profiles/([^/]+)/([^/]+)", function ($id, $gamemode) {
     echo \Data\Profiles::Get($id, $gamemode)->ReturnJson();
 });

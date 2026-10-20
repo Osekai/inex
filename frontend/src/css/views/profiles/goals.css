@@ -186,8 +186,9 @@
         transition: opacity 0.15s ease, transform 0.15s ease;
 
         svg {
-            width: 14px;
-            height: 14px;
+            width: 14px !important;
+            height: 14px !important;
+            margin: 0 !important;
         }
 
         &:hover {
@@ -287,39 +288,5 @@
     .input {
         flex: 1;
         min-width: 0;
-    }
-}
-
-.goal-mode-picker {
-    display: flex;
-    gap: 2px;
-    padding: 3px;
-    border-radius: 90px;
-    background: var(--col-l3);
-    transition: opacity 0.15s ease;
-
-    &.disabled {
-        opacity: 0.3;
-        pointer-events: none;
-    }
-}
-
-.goal-mode-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 90px;
-    cursor: pointer;
-    font-size: 18px;
-
-    &:hover {
-        background: var(--col-l5);
-    }
-
-    &.active {
-        background: var(--gradient);
-        color: var(--topcol);
     }
 }

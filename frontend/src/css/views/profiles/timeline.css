@@ -1,0 +1,287 @@
+#timeline-outer {
+    width: 100%;
+}
+
+.timeline {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.timeline-track-outer {
+    position: relative;
+    padding: 0 10px;
+}
+
+.timeline.editable .timeline-track-outer {
+    cursor: copy;
+}
+
+.timeline-track {
+    position: relative;
+    height: 28px;
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: -10px;
+        right: -10px;
+        height: 4px;
+        transform: translateY(-50%);
+        border-radius: 90px;
+        background: var(--col-l3);
+    }
+}
+
+.timeline-date-tip {
+    position: absolute;
+    top: -30px;
+    z-index: 5;
+    transform: translateX(-50%);
+    padding: 3px 10px;
+    border-radius: 90px;
+    background: var(--col-l5);
+    font-size: 13px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+
+    &.visible {
+        opacity: 1;
+    }
+}
+
+.timeline-ghost {
+    position: absolute;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    transform: translate(-50%, -50%);
+    border-radius: 90px;
+    border: 2px dashed var(--col-sat-2);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 1;
+
+    &.visible {
+        opacity: 1;
+    }
+}
+
+.timeline-dot {
+    position: absolute;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    border-radius: 90px;
+    background: var(--col-sat-2);
+    outline: 4px solid var(--col-l1);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+
+    p {
+        font-size: 10px;
+        font-weight: 800;
+        color: var(--col-l1);
+    }
+
+    &:hover {
+        transform: translate(-50%, -50%) scale(1.25);
+    }
+
+    &.active {
+        width: 22px;
+        height: 22px;
+        background: var(--col-l90);
+        box-shadow: 0 0 12px var(--col-sat-2);
+    }
+}
+
+.timeline-labels {
+    display: flex;
+    justify-content: space-between;
+    /* track is 28px tall for the hit area, pull these up to the line */
+    margin-top: -6px;
+
+    p {
+        font-size: 13px;
+        font-weight: 300;
+        opacity: 0.6;
+    }
+}
+
+.timeline-detail {
+    &.card {
+        position: absolute;
+        top: calc(100% + 10px);
+        z-index: 5;
+        box-shadow: 0 6px 20px #0006;
+        width: fit-content;
+        min-width: 220px;
+        max-width: min(100%, 420px);
+        padding: 0;
+        border-radius: var(--border-radius);
+        background: var(--col-d2);
+        outline: 1px solid var(--col-l3);
+
+        /* little arrow pointing up at the dot */
+        &:before {
+            content: "";
+            position: absolute;
+            top: -6px;
+            left: var(--arrow, 50%);
+            width: 12px;
+            height: 12px;
+            transform: translateX(-50%) rotate(45deg);
+            background: var(--col-d2);
+            border-left: 1px solid var(--col-l3);
+            border-top: 1px solid var(--col-l3);
+        }
+    }
+}
+
+.timeline-detail.card > h2 {
+    font-size: 18px;
+    font-weight: 400;
+    padding: 10px 14px;
+    border-bottom: 1px solid #fff1;
+}
+
+.timeline-detail.card .timeline-add-another {
+    cursor: pointer;
+    background: var(--col-l3);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+
+    > svg {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        color: var(--col-sat-2);
+    }
+
+    &:hover {
+        background: var(--col-l5);
+    }
+}
+
+/* only the empty-timeline message sits in the flow, an empty div shouldn't add space */
+.timeline-detail:not(.card):not(:empty) {
+    margin-top: 14px;
+}
+
+.timeline-empty p {
+    font-weight: 300;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.timeline-entry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+
+    &:not(:last-child) {
+        border-bottom: 1px solid #fff1;
+    }
+
+    > i {
+        flex-shrink: 0;
+        font-size: 20px;
+        color: var(--col-sat-2);
+    }
+
+    .timeline-entry-text {
+        flex: 1;
+        min-width: 0;
+
+        p {
+            font-size: 17px;
+            font-weight: 300;
+            overflow-wrap: anywhere;
+        }
+
+        small {
+            font-size: 13px;
+            opacity: 0.6;
+        }
+    }
+
+    .timeline-entry-buttons {
+        display: flex;
+        gap: 4px;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+    }
+
+    &:hover .timeline-entry-buttons {
+        opacity: 1;
+    }
+}
+
+.timeline-entry-button {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 90px;
+    background: var(--col-l3);
+
+    /* icon-button forces 25px with !important */
+    svg {
+        width: 15px !important;
+        height: 15px !important;
+        margin: 0 !important;
+    }
+
+    &:hover {
+        background: var(--col-l5);
+    }
+
+    &.danger:hover {
+        background: #ff623e;
+        color: #fff;
+    }
+}
+
+.timeline-editor {
+    width: 420px;
+    max-width: calc(100vw - 32px);
+    align-items: stretch !important;
+
+    .timeline-editor-label {
+        font-size: 15px;
+        font-weight: 300;
+        margin-top: 12px;
+        margin-bottom: 4px;
+        opacity: 0.8;
+    }
+
+    .button-row {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 20px;
+    }
+}
+
+.timeline-detail.card:not(.clicked) {
+    /* hidden but still there, so the card is the same width either way */
+    .timeline-entry-buttons, .timeline-entry:hover .timeline-entry-buttons {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .timeline-add-another {
+        display: none;
+    }
+}

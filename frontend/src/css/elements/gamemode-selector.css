@@ -1,0 +1,34 @@
+gamemode-selector {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    width: fit-content;
+    border-radius: 90px;
+    background: var(--col-l3);
+    transition: opacity 0.15s ease;
+
+    &[disabled] {
+        opacity: 0.3;
+        pointer-events: none;
+    }
+}
+
+.gamemode-selector-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 90px;
+    cursor: pointer;
+    font-size: 18px;
+
+    &:hover {
+        background: var(--col-l5);
+    }
+
+    &.active {
+        background: var(--gradient);
+        color: var(--topcol);
+    }
+}

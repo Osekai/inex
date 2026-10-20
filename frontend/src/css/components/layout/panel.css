@@ -8,6 +8,7 @@
     align-items: flex-start;
     margin-bottom: 10px;
     position: relative;
+    border: 1px solid var(--col-l4);
 }
 
 .panel > h1:first-child, .panel .panel-header h1 {

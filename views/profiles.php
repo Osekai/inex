@@ -101,10 +101,9 @@ if (INSTANCE !== "dev") {
                     <div class="panel">
                         <div class="panel-header">
                             <h1>Timeline</h1>
-                            <div class="lumen-button sm pill"><i data-lucide="plus"></i> Add timeline point</div>
                         </div>
                         <div class="divider"></div>
-                        <div id="timeline"></div>
+                        <div id="timeline-outer"></div>
                     </div>
                     <div class="panel">
                         <h1>Goals</h1>

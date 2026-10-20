@@ -1,5 +1,6 @@
 import "../../css/views/profiles.css";
 import "../../css/views/profiles/goals.css";
+import "../../css/views/profiles/timeline.css";
 import "../../css/views/profiles/info.css";
 import "../../css/views/profiles/banners.css";
 import {Graph} from "../ui/graph";
@@ -14,6 +15,7 @@ import {Overlay} from "../ui/overlay";
 import {setSections} from "../utils/urlQuery";
 import Banners from "./profiles/Banners";
 import Goals from "./profiles/Goals";
+import Timeline from "./profiles/Timeline";
 
 
 class Profiles {
@@ -77,6 +79,7 @@ class Profiles {
 
         this.banners = new Banners(this);
         this.goals = new Goals(this);
+        this.timeline = new Timeline(this);
     }
 
     Render_Header() {

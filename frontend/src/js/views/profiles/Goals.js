@@ -193,19 +193,12 @@ export default class Goals {
                     if (e.key == "Enter") this.addGoal(input);
                 });
 
-                this.els.modeButtons = D2.Div("goal-mode-picker", () => {
-                    for (let mode of MODES) {
-                        let button = D2.Div("goal-mode-button", () => {
-                            D2.Custom("i", "icon-gamemode-" + mode.Key);
-                        });
-                        button.modeKey = mode.Key;
-                        button.setAttribute("tooltip", mode.Name);
-                        button.addEventListener("click", () => {
-                            this.selectedMode = mode.Key;
-                            this.updatePickers();
-                        });
-                    }
+                this.els.modeSelector = document.createElement("gamemode-selector");
+                this.els.modeSelector.value = this.selectedMode;
+                this.els.modeSelector.addEventListener("change", (e) => {
+                    this.selectedMode = e.detail;
                 });
+                D2._currentParent.appendChild(this.els.modeSelector);
 
                 let add = D2.IconButton("plus", "Add", "lumen-button primary");
                 add.addEventListener("click", () => {
@@ -222,12 +215,8 @@ export default class Goals {
         for (let button of this.els.typeButtons.children) {
             button.classList.toggle("active", button.typeKey == this.selectedType.Key);
         }
-        for (let button of this.els.modeButtons.children) {
-            button.classList.toggle("active", button.modeKey == this.selectedMode);
-        }
-
         // medals and badges don't care about mode
-        this.els.modeButtons.classList.toggle("disabled", !this.selectedType.Per_Mode);
+        this.els.modeSelector.toggleAttribute("disabled", !this.selectedType.Per_Mode);
     }
 
     async addGoal(input) {
