@@ -1,13 +1,13 @@
 <?php
 
-namespace Tasks\Runners;
+namespace Tasks\Tasks\Eclipse;
 
 use Database\Connection;
-use Tasks\AbstractRunner;
+use Tasks\EclipseTask;
 
-class RoleAssignments extends AbstractRunner
+class RoleAssignments extends EclipseTask
 {
-    public function etirun($args): void
+    public function Run(): void
     {
         $roles = $this->eclipse_db->execSimpleSelect("SELECT * FROM GroupAssignments");
 

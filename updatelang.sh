@@ -1,5 +1,5 @@
 #!/bin/bash
-php index.php task preparelocalization
+php index.php task PrepareLocalization
 
 cd public/lang
 git add en_GB.json

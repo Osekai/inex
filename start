@@ -24,5 +24,6 @@ run_with_restart() {
 }
 
 run_with_restart "AMPRA" bash -c "cd services/ampra && ./start.sh" &
+run_with_restart "TASKS" bash -c "php index.php task Cron" &
 
 wait

@@ -11,7 +11,7 @@ use Discord;
 use Jfcherng\Diff\Differ;
 use Jfcherng\Diff\Renderer\RendererConstant;
 use Jfcherng\Diff\Renderer\Text\Unified;
-use Tasks\Runners\BeatmapPacks;
+use Tasks\Tasks\UpdateBeatmapPacks;
 
 class Medals
 {
@@ -92,9 +92,9 @@ class Medals
             }
         }
 
-        $bpu = (new BeatmapPacks());
+        $bpu = (new UpdateBeatmapPacks());
         $bpu->log = false;
-        $bpu->etirun([]);
+        $bpu->Run();
         ///
 
 

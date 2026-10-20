@@ -1,13 +1,13 @@
 <?php
 
-namespace Tasks\Runners;
+namespace Tasks\Tasks;
 
 use Database\Connection;
-use Tasks\AbstractRunner;
+use Tasks\Task;
 
-class ProfilesBannersThemes extends AbstractRunner
+class UpdateProfilesBannersThemes extends Task
 {
-    public function etirun($args): void
+    public function Run(): void
     {
         $themes = [];
         $path = __DIR__ . "/../../../frontend/profiles-banners/";

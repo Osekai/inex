@@ -12,4 +12,3 @@ git submodule update
 COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader
 php vendor/bin/phinx migrate
 php index.php task Update
-php index.php task profilesbannersthemes

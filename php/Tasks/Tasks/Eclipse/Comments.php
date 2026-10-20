@@ -1,12 +1,12 @@
 <?php
 
-namespace Tasks\Runners;
+namespace Tasks\Tasks\Eclipse;
 
-use Tasks\AbstractRunner;
+use Tasks\EclipseTask;
 
-class Comments extends AbstractRunner
+class Comments extends EclipseTask
 {
-    public function etirun($args): void
+    public function Run(): void
     {
         echo "hi";
         $types = [
@@ -19,7 +19,8 @@ class Comments extends AbstractRunner
                 "target_table" => "Profiles_Data"
             ]
         ];
-        $type = $types[$args[0]];
+        // only profiles is active right now
+        $type = $types["profiles"];
 
         print_r($type);
 

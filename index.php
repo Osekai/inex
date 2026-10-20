@@ -36,14 +36,8 @@ $s->finish();
 
 
 
-if (php_sapi_name() == "cli") {
-    if ($argv[1] == "task") {
-        include("php/Tasks/run.php");
-    } else {
-        echo "Use command 'task' to run tasks\n";
-    }
-    exit;
-} else {
+// cli doesn't buffer, task output should show up live
+if (php_sapi_name() != "cli") {
     $s = new \Debug\Timings("ob_start");
     ob_start();
     $s->finish();
@@ -69,6 +63,22 @@ $s->finish();
 $s = new \Debug\Timings("general");
 include("php/General.php");
 $s->finish();
+
+if (php_sapi_name() == "cli") {
+    error_reporting(E_ERROR | E_PARSE);
+    if (count($argv) < 3) {
+        $argv[2] = "help";
+    }
+    switch ($argv[1] ?? null) {
+        case 'task':
+            \Tasks\Tasks::RunSpecific($argv[2]);
+            break;
+        default:
+            echo "Use command 'task' to run task\n";
+            break;
+    }
+    exit;
+}
 
 $s = new \Debug\Timings("session");
 Database\Session::Begin();

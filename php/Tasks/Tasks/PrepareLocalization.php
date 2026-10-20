@@ -1,10 +1,10 @@
 <?php
 
-namespace Tasks\Runners;
+namespace Tasks\Tasks;
 
-use Tasks\AbstractRunner;
+use Tasks\Task;
 
-class PrepareLocalization extends AbstractRunner
+class PrepareLocalization extends Task
 {
     private string $projectRoot;
     private string $langDir;
@@ -12,7 +12,6 @@ class PrepareLocalization extends AbstractRunner
 
     public function __construct()
     {
-        parent::__construct();
         $this->projectRoot = ROOT;
         $this->langDir = $this->projectRoot . '/public/lang';
         $this->loadGitignore();
@@ -99,7 +98,7 @@ class PrepareLocalization extends AbstractRunner
         return $found;
     }
 
-    function etirun($args): void
+    public function Run(): void
     {
         $found = $this->ReadFiles();
         $outputPath = $this->langDir . '/en_GB.json';

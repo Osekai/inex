@@ -1,13 +1,13 @@
 <?php
 
-namespace Tasks\Runners;
+namespace Tasks\Tasks;
 
 use Database\Connection;
-use Tasks\AbstractRunner;
+use Tasks\Task;
 
-class MedalImages extends AbstractRunner
+class UpdateMedalImages extends Task
 {
-    public function etirun($args): void
+    public function Run(): void
     {
         $medals = Connection::execSimpleSelect("SELECT * FROM Medals_Data");
         $path = __DIR__ . "/../../../assets/osu";

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tasks\Runners;
+namespace Tasks\Tasks\Eclipse;
 
 use Database\Connection;
-use Tasks\AbstractRunner;
+use Tasks\EclipseTask;
 
 
-class Beatmaps extends AbstractRunner
+class Beatmaps extends EclipseTask
 {
     /**
      * Run Method.
@@ -17,9 +17,8 @@ class Beatmaps extends AbstractRunner
      *
      * More information on writing seeders is available here:
      * https://book.cakephp.org/phinx/0/en/seeding.html
-     * @param $args
      */
-    public function etirun($args): void
+    public function Run(): void
     {
         function removeDuplicates($array, $key)
         {

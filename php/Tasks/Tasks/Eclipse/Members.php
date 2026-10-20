@@ -1,13 +1,13 @@
 <?php
 
-namespace Tasks\Runners;
+namespace Tasks\Tasks\Eclipse;
 
 use Database\Connection;
-use Tasks\AbstractRunner;
+use Tasks\EclipseTask;
 
-class Members extends AbstractRunner
+class Members extends EclipseTask
 {
-    public function etirun($args): void
+    public function Run(): void
     {
         $members = [];
 

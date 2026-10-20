@@ -1,13 +1,13 @@
 <?php
 
-namespace Tasks\Runners;
+namespace Tasks\Tasks\Eclipse;
 
 use Database\Connection;
-use Tasks\AbstractRunner;
+use Tasks\EclipseTask;
 
-class Votes extends AbstractRunner
+class Votes extends EclipseTask
 {
-    public function etirun($args): void
+    public function Run(): void
     {
         $votes = $this->eclipse_db->execSimpleSelect("SELECT * FROM Votes LEFT JOIN Beatmaps ON Beatmaps.ID = Votes.ObjectID");
 

@@ -1,2 +1,8 @@
-This folder manages migrations from Eclipse to INEX. You connect your legacy database using the config settings,
+Tasks, ported from anthera. Run one with `php index.php task <Name>`, or `php index.php task help` to list them.
+Nested tasks use dots, e.g. `php index.php task Eclipse.Beatmaps`.
+
+Every class in Tasks/ extends Task and implements Run(). Set $frequency (seconds) on a task and the Cron task
+(`php index.php task Cron`, started by ./start) will run it on that interval. Runs are logged to Site_Tasks.
+
+Tasks/Eclipse/ manages migrations from Eclipse to INEX. You connect your legacy database using the config settings,
 and then you can migrate from it - you'll need to use a separate database for this.

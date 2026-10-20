@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Tasks\Runners;
+namespace Tasks\Tasks\Eclipse;
 
-use Tasks\AbstractRunner;
+use Tasks\EclipseTask;
 
 
-class Profiles extends AbstractRunner
+class Profiles extends EclipseTask
 {
     private const CHUNK_SIZE = 1000;
 
-    public function etirun($args): void
+    public function Run(): void
     {
         // dev only - wipe before transferring, remove once inex is live
         $this->table('Profiles_Goals')->truncate();
