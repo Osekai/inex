@@ -1,9 +1,9 @@
-import {AntheraIcon, Div, Image, Text} from "../../../utils/dom";
+import {AntheraIcon, Div, Image, LucideIcon, Text} from "../../../utils/dom";
 import {Misc} from "../../../utils/misc";
 import {MedalData} from "../MedalData";
 import {SetMedal} from "../../medals";
 import {GamemodeToName} from "../../../utils/osu/gamemode";
-import {GetSetting, OnChangeSetting} from "../../../utils/usersettings";
+import {GetSetting, OnChangeSetting, SetSettings} from "../../../utils/usersettings";
 import {D2} from "../../../utils/d2";
 
 String.prototype.includes_nl = function (text) {
@@ -24,8 +24,10 @@ export class MedalsSidebar {
         }
         if (rawtext.length > 0) {
             document.getElementById("medal_search_clear").classList.remove("hidden");
+            document.getElementById("sidebar").classList.add("searching");
         } else {
             document.getElementById("medal_search_clear").classList.add("hidden");
+            document.getElementById("sidebar").classList.remove("searching");
         }
 
         var text = "";
@@ -208,17 +210,18 @@ export class MedalsSidebar {
         return grid;
     }
 
-    RenderGamemode(gamemode, name) {
+    RenderGamemode(gamemode, name, sectionName) {
         var gamemodecategorydiv = Div("div", "medals__medal-gamemodesection");
         var modeheader = Text("h2", GamemodeToName(name));
 
         modeheader.prepend(AntheraIcon("icon-gamemode-" + name));
 
         gamemodecategorydiv.appendChild(modeheader);
+        var inner = this.MakeCollapsible(gamemodecategorydiv, modeheader, sectionName + "/" + GamemodeToName(name));
         for (let ordering of gamemode) {
             if (typeof (ordering) == "undefined") continue;
 
-            gamemodecategorydiv.appendChild(this.RenderMedalGrid(ordering));
+            inner.appendChild(this.RenderMedalGrid(ordering));
         }
 
         gamemodecategorydiv.classList.add("gamemode-" + name);
@@ -237,13 +240,75 @@ export class MedalsSidebar {
         var categorydiv = Div("div", "medals__medal-section");
         var header = Text("h1", name);
         categorydiv.appendChild(header);
+        var inner = this.MakeCollapsible(categorydiv, header, name);
         for (var mode in category) {
             if (category[mode].length == 0) continue;
 
-            categorydiv.appendChild(this.RenderGamemode(category[mode], mode));
+            inner.appendChild(this.RenderGamemode(category[mode], mode, name));
         }
 
         return categorydiv;
+    }
+
+    MakeCollapsible(parent, header, key) {
+        var collapsible = Div("div", "medals__collapsible");
+        var inner = Div("div", "medals__collapsible-inner");
+        collapsible.appendChild(inner);
+        parent.appendChild(collapsible);
+
+        if (GetSetting("medal.medalGroups.collapsedState", {}, true)[key] === true) {
+            parent.classList.add("collapsed");
+        }
+
+        var button = Div("button", "medals__collapse-button");
+        button.appendChild(LucideIcon("chevron-down"));
+        header.appendChild(button);
+
+        header.addEventListener("click", () => {
+            if (document.getElementById("sidebar").classList.contains("searching")) return;
+
+            var collapsedState = GetSetting("medal.medalGroups.collapsedState", {}, true);
+            parent.classList.add("animating");
+
+            if (parent.classList.contains("temp-expanded")) {
+                // only open because of a link, so don't touch the setting
+                parent.classList.remove("temp-expanded");
+                return;
+            }
+
+            if (parent.classList.contains("collapsed")) {
+                parent.classList.remove("collapsed");
+                collapsedState[key] = false;
+            } else {
+                parent.classList.add("collapsed");
+                collapsedState[key] = true;
+            }
+            SetSettings("medal.medalGroups.collapsedState", collapsedState, true);
+        })
+
+        collapsible.addEventListener("transitionend", (e) => {
+            if (e.target !== collapsible) return;
+            parent.classList.remove("animating");
+        })
+
+        return inner;
+    }
+
+    TempExpandMedal(medalId) {
+        for (var expanded of document.querySelectorAll("#sidebar .temp-expanded")) {
+            expanded.classList.remove("temp-expanded");
+            expanded.classList.add("animating");
+        }
+
+        var button = document.querySelector("[medal-button-id='" + medalId + "']");
+        if (button == null) return;
+
+        var collapsed = button.closest(".collapsed");
+        while (collapsed != null) {
+            collapsed.classList.remove("animating");
+            collapsed.classList.add("temp-expanded");
+            collapsed = collapsed.parentElement.closest(".collapsed");
+        }
     }
 
     LoadSidebar() {

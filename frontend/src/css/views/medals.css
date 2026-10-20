@@ -27,6 +27,9 @@ body {
     font-weight: 400;
     font-size: 22px;
     margin-left: 20px;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
 }
 .medals__medal-gamemodesection {
     padding: 20px;
@@ -53,9 +56,67 @@ body {
     color: var(--col-sat-2);
     font-size: 30px;
 }
+:is(.medals__medal-section > h1, .medals__medal-gamemodesection > h2):has(.medals__collapse-button) {
+    cursor: pointer;
+    user-select: none;
+}
+#sidebar.searching :is(.medals__medal-section > h1, .medals__medal-gamemodesection > h2) {
+    cursor: auto;
+}
+.medals__collapse-button {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    padding: 4px;
+    border-radius: var(--border-radius);
+}
+.medals__collapse-button:hover {
+    background: #fff2;
+}
+.medals__collapse-button svg {
+    transition: all 0.2s ease;
+}
+:is(.medals__medal-section, .medals__medal-gamemodesection).collapsed:not(.temp-expanded) > :is(h1, h2) .medals__collapse-button svg {
+    transform: rotate(90deg);
+}
+
+.medals__collapsible {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.3s ease;
+}
+.medals__collapsible-inner {
+    min-height: 0;
+}
+:is(.medals__medal-section, .medals__medal-gamemodesection).collapsed:not(.temp-expanded) > .medals__collapsible {
+    grid-template-rows: 0fr;
+}
+:is(.medals__medal-section, .medals__medal-gamemodesection).collapsed:not(.temp-expanded) > .medals__collapsible > .medals__collapsible-inner,
+:is(.medals__medal-section, .medals__medal-gamemodesection).animating > .medals__collapsible > .medals__collapsible-inner {
+    overflow: clip;
+    overflow-clip-margin: 8px;
+}
+:is(.medals__medal-section, .medals__medal-gamemodesection).temp-expanded > .medals__collapsible {
+    transition: none;
+}
+
+#sidebar.searching .medals__collapse-button {
+    display: none;
+}
+#sidebar.searching .collapsed > .medals__collapsible {
+    grid-template-rows: 1fr;
+}
+#sidebar.searching .collapsed > .medals__collapsible > .medals__collapsible-inner {
+    overflow: visible;
+}
+
 .medals__medal-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(3.2rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    justify-items: center;
     grid-auto-rows: 1fr;
     width: 100%;
     grid-gap: 8px 14px;
@@ -1243,6 +1304,7 @@ body {
     position: absolute;
     transition: all 0.2s ease;
     opacity: 0;
+    pointer-events: none;
 }
 body:not(.medals-loaded) {
     .medals__page {

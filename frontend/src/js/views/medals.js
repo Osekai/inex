@@ -73,6 +73,7 @@ export function SetMedal(inputMedal, setUrl = false, scrollTo = false) {
         setSections(`/medals/{medal}`, {"medal": currentMedal.Name})
     }
     MedalData.CurrentMedal = currentMedal.Medal_ID;
+    if (sidebar != null) sidebar.TempExpandMedal(currentMedal.Medal_ID);
     MedalsUI.LoadMedal(currentMedal, scrollTo);
     for (var button of document.querySelectorAll("[medal-button-id]")) {
 
