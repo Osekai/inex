@@ -13,7 +13,7 @@
     </script>
 </head>
 <body>
-<div class="banner <?= \Data\Profiles\Banners::$themeParser->classes ?>">
+<div class="banner <?= \Data\Profiles\Banners::$themeParser->classes ?>" id="banner">
 
     <?= $page; ?>
 </div>

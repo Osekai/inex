@@ -1,6 +1,7 @@
 .banner {
     background: white;
     color: black;
+    position: relative;
 }
 
 body {

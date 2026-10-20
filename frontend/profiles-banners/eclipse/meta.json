@@ -8,21 +8,26 @@
   ],
   "settings": {
     "backgroundType": {
-      "type": "select",
-      "options": {
-        "club": {
+      "name": "Background Type",
+      "type": "enum",
+      "values": [
+        {
+          "key": "club",
           "name": "Club"
         },
-        "gradient": {
+        {
+          "key": "gradient",
           "name": "Gradient"
         }
-      },
+      ],
       "default": "club",
       "output": {
-        "type": "class"
+        "type": "css-class",
+        "prefix": "dyn-backgroundType-"
       }
     },
     "backgroundGradient": {
+      "name": "Background Gradient",
       "type": "colour-gradient",
       "default": [
         "#ffaa66",
@@ -32,19 +37,23 @@
         "backgroundType": "gradient"
       },
       "output": {
-        "type": "variable"
+        "type": "css-variable"
       }
     },
     "backgroundGradientAngle": {
-      "type": "number",
+      "name": "Background Gradient Angle",
+      "type": "range",
+      "values": {
+        "start": 0,
+        "end": 360
+      },
       "default": 0,
-      "min": 0,
-      "max": 360,
       "showOn": {
         "backgroundType": "gradient"
       },
       "output": {
-        "type": "variable"
+        "type": "css-variable",
+        "suffix": "deg"
       }
     }
   }

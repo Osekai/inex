@@ -72,8 +72,12 @@ $router->get('/profiles/banner/{id}/html', function ($id) {
 HTML,
         "pb-gamemode-icon" => <<< HTML
 <i class="icon-gamemode-{$qu['User']['playmode']}"></i>
+HTML,
+        "pb-medals-completion-bar" => <<< HTML
+<div class="medals-completion-bar">
+<div class="bar" style="width: {$qu["Statistics"]["Medals"]["Percentage"]}%"></div>
+</div>
 HTML
-
     ];
 
 

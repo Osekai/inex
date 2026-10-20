@@ -5,4 +5,6 @@ export * from '../profiles-banners.js';
 
 let club = Clubs2.Get(data.User.Statistics.Medals.Percentage);
 console.log(club);
-document.getElementById('eclipse-banner').style.backgroundImage = `url(${club.Banner})`;
+document.getElementById('banner').classList.add(club.cssClass);
+console.log("ok");
+document.getElementById("clubname").innerText = club.name;

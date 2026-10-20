@@ -19,7 +19,7 @@ class BannerThemeParser
         }
 
 
-        $output_type = "class";
+        $output_type = "css-class";
         $output_suffix = "";
         $value = "";
 
@@ -30,11 +30,11 @@ class BannerThemeParser
             }
         }
 
-        if ($item['type'] == "select") {
+        if ($item['type'] == "enum") {
             $valid = false;
 
-            foreach ($item['options'] as $k => $v) {
-                if ($k == $item['value']) {
+            foreach ($item['values'] as $v) {
+                if ($v['key'] == $item['value']) {
                     $valid = true;
                 }
             }
@@ -44,12 +44,10 @@ class BannerThemeParser
         }
 
 
-        if ($item['type'] == "number") {
+        if ($item['type'] == "range") {
             $value = floatval($item['value']);
-            if (isset($item['min']) && $value < $item['min']) $value = $item['min'];
-            if (isset($item['max']) && $value > $item['max']) $value = $item['max'];
         }
-        if ($item['type'] == "colour") {
+        if ($item['type'] == "colour-picker") {
             $value = preg_match('/^#[0-9a-fA-F]{6}$/', $item['value']) ? $item['value'] : ($item['default'] ?? '#000000');
         }
         if ($item['type'] == "colour-gradient") {
@@ -70,14 +68,14 @@ class BannerThemeParser
 
         $item['value'] = $value;
 
-        if ($output_type == "class") {
-            $class = "dyn-$key-" . $item['value'];
+        if ($output_type == "css-class") {
+            $class = $item['value'];
             if (isset($item['output']['prefix'])) {
                 $class = $item['output']['prefix'] . $class;
             }
             $this->classes .= $class . " ";
         }
-        if ($output_type == "variable") {
+        if ($output_type == "css-variable") {
             // gradients get split into -1, -2 etc
             if (is_array($item['value'])) {
                 foreach ($item['value'] as $i => $v) {
