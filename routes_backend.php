@@ -137,7 +137,7 @@ $router->all("/api/medals/get_all", function () {
 $router->all("/api/medals/suggestions", function () {
     echo \Data\Medals::Suggestions()->ReturnJson();
 });
-$router->all("/api/medals/{id}/save", function ($id) {
+$router->all("/api/medals/([^/]+)/save", function ($id) {
     if (!requireLogin()) return;
     if (!OsekaiUsers::HasPermission("medal.edit", false)) {
         echo "no perms";
@@ -145,34 +145,34 @@ $router->all("/api/medals/{id}/save", function ($id) {
     }
     echo \Data\Medals::Save($id, $_REQUEST)->ReturnJson();
 });
-$router->all("/api/medals/{id}/extra", function ($id) {
+$router->all("/api/medals/([^/]+)/extra", function ($id) {
     echo \Data\Medals::GetExtraData($id)->ReturnJson();
 });
-$router->all("/api/medals/{id}/extra/owners", function ($id) {
+$router->all("/api/medals/([^/]+)/extra/owners", function ($id) {
     echo \Data\Medals::GetMedalOwners($id, $_REQUEST['page'])->ReturnJson();
 });
 /// =====================
 /// Medals Beatmaps
 /// =====================
 
-$router->all("/api/medals/beatmaps/{id}/delete", function ($id) {
+$router->all("/api/medals/beatmaps/([^/]+)/delete", function ($id) {
     if (!requireLogin()) return;
     echo MedalsBeatmaps::Delete($id)->ReturnJson();
 });
-$router->all("/api/medals/beatmaps/{id}/admindelete", function ($id) {
+$router->all("/api/medals/beatmaps/([^/]+)/admindelete", function ($id) {
     if (!requireLogin()) return;
     echo MedalsBeatmaps::AdminDelete($id)->ReturnJson();
 });
-$router->all("/api/medals/{id}/beatmaps", function ($id) {
+$router->all("/api/medals/([^/]+)/beatmaps", function ($id) {
     echo MedalsBeatmaps::GetBeatmaps($id)->ReturnJson();
 });
-$router->all("/api/medals/beatmaps/{id}/report", function ($id) {
+$router->all("/api/medals/beatmaps/([^/]+)/report", function ($id) {
     echo MedalsBeatmaps::ReportBeatmap($id, $_POST)->ReturnJson();
 });
-$router->all("/api/medals/{id}/packs", function ($id) {
+$router->all("/api/medals/([^/]+)/packs", function ($id) {
     echo MedalsBeatmaps::GetPacks($id)->ReturnJson();
 });
-$router->all("/api/medals/{id}/beatmap/add", function ($id) {
+$router->all("/api/medals/([^/]+)/beatmap/add", function ($id) {
     if (!requireLogin()) return;
     echo MedalsBeatmaps::AddBeatmap($_POST['url'], $id, $_POST['note'])->ReturnJson();
 });
@@ -186,25 +186,25 @@ $router->all("/api/comments/post", function ($id) {
     if (!requireLogin()) return;
     echo Comments::Post($_POST['id'], $_POST['table'], $_POST['text'])->ReturnJson();
 });
-$router->all("/api/comments/{id}/report", function ($id) {
+$router->all("/api/comments/([^/]+)/report", function ($id) {
     echo Comments::Report($id, $_POST)->ReturnJson();
 });
-$router->all("/api/comments/{id}/delete", function ($id) {
+$router->all("/api/comments/([^/]+)/delete", function ($id) {
     if (!requireLogin()) return;
     echo Comments::Delete($id)->ReturnJson();
 });
-$router->all("/api/comments/{id}/admindelete", function ($id) {
+$router->all("/api/comments/([^/]+)/admindelete", function ($id) {
     if (!requireLogin()) return;
     echo Comments::AdminDelete($id)->ReturnJson();
 });
-$router->all("/api/comments/{id}/pin", function ($id) {
+$router->all("/api/comments/([^/]+)/pin", function ($id) {
     if (!requireLogin()) return;
     echo Comments::Pin($id)->ReturnJson();
 });
-$router->all("/api/comments/{ref}/{section}/get", function ($ref, $section) {
+$router->all("/api/comments/([^/]+)/([^/]+)/get", function ($ref, $section) {
     echo Data\Comments::Get($section, $ref, $_POST['ParentID'])->ReturnJson();
 });
-$router->all("/api/comments/{ref}/{section}/send", function ($ref, $section) {
+$router->all("/api/comments/([^/]+)/([^/]+)/send", function ($ref, $section) {
     if (!requireLogin()) return;
     $replyingTo = null;
     if (isset($_REQUEST['replyingTo'])) {
@@ -218,7 +218,7 @@ $router->all("/api/comments/{ref}/{section}/send", function ($ref, $section) {
 /// Voting
 /// =====================
 
-$router->all("/api/vote/{target}/{id}", function ($target, $id) {
+$router->all("/api/vote/([^/]+)/([^/]+)", function ($target, $id) {
     echo Votes::Vote($target, $id)->ReturnJson();
 });
 
@@ -250,12 +250,32 @@ $router->all("/api/rankings/add", function () {
 /// Profiles
 /// =====================
 
-$router->all("/api/profiles/quick/{id}", function ($id) {
+$router->all("/api/profiles/([^/]+)/banners/all", function ($id) {
+    echo \Data\Profiles\Banners::GetUserBanners($id)->ReturnJson();
+});
+$router->all("/api/profiles/banners/themes", function () {
+    echo \Data\Profiles\Banners::AllThemes()->ReturnJson();
+});
+$router->all("/api/profiles/quick/([^/]+)", function ($id) {
     echo \Data\Profiles::GetSmall($id)->ReturnJson();
 });
-$router->all("/api/profiles/{id}", function ($id) {
+$router->all("/api/profiles/goals/types", function () {
+    echo \Data\Profiles\Goals::TypesPublic()->ReturnJson();
+});
+$router->post("/api/profiles/goals/add", function () {
+    echo \Data\Profiles\Goals::Add($_POST['type'] ?? '', $_POST['value'] ?? '', $_POST['gamemode'] ?? '')->ReturnJson();
+});
+$router->post("/api/profiles/goals/([^/]+)/delete", function ($id) {
+    echo \Data\Profiles\Goals::Delete($id)->ReturnJson();
+});
+$router->all("/api/profiles/([^/]+)/([^/]+)", function ($id, $gamemode) {
+    echo \Data\Profiles::Get($id, $gamemode)->ReturnJson();
+});
+$router->all("/api/profiles/([^/]+)", function ($id) {
     echo \Data\Profiles::Get($id, $_REQUEST['gamemode'])->ReturnJson();
 });
+
+
 
 
 

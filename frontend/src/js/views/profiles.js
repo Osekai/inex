@@ -1,4 +1,6 @@
 import "../../css/views/profiles.css";
+import "../../css/views/profiles/goals.css";
+import "../../css/views/profiles/banners.css";
 import {Graph} from "../ui/graph";
 import {Clubs} from "../utils/clubs";
 import MedalBatchData from "../data/MedalBatchData";
@@ -9,6 +11,8 @@ import {Clubs2} from "../utils/Clubs2";
 import {UTCify} from "../utils/time";
 import {Overlay} from "../ui/overlay";
 import {setSections} from "../utils/urlQuery";
+import Banners from "./profiles/Banners";
+import Goals from "./profiles/Goals";
 
 
 class Profiles {
@@ -70,6 +74,8 @@ class Profiles {
 
         document.getElementById("comments").loadComments(this.profile.User.id);
 
+        this.banners = new Banners(this);
+        this.goals = new Goals(this);
     }
 
     Render_Header() {

@@ -4,6 +4,7 @@ namespace Data\Profiles;
 
 use API\Response;
 use Database\Connection;
+use Database\Session;
 
 class Goals
 {
@@ -15,6 +16,7 @@ class Goals
         return [
             "pp" => [
                 "Name" => "PP",
+                "Icon" => "icon-goals-pp",
                 "Lower_Is_Better" => false,
                 "api" => function ($user, $stats) {
                     return $stats['pp'] ?? null;
@@ -25,6 +27,7 @@ class Goals
             ],
             "rank" => [
                 "Name" => "Global Rank",
+                "Icon" => "icon-goals-rank",
                 "Lower_Is_Better" => true,
                 "api" => function ($user, $stats) {
                     return $stats['global_rank'] ?? null;
@@ -35,6 +38,7 @@ class Goals
             ],
             "country-rank" => [
                 "Name" => "Country Rank",
+                "Icon" => "icon-goals-country-rank",
                 "Lower_Is_Better" => true,
                 "api" => function ($user, $stats) {
                     return $stats['country_rank'] ?? null;
@@ -43,8 +47,9 @@ class Goals
             ],
             "medals" => [
                 "Name" => "Medals",
-                "Icon" => "aicon-medal",
+                "Icon" => "icon-goals-medals",
                 "Lower_Is_Better" => false,
+                "Per_Mode" => false,
                 "api" => function ($user, $stats) {
                     return count($user['user_achievements'] ?? []);
                 },
@@ -54,6 +59,7 @@ class Goals
             ],
             "level" => [
                 "Name" => "Level",
+                "Icon" => "icon-goals-level",
                 "Lower_Is_Better" => false,
                 "api" => function ($user, $stats) {
                     return $stats['level']['current'] ?? null;
@@ -64,6 +70,7 @@ class Goals
             ],
             "ss-count" => [
                 "Name" => "SS Count",
+                "Icon" => "icon-goals-ss-count",
                 "Lower_Is_Better" => false,
                 "api" => function ($user, $stats) {
                     if (!isset($stats['grade_counts'])) return null;
@@ -79,6 +86,7 @@ class Goals
             ],
             "ranked-score" => [
                 "Name" => "Ranked Score",
+                "Icon" => "icon-goals-ranked-score",
                 "Lower_Is_Better" => false,
                 "api" => function ($user, $stats) {
                     return $stats['ranked_score'] ?? null;
@@ -87,7 +95,9 @@ class Goals
             ],
             "badges" => [
                 "Name" => "Badges",
+                "Icon" => "icon-goals-badges",
                 "Lower_Is_Better" => false,
+                "Per_Mode" => false,
                 "api" => function ($user, $stats) {
                     return count($user['badges'] ?? []);
                 },
@@ -96,6 +106,60 @@ class Goals
                 },
             ],
         ];
+    }
+
+    // types without the closures, for the frontend
+    public static function TypesPublic(): Response
+    {
+        $types = [];
+        foreach (Goals::Types() as $key => $type) {
+            $types[] = [
+                "Key" => $key,
+                "Name" => $type['Name'],
+                "Icon" => $type['Icon'],
+                "Lower_Is_Better" => $type['Lower_Is_Better'],
+                "Per_Mode" => $type['Per_Mode'] ?? true,
+            ];
+        }
+        return new Response(true, "Success", $types);
+    }
+
+    public static function Add($type, $value, $gamemode): Response
+    {
+        if (!Session::LoggedIn()) return new Response(false, "Not logged in");
+        $userId = Session::UserData()['id'];
+
+        $types = Goals::Types();
+        if (!isset($types[$type])) return new Response(false, "Invalid goal type");
+
+        if (!is_numeric($value) || (float)$value <= 0) return new Response(false, "Invalid value");
+
+        // stored as catch, the api side converts back to fruits
+        if ($gamemode == "fruits") $gamemode = "catch";
+        if (!in_array($gamemode, ["osu", "taiko", "catch", "mania"])) return new Response(false, "Invalid gamemode");
+
+        if (isset($types[$type]['Per_Mode']) && $types[$type]['Per_Mode'] === false) {
+            $gamemode = null;
+        }
+
+        $existing = Connection::execSelect("SELECT ID FROM Profiles_Goals WHERE User_ID = ? AND Type = ? AND Value = ? AND Gamemode <=> ?", "isss", [$userId, $type, $value, $gamemode]);
+        if (count($existing) > 0) return new Response(false, "You already have this goal");
+
+        Connection::execOperation("INSERT INTO Profiles_Goals (User_ID, Value, Type, Gamemode, Creation_Date) VALUES (?, ?, ?, ?, NOW())", "isss", [$userId, $value, $type, $gamemode]);
+
+        return Goals::Get($userId);
+    }
+
+    public static function Delete($id): Response
+    {
+        if (!Session::LoggedIn()) return new Response(false, "Not logged in");
+        $userId = Session::UserData()['id'];
+
+        if (!is_numeric($id)) return new Response(false, "Invalid goal");
+
+        Connection::execOperation("DELETE FROM Profiles_Goals WHERE ID = ? AND User_ID = ?", "ii", [$id, $userId]);
+
+        return Goals::Get($userId);
     }
 
     public static function Get($user, $dataPassthrough = false): Response

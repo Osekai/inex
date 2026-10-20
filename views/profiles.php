@@ -103,18 +103,7 @@ if (INSTANCE !== "dev") {
                     <div class="panel">
                         <h1>Goals</h1>
                         <div class="divider"></div>
-                        <div id="goals"></div>
-                        <div class="divider basic"></div>
-                        <div class="goal-input">
-                            <div>
-                                <searchable-dropdown></searchable-dropdown>
-                                <input type="number" placeholder="Amount" class="input">
-                                <div class="dropdown"><i class="icon-gamemode-taiko"></i></div>
-                            </div>
-                            <div class="button-row">
-                                <button class="lumen-button border primary left">Add Goal</button>
-                            </div>
-                        </div>
+                        <div id="goals-outer"></div>
                     </div>
                 </div>
             </div>
@@ -184,7 +173,7 @@ if (INSTANCE !== "dev") {
                     </a>
                 </div>
             </div>
-            <div otab-name="banners">
+            <div otab-name="banners" id="banners-outer">
                 <p>banners</p>
             </div>
             <div otab-name="allmode">

@@ -346,13 +346,18 @@
 
 .profile-page {
     display: flex;
-gap: 20px;
+    gap: 20px;
+
     > * {
         flex: 1;
 
         &.left {
             max-width: 500px;
         }
+    }
+
+    &.otab-hidden {
+        display: none;
     }
 }
 

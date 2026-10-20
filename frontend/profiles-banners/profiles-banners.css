@@ -11,5 +11,8 @@ html {
     height: fit-content !important;
 }
 :root {
-    background: black;
+    background: transparent;
+    >* {
+        background: transparent;
+    }
 }

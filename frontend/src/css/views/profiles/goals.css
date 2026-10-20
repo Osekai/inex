@@ -1,0 +1,325 @@
+#goals-outer {
+    width: 100%;
+}
+
+.goals {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.goal-list {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+@media (max-width: 700px) {
+    .goal-list {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.goal-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 24px 12px;
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--col-text-l1);
+    opacity: 0.6;
+
+    svg {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+.goal {
+    --goal-col: var(--col-sat-2);
+    --goal-bar: var(--gradient);
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: 14px;
+    padding: 14px;
+    border-radius: var(--border-radius);
+    outline: 1px solid var(--col-l3);
+    background: linear-gradient(110deg,
+    color-mix(in srgb, var(--goal-col) 12%, transparent),
+    color-mix(in srgb, var(--goal-col) 0%, transparent) 60%
+    ), var(--col-d2);
+    transition: outline-color 0.15s ease;
+
+    &:hover {
+        outline-color: color-mix(in srgb, var(--goal-col) 40%, var(--col-l3));
+    }
+
+    &.complete {
+        --goal-col: #f0c040;
+        --goal-bar: #f0c040;
+    }
+
+    .goal-icon {
+        flex-shrink: 0;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--border-radius);
+        background: color-mix(in srgb, var(--goal-col) 20%, transparent);
+        color: var(--goal-col);
+        font-size: 24px;
+    }
+
+    .goal-main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .goal-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .goal-title {
+        flex: 1;
+        min-width: 0;
+
+        h2 {
+            font-size: 20px;
+            font-weight: 300;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            strong {
+                font-weight: 700;
+                color: var(--goal-col);
+            }
+        }
+    }
+
+    .goal-meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 2px;
+        font-size: 13px;
+        color: var(--col-text-l1);
+
+        strong {
+            font-weight: 600;
+        }
+    }
+
+    .goal-mode-tag {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 90px;
+        background: var(--col-l3);
+        font-size: 13px;
+    }
+
+    .goal-status {
+        text-align: right;
+
+        h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--goal-col);
+        }
+
+        p {
+            font-size: 12px;
+            color: var(--col-text-l1);
+        }
+    }
+
+    .goal-complete-tag {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 90px;
+        background: var(--goal-col);
+        color: #000;
+
+        svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 3px;
+        }
+    }
+
+    .goal-delete {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        z-index: 2;
+        width: 26px;
+        height: 26px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 90px;
+        background: var(--col-l5);
+        outline: 1px solid var(--col-l3);
+        box-shadow: 0 2px 8px #0006;
+        opacity: 0;
+        transform: scale(0.8);
+        transition: opacity 0.15s ease, transform 0.15s ease;
+
+        svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        &:hover {
+            background: #ff623e;
+            color: #fff;
+        }
+    }
+
+    &:hover .goal-delete {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.goal-progress {
+    width: 100%;
+    height: 5px;
+    border-radius: 90px;
+    background: color-mix(in srgb, var(--goal-col) 20%, transparent);
+
+    .goal-progress-inner {
+        position: relative;
+        height: 100%;
+        border-radius: 90px;
+        background: var(--goal-bar);
+        transition: width 0.3s ease;
+
+        /* same shine as the club bar */
+        &:before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(to right, #fff0, #fff);
+            mix-blend-mode: overlay;
+            opacity: 0.4;
+        }
+    }
+}
+
+.goal-input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    border-radius: var(--border-radius);
+    background: var(--col-l2);
+    outline: 1px solid var(--col-l5);
+
+    .goal-input-label {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--col-text-l1);
+    }
+}
+
+.goal-type-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.goal-type-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 90px;
+    background: var(--col-l3);
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.1s ease;
+
+    i {
+        font-size: 16px;
+    }
+
+    &:hover {
+        background: var(--col-l5);
+    }
+
+    &.active {
+        background: var(--gradient);
+        color: var(--topcol);
+        font-weight: 700;
+    }
+}
+
+.goal-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .input {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+.goal-mode-picker {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 90px;
+    background: var(--col-l3);
+    transition: opacity 0.15s ease;
+
+    &.disabled {
+        opacity: 0.3;
+        pointer-events: none;
+    }
+}
+
+.goal-mode-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 90px;
+    cursor: pointer;
+    font-size: 18px;
+
+    &:hover {
+        background: var(--col-l5);
+    }
+
+    &.active {
+        background: var(--gradient);
+        color: var(--topcol);
+    }
+}

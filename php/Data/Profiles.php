@@ -13,9 +13,17 @@ class Profiles
     static function Get($id, $gamemode = "") {
         if(is_object($id)) return new Response(true, "Probably already a user", $id);
 
+        // osu api calls catch "fruits"
+        if ($gamemode == "catch") $gamemode = "fruits";
+
         $x = new Timings("profiles_fetch");
-        $user = \Caching::Layer("profiles_user_fetch_" . $id, function() use ($id) {
-            return User::GetUser($id, $gamemode);
+        $user = \Caching::Layer("profiles_user_fetch_" . $id . "_" . $gamemode, function() use ($id, $gamemode) {
+            $user = User::GetUser($id, $gamemode);
+            if (!is_array($user)) return $user;
+
+            // the single user endpoint doesn't have per mode stats, goals need them
+            $user['statistics_rulesets'] = User::GetUserRulesets($user['id']);
+            return $user;
         });
         $x->finish();
 

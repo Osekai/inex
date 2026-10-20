@@ -97,6 +97,10 @@ $router->set404(function () {
     header('HTTP/1.1 404 Not Found');
     DrawViewWithTemplate("404", "page");
 });
+$router->set404('/api(/.*)?', function () {
+    header('HTTP/1.1 404 Not Found');
+    echo (new \API\Response(false, "Not Found"))->ReturnJson();
+});
 $router->get('/home', function () {
     header("Location: /");
 });

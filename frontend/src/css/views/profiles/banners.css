@@ -1,0 +1,39 @@
+.banner-editor {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 2.5fr;
+    gap: 20px;
+    .banner-list {
+        /* display along left */
+        grid-column: 1;
+        >button {
+            display: flex;
+            flex-direction: column;
+            padding: 8px;
+            background: var(--col-l2);
+            outline: 1px solid var(--col-l4);
+            border-radius: var(--border-radius);
+            width: 100%;
+            .banner-list-item-shadow {
+                width: 100%;
+                aspect-ratio: var(--aspect);
+                overflow: hidden;
+            }
+            iframe {
+                border: 0;
+                width: 100%;
+            }
+            text-align: left;
+        }
+    }
+
+    .banner-preview {
+        /* top right */
+        grid-column: 2;
+    }
+
+    .banner-editor {
+        /* bottom right */
+        grid-column: 2;
+    }
+}
