@@ -367,7 +367,16 @@ export class MedalsUI {
     static CheckObtainedFilter() {
 
         if (!loggedIn) return;
-        if (MedalData.ObtainedFilterActive()) {
+        let filter = MedalData.GetObtainedFilter();
+        let filterButton = document.getElementById("filter-button");
+        filterButton.innerHTML = "";
+        if (filter === "hide") {
+            filterButton.appendChild(LucideIcon("filter-x"));
+        } else {
+            filterButton.appendChild(LucideIcon("filter"));
+        }
+
+        if (filter !== "all") {
             document.getElementById("medal-page").classList.add("filter-obtained");
             document.getElementById("filter-button").classList.add("active");
         } else {

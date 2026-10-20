@@ -124,13 +124,6 @@ use Database\Session; ?>
                 <div dropdown-mode="legacy" dropdown="settings-dropdown-old"
                      class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
                     <h1 langkey="navbar/settings.h1">Settings</h1>
-                    <label setting-item="medals.hideUnachievedMedals" class="toggle-text navbar-pfp-dropdown-item"
-                           for="checkbox">
-                        <input type="checkbox" class="checkbox" id="checkbox">
-                        <p langkey="navbar/settings.hideobtained.title">Completely hide obtained medals</p>
-                        <small langkey="navbar/settings.hideobtained.flair">Only enabled when filter is on</small>
-                    </label>
-
                     <label setting-item="global.profileLinks" class="navbar-pfp-dropdown-item">
                         <p>Where to go when clicking on a profile?</p>
                         <fieldset>

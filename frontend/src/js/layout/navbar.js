@@ -6,13 +6,6 @@ import {UTCify} from "../utils/time";
 
 export class Settings {
     settings = {
-        "medals.hideUnachievedMedals": {
-            "type": "boolean",
-            "default": false,
-            "title": "Hide filtered medals",
-            "description": "Hide medals that you've already achieved. Only enabled when medals filter is on.",
-            "local": true,
-        },
         "global.profileLinks": {
             "type": "option",
             "default": "osekai",

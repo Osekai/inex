@@ -35,7 +35,7 @@ if ($cur_medal == null) {
             <?php
             if (\Database\Session::LoggedIn()) {
                 ?>
-                <button class="button square" tooltip="Mark Completed Medals" id="filter-button"
+                <button class="button square" tooltip="Filter" id="filter-button"
                         bug="medals/search_filter"><i
                             data-lucide="filter"></i>
                 </button>

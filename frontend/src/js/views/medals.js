@@ -14,6 +14,7 @@ import {OnChangeSetting} from "../utils/usersettings";
 import {Initialize} from "./medals/MedalsAdmin";
 import {PermissionChecker} from "../utils/permissionChecker";
 import {MedalsSuggestions} from "./medals/ui/MedalsSuggestions";
+import {D2} from "../utils/d2";
 
 export * from "./medals/SolutionElements.js";
 
@@ -103,9 +104,6 @@ async function Load() {
 
     MedalsUI.Init();
 
-    OnChangeSetting("medals.hideUnachievedMedals", () => {
-        //sidebar.LoadSidebar();
-    })
     GetMedalFromUrl();
 
 
@@ -196,11 +194,38 @@ Load().then(r => {
     console.log("load complete")
 });
 
-var filterbutton = document.getElementById("filter-button");
-filterbutton.addEventListener("click", () => {
-    if (MedalData.ObtainedFilterActive()) {
-        MedalData.SetObtainedFilterActive(false);
-    } else {
-        MedalData.SetObtainedFilterActive(true);
-    }
-})
+if (loggedIn) {
+    let toolbar = document.querySelector(".sidebar-md-toolbar");
+    let filterButton = document.getElementById("filter-button");
+
+    let filterOptions = D2.Div("medals__filter-options", () => {
+        let options = {
+            "all": {"icon": "eye", "title": "Show All"},
+            "mark": {"icon": "filter", "title": "Mark Achieved"},
+            "hide": {"icon": "filter-x", "title": "Hide Achieved"}
+        };
+        for (let filter in options) {
+            let option = D2.CustomPlus("button", "button", {}, () => {
+                D2.LucideIcon(options[filter].icon);
+                D2.Text("span", options[filter].title);
+            });
+            if (filter === MedalData.GetObtainedFilter()) {
+                option.classList.add("active");
+            }
+
+            option.addEventListener("click", () => {
+                for (let other of filterOptions.children) {
+                    other.classList.remove("active");
+                }
+                option.classList.add("active");
+                MedalData.SetObtainedFilter(filter);
+                toolbar.classList.remove("filter-open");
+            });
+        }
+    });
+    filterButton.after(filterOptions);
+
+    filterButton.addEventListener("click", () => {
+        toolbar.classList.toggle("filter-open");
+    });
+}

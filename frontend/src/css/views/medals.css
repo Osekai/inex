@@ -1220,6 +1220,48 @@ body {
     opacity: 0.8;
 }
 
+.medals__page .sidebar-md-toolbar .input-container,
+.medals__filter-options {
+    min-width: 0;
+    transition: flex-grow 0.3s ease, opacity 0.2s ease, margin 0.3s ease;
+}
+.medals__filter-options {
+    flex: 0;
+    overflow: hidden;
+    opacity: 0;
+    margin-left: -6px;
+    pointer-events: none;
+    display: flex;
+    gap: 6px;
+
+    .button {
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+    }
+    .button svg {
+        height: 18px;
+        width: 18px;
+    }
+}
+.sidebar-md-toolbar.filter-open {
+    .input-container {
+        flex-grow: 0;
+        opacity: 0;
+        margin-right: -6px;
+        overflow: hidden;
+        pointer-events: none;
+    }
+    .medals__filter-options {
+        flex-grow: 1;
+        opacity: 1;
+        margin-left: 0;
+        pointer-events: all;
+    }
+}
+
 .filter-obtained .medals__medal-button.obtained {
     opacity: 0.5;
     filter: grayscale(1);

@@ -149,7 +149,7 @@ export class MedalsSidebar {
                 }
             }
 
-            if (medal.Obtained && GetSetting("medals.hideUnachievedMedals", false, true) == true && GetSetting("medals.hide_obtained", false, true) == true) {
+            if (medal.Obtained && MedalData.GetObtainedFilter() === "hide") {
                 show = false;
             }
 
@@ -346,10 +346,7 @@ export class MedalsSidebar {
             this.Search(searchbar.value);
         })
 
-        OnChangeSetting("medals.hide_obtained", () => {
-            this.Search();
-        })
-        OnChangeSetting("medals.hideUnachievedMedals", () => {
+        OnChangeSetting("medals.obtainedFilter", () => {
             this.Search();
         })
 

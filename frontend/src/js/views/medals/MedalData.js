@@ -69,16 +69,35 @@ export class MedalData {
         //});
     }
 
-    static ObtainedFilterActive() {
-        
-        if (!loggedIn) return;
-        return parseBoolean(GetSetting("medals.hide_obtained", false, true));
+    static GetObtainedFilter() {
+        if (!loggedIn) return "all";
+        return GetSetting("medals.obtainedFilter", "all", true);
     }
 
-    static SetObtainedFilterActive(b: boolean) {
-        
+    static SetObtainedFilter(filter: string) {
         if (!loggedIn) return;
-        SetSettings("medals.hide_obtained", b, true);
+        SetSettings("medals.obtainedFilter", filter, true);
         MedalsUI.CheckObtainedFilter()
     }
+
+    static MigrateObtainedFilter() {
+        // TODO: remove this after a few months
+        if (!loggedIn) return;
+        if (localStorage.getItem("medals.obtainedFilter") != null) return;
+
+        let filter = "all";
+        if (parseBoolean(GetSetting("medals.hide_obtained", false, true))) {
+            if (parseBoolean(GetSetting("medals.hideUnachievedMedals", false, true))) {
+                filter = "hide";
+            } else {
+                filter = "mark";
+            }
+        }
+
+        SetSettings("medals.obtainedFilter", filter, true);
+        localStorage.removeItem("medals.hide_obtained");
+        localStorage.removeItem("medals.hideUnachievedMedals");
+    }
 }
+
+MedalData.MigrateObtainedFilter();
