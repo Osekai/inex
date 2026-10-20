@@ -176,6 +176,9 @@ class Medals
 
     public static function Suggestions()
     {
+        if (!Session::LoggedIn()) {
+            return new Response(false, "Log in to get medal recommendations!");
+        }
         $userid = Session::UserData()['id'];
 
         $rankingUser = Connection::execSelect(
@@ -184,8 +187,7 @@ class Medals
                 [$userid]
         );
         if (count($rankingUser) === 0) {
-            echo "You're not in the rankings yet, add yourself and check back in a few days!";
-            return;
+            return new Response(false, "You're not in the rankings yet, add yourself and check back in a few days!");
         }
         $rankingUser = $rankingUser[0];
 
@@ -205,8 +207,7 @@ class Medals
 
 
         if ($ourCount < 60) {
-            echo "You need at least 60 medals to get suggestions!";
-            return;
+            return new Response(false, "You need at least 60 medals to get suggestions!");
         }
         $scores = Caching::Layer("medala_suggestions2_" . $userid, function () use ($types, $ourCount, $userMedalIds, $placeholders) {
             $rows = Connection::execSelect(

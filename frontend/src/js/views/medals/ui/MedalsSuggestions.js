@@ -56,6 +56,15 @@ export class MedalsSuggestions {
         getMessage();
 
         let suggestions = await DoRequest("POST", "/api/medals/suggestions");
+        if(!suggestions.success) {
+            loaded = true;
+            grid.innerHTML = "";
+            grid.classList.add("not-enough");
+            grid.appendChild(D2.LucideIcon("frown"));
+            grid.appendChild(D2.Text("h1", "No recommendations yet"));
+            grid.appendChild(D2.Text("p", suggestions.message));
+            return;
+        }
         grid.innerHTML = "";
         let offset = 0;
         for(let suggestion of suggestions.content) {
