@@ -33,18 +33,18 @@
       },
       "output": {
         "type": "variable"
+      }
+    },
+    "backgroundGradientAngle": {
+      "type": "number",
+      "default": 0,
+      "min": 0,
+      "max": 360,
+      "showOn": {
+        "backgroundType": "gradient"
       },
-      "backgroundGradientAngle": {
-        "type": "number",
-        "default": 0,
-        "min": 0,
-        "max": 360,
-        "showOn": {
-          "backgroundType": "gradient"
-        },
-        "output": {
-          "type": "variable"
-        }
+      "output": {
+        "type": "variable"
       }
     }
   }

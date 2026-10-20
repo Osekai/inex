@@ -57,6 +57,12 @@ $router->get('/profiles/banner/{id}/html', function ($id) {
     if ($bannerData === null) return;
     Site::$profiles_banner = $bannerData;
 
+    Banners::$themeParser = new \Data\Profiles\BannerThemeParser();
+    foreach ($bannerData->content['Theme']['Settings'] as $key => &$value) {
+        Banners::$themeParser->Parse($key, $value, $bannerData->content['Settings']);
+    }
+    unset($value);
+
     // we don't like the template rendering since it's old and doesn't let us do our fuckery so we do it ourselves
 
     $qu = $bannerData->content['User'];
