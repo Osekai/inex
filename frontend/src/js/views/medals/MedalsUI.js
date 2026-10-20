@@ -493,7 +493,7 @@ export class MedalsUI {
         let buttons = document.querySelectorAll("[medal-button]");
         for (let button of buttons) {
             button.addEventListener("click", () => {
-                MedalsUI.LoadMedalQuick(button.getAttribute("medal-button"))
+                SetMedal(button.getAttribute("medal-button"), true, true);
             })
         }
     }
