@@ -1,5 +1,6 @@
 import "../../css/views/profiles.css";
 import "../../css/views/profiles/goals.css";
+import "../../css/views/profiles/info.css";
 import "../../css/views/profiles/banners.css";
 import {Graph} from "../ui/graph";
 import {Clubs} from "../utils/clubs";

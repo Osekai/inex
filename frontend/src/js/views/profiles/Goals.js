@@ -172,8 +172,6 @@ export default class Goals {
         let input = null;
 
         let el = D2.Div("goal-input", () => {
-            D2.Text("p", "New goal", "goal-input-label");
-
             this.els.typeButtons = D2.Div("goal-type-picker", () => {
                 for (let type of this.types) {
                     let button = D2.Div("goal-type-button", () => {

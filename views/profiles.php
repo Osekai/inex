@@ -57,28 +57,34 @@ if (INSTANCE !== "dev") {
             <div otab-name="profile" class="profile-page">
                 <div class="left">
                     <div class="panel panel-profile-stats">
-                        <h1>Info</h1>
-                        <p>this panel looks shit i know, i'll do it later</p>
-                        <div class="divider"></div>
-                        <p>Joined osu! <strong pr-el="osekai-statistics-joined-osu"></strong></p>
-                        <p>Joined Osekai <strong pr-el="osekai-statistics-joined-osekai"></strong></p>
-                        <h2><i data-lucide="smile"></i> Contributions</h2>
-                        <div class="contribution-grid">
-                            <p>
-                                <i data-lucide="message-circle"></i>
-                                <strong pr-el="osekai-statistics-global-comments"></strong> comments
-                            </p>
+                        <h2><i data-lucide="user"></i> Account</h2>
+                        <div class="info-rows">
+                            <div class="info-row">
+                                <p><i data-lucide="calendar"></i> Joined osu!</p>
+                                <strong pr-el="osekai-statistics-joined-osu"></strong>
+                            </div>
+                            <div class="info-row">
+                                <p><i class="icon-logo-osekai"></i> Joined Osekai</p>
+                                <strong pr-el="osekai-statistics-joined-osekai"></strong>
+                            </div>
                         </div>
-                        <h3><img src="/public/img/branding/app/medals.svg"> Medals</h3>
-                        <div class="contribution-grid">
-                            <p>
-                                <i data-lucide="map"></i>
-                                <strong pr-el="osekai-statistics-medals-beatmaps"></strong> beatmaps
-                            </p>
-                            <p>
-                                <i data-lucide="list-plus"></i>
-                                <strong pr-el="osekai-statistics-medals-votes"></strong> beatmap upvotes
-                            </p>
+                        <h2><i data-lucide="smile"></i> Contributions</h2>
+                        <div class="info-rows">
+                            <div class="info-row">
+                                <p><i data-lucide="message-circle"></i> Comments</p>
+                                <strong pr-el="osekai-statistics-global-comments"></strong>
+                            </div>
+                        </div>
+                        <h2><img src="/public/img/branding/app/medals.svg"> Medals</h2>
+                        <div class="info-rows">
+                            <div class="info-row">
+                                <p><i data-lucide="map"></i> Beatmaps</p>
+                                <strong pr-el="osekai-statistics-medals-beatmaps"></strong>
+                            </div>
+                            <div class="info-row">
+                                <p><i data-lucide="list-plus"></i> Beatmap upvotes</p>
+                                <strong pr-el="osekai-statistics-medals-votes"></strong>
+                            </div>
                         </div>
                     </div>
                     <div class="panel">
