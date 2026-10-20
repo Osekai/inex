@@ -932,6 +932,18 @@ body {
 .medal__info-solution {
     width: 100%;
 }
+.medal__video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+}
 .medal__info-solution ul {
     margin: 4px 0px;
     margin-left: 16px;

@@ -177,6 +177,13 @@ if ($cur_medal == null) {
                     </div>
                 </div>
                 <div class="main-right">
+                    <div class="panel hidden" id="medal_video_panel" bug="medals/info/video">
+                        <div class="panel-header">
+                            <h1>Video</h1>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="medal__video" id="medal_video"></div>
+                    </div>
                     <div class="panel">
                         <div class="loader-overlay" id="extra-loader">
                             <?= LOADER ?>

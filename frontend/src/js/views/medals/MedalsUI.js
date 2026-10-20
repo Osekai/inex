@@ -464,6 +464,21 @@ export class MedalsUI {
             document.getElementById("medal_solution").innerHTML = "Unknown";
         }
 
+        let video = document.getElementById("medal_video");
+        let videoPanel = document.getElementById("medal_video_panel");
+        video.innerHTML = "";
+        if (medal.Video_URL && /^[\w-]{11}$/.test(medal.Video_URL)) {
+            videoPanel.classList.remove("hidden");
+            video.appendChild(D2.CustomPlus("iframe", "", {
+                "src": "https://www.youtube-nocookie.com/embed/" + medal.Video_URL,
+                "title": medal.Name + " video",
+                "loading": "lazy",
+                "allowfullscreen": ""
+            }));
+        } else {
+            videoPanel.classList.add("hidden");
+        }
+
 
         function setSupport(type, support) {
             var el = document.getElementById("support-" + type);
