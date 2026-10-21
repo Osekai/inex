@@ -34,6 +34,14 @@
     justify-content: space-between;
 }
 
+/* controls sit top right so they never push the divider down */
+.panel-header > :not(h1) {
+    position: absolute;
+    top: calc(var(--padding) + 14px);
+    right: var(--padding);
+    transform: translateY(-50%);
+}
+
 .panel-header-left {
     margin-left: auto;
 }

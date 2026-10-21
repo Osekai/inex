@@ -286,6 +286,9 @@ $router->get("/api/profiles/visits/most", function () {
 $router->get("/api/profiles/visits/recent", function () {
     echo \Data\Profiles\Visits::RecentlyVisited(10)->ReturnJson();
 });
+$router->post("/api/profiles/bio", function () {
+    echo \Data\Profiles\Bio::Set($_POST['bio'] ?? '')->ReturnJson();
+});
 $router->post("/api/profiles/favourite-medal", function () {
     echo \Data\Profiles\FavouriteMedal::Set($_POST['medal'] ?? '')->ReturnJson();
 });

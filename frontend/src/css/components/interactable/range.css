@@ -31,7 +31,7 @@
     background: var(--col-l1);
     outline: none;
     transition: opacity 0.2s;
-    --handle: hsl(var(--accent-3));
+    --handle: var(--col-sat-3);
 }
 
 .slider:hover {
@@ -42,7 +42,9 @@
 
 .slider::-moz-range-progress {
     border-radius: 10px 0px 0px 10px;
-    background: var(--gradient_50);
+    background: linear-gradient(45deg,
+        color-mix(in srgb, var(--col-sat-1) 50%, transparent),
+        color-mix(in srgb, var(--col-sat-3) 50%, transparent));
     height: 40px;
 }
 

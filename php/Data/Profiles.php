@@ -4,6 +4,7 @@ namespace Data;
 
 use API\Osu\User;
 use API\Response;
+use Data\Profiles\Bio;
 use Data\Profiles\Goals;
 use Data\Profiles\Timeline;
 use Data\Profiles\FavouriteMedal;
@@ -217,6 +218,8 @@ WHERE u.ID = ?;
         $data['Goals'] = Goals::Get($data, true);
         $data['Timeline'] = Timeline::Get($data['User']['id']);
         $data['Favourite_Medal'] = FavouriteMedal::Get($data['User']['id']);
+        $data['Bio'] = Bio::Get($data['User']['id']);
+        $data['Bio_Html'] = Bio::Render($data['Bio']);
         return new Response(true, "ok", $data);
     }
 

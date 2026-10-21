@@ -214,7 +214,7 @@ body {
 }
 
 .navbar-icon-container.invites.has-invite svg {
-    stroke: hsl(var(--accent-2));
+    stroke: var(--col-sat-2);
 }
 
 .navbar-icon-container > * > svg {

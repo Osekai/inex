@@ -121,11 +121,20 @@ if ($profileResponse->success) {
                             <div class="left sort-toggle" id="comments_dropdown">loading</div>
                         </div>
                         <div class="divider"></div>
-                        <comments-section dropdown="comments_dropdown" section="Profiles_Data" ref="334"
+                        <comments-section dropdown="comments_dropdown" section="Profiles_Data" ref="<?= intval($profileResponse->content['User']['id']) ?>"
                                           id="comments" pr-el="comments"></comments-section>
                     </div>
                 </div>
                 <div class="right">
+                    <div class="panel panel-bio" pr-el="panel-bio">
+                        <div class="panel-header">
+                            <h1>About</h1>
+                            <button class="button cta pill-button hidden" pr-el="bio-edit"><i data-lucide="pencil"></i> Edit</button>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="bio-content" pr-el="bio-content"></div>
+                        <div class="bio-editor hidden" pr-el="bio-editor"></div>
+                    </div>
                     <div class="panel">
                         <div class="panel-header">
                             <h1>Timeline</h1>

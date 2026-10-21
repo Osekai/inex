@@ -198,6 +198,8 @@
         <tag-input></tag-input>
         <h2>Advanced Text Field</h2>
         <advanced-text-field></advanced-text-field>
+        <h2>Advanced Text Field V2</h2>
+        <advanced-text-field-v2></advanced-text-field-v2>
         <h2>Category Picker</h2>
         <category-picker></category-picker>
         <h2>Gallery</h2>

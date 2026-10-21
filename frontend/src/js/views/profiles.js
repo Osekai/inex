@@ -24,6 +24,8 @@ import Timeline from "./profiles/Timeline";
 import MedalHistory from "./profiles/MedalHistory";
 import MedalsUnachieved from "./profiles/MedalsUnachieved";
 import {OpenFavouriteMedalPicker} from "./profiles/FavouriteMedalPicker";
+import Bio from "./profiles/Bio";
+import "../../css/views/profiles/bio.css";
 import {formatNumber} from "../utils/numbers";
 
 
@@ -87,6 +89,7 @@ class Profiles {
         document.getElementById("comments").loadComments(this.profile.User.id);
 
         this.banners = new Banners(this);
+        this.bio = new Bio(this);
         this.goals = new Goals(this);
         this.timeline = new Timeline(this);
         this.medalHistory = new MedalHistory(this);

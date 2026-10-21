@@ -110,6 +110,36 @@ export default class IO {
 
 
 
+        app.post("/profile-bio", asyncHandler(async (req, res) => {
+            const { user, bio, url } = req.body;
+
+            const userUrl = `https://osu.ppy.sh/users/${user.id}`;
+            const profileUrl = `https://inex.osekai.net${url}`;
+
+            // embed descriptions cap at 4096, keep some room for the link
+            const limit = 3800;
+            let description = bio;
+            if (bio.length > limit) {
+                description = bio.slice(0, limit).trimEnd() + `…\n\n[Read the rest on their profile](${profileUrl})`;
+            }
+
+            const embed = new EmbedBuilder()
+                .setTitle("📝 " + user.username + " updated their bio")
+                .setURL(profileUrl)
+                .setDescription(description)
+                .addFields(
+                    { name: "Author", value: `[${user.username}](${userUrl}) (\`${user.id}\`)`, inline: true },
+                    { name: "Profile", value: `[${url}](${profileUrl})`, inline: true },
+                    { name: "Length", value: `${bio.length} characters`, inline: true },
+                )
+                .setThumbnail("https://a.ppy.sh/" + user.id)
+                .setTimestamp()
+                .setColor(0xFF2335);
+
+            await BotIO.GetChannel("profile-bios").send({ embeds: [embed] });
+            res.sendStatus(200);
+        }));
+
         app.post("/feedback/bug", asyncHandler(async (req, res) => {
             const data = req.body;
 

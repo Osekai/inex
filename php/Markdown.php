@@ -12,7 +12,8 @@ use League\CommonMark\MarkdownConverter;
 
 class Markdown
 {
-    public static function Parse($content)
+    // safe is for user written content, no raw html or script links
+    public static function Parse($content, $safe = false)
     {
         if ($content === null) {
             return '';
@@ -20,8 +21,8 @@ class Markdown
 
         // Environment with soft breaks enabled
         $environment = new Environment([
-            'html_input' => 'allow',
-            'allow_unsafe_links' => true,
+            'html_input' => $safe ? 'strip' : 'allow',
+            'allow_unsafe_links' => !$safe,
             'renderer' => [
                 'soft_break' => "<br>\n", // single line breaks render as <br>
             ],
@@ -42,6 +43,6 @@ class Markdown
         $converter = new MarkdownConverter($environment);
 
         // Convert and return HTML
-        return $converter->convert($content);
+        return (string)$converter->convert($content);
     }
 }

@@ -262,8 +262,9 @@
 
 @media (max-width: 600px) {
     .medals-unachieved .panel-header searchable-dropdown {
+        position: static;
+        transform: none;
         min-width: 0;
-        width: 100%;
     }
 
     .medals-unachieved-section-header {

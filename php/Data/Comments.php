@@ -34,11 +34,16 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
             $medal = Medals::Get($id);
             $title = $medal['Name'];
         }
+        if($table === "Profiles_Data") {
+            // not everyone is in our database, so fall back to something generic
+            $target = Connection::execSelect("SELECT Name FROM Merged_Users WHERE User_ID = ?", "i", [$id]);
+            $title = count($target) > 0 ? $target[0]['Name'] . "'s profile" : "a profile";
+        }
 
         IO::Send("/comment", [
             "comment" => $comment,
             "user" => Session::UserData(),
-            "url" => $table === "Medals_Data" ? "/medals/" . $id : "/user/" . $id,
+            "url" => $table === "Medals_Data" ? "/medals/" . $id : "/profiles/" . $id,
             "title" => $title
         ]);
 
