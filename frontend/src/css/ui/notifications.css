@@ -172,6 +172,7 @@ body:has(.notifications-overlay.jsdropdown-open) {
     height: 32px;
     width: 32px;
     border-radius: 90px;
+    corner-shape: round;
     margin-right: 9px;
 }
 .notification-extra-comment p {

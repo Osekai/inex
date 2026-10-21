@@ -47,6 +47,7 @@
     padding: 25px;
     margin: 25px;
     border-radius: 900px;
+    corner-shape: round;
     overflow: visible;
     position: relative;
     background-color: var(--col-l3);
@@ -64,6 +65,7 @@
     height: 50px;
     margin: 10px 0px;
     border-radius: 900px;
+    corner-shape: round;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -194,6 +194,7 @@ body {
             cursor: pointer;
             background: var(--brand-accent);
             border-radius: 900px;
+            corner-shape: round;
         }
     }
 }

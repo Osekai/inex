@@ -3,6 +3,7 @@
     background-color: var(--col-l4);
     display: inline-block;
     border-radius: 90px;
+    corner-shape: round;
     font-size: 18px;
     color: #fffd;
     font-weight: 400;

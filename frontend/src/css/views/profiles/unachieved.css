@@ -75,11 +75,13 @@
     flex: 1;
     height: 6px;
     border-radius: 90px;
+    corner-shape: round;
     background: var(--col-l1);
 
     .medals-unachieved-progress-inner {
         height: 100%;
         border-radius: 90px;
+        corner-shape: round;
         background: var(--group-col);
     }
 }

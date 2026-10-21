@@ -252,12 +252,14 @@
     gap: 2px;
     padding: 3px;
     border-radius: 90px;
+    corner-shape: round;
     background: var(--col-l3);
 }
 
 .banner-link-format {
     padding: 6px 14px;
     border-radius: 90px;
+    corner-shape: round;
     font-size: 14px;
     color: inherit;
     cursor: pointer;
@@ -293,6 +295,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 90px;
+    corner-shape: round;
     background: var(--col-l4);
 
     svg {
@@ -366,6 +369,7 @@
         height: 14px;
         padding: 0;
         border-radius: 90px;
+        corner-shape: round;
         border: 2px solid #fffa;
         background: var(--swatch-colour);
         cursor: pointer;

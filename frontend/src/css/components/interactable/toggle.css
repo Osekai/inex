@@ -9,6 +9,7 @@
     height: 26px;
     background-color: var(--col-l4);
     border-radius: 90px;
+    corner-shape: round;
     position: relative;
     transition: outline 0.2s ease, background 0.2s ease;
     outline: 2px solid #FF3939;
@@ -21,6 +22,7 @@
 
 .toggle:after {
     border-radius: 90px;
+    corner-shape: round;
     content: "";
     position: absolute;
     width: 14px;

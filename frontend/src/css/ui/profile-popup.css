@@ -34,6 +34,7 @@
             height: 56px;
             width: 56px;
             border-radius: calc(var(--border-radius) * 2.2857);
+            corner-shape: round;
             margin-right: 8px;
         }
         .flag {

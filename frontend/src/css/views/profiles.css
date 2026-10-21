@@ -359,6 +359,7 @@
                 left: 10px;
                 right: 10px;
                 border-radius: 90px;
+                corner-shape: round;
                 transition: all 0.2s ease;
             }
 

@@ -120,6 +120,7 @@
     width: 40px;
     padding: 2px 0;
     border-radius: 90px;
+    corner-shape: round;
     background: var(--col-l3);
     text-align: center;
     font-size: 13px;
@@ -159,6 +160,7 @@
     height: 22px;
     margin-left: -7px;
     border-radius: 90px;
+    corner-shape: round;
     transition: transform 0.1s ease;
 
     medal-icon {
@@ -181,6 +183,7 @@
     margin-left: 4px;
     padding: 1px 6px;
     border-radius: 90px;
+    corner-shape: round;
     background: var(--col-l3);
     font-size: 11px;
     font-weight: 700;

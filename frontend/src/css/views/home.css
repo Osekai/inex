@@ -356,6 +356,7 @@ body {
             margin-top: -90px;
             >img {
                 border-radius: 64px;
+                corner-shape: round;
                 width: 100px;
             }
             h1 {
@@ -376,6 +377,7 @@ body {
                 background: var(--col-l4);
                 padding: 6px 12px;
                 border-radius: 90px;
+                corner-shape: round;
                 font-size: 16px;
                 font-weight: 500;
                 color: var(--col-text-l2);

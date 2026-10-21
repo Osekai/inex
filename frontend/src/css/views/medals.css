@@ -150,6 +150,7 @@ body {
         width: 22px;
         background: white;
         border-radius: 100px;
+        corner-shape: round;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -241,6 +242,7 @@ body {
     height: 29px;
     width: 29px;
     border-radius: calc(var(--border-radius) * 1.5714);
+    corner-shape: round;
 }
 .medals__page .sidebar-md-toolbar .input-container > button svg {
     height: 18px;
@@ -606,6 +608,7 @@ body {
     left: 0;
     width: calc(100% - 20px);
     border-radius: 200px;
+    corner-shape: round;
     margin: 10px;
     text-align: center;
     padding: 12px;
@@ -730,6 +733,7 @@ body {
         img {
             height: 48px;
             border-radius: 100px;
+            corner-shape: round;
         }
         h3 {
             font-size: 18px;
@@ -838,6 +842,7 @@ body {
                     margin-left: auto;
                     padding: 5px 10px;
                     border-radius: 100px;
+                    corner-shape: round;
                     background: var(--col-l5);
                     display: flex;
                     align-items: center;
@@ -989,6 +994,7 @@ body {
     padding: 3px 8px;
     background: #fff1;
     border-radius: 100px;
+    corner-shape: round;
     margin-left: 5px;
 }
 .medal__info-solution .md-toolbar #support > div p {
@@ -1048,6 +1054,7 @@ body {
         width: 24px;
         height: 24px;
         border-radius: 100px;
+        corner-shape: round;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1132,6 +1139,7 @@ body {
     display: flex;
     background: #fff;
     border-radius: 90px;
+    corner-shape: round;
     padding: 2px 11px;
     margin-right: 5px;
     font-weight: 900;
@@ -1325,6 +1333,7 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: calc(var(--border-radius) * 2.8571);
+    corner-shape: round;
 }
 #medal_beatmaps .pack .main .right a svg {
     height: 20px;

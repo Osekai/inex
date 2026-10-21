@@ -136,6 +136,7 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
+    corner-shape: round;
     background: var(--col-text-l2);
     transform: translate(-50%, 0);
 }
@@ -187,6 +188,7 @@
     width: 9px;
     height: 9px;
     border-radius: 50%;
+    corner-shape: round;
     background: var(--col-text-l1);
     border: 2px solid var(--col-d1);
     transform: translate(-50%, -50%);

@@ -55,6 +55,7 @@
     height: 40px;
     background: var(--handle);
     border-radius: 90px;
+    corner-shape: round;
     border: none;
     cursor: pointer;
     position: relative;
@@ -67,6 +68,7 @@
     height: 40px;
     background: var(--handle);
     border-radius: 90px;
+    corner-shape: round;
     border: none;
     cursor: pointer;
     position: relative;

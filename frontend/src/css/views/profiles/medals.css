@@ -177,6 +177,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 90px;
+    corner-shape: round;
     background: var(--col-l5);
     opacity: 0;
     transition: opacity 0.15s ease;

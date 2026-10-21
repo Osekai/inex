@@ -30,6 +30,7 @@
     height: 2px;
     width: 100%;
     border-radius: calc(var(--border-radius) * 1.4286);
+    corner-shape: round;
     margin: 10px 0px;
 }
 .divider.dark {

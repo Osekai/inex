@@ -234,6 +234,7 @@ body {
 
     &.pill {
         border-radius: 90px;
+        corner-shape: round;
     }
 
     &:hover {

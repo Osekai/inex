@@ -256,6 +256,7 @@
             img {
                 height: 48px;
                 border-radius: 900px;
+                corner-shape: round;
             }
             h3 {
                 font-weight: 600;
@@ -366,6 +367,7 @@
         align-items: center;
         justify-content: center;
         border-radius: 900px;
+        corner-shape: round;
         opacity: 0.5;
         svg {
             height: 20px;

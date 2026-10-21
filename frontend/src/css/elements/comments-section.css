@@ -4,6 +4,7 @@
     align-items: center;
     padding: 8px 16px;
     border-radius: 90px;
+    corner-shape: round;
     gap: 5px;
     cursor: pointer;
     justify-content: flex-end;
@@ -104,6 +105,7 @@ comments-section {
 .comment .name-inner > img {
     height: 32px;
     border-radius: 200px;
+    corner-shape: round;
 
     &.club-icon {
         height: 24px;
@@ -147,6 +149,7 @@ comments-section {
 
     margin-left: -3px;
     border-radius: 900px;
+    corner-shape: round;
 }
 
 

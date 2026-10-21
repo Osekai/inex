@@ -4,6 +4,7 @@ gamemode-selector {
     padding: 3px;
     width: fit-content;
     border-radius: 90px;
+    corner-shape: round;
     background: var(--col-l3);
     transition: opacity 0.15s ease;
 
@@ -20,6 +21,7 @@ gamemode-selector {
     width: 34px;
     height: 34px;
     border-radius: 90px;
+    corner-shape: round;
     cursor: pointer;
     font-size: 18px;
 

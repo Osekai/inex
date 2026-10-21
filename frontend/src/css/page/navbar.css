@@ -81,6 +81,7 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 90px;
+    corner-shape: round;
     margin-right: 8px;
 
     &#process-state-button {
@@ -90,6 +91,7 @@ body {
             width: var(--size);
             height: var(--size);
             border-radius: 50%;
+            corner-shape: round;
             background: conic-gradient(var(--col-sat-3), var(--progress), color-mix(in srgb, var(--col-sat-3) 25%, transparent) 0);
             /* cut out the middle so it's a ring, not a pie */
             mask: radial-gradient(farthest-side, transparent calc(100% - var(--thickness)), #000 calc(100% - var(--thickness) + 1px));
@@ -111,6 +113,7 @@ body {
         img {
             height: 32px;
             border-radius: 90px;
+            corner-shape: round;
         }
         h1 {
             font-size: 20px;
@@ -134,6 +137,7 @@ body {
             min-width: var(--size);
             min-height: var(--size);
             border-radius: 50%;
+            corner-shape: round;
             background: conic-gradient(var(--col-sat-3), var(--progress), color-mix(in srgb, var(--col-sat-3) 25%, transparent) 0);
             /* cut out the middle so it's a ring, not a pie */
             mask: radial-gradient(farthest-side, transparent calc(100% - var(--thickness)), #000 calc(100% - var(--thickness) + 1px));
@@ -197,7 +201,8 @@ body {
 
 .navbar-icon-container > a, .navbar-icon-container > button {
     margin-right: 5px;
-    border-radius: 90px;;
+    border-radius: 90px;
+    corner-shape: round;;
     width: 40px;
     height: 40px;
     display: flex;
@@ -296,6 +301,7 @@ body {
 .navbar-right .pfp {
     height: 48px;
     border-radius: 900px;
+    corner-shape: round;
 }
 
 .navbar-pfp-container, .navbar-icon-container {
@@ -511,6 +517,7 @@ body {
 .navbar-pfp-dropdown-header img {
     height: 64px;
     border-radius: 200px;
+    corner-shape: round;
 }
 
 .navbar-pfp-dropdown-header h1 {
@@ -537,6 +544,7 @@ body {
     font-size: 14px;
     bottom: -9px;
     border-radius: 100px;
+    corner-shape: round;
     background: var(--gradient);
     font-weight: 900;
     color: var(--topcol);
@@ -557,6 +565,7 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 100px;
+    corner-shape: round;
     background: var(--gradient);
     font-weight: 800;
     font-size: 12px;

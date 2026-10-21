@@ -78,6 +78,7 @@
     cursor: pointer;
     background-color: var(--col-l3);
     border-radius: 90px;
+    corner-shape: round;
     height: 37px;
     padding: 2px 24px;
     display: flex;

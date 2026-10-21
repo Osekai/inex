@@ -5,6 +5,7 @@
     width: 0.6em;
     height: 0.6em;
     border-radius: 50%;
+    corner-shape: round;
 }
 
 .loader-centered {

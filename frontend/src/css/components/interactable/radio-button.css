@@ -8,6 +8,7 @@
     height: 26px;
     background-color: var(--col-l3);
     border-radius: 90px;
+    corner-shape: round;
     position: relative;
 }
 
@@ -17,6 +18,7 @@
 
 .radio:checked:after {
     border-radius: 90px;
+    corner-shape: round;
     content: "";
     position: absolute;
     width: 14px;

@@ -104,6 +104,7 @@
     img {
         height: 32px;
         border-radius: 90px;
+        corner-shape: round;
     }
 
     .flag {
@@ -237,6 +238,7 @@
         margin-left: 8px;
         background: var(--col-l2);
         border-radius: 90px;
+        corner-shape: round;
         padding: 8px 16px;
 
         &.active {
@@ -331,16 +333,19 @@
     background: var(--col-l2);
     border: 1px solid var(--col-l4);
     border-radius: 90px;
+    corner-shape: round;
 
     > div {
         position: relative;
         height: 24px;
         background: var(--maincol);
         border-radius: 90px;
+        corner-shape: round;
         overflow: hidden;
 
         &:before {
             border-radius: 90px;
+            corner-shape: round;
             position: absolute;
             content: "";
             top: 0;
@@ -354,6 +359,7 @@
 
         &:after {
             border-radius: 90px;
+            corner-shape: round;
             position: absolute;
             content: "";
             top: 0;
@@ -458,6 +464,7 @@ td:has(*.coltype-text-short) {
         font-size: 14px;
         height: 12px;
         border-radius: calc(var(--border-radius) * 0.5714);
+        corner-shape: round;
     }
 }
 

@@ -23,6 +23,7 @@
     height: 5px;
     width: 70px;
     border-radius: 90px;
+    corner-shape: round;
     transition: background 1s ease;
     background: var(--col-sat-1);
 }
