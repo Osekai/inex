@@ -203,6 +203,7 @@ HTML
         return new Response(true, "ok");
     }
 
+    // ported from anthera (php/Data/Me.php, Me::Save)
     public static function Save($id, $data)
     {
         if (!Session::LoggedIn()) return new Response(false, "Not logged in");

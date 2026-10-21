@@ -1,3 +1,5 @@
+// ported from anthera (frontend/src/js/views/me_edit/inputs/colour-picker.js)
+
 import iro from "@jaames/iro";
 import {Input} from "../input";
 import {D2} from "../../../../utils/d2";

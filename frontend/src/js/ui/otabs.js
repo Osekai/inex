@@ -1,3 +1,5 @@
+// otabGhost, otabClearGhost, otabFadeIn and the otab-animate handling in switchTab
+// are ported from anthera (frontend/src/js/ui/otabs.js)
 import { insertParam, getParam, removeParam } from "../utils/urlQuery.js";
 
 const initializedContainers = new WeakSet();

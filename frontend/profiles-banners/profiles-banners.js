@@ -17,7 +17,7 @@ socket.on("js_reload", () => {
     location.reload();
 });
 
-// live updates from the editor, ported from anthera's me.js theme.update
+// live updates from the editor, ported from anthera's theme.update (frontend/src/js/views/me_edit.js)
 // only does css variables, anything that changes classes gets a full reload instead
 window.addEventListener('message', (event) => {
     if (event.origin !== location.origin) return;

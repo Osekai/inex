@@ -1,3 +1,5 @@
+// ported from anthera (frontend/src/js/views/me_edit/inputs/enum.js)
+
 import {Input} from "../input";
 import {D2} from "../../../../utils/d2";
 import SearchableDropdown from "../../../../elements/searchable-dropdown";

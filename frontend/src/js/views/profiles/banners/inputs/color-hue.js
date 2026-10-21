@@ -1,7 +1,7 @@
 import {Input} from "../input";
 import {Range} from "./range";
 
-// ported from anthera, just a range with a rainbow track
+// ported from anthera (frontend/src/js/views/me_edit/inputs/color-hue.js), just a range with a rainbow track
 export class ColorHue extends Input {
     constructor(data, cb) {
         super();

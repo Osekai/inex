@@ -64,6 +64,7 @@ $s = new \Debug\Timings("general");
 include("php/General.php");
 $s->finish();
 
+// ported from anthera: index.php (cli task runner)
 if (php_sapi_name() == "cli") {
     error_reporting(E_ERROR | E_PARSE);
     if (count($argv) < 3) {

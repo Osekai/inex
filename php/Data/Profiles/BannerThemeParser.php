@@ -1,5 +1,7 @@
 <?php
 
+// ported from anthera (php/MeGallery/ThemeParser.php)
+
 namespace Data\Profiles;
 
 class BannerThemeParser

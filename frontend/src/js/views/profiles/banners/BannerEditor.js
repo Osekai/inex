@@ -1,3 +1,5 @@
+// ported from anthera (frontend/src/js/views/me_edit.js and frontend/src/js/views/me_edit/themes.js)
+
 import {DoRequest, DoRequestWithLoader} from "../../../utils/requests";
 import {PushToast} from "../../../ui/toasts";
 import {D2} from "../../../utils/d2";
@@ -8,7 +10,6 @@ import {ColorHue} from "./inputs/color-hue";
 import {ColourPicker} from "./inputs/colour-picker";
 import {ColourGradient} from "./inputs/colour-gradient";
 
-// ported from anthera's me_edit (MeEdit + Themes.InitializeThemeInputs)
 export class BannerEditor {
     static inputTypes = {
         "enum": Enum,

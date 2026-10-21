@@ -1,3 +1,5 @@
+// ported from anthera (frontend/src/js/views/me_edit/inputs/range.js)
+
 import {Input} from "../input";
 import {D2} from "../../../../utils/d2";
 
