@@ -38,6 +38,12 @@ class Profiles
         $x->finish();
 
 
+        // no medals released yet shouldn't divide by zero
+        $percent = function ($achieved, $released) {
+            if ($released == 0) return 0;
+            return round(($achieved / $released) * 100, 2);
+        };
+
         $graph_medalPercentageOverTimeRelative = [];
         $graph_medalPercentageOverTimeTotal = [];
 
@@ -66,7 +72,7 @@ class Profiles
             if ($totalAchieved < 1) continue;
             $graph_medalPercentageOverTimeRelative[] = [
                 'Date' => min($release, $achieved),
-                'Percentage' => round(($totalAchieved / $totalReleased) * 100, 2),
+                'Percentage' => $percent($totalAchieved, $totalReleased),
                 'Achieved' => $totalAchieved,
                 'Released' => $totalReleased,
             ];
@@ -74,7 +80,7 @@ class Profiles
 
         $graph_medalPercentageOverTimeRelative[] = [
             'Date' => date('Y-m-d\TH:i:s\Z'),
-            'Percentage' => round(($totalAchieved / $totalReleased) * 100, 2),
+            'Percentage' => $percent($totalAchieved, $totalReleased),
             'Achieved' => $totalAchieved,
             'Released' => $totalReleased,
         ];
@@ -92,7 +98,7 @@ class Profiles
             $totalAchieved++;
             $graph_medalPercentageOverTimeTotal[] = [
                 'Date' => $date,
-                'Percentage' => round(($totalAchieved / $totalMedals) * 100, 2),
+                'Percentage' => $percent($totalAchieved, $totalMedals),
                 'Achieved' => $totalAchieved,
                 'Released' => $totalMedals,
             ];
@@ -100,7 +106,7 @@ class Profiles
 
         $graph_medalPercentageOverTimeTotal[] = [
             'Date' => date('Y-m-d\TH:i:s\Z'),
-            'Percentage' => round(($totalAchieved / $totalMedals) * 100, 2),
+            'Percentage' => $percent($totalAchieved, $totalMedals),
             'Achieved' => $totalAchieved,
             'Released' => $totalMedals,
         ];
@@ -190,7 +196,7 @@ WHERE u.ID = ?;
                 "Medals" => [
                     "TotalReleased" => $totalReleased,
                     "TotalAchieved" => $totalAchieved,
-                    "Percentage" => round(($totalAchieved / $totalMedals) * 100, 2),
+                    "Percentage" => $percent($totalAchieved, $totalMedals),
                     "Ranks" => [
                         "Global" => $osekaiUser['Rank_Medals_Global'],
                         "Country" => $osekaiUser['Rank_Medals_Country'],

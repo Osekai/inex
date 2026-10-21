@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tasks\Tasks\Eclipse;
 
+use Data\Profiles\Goals;
+use Data\Profiles\Timeline;
+use Database\Connection;
 use Tasks\EclipseTask;
 
 
@@ -13,14 +16,26 @@ class Profiles extends EclipseTask
 
     public function Run(): void
     {
+        // goals already there means this has run before (or inex is live), so don't wipe it by accident
+        $argv = $GLOBALS['argv'] ?? [];
+        $bypass = in_array("bypass", array_slice($argv, 3), true);
+        $existing = Connection::execSimpleSelect("SELECT COUNT(*) AS Count FROM Profiles_Goals")[0]['Count'];
+        if ($existing > 0 && !$bypass) {
+            $this->Log("Profiles_Goals already has " . $existing . " goals, refusing to run because this wipes them.");
+            $this->Log("Run it again with bypass on the end to go ahead: php index.php task Eclipse.Profiles bypass");
+            return;
+        }
+
         // dev only - wipe before transferring, remove once inex is live
         $this->table('Profiles_Goals')->truncate();
         $this->table('Profiles_Timeline')->truncate();
         $this->table('Profiles_Visits')->truncate();
+        Connection::execOperation("DELETE FROM Common_Comments WHERE Target_Table = ?", "s", ["Profiles_Data"]);
 
         $this->transferGoals();
         $this->transferTimeline();
         $this->transferVisits();
+        $this->transferComments();
     }
 
     private function transferGoals(): void
@@ -28,8 +43,14 @@ class Profiles extends EclipseTask
         $goals = $this->eclipse_db->execSimpleSelect("SELECT * FROM Goals");
 
         $data = [];
+        $skipped = 0;
         foreach ($goals as $goal) {
             $type = $this->keyify($goal['Type']);
+
+            if (!$this->goalValueIsSane($type, $goal['Value'])) {
+                $skipped++;
+                continue;
+            }
 
             // medals and badges aren't per mode, old data saved one anyway
             $gamemode = $this->fixGamemode($goal['Gamemode']);
@@ -48,6 +69,8 @@ class Profiles extends EclipseTask
             ];
         }
 
+        if ($skipped > 0) echo "goals: skipped $skipped broken goals" . PHP_EOL;
+
         $data = $this->dedupeGoals($data);
 
         $this->insertChunked('Profiles_Goals', $data);
@@ -58,8 +81,16 @@ class Profiles extends EclipseTask
     {
         $timeline = $this->eclipse_db->execSimpleSelect("SELECT * FROM Timeline");
 
+        $joinDates = $this->fetchJoinDates();
+
         $data = [];
+        $skipped = 0;
         foreach ($timeline as $entry) {
+            if (!$this->timelineDateIsSane($entry['Date'], $joinDates[$entry['UserID']] ?? null)) {
+                $skipped++;
+                continue;
+            }
+
             $data[] = [
                 "ID" => $entry['ID'],
                 "User_ID" => $entry['UserID'],
@@ -68,6 +99,8 @@ class Profiles extends EclipseTask
                 "Mode" => $this->fixGamemode($entry['Mode']),
             ];
         }
+
+        if ($skipped > 0) echo "timeline: skipped $skipped entries with impossible dates" . PHP_EOL;
 
         $this->insertChunked('Profiles_Timeline', $data);
         echo "timeline: transferred " . count($data) . PHP_EOL;
@@ -90,10 +123,77 @@ class Profiles extends EclipseTask
         echo "visits: transferred " . count($data) . PHP_EOL;
     }
 
+    private function transferComments(): void
+    {
+        $comments = $this->eclipse_db->execSimpleSelect("SELECT * FROM Comments WHERE ProfileID IS NOT NULL");
+
+        $data = [];
+        foreach ($comments as $comment) {
+            $data[] = [
+                "ID" => $comment['ID'],
+                "Target_ID" => $comment['ProfileID'],
+                "Target_Table" => "Profiles_Data",
+                "User_ID" => $comment['UserID'],
+                "Parent_Comment_ID" => $comment['ParentComment'],
+                "Text" => $comment['PostText'],
+                "Date" => $comment['PostDate'],
+                "Is_Pinned" => $comment['Pinned'],
+            ];
+        }
+
+        $this->insertChunked('Common_Comments', $data);
+        echo "comments: transferred " . count($data) . PHP_EOL;
+    }
+
+    // join dates come from the rankings table, users without one skip the join check
+    private function fetchJoinDates(): array
+    {
+        $rows = Connection::execSimpleSelect("SELECT ID, Join_Date FROM Rankings_Users WHERE Join_Date IS NOT NULL");
+
+        $joinDates = [];
+        foreach ($rows as $row) {
+            $joinDates[$row['ID']] = substr($row['Join_Date'], 0, 10);
+        }
+
+        echo "timeline: got join dates for " . count($joinDates) . " users" . PHP_EOL;
+        return $joinDates;
+    }
+
+    // before osu existed, in the future, or before the account was made
+    private function timelineDateIsSane(string $date, ?string $joinDate): bool
+    {
+        $date = substr($date, 0, 10);
+
+        if ($date < Timeline::EARLIEST_DATE) return false;
+        if ($date > date("Y-m-d")) return false;
+        if ($joinDate !== null && $date < $joinDate) return false;
+
+        return true;
+    }
+
+    // catches negative, zero, non numbers, infinite and silly big goals
+    private function goalValueIsSane(string $type, $value): bool
+    {
+        if (!is_numeric($value)) return false;
+
+        $number = (float)$value;
+        if (is_nan($number) || is_infinite($number)) return false;
+        if ($number <= 0) return false;
+
+        // same limits the goals api uses
+        $types = Goals::Types();
+        $limit = $types[$type]['Max'] ?? Goals::DEFAULT_MAX;
+
+        return $number <= $limit;
+    }
+
     // old data uses "fruits", inex uses "catch"
     private function fixGamemode(?string $mode): ?string
     {
         if ($mode === "fruits") return "catch";
+
+        // all mode is gone, so these aren't tied to a mode anymore
+        if ($mode === "all" || $mode === "null" || $mode === "") return null;
         return $mode;
     }
 
@@ -132,6 +232,10 @@ class Profiles extends EclipseTask
     private function keyify(string $str): string
     {
         $str = strtolower(trim($str));
+
+        // the % would get stripped and clash with "medals"
+        if ($str == "% medals") return "medals-percent";
+
         $str = preg_replace('/[^a-z0-9]+/', '-', $str);
         return trim($str, '-');
     }

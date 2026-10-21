@@ -9,6 +9,16 @@ if (INSTANCE !== "dev") {
 $profileResponse = \Data\Profiles::Get($args[0], $args[1] ?? "");
 if ($profileResponse->success) {
     $embedUser = $profileResponse->content['User'];
+
+    // username in the url, send them to the id version
+    if ((string)$embedUser['id'] !== (string)$args[0]) {
+        $redirectUrl = "/profiles/" . intval($embedUser['id']);
+        if (!empty($args[1])) {
+            $redirectUrl .= "/" . rawurlencode($args[1]);
+        }
+        header("Location: " . $redirectUrl);
+        exit;
+    }
     \Site\Embed::SetTitle("Osekai Profiles • " . $embedUser['username']);
     \Site\Embed::SetDescription("Check out the Osekai Profiles page for " . $embedUser['username'] . "! Including stats, medals, goals, timeline, and more!");
     \Site\Embed::SetImage("https://a.ppy.sh/" . intval($embedUser['id']));

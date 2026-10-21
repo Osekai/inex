@@ -8,6 +8,9 @@ use Database\Session;
 
 class Timeline
 {
+    // osu! came out in 2007, nothing can be earlier than that
+    const EARLIEST_DATE = "2007-09-01";
+
     public static function Get($userId): Response
     {
         $entries = Connection::execSelect("SELECT * FROM Profiles_Timeline WHERE User_ID = ? ORDER BY Date ASC", "i", [$userId]);
@@ -15,11 +18,29 @@ class Timeline
     }
 
     // shared checks for add + edit, returns an error message or null
-    static function Validate($date, $note)
+    static function Validate($date, $note, $userId)
     {
         $parsed = \DateTime::createFromFormat("Y-m-d", $date);
         if ($parsed === false || $parsed->format("Y-m-d") !== $date) return "Invalid date";
         if ($parsed > new \DateTime()) return "Date can't be in the future";
+        if ($date < Timeline::EARLIEST_DATE) return "Date is too far back";
+
+        // can't have done something before the account existed
+        $joined = null;
+        $row = Connection::execSelect("SELECT Join_Date FROM Rankings_Users WHERE ID = ?", "i", [$userId]);
+        if (count($row) > 0) {
+            $joined = $row[0]['Join_Date'];
+        }
+
+        // not hydrated yet, ask osu instead
+        if ($joined === null) {
+            $profile = \Data\Profiles::Get($userId);
+            if ($profile->success) {
+                $joined = $profile->content['User']['join_date'] ?? null;
+            }
+        }
+
+        if ($joined !== null && $date < substr($joined, 0, 10)) return "Date is before your osu! account was created";
 
         $note = trim($note);
         if ($note == "") return "Note can't be empty";
@@ -34,7 +55,7 @@ class Timeline
         if (!\Data\OsekaiUsers::HasPermission("profiles.timeline.edit", true)) return new Response(false, "You can't do that");
         $userId = Session::UserData()['id'];
 
-        $error = Timeline::Validate($date, $note);
+        $error = Timeline::Validate($date, $note, $userId);
         if ($error !== null) return new Response(false, $error);
 
         // empty mode means it's not tied to one
@@ -58,7 +79,7 @@ class Timeline
 
         if (!is_numeric($id)) return new Response(false, "Invalid timeline point");
 
-        $error = Timeline::Validate($date, $note);
+        $error = Timeline::Validate($date, $note, $userId);
         if ($error !== null) return new Response(false, $error);
 
         Connection::execOperation("UPDATE Profiles_Timeline SET Date = ?, Note = ? WHERE ID = ? AND User_ID = ?", "ssii", [$date, trim($note), $id, $userId]);

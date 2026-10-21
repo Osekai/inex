@@ -8,6 +8,9 @@ use Database\Session;
 
 class Goals
 {
+    // for types without their own Max
+    const DEFAULT_MAX = 10000000000000;
+
     // every goal type lives here, add new ones to this list
     // api gets the user + that mode's statistics
     // rankings gets the Rankings_Users row + the column suffix (Standard, Taiko, Catch, Mania)
@@ -18,6 +21,7 @@ class Goals
                 "Name" => "PP",
                 "Icon" => "icon-goals-pp",
                 "Lower_Is_Better" => false,
+                "Max" => 1000000,
                 "api" => function ($user, $stats) {
                     return $stats['pp'] ?? null;
                 },
@@ -29,6 +33,7 @@ class Goals
                 "Name" => "Global Rank",
                 "Icon" => "icon-goals-rank",
                 "Lower_Is_Better" => true,
+                "Max" => 100000000,
                 "api" => function ($user, $stats) {
                     return $stats['global_rank'] ?? null;
                 },
@@ -40,15 +45,19 @@ class Goals
                 "Name" => "Country Rank",
                 "Icon" => "icon-goals-country-rank",
                 "Lower_Is_Better" => true,
+                "Max" => 10000000,
                 "api" => function ($user, $stats) {
                     return $stats['country_rank'] ?? null;
                 },
-                "rankings" => null, // not in the table
+                "rankings" => function ($row, $mode) {
+                    return $row['Rank_Country_' . $mode] ?? null;
+                },
             ],
             "medals" => [
                 "Name" => "Medals",
                 "Icon" => "icon-goals-medals",
                 "Lower_Is_Better" => false,
+                "Max" => 10000,
                 "Per_Mode" => false,
                 "api" => function ($user, $stats) {
                     return count($user['user_achievements'] ?? []);
@@ -61,6 +70,7 @@ class Goals
                 "Name" => "% Medals",
                 "Icon" => "icon-goals-medals",
                 "Lower_Is_Better" => false,
+                "Max" => 100,
                 "Per_Mode" => false,
                 "api" => function ($user, $stats) {
                     $total = Goals::TotalMedals();
@@ -77,6 +87,7 @@ class Goals
                 "Name" => "Level",
                 "Icon" => "icon-goals-level",
                 "Lower_Is_Better" => false,
+                "Max" => 1000,
                 "api" => function ($user, $stats) {
                     return $stats['level']['current'] ?? null;
                 },
@@ -88,6 +99,7 @@ class Goals
                 "Name" => "SS Count",
                 "Icon" => "icon-goals-ss-count",
                 "Lower_Is_Better" => false,
+                "Max" => 1000000,
                 "api" => function ($user, $stats) {
                     if (!isset($stats['grade_counts'])) return null;
 
@@ -104,15 +116,19 @@ class Goals
                 "Name" => "Ranked Score",
                 "Icon" => "icon-goals-ranked-score",
                 "Lower_Is_Better" => false,
+                "Max" => 10000000000000,
                 "api" => function ($user, $stats) {
                     return $stats['ranked_score'] ?? null;
                 },
-                "rankings" => null, // only total score is stored
+                "rankings" => function ($row, $mode) {
+                    return $row['Ranked_Score_' . $mode] ?? null;
+                },
             ],
             "badges" => [
                 "Name" => "Badges",
                 "Icon" => "icon-goals-badges",
                 "Lower_Is_Better" => false,
+                "Max" => 1000,
                 "Per_Mode" => false,
                 "api" => function ($user, $stats) {
                     return count($user['badges'] ?? []);
@@ -154,7 +170,13 @@ class Goals
         $types = Goals::Types();
         if (!isset($types[$type])) return new Response(false, "Invalid goal type");
 
-        if (!is_numeric($value) || (float)$value <= 0) return new Response(false, "Invalid value");
+        if (!is_numeric($value)) return new Response(false, "Invalid value");
+
+        $number = (float)$value;
+        if (is_nan($number) || is_infinite($number) || $number <= 0) return new Response(false, "Invalid value");
+
+        $max = $types[$type]['Max'] ?? Goals::DEFAULT_MAX;
+        if ($number > $max) return new Response(false, "That goal is too high");
 
         // stored as catch, the api side converts back to fruits
         if ($gamemode == "fruits") $gamemode = "catch";
