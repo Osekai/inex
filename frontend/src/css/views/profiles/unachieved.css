@@ -1,0 +1,277 @@
+#medals-unachieved-outer {
+    width: 100%;
+}
+
+.medals-unachieved .panel-header searchable-dropdown {
+    min-width: 190px;
+}
+
+.medals-unachieved-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.medals-unachieved-done {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 30px 0;
+
+    svg {
+        width: 36px;
+        height: 36px;
+        color: var(--maincol);
+    }
+
+    h3 {
+        font-size: 20px;
+        font-weight: 300;
+    }
+}
+
+.medals-unachieved-section {
+    --group-col: var(--col-sat-2);
+    margin-bottom: 16px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background: var(--col-l2);
+    outline: 1px solid color-mix(in srgb, var(--group-col) 30%, transparent);
+    outline-offset: -1px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.medals-unachieved-section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--col-l3);
+
+    h2 {
+        flex-shrink: 0;
+        font-size: 22px;
+        font-weight: 400;
+    }
+
+    p {
+        flex-shrink: 0;
+        font-size: 16px;
+        font-weight: 300;
+        color: var(--col-text-l1);
+
+        strong {
+            font-weight: 700;
+            color: var(--group-col);
+        }
+    }
+}
+
+.medals-unachieved-progress {
+    flex: 1;
+    height: 6px;
+    border-radius: 90px;
+    background: var(--col-l1);
+
+    .medals-unachieved-progress-inner {
+        height: 100%;
+        border-radius: 90px;
+        background: var(--group-col);
+    }
+}
+
+.medals-unachieved-section-inner {
+    padding: 14px 16px;
+}
+
+.medals-unachieved-mode:not(:first-child) {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid color-mix(in srgb, var(--group-col) 35%, transparent);
+}
+
+.medals-unachieved-mode-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+
+    i {
+        font-size: 16px;
+        color: var(--group-col);
+    }
+
+    p {
+        font-size: 14px;
+        opacity: 0.8;
+    }
+}
+
+.medals-unachieved-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+    gap: 6px 2px;
+}
+
+.medals-unachieved-medal {
+    display: flex;
+    justify-content: center;
+    aspect-ratio: 1;
+    transition: transform 0.1s ease;
+
+    medal-icon {
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    &:hover {
+        transform: scale(1.12);
+    }
+}
+
+.medals-unachieved-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+    color: inherit;
+
+    &:not(:last-child) {
+        border-bottom: 1px solid #fff1;
+    }
+
+    medal-icon {
+        flex-shrink: 0;
+        width: 42px;
+        height: 42px;
+    }
+
+    &:hover {
+        background: color-mix(in srgb, var(--col-l3) 40%, transparent);
+    }
+}
+
+.medals-unachieved-row-text {
+    flex: 1;
+    min-width: 0;
+
+    h3 {
+        font-size: 16px;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    p {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 13px;
+        font-weight: 300;
+        color: var(--col-text-l1);
+    }
+}
+
+.medals-unachieved-row-stat {
+    flex-shrink: 0;
+    text-align: right;
+
+    h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--maincol);
+    }
+
+    p {
+        font-size: 12px;
+        opacity: 0.6;
+    }
+}
+
+.medals-unachieved-milestone {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    border-radius: var(--border-radius);
+    background: var(--col-l3);
+    color: inherit;
+
+    medal-icon {
+        flex-shrink: 0;
+        width: 52px;
+        height: 52px;
+    }
+
+    &:hover {
+        background: var(--col-l4);
+    }
+}
+
+.medals-unachieved-milestone-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .medals-unachieved-progress {
+        flex: none;
+    }
+}
+
+.medals-unachieved-milestone-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+
+    h3 {
+        min-width: 0;
+        font-size: 16px;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        span {
+            font-weight: 300;
+            opacity: 0.6;
+        }
+    }
+
+    p {
+        flex-shrink: 0;
+        font-size: 13px;
+        font-weight: 300;
+        color: var(--col-text-l1);
+
+        strong {
+            font-weight: 700;
+            color: var(--group-col);
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .medals-unachieved .panel-header searchable-dropdown {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .medals-unachieved-section-header {
+        padding: 12px;
+        flex-wrap: wrap;
+    }
+
+    .medals-unachieved-section-inner {
+        padding: 12px;
+    }
+}

@@ -52,4 +52,3 @@ foreach ($qu['Medals'] as $medal) {
         https://osekai.net
     </div>
 </div>
-<img class="original-ref" src="https://i.ppy.sh/48ad43eabb4d65972d1d760909bbffb99911370a/68747470733a2f2f6f73656b61692e6e65742f70726f66696c65732f696d672f62616e6e65722e7376673f69643d31303337393936352631">

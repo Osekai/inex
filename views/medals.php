@@ -124,7 +124,7 @@ if ($cur_medal == null) {
                 <div class="main-left">
                     <div class="panel medal__info">
                         <div class="medal__info-upper" bug="medals/info/info">
-                            <medal-icon id="medal_image" src="all-secret-jackpot"></medal-icon>
+                            <medal-icon id="medal_image" fancy="true" src="all-secret-jackpot"></medal-icon>
                             <div class="medal__info-text">
                                 <div>
                                     <h1>

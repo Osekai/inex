@@ -173,10 +173,24 @@
 
 /* only the empty-timeline message sits in the flow, an empty div shouldn't add space */
 .timeline-detail:not(.card):not(:empty) {
-    margin-top: 14px;
+    margin: 14px 0 10px;
+}
+
+@media (min-width: 700px) {
+    .timeline-detail:not(.card):not(:empty) {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: calc(100% - 6px);
+        margin: 0;
+        padding: 0 110px;
+        text-align: center;
+        pointer-events: none;
+    }
 }
 
 .timeline-empty p {
+    font-size: 13px;
     font-weight: 300;
     font-style: italic;
     opacity: 0.7;

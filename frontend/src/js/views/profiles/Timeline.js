@@ -82,6 +82,7 @@ export default class Timeline {
 
     formatDate(date) {
         // dates come in as yyyy-mm-dd (or a full timestamp for join date)
+        if (!date) return "Unknown";
         return new Date(date.substring(0, 10) + "T00:00:00").toLocaleDateString(undefined, {
             "day": "numeric",
             "month": "short",

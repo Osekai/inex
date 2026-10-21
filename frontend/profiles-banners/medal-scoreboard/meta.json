@@ -1,0 +1,41 @@
+{
+  "key": "medal-scoreboard",
+  "name": "Medal Scoreboard",
+  "category": "Medals",
+  "resolution": [
+    1400,
+    250
+  ],
+  "settings": {
+    "colourType": {
+      "name": "Colour",
+      "type": "enum",
+      "values": [
+        {
+          "key": "club",
+          "name": "Club"
+        },
+        {
+          "key": "custom",
+          "name": "Custom"
+        }
+      ],
+      "default": "club",
+      "output": {
+        "type": "css-class",
+        "prefix": "dyn-colourType-"
+      }
+    },
+    "accentColour": {
+      "name": "Accent Colour",
+      "type": "colour-picker",
+      "default": "#e5457f",
+      "showOn": {
+        "colourType": "custom"
+      },
+      "output": {
+        "type": "css-variable"
+      }
+    }
+  }
+}

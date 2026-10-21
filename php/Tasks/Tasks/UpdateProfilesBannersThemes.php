@@ -15,6 +15,8 @@ class UpdateProfilesBannersThemes extends Task
         foreach(scandir($path) as $theme) {
             if($theme == "." || $theme == "..") continue;
             $realpath = realpath($path . $theme);
+            // skips the shared profiles-banners.js/css files
+            if(!is_dir($realpath)) continue;
             echo $realpath;
             $json = json_decode(file_get_contents($realpath . "/meta.json"), true);
             if(!isset($json['settings'])) {

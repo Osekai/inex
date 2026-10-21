@@ -52,8 +52,14 @@ $router->get('/badges/([^/]+)/', function ($badge) {
 $router->get('/profiles', function () {
     DrawViewWithTemplate("profiles_home", "page");
 });
+$router->get('/profiles/banner/preview/([^/]+)', function ($key) {
+    $result = Banners::RenderPreview($key);
+    // errors come back as plain strings
+    echo is_array($result) ? $result['html'] : $result;
+});
 $router->get('/profiles/banner/([^/]+)/html', function ($id) {
-    echo Banners::RenderBanner($id)['html'];
+    $result = Banners::RenderBanner($id);
+    echo is_array($result) ? $result['html'] : $result;
 });
 $router->get('/profiles/([^/]+)/([^/]+)', function ($user, $gamemode) {
     DrawViewWithTemplate("profiles", "page", $user, $gamemode);

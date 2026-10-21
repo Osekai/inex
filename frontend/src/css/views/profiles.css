@@ -1,7 +1,13 @@
 #medal-graph {
     width: 100%;
 }
-
+.profiles-loader {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .header-img {
     width: 100%;
     position: absolute;
@@ -324,22 +330,69 @@
     > .tabs {
         margin-bottom: 24px;
         display: flex;
-        gap: 8px;
-
+        gap: 40px;
         > * {
-            background: color-mix(in srgb, var(--col-l5) 40%, transparent);
-            backdrop-filter: blur(10px);
-            padding: 14px 30px;
-            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 6px 0px;
+            gap: 6px;
+            font-size: 17px;
+
+            i {
+                font-size: 28px;
+            }
+            svg {
+                height: 28px;
+                width: auto;
+            }
+            transition: all 0.2s ease;
+            cursor: pointer;
+            &:before {
+                content: "";
+                height: 4px;
+                background: var(--col-l5);
+                position: absolute;
+                bottom: -8px;
+                left: 10px;
+                right: 10px;
+                border-radius: 90px;
+                transition: all 0.2s ease;
+            }
 
             &.otab-button-active {
-                background: var(--col-l90);
-                color: var(--col-l2);
+                &:before {
+                    background: linear-gradient(to right,
+                    var(--col-sat-1),
+                    var(--col-sat-2));
+                    left: 0;
+                    right: 0;
+                }
+                color: var(--col-sat-2);
             }
         }
 
         a {
             margin-left: auto;
+        }
+
+        > gamemode-selector {
+            margin-left: auto;
+            padding: 3px;
+            gap: 2px;
+            cursor: default;
+
+            &:before {
+                display: none;
+            }
+
+            i {
+                font-size: 18px;
+            }
+
+            + a {
+                margin-left: 0;
+            }
         }
     }
 }
@@ -507,7 +560,7 @@
     gap: 16px;
     margin: 16px 0px;
 
-    > .medal-item {
+    > .medal-item, > .medals-favourite-outer > .medal-item {
         color: inherit;
         flex: 1;
         background: var(--col-l3);
@@ -554,52 +607,226 @@
     }
 }
 
-.medal-picker-overlay-outer {
-    max-width: 800px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 32px;
-}
 
-.medal-picker-overlay {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    flex-direction: row;
-    gap: 4px;
-    padding: 0px;
-    margin: 0px;
-    max-height: 70vh;
-    overflow-y: auto;
-    padding: 20px 0px;
-
-    > div {
-        padding: 8px;
-        background: var(--col-l3);
-        border-radius: var(--border-radius);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-
-        medal-icon {
-            height: 64px;
-            width: 64px;
-        }
-
-        cursor: pointer;
-
-        &:hover {
-            background: var(--col-l4);
-        }
-
-        &.selected {
-            background: var(--col-sat-1);
+/* mobile */
+@media (max-width: 1100px) {
+    .user-header {
+        .panels > div {
+            width: 240px;
         }
     }
 
+    .medals-top-panel {
+        flex-direction: column;
 
+        .content {
+            max-width: none;
+        }
+
+        #medal-graph {
+            flex: none;
+        }
+    }
+}
+
+@media (max-width: 900px) {
+    .profile-page {
+        flex-direction: column;
+
+        > * {
+            flex: none;
+            width: 100%;
+
+            &.left {
+                max-width: none;
+            }
+        }
+    }
+
+    .medals-favourite {
+        flex-direction: column;
+    }
+
+    .user-header {
+        height: auto;
+        flex-wrap: wrap;
+        gap: 16px;
+        padding: 20px 0;
+
+        img {
+            height: 120px;
+        }
+
+        .name {
+            margin-left: 0;
+
+            > div h1 {
+                font-size: 30px;
+            }
+
+            > span {
+                font-size: 20px;
+            }
+        }
+
+        .panels {
+            margin-left: 0;
+            width: 100%;
+            flex-wrap: wrap;
+
+            > div {
+                flex: 1 1 240px;
+                width: auto;
+            }
+        }
+    }
+
+    .header-img {
+        height: 300px;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-profile > .tabs {
+        gap: 18px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+
+        > * {
+            font-size: 15px;
+        }
+
+        > gamemode-selector {
+            margin-left: 0;
+            order: 5;
+        }
+
+        a {
+            margin-left: 0;
+        }
+    }
+
+    .user-header {
+        img {
+            height: 90px;
+            border-radius: 14px;
+        }
+
+        .name > div {
+            gap: 6px;
+
+            img {
+                height: 20px;
+                border-radius: 4px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+        }
+
+        .name > span {
+            font-size: 15px;
+            margin-top: 8px;
+        }
+
+        .panels > div {
+            flex-basis: 100%;
+            height: 150px;
+        }
+    }
+
+    .panel-stats {
+        padding: 12px;
+
+        > p, .toolbar-area * {
+            font-size: 13px;
+        }
+
+        > h1 {
+            font-size: 24px;
+        }
+
+        > h3 {
+            font-size: 16px;
+        }
+
+        .footerarea {
+            font-size: 14px;
+        }
+
+        &.panel-medals-outer {
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 15px;
+            }
+
+            h3 {
+                font-size: 13px;
+            }
+
+            .rank-image {
+                height: 60px;
+                top: 12px;
+                right: 12px;
+            }
+
+            .next-medals img {
+                height: 12px;
+            }
+        }
+    }
+
+    .medals-top-panel .content {
+        padding: 14px;
+
+        > .top {
+            img {
+                width: 70px;
+            }
+
+            > div {
+                margin-left: 12px;
+
+                h1 {
+                    font-size: 26px;
+                }
+
+                h3 {
+                    font-size: 17px;
+                }
+
+                h4 {
+                    font-size: 15px;
+                }
+            }
+        }
+
+        > .ranks {
+            flex-wrap: wrap;
+            gap: 10px 16px;
+        }
+
+        > .bottom > .next-content {
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+    }
+
+    .medals-favourite > .medal-item,
+    .medals-favourite > .medals-favourite-outer > .medal-item {
+        padding: 14px;
+
+        medal-icon {
+            height: 60px;
+            width: 60px;
+        }
+
+        > div h1 {
+            font-size: 24px;
+        }
+    }
 }

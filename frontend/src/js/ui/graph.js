@@ -54,17 +54,30 @@ export class Graph {
         return this;
     }
 
-    _colourAt(ts) {
-        const colourEvents = this.events
+    // sorted once per render, there can be one colour event per data point
+    _buildColourEvents() {
+        this._colourEvents = this.events
             .filter(e => e.type === "colour")
-            .sort((a, b) => new Date(a.date) - new Date(b.date));
+            .map(e => ({ ts: new Date(e.date).getTime(), colour: e.colour }))
+            .sort((a, b) => a.ts - b.ts);
+    }
 
-        let colour = this.defaultColour;
-        for (const e of colourEvents) {
-            if (new Date(e.date).getTime() <= ts) colour = e.colour;
-            else break;
+    // last colour event at or before ts, binary search
+    _colourAt(ts) {
+        let low = 0;
+        let high = this._colourEvents.length - 1;
+        let found = -1;
+        while (low <= high) {
+            let mid = (low + high) >> 1;
+            if (this._colourEvents[mid].ts <= ts) {
+                found = mid;
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
         }
-        return colour;
+        if (found === -1) return this.defaultColour;
+        return this._colourEvents[found].colour;
     }
 
     _buildDom() {
@@ -163,19 +176,34 @@ export class Graph {
         this.crosshairDot.style.left = snappedX + "px";
         this.crosshairDot.style.top = snappedY + "px";
 
-        this.tooltip.innerHTML = this.renderTooltip(nearest.raw);
+        if (this._lastNearest !== nearest) {
+            this._lastNearest = nearest;
+            this.tooltip.innerHTML = this.renderTooltip(nearest.raw);
+        }
         this.tooltip.classList.add("visible");
 
         // show event labels when hovering within threshold of their marker
         const LABEL_THRESHOLD_PX = 20;
         const markers = this.inner.querySelectorAll(".graph-event-marker");
+
+        // only the closest marker lights up, otherwise clustered events all show at once
+        let closest = null;
+        let closestDist = LABEL_THRESHOLD_PX;
         for (const marker of markers) {
             const markerX = parseFloat(marker.style.left) + this.panX;
             const dist = Math.abs(this._lastMouseX - markerX);
-            marker.classList.toggle("label-visible", dist < LABEL_THRESHOLD_PX);
+            if (dist < closestDist) {
+                closestDist = dist;
+                closest = marker;
+            }
+        }
+
+        for (const marker of markers) {
+            const active = marker === closest;
+            marker.classList.toggle("label-visible", active);
 
             const line = marker.querySelector(".graph-event-line");
-            if (line) line.classList.toggle("hovered", dist < LABEL_THRESHOLD_PX);
+            if (line) line.classList.toggle("hovered", active);
         }
     }
 
@@ -315,19 +343,24 @@ export class Graph {
             svg.appendChild(gridLine);
         }
 
+        this._buildColourEvents();
+        const colours = this.data.map(d => this._colourAt(d.ts));
+
         const segments = [];
         let segStart = 0;
         for (let i = 1; i < this.data.length; i++) {
-            if (this._colourAt(this.data[i].ts) !== this._colourAt(this.data[i - 1].ts)) {
-                segments.push({ from: segStart, to: i, colour: this._colourAt(this.data[i - 1].ts) });
+            if (colours[i] !== colours[i - 1]) {
+                segments.push({ from: segStart, to: i, colour: colours[i - 1] });
                 segStart = i;
             }
         }
-        segments.push({ from: segStart, to: this.data.length - 1, colour: this._colourAt(this.data[segStart].ts) });
+        segments.push({ from: segStart, to: this.data.length - 1, colour: colours[segStart] });
 
         for (const seg of segments) {
             const pts = [];
             for (let i = seg.from; i <= seg.to; i++) {
+                // same value as the one before draws the same flat line
+                if (i > seg.from && i < seg.to && this.data[i].value === this.data[i - 1].value) continue;
                 if (i > seg.from) {
                     pts.push(`${xOf(this.data[i].ts)},${yOf(this.data[i - 1].value)}`);
                 }

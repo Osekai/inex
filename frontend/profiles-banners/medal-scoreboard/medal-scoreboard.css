@@ -1,0 +1,222 @@
+html .banner {
+    --accent: var(--maincol, hsl(var(--hue), 80%, 40%));
+    --ink: var(--col-vd);
+
+    width: 1400bpx;
+    height: 250bpx;
+    overflow: hidden;
+    border-radius: 16bpx;
+    background: var(--accent);
+
+    &.dyn-colourType-custom { --accent: var(--dyn-accentColour); }
+
+    &.dyn-colourType-club {
+        .darken-layer {
+            background: black;
+            opacity: 0.2;
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            z-index: -1;
+        }
+    }
+    >* {
+        position: relative;
+        z-index: 2;
+    }
+    &:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+            135deg,
+            rgba(0, 0, 0, 0.07) 0,
+            rgba(0, 0, 0, 0.07) 2bpx,
+            transparent 2bpx,
+            transparent 12bpx
+        );
+        z-index: 0;
+    }
+
+    &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 480bpx;
+        background: var(--ink);
+        opacity: 0.22;
+        clip-path: polygon(110bpx 0, 100% 0, 100% 100%, 0 100%);
+        z-index: 0;
+    }
+}
+
+.bg-elements {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+
+    medal-icon {
+        position: absolute;
+        width: 420bpx;
+        right: -40bpx;
+        top: -85bpx;
+        opacity: 0.18;
+    }
+}
+
+.scoreboard {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 40bpx;
+    height: 100%;
+    padding: 0 64bpx 0 45bpx;
+    color: #fff;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+
+    img.pb-pfp {
+        height: 160bpx;
+        width: 160bpx;
+        flex-shrink: 0;
+        border-radius: 22bpx;
+        border: 6bpx solid var(--ink);
+        box-shadow: 8bpx 8bpx 0 var(--ink);
+        object-fit: cover;
+    }
+
+    .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 16bpx;
+    }
+
+    .label {
+        font-size: 16bpx;
+        opacity: 0.75;
+    }
+
+    .head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding-bottom: 16bpx;
+        border-bottom: 3bpx solid var(--ink);
+    }
+
+    h1 {
+        font-size: 58bpx;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    .sub {
+        margin-top: 12bpx;
+        font-size: 20bpx;
+        font-weight: 600;
+        opacity: 0.85;
+
+        .sep {
+            opacity: 0.5;
+            margin: 0 4bpx;
+        }
+    }
+
+    .rank {
+        text-align: right;
+
+        .big {
+            margin-top: 6bpx;
+            font-size: 68bpx;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+
+            span {
+                font-size: 40bpx;
+                opacity: 0.55;
+                margin-right: 4bpx;
+            }
+        }
+
+    }
+
+    .foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .cells {
+        display: flex;
+        gap: 44bpx;
+
+        .val {
+            margin-top: 6bpx;
+            font-size: 30bpx;
+            font-weight: 700;
+        }
+    }
+
+    .rarest {
+        display: flex;
+        align-items: center;
+        gap: 12bpx;
+        padding: 8bpx 18bpx 8bpx 10bpx;
+        background: var(--ink);
+        border-radius: 10bpx;
+        font-size: 22bpx;
+        font-weight: 600;
+
+        medal-icon {
+            width: 40bpx;
+            height: 40bpx;
+        }
+
+        span {
+            margin-left: 6bpx;
+            font-size: 16bpx;
+            font-weight: 400;
+            opacity: 0.6;
+        }
+    }
+}
+
+.watermark {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 64bpx;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10bpx;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    color: #fff;
+    opacity: 0.5;
+    font-size: 14bpx;
+
+    img {
+        height: 20bpx;
+        width: auto;
+        transform: rotate(180deg);
+    }
+
+    p {
+        white-space: nowrap;
+    }
+
+    span {
+        margin-inline-start: 8bpx;
+        opacity: 0.7;
+    }
+}

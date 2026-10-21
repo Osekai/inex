@@ -1,0 +1,41 @@
+{
+  "key": "scoreboard",
+  "name": "Scoreboard Banner",
+  "category": "Gamemode",
+  "resolution": [
+    1400,
+    250
+  ],
+  "settings": {
+    "colourType": {
+      "name": "Colour",
+      "type": "enum",
+      "values": [
+        {
+          "key": "mode",
+          "name": "Gamemode"
+        },
+        {
+          "key": "custom",
+          "name": "Custom"
+        }
+      ],
+      "default": "mode",
+      "output": {
+        "type": "css-class",
+        "prefix": "dyn-colourType-"
+      }
+    },
+    "accentColour": {
+      "name": "Accent Colour",
+      "type": "colour-picker",
+      "default": "#e5457f",
+      "showOn": {
+        "colourType": "custom"
+      },
+      "output": {
+        "type": "css-variable"
+      }
+    }
+  }
+}

@@ -1,7 +1,13 @@
 <?php
 // Basic Data
 const DEV = true;
-const URL = "http://0.0.0.0:19242";
+// fwd forwards (https://<id>-tza-fwd.untone.in) get their url from the host header
+$fwdHost = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? "";
+if (preg_match('/^[a-z0-9-]+-tza-fwd\.untone\.in$/', $fwdHost)) {
+    define("URL", "https://" . $fwdHost);
+} else {
+    define("URL", "http://0.0.0.0:19242");
+}
 
 // OAUTH Login
 const CLIENT_ID = "31799";

@@ -4,17 +4,36 @@ if (INSTANCE !== "dev") {
     header("Location: https://osekai.net/profiles?user=" . $args[0]);
     exit;
 }
+
+// same request the api would do, the js reads it from the const
+$profileResponse = \Data\Profiles::Get($args[0], $args[1] ?? "");
+if ($profileResponse->success) {
+    $embedUser = $profileResponse->content['User'];
+    \Site\Embed::SetTitle("Osekai Profiles • " . $embedUser['username']);
+    \Site\Embed::SetDescription("Check out the Osekai Profiles page for " . $embedUser['username'] . "! Including stats, medals, goals, timeline, and more!");
+    \Site\Embed::SetImage("https://a.ppy.sh/" . intval($embedUser['id']));
+    \Site\Embed::AddTags($embedUser['username'] . ",profiles,user_profile");
+} else {
+    // unknown user, same page as any other 404
+    http_response_code(404);
+    include("./views/404.php");
+    return;
+}
 ?>
 <script>
     const profileID = <?= json_encode($args[0]) ?>;
     const gamemode = <?= json_encode($args[1]) ?>;
+    const profileResponse = <?= json_encode($profileResponse) ?>;
 </script>
 
 <div class="header-img" id="profiles-header-img">
 
 </div>
 
-<div otab-container="page" otab-no-replace otab-default="profile" id="profile-outer">
+<div class="profiles-loader" id="profiles-loader">
+    <?= LOADER ?>
+</div>
+<div otab-container="page" otab-no-replace otab-animate otab-default="profile" id="profile-outer" class="hidden" no-url-replace>
 
     <div class="page-container-inner">
         <div class="user-header">
@@ -27,7 +46,7 @@ if (INSTANCE !== "dev") {
                 <span><i pr-el="gamemode-icon" class="icon-gamemode-osu"></i> #<span pr-el="gamemode-rank">00000</span> Global</span>
             </div>
             <div class="panels">
-                <div pr-el="panel-allmode" otab-button="allmode">
+                <div pr-el="panel-allmode">
                     ALLMODE
                 </div>
                 <div pr-el="panel-medals" otab-button="medals">
@@ -45,12 +64,21 @@ if (INSTANCE !== "dev") {
     </div>
     <div class="page-container-inner main-profile">
         <div class="tabs">
-            <p otab-button="profile">Profile</p>
-            <p otab-button="medals">Medals</p>
-            <p otab-button="banners">Banners</p>
-            <p otab-button="allmode">Allmode</p>
-            <a pr-el="link-osu" target="_blank">
-                <i class="icon-logo-osu"></i>
+            <p otab-button="profile">
+                <i data-lucide="user"></i>
+                Profile
+            </p>
+            <p otab-button="medals">
+                <i class="icon-goals-medals"></i>
+                Medals
+            </p>
+            <p otab-button="banners">
+                <i data-lucide="image"></i>
+                Banners
+            </p>
+            <gamemode-selector pr-el="gamemode-selector"></gamemode-selector>
+            <a pr-el="link-osu" target="_blank" tooltip="View on osu!">
+                <i simple-icon="osu"></i>
             </a>
         </div>
         <div class="pages">
@@ -68,21 +96,21 @@ if (INSTANCE !== "dev") {
                                 <strong pr-el="osekai-statistics-joined-osekai"></strong>
                             </div>
                         </div>
-                        <h2><i data-lucide="smile"></i> Contributions</h2>
+                        <h2><img src="/public/img/branding/icon_monochrome.svg"> Osekai Contributions</h2>
                         <div class="info-rows">
                             <div class="info-row">
                                 <p><i data-lucide="message-circle"></i> Comments</p>
                                 <strong pr-el="osekai-statistics-global-comments"></strong>
                             </div>
                         </div>
-                        <h2><img src="/public/img/branding/app/medals.svg"> Medals</h2>
+                        <h2><img src="/public/img/branding/app-fill/medals.svg"> Osekai Medals</h2>
                         <div class="info-rows">
                             <div class="info-row">
-                                <p><i data-lucide="map"></i> Beatmaps</p>
+                                <p><i data-lucide="map"></i> Beatmap Suggestions</p>
                                 <strong pr-el="osekai-statistics-medals-beatmaps"></strong>
                             </div>
                             <div class="info-row">
-                                <p><i data-lucide="list-plus"></i> Beatmap upvotes</p>
+                                <p><i data-lucide="list-plus"></i> Beatmap Suggestion Upvotes</p>
                                 <strong pr-el="osekai-statistics-medals-votes"></strong>
                             </div>
                         </div>
@@ -106,7 +134,10 @@ if (INSTANCE !== "dev") {
                         <div id="timeline-outer"></div>
                     </div>
                     <div class="panel">
-                        <h1>Goals</h1>
+                        <div class="panel-header">
+                            <h1>Goals</h1>
+                            <button class="goals-help" id="goals-help" tooltip="What are goals?" style="display: none"><i data-lucide="circle-help"></i></button>
+                        </div>
                         <div class="divider"></div>
                         <div id="goals-outer"></div>
                     </div>
@@ -141,7 +172,7 @@ if (INSTANCE !== "dev") {
                                 <div class="left">
                                     <h4 pr-el="medals-percentage"></h4> Achieved
                                 </div>
-                                <div class="right">
+                                <div class="right" pr-el="medals-club-next">
                                     <h4 pr-el="medals-club-next-togo"></h4> medals until
                                     <img pr-el="medals-club-next-badge">
                                     <span pr-el="medals-club-next-name"></span>
@@ -153,38 +184,36 @@ if (INSTANCE !== "dev") {
                     <div id="medal-graph"></div>
                 </div>
                 <div class="medals-favourite">
-                    <a class="medal-item" pr-el="medal-rarest-link">
-                        <medal-icon pr-el="medal-rarest-icon"></medal-icon>
-                        <div>
-                            <p><i data-lucide="gem"></i> Rarest Medal</p>
-                            <h1 pr-el="medal-rarest-name"></h1>
-                            <div>
-                                <h4>Achieved <span pr-el="medal-rarest-achieved-date"></span></h4>
-                                /
-                                <h4><span pr-el="medal-rarest-percentage"></span>% of users have this medal!</h4>
-                            </div>
+                    <div class="medals-rarest">
+                        <p><i data-lucide="gem"></i> Rarest Medals</p>
+                        <div class="medals-rarest-scroller">
+                            <div class="medals-rarest-track" pr-el="medals-rarest-list"></div>
                         </div>
-                    </a>
-                    <a class="medal-item" pr-el="medal-favourite-link">
-                        <medal-icon pr-el="medal-favourite-icon"></medal-icon>
-                        <div>
-                            <p><i data-lucide="star"></i> Favourite Medal</p>
-                            <h1 pr-el="medal-favourite-name"></h1>
+                    </div>
+                    <div class="medals-favourite-outer" pr-el="medal-favourite"></div>
+                </div>
+                <div class="medals-lower">
+                    <div class="panel">
+                        <h1>Medal History</h1>
+                        <div class="divider"></div>
+                        <div id="medal-history-outer"></div>
+                    </div>
+                    <div class="panel medals-unachieved">
+                        <div class="panel-header">
+                            <h1>Medals to Achieve</h1>
+                            <searchable-dropdown id="unachieved-sort"></searchable-dropdown>
                         </div>
-                        <button pr-el="medal-favourite-button" class="button">
-                            <i data-lucide="star"></i>
-                            Change your Favourite Medal
-                        </button>
-                    </a>
+                        <div class="divider"></div>
+                        <div id="medals-unachieved-outer"></div>
+                    </div>
                 </div>
             </div>
             <div otab-name="banners" id="banners-outer">
-                <p>banners</p>
-            </div>
-            <div otab-name="allmode">
-                <p>allmode</p>
             </div>
         </div>
     </div>
 
 </div>
+<?php
+include("./views/elements/footer.php");
+?>

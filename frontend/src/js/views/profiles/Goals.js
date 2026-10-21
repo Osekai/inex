@@ -1,8 +1,12 @@
 import {DoRequest} from "../../utils/requests";
 import {D2} from "../../utils/d2";
 import {UTCify} from "../../utils/time";
+import {formatNumber} from "../../utils/numbers";
 import {PushToast} from "../../ui/toasts";
 import {Modal, ModalButton, ModalIcon} from "../../ui/overlay";
+
+const WELCOME_TITLE = "Welcome to Goals";
+const WELCOME_BODY = "Goals are a way to keep track of what you're working towards in osu!, from medal counts and pp to badges and rank. Pick a goal type, set a target and hit add, and we'll keep your progress updated and mark it complete once you get there!";
 
 const MODES = [
     {"Key": "osu", "Name": "osu!"},
@@ -49,6 +53,16 @@ export default class Goals {
 
         if (this.main.Am_User()) {
             this.el.appendChild(this.renderInput());
+
+            let help = document.getElementById("goals-help");
+            help.style.display = "";
+            help.addEventListener("click", () => {
+                let modal = new Modal(WELCOME_TITLE, WELCOME_BODY, [
+                    new ModalButton("Got it", () => {
+                        modal.close();
+                    })
+                ], new ModalIcon("flag", "#7E95FB"));
+            });
         }
     }
 
@@ -66,7 +80,21 @@ export default class Goals {
 
     format(value) {
         if (value === null) return "?";
-        return Number(value).toLocaleString();
+        return formatNumber(value);
+    }
+
+    // "Reach 2 Medals" style wording per goal type, falls back to reach + the type name
+    getTitle(goal, type) {
+        let value = this.format(goal.Value);
+
+        if (goal.Type == "rank") return `Reach <strong>#${value}</strong> Global Rank`;
+        if (goal.Type == "country-rank") return `Reach <strong>#${value}</strong> Country Rank`;
+        if (goal.Type == "medals-percent") return `Reach <strong>${value}%</strong> of all Medals`;
+        if (goal.Type == "level") return `Reach Level <strong>${value}</strong>`;
+        if (goal.Type == "ss-count") return `Get <strong>${value}</strong> SS Ranks`;
+        if (goal.Type == "badges") return `Earn <strong>${value}</strong> Badges`;
+
+        return `Reach <strong>${value}</strong> ${type.Name}`;
     }
 
     // unfinished first (closest to done on top), then finished (newest on top)
@@ -89,13 +117,19 @@ export default class Goals {
         this.els.list.innerHTML = "";
 
         if (this.goals.length == 0) {
+            // first timers get the explainer, it goes away once they add one
+            if (this.main.Am_User()) {
+                this.els.list.appendChild(D2.Div("goal-welcome", () => {
+                    D2.LucideIcon("flag");
+                    D2.Text("h2", WELCOME_TITLE);
+                    D2.Text("p", WELCOME_BODY);
+                }));
+                return;
+            }
+
             this.els.list.appendChild(D2.Div("goal-empty", () => {
                 D2.LucideIcon("flag");
-                if (this.main.Am_User()) {
-                    D2.Text("p", "You don't have any goals yet, set one below!");
-                } else {
-                    D2.Text("p", "This user doesn't have any goals yet.");
-                }
+                D2.Text("p", "This user doesn't have any goals yet.");
             }));
             return;
         }
@@ -112,57 +146,60 @@ export default class Goals {
         if (complete) progress = 1;
 
         let el = D2.Div("goal", () => {
-            D2.Div("goal-icon", () => {
-                D2.Custom("i", type.Icon);
-            });
-
-            D2.Div("goal-main", () => {
+            D2.Div("goal-body", () => {
                 D2.Div("goal-top", () => {
-                    D2.Div("goal-title", () => {
-                        D2.StyledText("h2", `<strong>${this.format(goal.Value)}</strong> ${type.Name}`);
-                        D2.Div("goal-meta", () => {
-                            if (goal.Gamemode !== null) {
-                                let mode = D2.Div("goal-mode-tag", () => {
-                                    D2.Custom("i", "icon-gamemode-" + goal.Gamemode);
-                                });
-                                mode.setAttribute("tooltip", this.getModeName(goal.Gamemode));
-                            }
-                            if (complete) {
-                                D2.StyledText("p", `Completed <strong>${D2.TimeRelative(UTCify(goal.Claimed))}</strong>`);
-                            } else {
-                                D2.StyledText("p", `Started <strong>${D2.TimeRelative(UTCify(goal.Creation_Date))}</strong>`);
-                            }
+                    D2.Custom("i", type.Icon + " goal-icon");
+                    D2.StyledText("h2", this.getTitle(goal, type));
+                    if (goal.Gamemode !== null) {
+                        let mode = D2.Div("goal-mode-tag", () => {
+                            D2.Custom("i", "icon-gamemode-" + goal.Gamemode);
                         });
-                    });
-
-                    D2.Div("goal-status", () => {
-                        if (complete) {
-                            D2.Div("goal-complete-tag", () => {
-                                D2.LucideIcon("check");
-                            });
-                        } else {
-                            D2.Text("h3", Math.floor(progress * 100) + "%");
-                            D2.Text("p", this.format(goal.Current_Value));
-                        }
-                    });
-
+                        mode.setAttribute("tooltip", this.getModeName(goal.Gamemode));
+                    }
                 });
 
                 D2.Div("goal-progress", () => {
                     D2.CustomPlus("div", "goal-progress-inner", {"style": `width: ${progress * 100}%`}, () => {
                     });
                 });
+
+                D2.Div("goal-numbers", () => {
+                    if (complete) {
+                        D2.Div("goal-done", () => {
+                            D2.LucideIcon("check");
+                            D2.Text("p", "Done");
+                        });
+                    } else {
+                        D2.Text("p", Math.floor(progress * 100) + "%");
+                    }
+
+                    // a finished goal counts as hitting its target
+                    let current = goal.Current_Value;
+                    if (complete) current = goal.Value;
+                    D2.Text("p", this.format(current) + "/" + this.format(goal.Value));
+                });
+            });
+
+            D2.Div("goal-footer", () => {
+                if (complete && goal.Claimed) {
+                    D2.StyledText("p", `Completed <strong>${D2.TimeRelative(UTCify(goal.Claimed))}</strong>`);
+                } else if (complete) {
+                    D2.Text("p", "Completed");
+                } else if (goal.Creation_Date) {
+                    D2.StyledText("p", `Started <strong>${D2.TimeRelative(UTCify(goal.Creation_Date))}</strong>`);
+                } else {
+                    D2.Text("p", "");
+                }
+
+                if (this.main.Am_User()) {
+                    let del = D2.IconButton("x", "", "goal-delete");
+                    del.setAttribute("tooltip", "Delete goal");
+                    del.addEventListener("click", () => {
+                        this.confirmDelete(goal);
+                    });
+                }
             });
         });
-
-        if (this.main.Am_User()) {
-            let del = D2.IconButton("x", "", "goal-delete");
-            del.setAttribute("tooltip", "Delete goal");
-            del.addEventListener("click", () => {
-                this.confirmDelete(goal);
-            });
-            el.appendChild(del);
-        }
 
         if (complete) el.classList.add("complete");
         return el;
@@ -219,14 +256,38 @@ export default class Goals {
         this.els.modeSelector.toggleAttribute("disabled", !this.selectedType.Per_Mode);
     }
 
+    // covers the whole goals panel while a request runs, so it's clear something is happening
+    setLoading(loading) {
+        if (!this.els.loading) {
+            let panel = this.el.closest(".panel");
+            panel.classList.add("goals-panel");
+
+            this.els.loading = D2.Div("goals-loading", () => {
+            });
+            this.els.loading.innerHTML = loader;
+            panel.appendChild(this.els.loading);
+        }
+        this.els.loading.classList.toggle("visible", loading);
+    }
+
     async addGoal(input) {
         if (input.value == "") return;
+        if (this.adding) return;
 
-        let response = await DoRequest("POST", "/api/profiles/goals/add", {
-            "type": this.selectedType.Key,
-            "value": input.value,
-            "gamemode": this.selectedMode
-        });
+        this.adding = true;
+        this.setLoading(true);
+
+        let response = null;
+        try {
+            response = await DoRequest("POST", "/api/profiles/goals/add", {
+                "type": this.selectedType.Key,
+                "value": input.value,
+                "gamemode": this.selectedMode
+            });
+        } finally {
+            this.adding = false;
+            this.setLoading(false);
+        }
 
         if (!response.success) {
             PushToast({theme: "error", content: response.message});

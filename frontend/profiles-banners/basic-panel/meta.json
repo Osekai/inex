@@ -1,0 +1,20 @@
+{
+  "key": "basic-panel",
+  "name": "Basic Panel",
+  "category": "osu!",
+  "resolution": [
+    500,
+    600
+  ],
+  "settings": {
+    "hue": {
+      "name": "Hue",
+      "type": "color-hue",
+      "default": 200,
+      "output": {
+        "type": "css-variable",
+        "suffix": "deg"
+      }
+    }
+  }
+}

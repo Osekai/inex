@@ -16,9 +16,11 @@ class Profiles extends EclipseTask
         // dev only - wipe before transferring, remove once inex is live
         $this->table('Profiles_Goals')->truncate();
         $this->table('Profiles_Timeline')->truncate();
+        $this->table('Profiles_Visits')->truncate();
 
         $this->transferGoals();
         $this->transferTimeline();
+        $this->transferVisits();
     }
 
     private function transferGoals(): void
@@ -69,6 +71,23 @@ class Profiles extends EclipseTask
 
         $this->insertChunked('Profiles_Timeline', $data);
         echo "timeline: transferred " . count($data) . PHP_EOL;
+    }
+
+    private function transferVisits(): void
+    {
+        $visits = $this->eclipse_db->execSimpleSelect("SELECT * FROM ProfilesVisited");
+
+        $data = [];
+        foreach ($visits as $visit) {
+            $data[] = [
+                "Visitor_User_ID" => $visit['visited_by'],
+                "Visited_User_ID" => $visit['visited_id'],
+                "Date" => $visit['date'],
+            ];
+        }
+
+        $this->insertChunked('Profiles_Visits', $data);
+        echo "visits: transferred " . count($data) . PHP_EOL;
     }
 
     // old data uses "fruits", inex uses "catch"

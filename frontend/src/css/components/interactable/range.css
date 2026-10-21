@@ -1,0 +1,110 @@
+.slider-with-input {
+    display: flex;
+    align-items: stretch;
+    border-radius: 12px;
+    background: var(--col-l2);
+    padding: 2px;
+    gap: 2px;
+}
+
+.slider-with-input .slider {
+    flex: 1;
+}
+
+.slider-with-input .input {
+    width: 50px;
+    padding: 0px;
+    font-size: 18px;
+    text-align: center;
+    -moz-appearance: textfield;
+}
+.slider-with-input .input::-webkit-outer-spin-button {
+    display: none !important;
+}
+
+.slider {
+    border-radius: 10px;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 40px;
+    background: var(--col-l1);
+    outline: none;
+    transition: opacity 0.2s;
+    --handle: hsl(var(--accent-3));
+}
+
+.slider:hover {
+    background: var(--col-l3);
+    opacity: 1;
+}
+
+
+.slider::-moz-range-progress {
+    border-radius: 10px 0px 0px 10px;
+    background: var(--gradient_50);
+    height: 40px;
+}
+
+.slider::-moz-range-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 40px;
+    background: var(--handle);
+    border-radius: 90px;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 40px;
+    background: var(--handle);
+    border-radius: 90px;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+
+.slider-with-input.hue,
+.slider-with-input.saturation,
+.slider-with-input.value {
+    .slider {
+        --handle: hsl(var(--value), 100%, 50%);
+        height: 20px;
+        margin: 10px 0;
+        overflow: visible;
+        background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red);
+    }
+
+    .slider::-webkit-slider-runnable-track,
+    .slider::-moz-range-track {
+        background: transparent;
+    }
+
+    .slider::-webkit-slider-thumb,
+    .slider::-moz-range-thumb {
+        border: 2px solid var(--col-l2);
+    }
+
+    .slider::-moz-range-progress {
+        opacity: 0;
+    }
+}
+.slider-with-input.saturation {
+    .slider {
+        --handle: white;
+        background: linear-gradient(to right, #fff, hsl(0deg, 50%, 50%), #f00);
+    }
+}
+.slider-with-input.value {
+    .slider {
+        --handle: black;
+        background: linear-gradient(to right, #000, #fff);
+    }
+}

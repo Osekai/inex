@@ -31,6 +31,7 @@ class Timeline
     public static function Add($date, $note, $mode): Response
     {
         if (!Session::LoggedIn()) return new Response(false, "Not logged in");
+        if (!\Data\OsekaiUsers::HasPermission("profiles.timeline.edit", true)) return new Response(false, "You can't do that");
         $userId = Session::UserData()['id'];
 
         $error = Timeline::Validate($date, $note);
@@ -52,6 +53,7 @@ class Timeline
     public static function Edit($id, $date, $note): Response
     {
         if (!Session::LoggedIn()) return new Response(false, "Not logged in");
+        if (!\Data\OsekaiUsers::HasPermission("profiles.timeline.edit", true)) return new Response(false, "You can't do that");
         $userId = Session::UserData()['id'];
 
         if (!is_numeric($id)) return new Response(false, "Invalid timeline point");
@@ -67,6 +69,7 @@ class Timeline
     public static function Delete($id): Response
     {
         if (!Session::LoggedIn()) return new Response(false, "Not logged in");
+        if (!\Data\OsekaiUsers::HasPermission("profiles.timeline.edit", true)) return new Response(false, "You can't do that");
         $userId = Session::UserData()['id'];
 
         if (!is_numeric($id)) return new Response(false, "Invalid timeline point");

@@ -57,6 +57,22 @@ class Goals
                     return $row['Count_Medals'] ?? null;
                 },
             ],
+            "medals-percent" => [
+                "Name" => "% Medals",
+                "Icon" => "icon-goals-medals",
+                "Lower_Is_Better" => false,
+                "Per_Mode" => false,
+                "api" => function ($user, $stats) {
+                    $total = Goals::TotalMedals();
+                    if ($total == 0) return null;
+                    return round(count($user['user_achievements'] ?? []) / $total * 100, 2);
+                },
+                "rankings" => function ($row, $mode) {
+                    $total = Goals::TotalMedals();
+                    if ($total == 0 || $row['Count_Medals'] === null) return null;
+                    return round($row['Count_Medals'] / $total * 100, 2);
+                },
+            ],
             "level" => [
                 "Name" => "Level",
                 "Icon" => "icon-goals-level",
@@ -108,6 +124,11 @@ class Goals
         ];
     }
 
+    static function TotalMedals(): int
+    {
+        return (int)Connection::execSimpleSelect("SELECT COUNT(*) AS Count FROM Medals_Data", "medals_total_count", 600)[0]['Count'];
+    }
+
     // types without the closures, for the frontend
     public static function TypesPublic(): Response
     {
@@ -127,6 +148,7 @@ class Goals
     public static function Add($type, $value, $gamemode): Response
     {
         if (!Session::LoggedIn()) return new Response(false, "Not logged in");
+        if (!\Data\OsekaiUsers::HasPermission("profiles.goals.edit", true)) return new Response(false, "You can't do that");
         $userId = Session::UserData()['id'];
 
         $types = Goals::Types();
@@ -153,6 +175,7 @@ class Goals
     public static function Delete($id): Response
     {
         if (!Session::LoggedIn()) return new Response(false, "Not logged in");
+        if (!\Data\OsekaiUsers::HasPermission("profiles.goals.edit", true)) return new Response(false, "You can't do that");
         $userId = Session::UserData()['id'];
 
         if (!is_numeric($id)) return new Response(false, "Invalid goal");

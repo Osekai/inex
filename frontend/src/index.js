@@ -15,6 +15,7 @@ import {Navbar} from "./js/layout/navbar";
 import {DoRequest} from "./js/utils/requests";
 import {Clubs2} from "./js/utils/Clubs2";
 import {io} from "socket.io-client";
+import {LoaderOverlay} from "./js/ui/loader-overlay";
 
 window.loader = createLazyLoadInstance();
 InitDragScroll();
@@ -229,7 +230,8 @@ let profileUrlList = []; // array of ProfileLink instances
 function profileUrls() {
     for (let element of document.querySelectorAll("a")) {
         if (profileUrlList.some(p => p.element === element)) continue;
-        if (element.hasAttribute("no-url-replace")) continue;
+        // on the element or any parent, so a whole section can opt out
+        if (element.closest("[no-url-replace]")) continue;
         let href = element.getAttribute("href");
         if (href == null) continue;
         if (href.startsWith("/profiles/")) {
@@ -257,7 +259,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 element._tippy.setContent(text);
             } else {
                 tippy(element, {
-                    content: text
+                    content: text,
+                    // tooltip-placement="bottom" etc, tippy's default is top
+                    placement: element.getAttribute("tooltip-placement") || "top"
                 });
             }
             element.removeAttribute("tooltip");

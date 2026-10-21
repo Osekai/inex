@@ -211,3 +211,101 @@ comments-section {
 .comment .comment-toolbar > *.active svg {
     fill: white;
 }
+.comment .name h3,
+.comment .comment-toolbar > * {
+    white-space: nowrap;
+}
+
+.comment .comment-toolbar {
+    flex-wrap: wrap;
+}
+
+.comment .content img {
+    max-width: 100%;
+}
+
+@media (max-width: 700px) {
+    .comment-outer {
+        margin-top: 18px;
+    }
+
+    .comment .name {
+        flex-wrap: wrap;
+        row-gap: 4px;
+    }
+
+    .comment .name-inner {
+        min-width: 0;
+        max-width: 100%;
+
+        h1 {
+            font-size: 18px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    /* badges sit inline after the name, date drops under it */
+    .comment .name .groups {
+        display: flex;
+        gap: 4px;
+        margin-left: 6px;
+        order: 1;
+
+        .role-badge {
+            margin-left: 0;
+            font-size: 10px;
+            height: 16px;
+            padding: 0 6px;
+
+            svg {
+                height: 11px;
+                width: 11px;
+            }
+        }
+    }
+
+    .comment .name h3 {
+        order: 2;
+        flex-basis: 100%;
+        margin: 0 0 0 37px;
+        font-size: 12px;
+        opacity: 0.6;
+    }
+
+    .comment .name .pin {
+        order: 1;
+    }
+
+    .comment .content {
+        font-size: 15px;
+    }
+
+    .comment .comment-toolbar {
+        margin-left: -4px;
+        margin-right: 0;
+
+        > * {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        .right {
+            margin-left: auto;
+        }
+    }
+
+    .comment-reply {
+        padding-left: 8px;
+    }
+
+    .comment-inner.pinned:after,
+    .comment-inner.pinned:before {
+        --offset: -8px;
+    }
+
+    .comment-input .input {
+        min-width: 0;
+    }
+}

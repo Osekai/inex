@@ -3,14 +3,21 @@
 
 const DRAG_THRESHOLD = 5; // px moved before a press becomes a drag
 const VELOCITY_CUTOFF = 0.01; // px/ms, below this we stop
+const BRAKE_DECELERATION = 0.95; // per ms while a throw is being caught, stops in roughly 100ms
 const RELEASE_GRACE = 66; // ms of no movement before release velocity gets penalised
+
+// horizontal scrollers inside the page, a drag that starts on one picks an axis and sticks to it
+const AXIS_LOCK_SELECTOR = "[data-axis-lock]";
 
 const IGNORED_SELECTOR = "input, textarea, select, option, [contenteditable], [data-no-drag-scroll], .dropdown-content";
 
 let pointerId = null;
 let target = null; // element being scrolled, or window
 
+let startX = 0;
 let startY = 0;
+let axisLock = false; // gesture started on a horizontal scroller
+let blockHorizontal = false; // vertical won, keep the scroller from also moving
 let startScroll = 0;
 let lastY = 0;
 let lastMoveTime = 0;
@@ -81,12 +88,18 @@ function stopCoasting() {
     velocity = 0;
 }
 
+// grabbing a moving page eases it to a stop instead of cutting it dead
+function brakeCoasting() {
+    if (coastFrame === null) return;
+    deceleration = BRAKE_DECELERATION;
+}
+
 function onPointerDown(e) {
     if (e.pointerType === "touch") return;
     if (e.button !== 0) return;
 
-    // grabbing while it's still moving just catches it
-    stopCoasting();
+    // grabbing while it's still moving catches it
+    brakeCoasting();
 
     if (e.target.closest(IGNORED_SELECTOR)) return;
 
@@ -98,22 +111,39 @@ function onPointerDown(e) {
     target = scrollTarget;
     dragging = false;
 
+    startX = e.clientX;
     startY = e.clientY;
+    axisLock = !!e.target.closest(AXIS_LOCK_SELECTOR);
     lastY = e.clientY;
     startScroll = getScroll(scrollTarget);
     lastMoveTime = e.timeStamp;
     lastMovementTime = e.timeStamp;
     accumulatedTime = 0;
-    velocity = 0;
 }
 
 function onPointerMove(e) {
     if (e.pointerId !== pointerId) return;
 
     if (!dragging) {
-        if (Math.abs(e.clientY - startY) < DRAG_THRESHOLD) return;
+        const movedY = Math.abs(e.clientY - startY);
+
+        if (axisLock) {
+            const movedX = Math.abs(e.clientX - startX);
+            if (movedX >= DRAG_THRESHOLD && movedX > movedY) {
+                // horizontal, the scroller owns this gesture so the page stays put
+                pointerId = null;
+                return;
+            }
+        }
+
+        if (movedY < DRAG_THRESHOLD) return;
 
         dragging = true;
+        blockHorizontal = axisLock;
+
+        // the drag takes over from wherever the braking got to
+        stopCoasting();
+        startScroll = getScroll(target);
         document.documentElement.classList.add("drag-scrolling");
         window.getSelection()?.removeAllRanges();
 
@@ -158,6 +188,7 @@ function eatClick(e) {
 }
 
 function onPointerUp(e) {
+    blockHorizontal = false;
     if (e.pointerId !== pointerId) return;
 
     const wasDragging = dragging;
@@ -226,6 +257,11 @@ export function InitDragScroll() {
     window.addEventListener("pointermove", onPointerMove, { passive: false });
     window.addEventListener("pointerup", onPointerUp);
     window.addEventListener("pointercancel", onPointerUp);
+
+    // embla listens for mouse events, so a vertical drag hides them from it
+    window.addEventListener("mousemove", (e) => {
+        if (blockHorizontal) e.stopPropagation();
+    }, { capture: true });
 
     // wheel or keyboard takes over from a throw
     window.addEventListener("wheel", stopCoasting, { passive: true });

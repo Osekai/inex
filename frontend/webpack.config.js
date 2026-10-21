@@ -31,15 +31,18 @@ function bpxPlugin() {
             // so changing meta.json triggers a rebuild
             result.messages.push({ type: 'dependency', plugin: 'bpx', file: metaPath });
 
-            if (widthCache[folder] === undefined) {
-                if (!fs.existsSync(metaPath)) {
-                    throw decl.error('no meta.json found for theme ' + folder);
-                }
-                const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
-                widthCache[folder] = meta.resolution[0];
+            if (!fs.existsSync(metaPath)) {
+                throw decl.error('no meta.json found for theme ' + folder);
             }
 
-            const width = widthCache[folder];
+            // keyed on mtime so a changed resolution gets picked up without restarting watch
+            const mtime = fs.statSync(metaPath).mtimeMs;
+            if (widthCache[folder] === undefined || widthCache[folder].mtime !== mtime) {
+                const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+                widthCache[folder] = {mtime: mtime, width: meta.resolution[0]};
+            }
+
+            const width = widthCache[folder].width;
             decl.value = decl.value.replace(/(-?\d*\.?\d+)bpx\b/g, (match, number) => {
                 return 'calc(' + number + ' * 100vw / ' + width + ')';
             });

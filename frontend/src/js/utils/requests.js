@@ -2,6 +2,7 @@
 
 import {D2} from "./d2";
 import {Overlay} from "../ui/overlay";
+import {LoaderOverlay} from "../ui/loader-overlay";
 import {deleteFromDB, getFromDB, openDB, putInDB} from "./indexeddb";
 import {PushToast} from "../ui/toasts";
 

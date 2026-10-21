@@ -11,10 +11,14 @@ class Club {
     }
 
     Next() {
+        // no club (idx -1) goes up to the lowest real club
+        if (this.#idx < 0) return Clubs2.clubs[Clubs2.clubs.length - 1];
         return this.#idx > 0 ? Clubs2.clubs[this.#idx - 1] : null;
     }
 
     Previous() {
+        // nothing below no club
+        if (this.#idx < 0) return null;
         return this.#idx < Clubs2.clubs.length - 1 ? Clubs2.clubs[this.#idx + 1] : null;
     }
 

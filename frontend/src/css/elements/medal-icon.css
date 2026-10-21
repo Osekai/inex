@@ -13,6 +13,12 @@ medal-icon {
         height: calc(100% - 2px);
     }
 
+    img.base {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
     svg {
         width: 100%;
         height: 100%;

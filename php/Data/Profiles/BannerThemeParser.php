@@ -47,6 +47,9 @@ class BannerThemeParser
         if ($item['type'] == "range") {
             $value = floatval($item['value']);
         }
+        if ($item['type'] == "color-hue") {
+            $value = intval($item['value']); // 0 to 360
+        }
         if ($item['type'] == "colour-picker") {
             $value = preg_match('/^#[0-9a-fA-F]{6}$/', $item['value']) ? $item['value'] : ($item['default'] ?? '#000000');
         }

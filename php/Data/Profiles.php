@@ -6,6 +6,7 @@ use API\Osu\User;
 use API\Response;
 use Data\Profiles\Goals;
 use Data\Profiles\Timeline;
+use Data\Profiles\FavouriteMedal;
 use Database\Connection;
 use Debug\Timings;
 
@@ -28,7 +29,8 @@ class Profiles
         });
         $x->finish();
 
-        if($user == null) return new Response(false, "User not found");
+        // the osu api gives back a non array when the user is missing
+        if(!is_array($user)) return new Response(false, "User not found");
 
         $x = new Timings("profiles_medals");
         $medals = Medals::GetAll()->content;
@@ -214,6 +216,7 @@ WHERE u.ID = ?;
         ];
         $data['Goals'] = Goals::Get($data, true);
         $data['Timeline'] = Timeline::Get($data['User']['id']);
+        $data['Favourite_Medal'] = FavouriteMedal::Get($data['User']['id']);
         return new Response(true, "ok", $data);
     }
 

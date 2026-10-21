@@ -256,6 +256,15 @@ $router->all("/api/profiles/([^/]+)/banners/all", function ($id) {
 $router->all("/api/profiles/banners/themes", function () {
     echo \Data\Profiles\Banners::AllThemes()->ReturnJson();
 });
+$router->post("/api/profiles/banners/create", function () {
+    echo \Data\Profiles\Banners::Create($_POST['theme'] ?? '')->ReturnJson();
+});
+$router->post("/api/profiles/banners/([^/]+)/save", function ($id) {
+    echo \Data\Profiles\Banners::Save($id, json_decode($_POST['data'] ?? '', true))->ReturnJson();
+});
+$router->post("/api/profiles/banners/([^/]+)/delete", function ($id) {
+    echo \Data\Profiles\Banners::Delete($id)->ReturnJson();
+});
 $router->all("/api/profiles/quick/([^/]+)", function ($id) {
     echo \Data\Profiles::GetSmall($id)->ReturnJson();
 });
@@ -267,6 +276,18 @@ $router->post("/api/profiles/goals/add", function () {
 });
 $router->post("/api/profiles/goals/([^/]+)/delete", function ($id) {
     echo \Data\Profiles\Goals::Delete($id)->ReturnJson();
+});
+$router->post("/api/profiles/visits/([^/]+)/record", function ($id) {
+    echo \Data\Profiles\Visits::Record($id)->ReturnJson();
+});
+$router->get("/api/profiles/visits/most", function () {
+    echo \Data\Profiles\Visits::MostVisited(10, $_GET['days'] ?? null)->ReturnJson();
+});
+$router->get("/api/profiles/visits/recent", function () {
+    echo \Data\Profiles\Visits::RecentlyVisited(10)->ReturnJson();
+});
+$router->post("/api/profiles/favourite-medal", function () {
+    echo \Data\Profiles\FavouriteMedal::Set($_POST['medal'] ?? '')->ReturnJson();
 });
 $router->post("/api/profiles/timeline/add", function () {
     echo \Data\Profiles\Timeline::Add($_POST['date'] ?? '', $_POST['note'] ?? '', $_POST['mode'] ?? '')->ReturnJson();

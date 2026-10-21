@@ -163,6 +163,43 @@ theme-picker {
     display: none;
 }
 
+@keyframes otab-animate-away {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+}
+
+@keyframes otab-animate-in {
+    0% {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.otab-animate-away {
+    animation: otab-animate-away 0.2s ease forwards;
+    position: absolute !important;
+    top: var(--top) !important;
+    left: var(--left) !important;
+    width: var(--width) !important;
+    height: var(--height) !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    pointer-events: none !important;
+}
+
+.otab-animate-in {
+    animation: otab-animate-in 0.2s ease;
+    animation-fill-mode: forwards;
+}
+
 .number {
     font-family: sans-serif;
 }

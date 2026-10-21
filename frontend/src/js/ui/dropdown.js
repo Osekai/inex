@@ -153,7 +153,8 @@ export class Dropdown {
         }
     }
 
-    open() {
+    // focusInput false keeps focus wherever it is (e.g. the user is typing in the field that opened it)
+    open(focusInput = true) {
         if (this.isOpen) return;
 
         window.DropdownInstances.forEach((inst) => {
@@ -200,7 +201,7 @@ export class Dropdown {
         this.buttons.forEach((btn) => btn.classList.add("jsdropdown-button-active"));
 
         const input = this.dropdown.querySelector("input");
-        if (input) setTimeout(() => input.focus(), 40);
+        if (input && focusInput) setTimeout(() => input.focus(), 40);
 
         this.dropdown.dispatchEvent(new Event("open"));
 

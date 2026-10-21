@@ -1,0 +1,70 @@
+.profiles-home {
+    padding: 64px;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+    >div:last-child {
+        flex: 1;
+        max-width: 700px;
+        margin-left: auto;
+    }
+
+    >div:first-child {
+        .header {
+            background: linear-gradient(to bottom right, var(--col-sat-1), var(--col-sat-3));
+            padding: 32px;
+            border-radius: 32px;
+        }
+        form {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 20px;
+            button {
+                white-space: nowrap;
+            }
+            input {
+                background: var(--col-l4);
+            }
+        }
+        .or {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 20px;
+            margin: 20px 0px;
+            &:before, &:after {
+                content: "";
+                flex: 1;
+                height: 3px;
+                border-radius: 20px;
+                background: var(--col-l5);
+            }
+        }
+        .youpanel {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            background: var(--col-l3);
+            color: inherit;
+            border: 1px solid var(--col-l5);
+            img {
+                height: 128px;
+                border-radius: 12px;
+            }
+
+            h3 {
+                font-size: 30px;
+                font-weight: 400;
+            }
+            p {
+                margin-top: 20px;
+            }
+            &:hover {
+                background: var(--col-l4);
+            }
+        }
+    }
+}

@@ -6,6 +6,32 @@
     &.dyn-backgroundType-gradient {
         background: linear-gradient(var(--dyn-backgroundGradientAngle), var(--dyn-backgroundGradient-1), var(--dyn-backgroundGradient-2));
     }
+    &.dyn-backgroundType-club {
+        background: var(--maincol);
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(to bottom right, #f00, #00f);
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+            mix-blend-mode: overlay;
+            opacity: 0.2;
+        }
+        &:after {
+            content: "";
+            position: absolute;
+            top: 50bpx;
+            left: 50bpx;
+            right: 50bpx;
+            bottom: 50bpx;
+            background: #000;
+            z-index: 0;
+            opacity: 0.5;
+            filter: blur(120bpx);
+        }
+    }
     border-radius: 30bpx;
 }
 .original-ref {

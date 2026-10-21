@@ -9,6 +9,8 @@ export function TimeTransform_MM_SS(time) {
 }
 
 export function UTCify(date) {
+    // missing dates happen, callers need to check for null
+    if (!date) return null;
     // avoid double-appending Z if the string is already ISO-formatted
     if (date.includes("T") || date.endsWith("Z")) return new Date(date);
     return new Date(date.replace(" ", "T") + "Z");

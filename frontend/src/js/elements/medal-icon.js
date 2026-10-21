@@ -8,7 +8,7 @@ class MedalIcon extends HTMLElement {
 
     base;
     icon;
-    fancy = true;
+    fancy = false;
 
     constructor() {
         super();

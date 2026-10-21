@@ -1,0 +1,82 @@
+.banner {
+    width: 500bpx;
+    height: 600bpx;
+    overflow: hidden;
+
+    background: hsl(var(--dyn-hue) 10% 10%) !important;
+    border-radius: 10bpx;
+    color: hsl(var(--dyn-hue) 41% 90%) !important;
+    overflow: hidden;
+
+    .content-inner {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        >div {
+            padding: 15bpx 30bpx;
+            display: flex;
+            &:not(:first-child) {
+                display: grid;
+                grid-template-columns: 1fr 1.4fr;
+                gap: 20bpx;
+                >div {
+                    h4 {
+                        font-size: 20bpx;
+                    }
+                    div {
+                        margin: 8bpx 0px;
+                        height: 6bpx;
+                        width: 40bpx;
+                        border-radius: 9999px;
+                        background: hsl(333 100% 70%);
+                    }
+                    p {
+                        font-size: 20bpx;
+                    }
+                }
+            }
+        }
+        >div:first-child {
+            padding: 30bpx;
+            background: hsl(var(--dyn-hue) 10% 25%);
+            align-items: center;
+            img {
+                height: 80bpx;
+                border-radius: 20bpx;
+            }
+            p {
+                margin-right: auto;
+                margin-left: 20bpx;
+                font-size: 50bpx;
+                font-weight: 200;
+            }
+            i {
+                font-size: 40bpx;
+            }
+        }
+        .footer {
+            background: hsl(var(--dyn-hue) 13% 15%);
+            padding: 15bpx 30bpx;
+            display: flex !important;
+            gap: 5bpx !important;
+            flex-direction: column !important;
+            >div {
+                display: flex;
+                align-items: center;
+                img {
+                    height: 24bpx;
+                    margin-right: 10bpx;
+                }
+                &:first-child {
+                    p{
+                        font-size: 24bpx;
+                    }
+                }
+                &:last-child {
+                    font-size: 14bpx;
+                }
+            }
+        }
+    }
+}
+

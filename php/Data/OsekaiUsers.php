@@ -76,13 +76,13 @@ class OsekaiUsers
             $user = self::GetUser($userid, true);
         }
 
-        if (self::CheckPermissionArray($permission, $user['Blocked_Permissions'])) {
+        if (self::CheckPermissionArray($permission, $user['BlockedPermissions'] ?? [])) {
             // this permission is blocked, do not allow
             return false;
         }
 
 
-        return self::CheckPermissionArray($permission, $user['Permissions'], $default);
+        return self::CheckPermissionArray($permission, $user['Permissions'] ?? [], $default);
     }
 
 }
