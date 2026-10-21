@@ -62,6 +62,7 @@ function GenerateConfig() {
         devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
         output: {
             filename: '[name].bundle.js',
+            chunkFilename: '[id].[contenthash].bundle.js',
             path: path.resolve(__dirname, 'dist'),
             clean: true, // Cleans up old files automatically
         },
