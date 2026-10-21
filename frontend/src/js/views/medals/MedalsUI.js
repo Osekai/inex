@@ -532,6 +532,14 @@ export class MedalsUI {
                 SetMedal(button.getAttribute("medal-button"), true, true);
             })
         }
+
+        const el = document.getElementById("medal_first_achieved_date");
+        if (el) {
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+            }, { capture: true });
+        }
     }
 }
 
