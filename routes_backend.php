@@ -277,6 +277,12 @@ $router->post("/api/profiles/goals/add", function () {
 $router->post("/api/profiles/goals/([^/]+)/delete", function ($id) {
     echo \Data\Profiles\Goals::Delete($id)->ReturnJson();
 });
+$router->get("/api/profiles/leaderboard", function () {
+    echo \Data\Profiles\Leaderboard::Get($_GET['mode'] ?? '', $_GET['type'] ?? 'pp')->ReturnJson();
+});
+$router->get("/api/profiles/search", function () {
+    echo \Data\Profiles\Search::Run($_GET['query'] ?? '')->ReturnJson();
+});
 $router->post("/api/profiles/visits/([^/]+)/record", function ($id) {
     echo \Data\Profiles\Visits::Record($id)->ReturnJson();
 });

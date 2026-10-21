@@ -1,70 +1,271 @@
 .profiles-home {
-    padding: 64px;
     display: flex;
     align-items: flex-start;
-    flex-direction: row;
-    >div:last-child {
-        flex: 1;
-        max-width: 700px;
-        margin-left: auto;
+    gap: 20px;
+
+    .panel {
+        width: 100%;
+        margin-bottom: 0;
     }
 
-    >div:first-child {
-        .header {
-            background: linear-gradient(to bottom right, var(--col-sat-1), var(--col-sat-3));
-            padding: 32px;
-            border-radius: 32px;
-        }
-        form {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 20px;
-            button {
-                white-space: nowrap;
-            }
-            input {
-                background: var(--col-l4);
-            }
-        }
-        .or {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 20px;
-            margin: 20px 0px;
-            &:before, &:after {
-                content: "";
-                flex: 1;
-                height: 3px;
-                border-radius: 20px;
-                background: var(--col-l5);
-            }
-        }
-        .youpanel {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            background: var(--col-l3);
-            color: inherit;
-            border: 1px solid var(--col-l5);
-            img {
-                height: 128px;
-                border-radius: 12px;
-            }
+    .panel > h1 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+}
 
-            h3 {
-                font-size: 30px;
-                font-weight: 400;
-            }
-            p {
-                margin-top: 20px;
-            }
-            &:hover {
-                background: var(--col-l4);
-            }
+.profiles-home-side {
+    flex: 1;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.profiles-home-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.profiles-home .welcomepanel {
+    background: linear-gradient(135deg, var(--col-sat-3), var(--col-sat-1));
+    border-radius: var(--border-radius);
+    position: relative;
+    box-shadow: 0px 0px 50px inset #0002;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+
+    &:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, #fff0, #000);
+        mix-blend-mode: overlay;
+    }
+
+    > * {
+        position: relative;
+        z-index: 9;
+        filter: drop-shadow(0px 2px 2px #0002);
+    }
+
+    img {
+        height: 64px;
+        margin-bottom: 14px;
+    }
+
+    p {
+        margin-top: 12px;
+    }
+}
+
+.profile-search {
+    position: relative;
+    width: 100%;
+
+    form {
+        display: flex;
+        margin: 0;
+    }
+
+    input {
+        width: 100%;
+        background: var(--col-l4);
+    }
+}
+
+.profile-search-results {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    border-radius: var(--border-radius);
+    background: var(--col-l2);
+    border: 1px solid var(--col-l5);
+    box-shadow: 0 8px 30px #0006;
+}
+
+.profile-search-message {
+    padding: 10px 12px;
+    opacity: 0.7;
+}
+
+.your-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    background: var(--col-l3);
+    color: inherit;
+    transition: all 0.2s ease;
+
+    img {
+        height: 80px;
+        width: 80px;
+        border-radius: var(--border-radius);
+        object-fit: cover;
+    }
+
+    .texts {
+        flex: 1;
+        min-width: 0;
+
+        p {
+            font-size: 20px;
+            font-weight: 500;
         }
+
+        h1 {
+            font-size: 30px;
+            font-weight: 300;
+            color: var(--col-sat-2);
+            overflow-wrap: anywhere;
+        }
+    }
+
+    &:hover {
+        background: var(--col-l5);
+    }
+
+    &:active {
+        transform: translateY(2px);
+        background: var(--col-l6);
+    }
+}
+
+.leaderboard-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+
+    .pill-button {
+        padding: 2px 18px;
+    }
+
+    .pill-button.active {
+        background: var(--col-sat-1) !important;
+    }
+}
+
+/* rows have their own padding, pull them out so the avatars line up with the heading */
+.profile-list {
+    width: calc(100% + 20px);
+    margin: 0 -10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.profile-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 10px;
+    border-radius: var(--border-radius);
+    color: inherit;
+    transition: background 0.15s ease;
+
+    img {
+        height: 36px;
+        width: 36px;
+        border-radius: calc(var(--border-radius) * 0.5714);
+        object-fit: cover;
+    }
+
+    p {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    small {
+        opacity: 0.6;
+        white-space: nowrap;
+    }
+
+    &:hover {
+        background: var(--col-l4);
+    }
+}
+
+.profile-row-rank {
+    min-width: 48px;
+    font-weight: 600;
+    opacity: 0.7;
+}
+
+/* top three on the leaderboard */
+.leaderboard {
+    width: calc(100% + 24px);
+    margin: 0 -12px;
+}
+
+.leaderboard .profile-row {
+    padding: 8px 12px;
+
+    img {
+        height: 40px;
+        width: 40px;
+    }
+
+    small {
+        font-size: 15px;
+        opacity: 0.8;
+    }
+
+    &:nth-child(odd) {
+        background: color-mix(in srgb, var(--col-l2) 60%, transparent);
+    }
+
+    &:hover {
+        background: var(--col-l4);
+    }
+
+    &:nth-child(-n+3) .profile-row-rank {
+        opacity: 1;
+        font-size: 18px;
+    }
+
+    &:nth-child(1) .profile-row-rank {
+        color: #ffd24a;
+    }
+
+    &:nth-child(2) .profile-row-rank {
+        color: #d4dbe6;
+    }
+
+    &:nth-child(3) .profile-row-rank {
+        color: #d98a4a;
+    }
+}
+
+@media (max-width: 1000px) {
+    .profiles-home {
+        flex-direction: column;
+    }
+
+    .profiles-home-side {
+        max-width: none;
+        width: 100%;
+    }
+
+    .profiles-home-main {
+        width: 100%;
     }
 }

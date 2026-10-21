@@ -2,12 +2,12 @@ advanced-code-field{
     width: 100%;
     background: #fff;
     color: #333;
-    border-radius: 8px;
+    border-radius: calc(var(--border-radius) * 0.5714);
     min-height: 80px;
     overflow: hidden;
 }
 .cm-editor {
-    border-radius: 8px;
+    border-radius: calc(var(--border-radius) * 0.5714);
     overflow: hidden;
 }
 .cm-editor, .cm-scroller, .cm-content {
@@ -28,7 +28,7 @@ advanced-text-field {
     display: flex;
     flex-direction: column;
     background-color: var(--col-l3);
-    border-radius: 10px;
+    border-radius: calc(var(--border-radius) * 0.7143);
 
     --w-e-textarea-bg-color: var(--col-l2);
     --w-e-textarea-color: #eee;
@@ -71,12 +71,12 @@ advanced-text-field .w-e-text-container {
 }
 
 .w-e-toolbar {
-    border-radius: 8px;
+    border-radius: calc(var(--border-radius) * 0.5714);
     background-color: var(--col-l2);
 }
 
 .w-e-bar-item button {
-    border-radius: 8px;
+    border-radius: calc(var(--border-radius) * 0.5714);
 }
 
 .w-e-menu-tooltip-v5 {

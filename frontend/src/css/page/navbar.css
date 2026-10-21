@@ -20,7 +20,7 @@ body {
     background-color: #161414;
     color: #FFC700;
     padding: 12px 14px;
-    border-radius: 8px;
+    border-radius: calc(var(--border-radius) * 0.5714);
     font-weight: 500;
 }
 
@@ -573,7 +573,7 @@ body {
     background: #fff1;
 
     padding: 8px 16px;
-    border-radius: 20px;
+    border-radius: calc(var(--border-radius) * 1.4286);
 }
 
 .navbar-apps-dropdown {

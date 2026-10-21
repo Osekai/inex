@@ -207,7 +207,7 @@
 .bugreport-screenshot {
     width: 100%;
     max-width: 50vw;
-    border-radius: 16px;
+    border-radius: calc(var(--border-radius) * 1.1429);
     border: 1px solid var(--col-l3);
     margin-left: 64px;
 }

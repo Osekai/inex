@@ -12,7 +12,7 @@ pagination-el > div > div {
     align-items: center;
     justify-content: center;
     margin: 0px 4px;
-    border-radius: 5px;
+    border-radius: calc(var(--border-radius) * 0.3571);
 }
 pagination-el > div {
     display: flex;

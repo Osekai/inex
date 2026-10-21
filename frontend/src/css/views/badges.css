@@ -53,7 +53,7 @@
 .badges__badge img {
     aspect-ratio: 86/40;
     height: 50px;
-    border-radius: 2px;
+    border-radius: calc(var(--border-radius) * 0.1429);
     background: #fff1;
 }
 .list__bar-outer {
@@ -220,7 +220,7 @@
         padding: 8px;
         margin-bottom: auto;
         background: var(--col-l3);
-        border-radius: 4px;
+        border-radius: calc(var(--border-radius) * 0.2857);
     }
     h1 {
         font-size: 28px;

@@ -17,39 +17,76 @@ if (isset($_GET['username'])) {
 \Site\Embed::AddTags("profiles,user_profile,badges,graph,chart,goals");
 ?>
 
-<div class="profiles-home" no-url-replace>
-    <div>
-        <div class="header" style="width: 50vw; max-width: 600px;">
+<div class="page-container-inner profiles-home" no-url-replace>
+    <div class="profiles-home-side">
+        <div class="welcomepanel">
             <img src="/public/img/branding/app/profiles.svg">
-            <h1>Welcome to Osekai Profiles Beta</h1>
+            <h2>Welcome to</h2>
+            <h1>Osekai Profiles!</h1>
+            <p>Stats, medals, goals, a timeline and more, for every osu! player. Currently in beta!</p>
         </div>
-        <form action="/profiles/">
-            <input class="input" type="text" name="username" placeholder="Username or ID">
-            <button class="button">Visit Profile</button>
-        </form>
-        <div class="or">Or</div>
+
         <?php
         if (\Database\Session::LoggedIn()) {
+            $you = Session::UserData();
             ?>
-
-            <a href="/profiles/<?= Session::UserData()['id'] ?>" class="youpanel">
-                <img src="https://a.ppy.sh/<?= Session::UserData()['id'] ?>">
-                <div>
-                    <h3><?= Session::UserData()['username'] ?></h3>
-                    <small><?= Session::UserData()['id'] ?></small>
-
-                    <p>Visit Your Profile</p>
+            <a href="/profiles/<?= intval($you['id']) ?>" class="your-profile">
+                <img src="https://a.ppy.sh/<?= intval($you['id']) ?>">
+                <div class="texts">
+                    <p>Your Profile</p>
+                    <h1><?= htmlspecialchars($you['username']) ?></h1>
                 </div>
             </a>
             <?php
         } else {
             ?>
-            <a href="/login">Log in to view & edit your profile</a>
+            <a href="/login" class="your-profile">
+                <div class="texts">
+                    <p>Not logged in</p>
+                    <h1>Log in to view &amp; edit your profile</h1>
+                </div>
+            </a>
             <?php
         }
         ?>
+
+        <div class="panel panel-search">
+            <h1>Find a Profile</h1>
+            <div class="divider"></div>
+            <div class="profile-search">
+                <form action="/profiles/" autocomplete="off">
+                    <input class="input" type="text" name="username" placeholder="Search for a user..." pr-el="search-input">
+                </form>
+                <div class="profile-search-results hidden" pr-el="search-results"></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h1><i data-lucide="eye"></i> Most Viewed</h1>
+            <div class="divider"></div>
+            <div class="profile-list" pr-el="most-viewed"></div>
+        </div>
+        <?php if (\Database\Session::LoggedIn()) { ?>
+            <div class="panel">
+                <h1><i data-lucide="history"></i> Recently Viewed</h1>
+                <div class="divider"></div>
+                <div class="profile-list" pr-el="recently-viewed"></div>
+            </div>
+        <?php } ?>
     </div>
-    <div>
+    <div class="profiles-home-main">
+        <div class="panel panel-leaderboard">
+            <div class="panel-header">
+                <h1><i data-lucide="chart-line"></i> Leaderboard</h1>
+                <gamemode-selector value="osu" allow-all pr-el="leaderboard-mode"></gamemode-selector>
+            </div>
+            <div class="divider"></div>
+            <div class="leaderboard-tabs">
+                <button class="pill-button active" pr-el="leaderboard-tab" leaderboard-type="pp">Performance</button>
+                <button class="pill-button" pr-el="leaderboard-tab" leaderboard-type="medals">Medals</button>
+            </div>
+            <div class="profile-list leaderboard" pr-el="leaderboard"></div>
+        </div>
         <div class="panel">
             <h1>Known Issues</h1>
             <div class="divider"></div>
@@ -57,9 +94,6 @@ if (isset($_GET['username'])) {
                 <li>Custom banner URLs are not yet viewable and instead just hit a 404. This will be fixed for
                     release.
                 </li>
-                <li><strong>Mobile is completely non-functional and most page layouts will reak</strong></li>
-                <li>osu! page link is missing (and/or loops back to Osekai by accident)</li>
-                <li>Some links get redirected to osu! instead of Osekai by accident depending on user settings</li>
                 <li>Embeds when sending on Discord are blank (show as 404)</li>
             </ul>
         </div>
@@ -72,8 +106,6 @@ if (isset($_GET['username'])) {
                 </li>
             </ul>
         </div>
-        <br>
-
         <h3>Any problems? Report them in the inex channel on Discord</h3>
     </div>
 </div>

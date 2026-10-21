@@ -17,7 +17,7 @@
 </head>
 <?php // the site's .gamemode-* classes set --hue, so on body they retint every --col-* var for the banner's mode ?>
 <body class="gamemode-<?= htmlspecialchars($modeKey) ?>">
-<div class="banner <?= \Data\Profiles\Banners::$themeParser->classes ?>" id="banner">
+<div class="no-squircle banner <?= \Data\Profiles\Banners::$themeParser->classes ?>" id="banner">
 
     <?= $page; ?>
 </div>

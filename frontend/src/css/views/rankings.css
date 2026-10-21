@@ -188,7 +188,7 @@
 }
 
 .option-group label {
-    border-radius: 20px;
+    border-radius: calc(var(--border-radius) * 1.4286);
     cursor: pointer;
     transition: background-color 0.1s, color 0.1s;
     background: var(--col-l2);
@@ -457,7 +457,7 @@ td:has(*.coltype-text-short) {
         text-align: center;
         font-size: 14px;
         height: 12px;
-        border-radius: 8px;
+        border-radius: calc(var(--border-radius) * 0.5714);
     }
 }
 

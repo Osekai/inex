@@ -20,7 +20,7 @@ star-rating > div svg {
 }
 
 star-rating > div:after {
-    border-radius: 20px;
+    border-radius: calc(var(--border-radius) * 1.4286);
     background: linear-gradient(
     to bottom,
     color-mix(in srgb, var(--background) 20%, transparent),
@@ -67,5 +67,5 @@ star-rating > div:after {
     border-radius: 0px;
     height: 100%;
     background: var(--background);
-    border-radius: 12px;
+    border-radius: var(--border-radius);
 }

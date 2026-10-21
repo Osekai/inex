@@ -61,6 +61,7 @@ export default class Bio {
         let field;
         let counter;
         let save;
+        let previousParent = D2._currentParent;
         D2._currentParent = this.els.editor;
         field = document.createElement("advanced-text-field-v2");
         field.setAttribute("height", "400px");
@@ -99,6 +100,8 @@ export default class Bio {
                 save.classList.add("pill-button");
             });
         });
+
+        D2._currentParent = previousParent;
 
         // the editor has no change event we can lean on, so poll while it's open
         let update = () => {

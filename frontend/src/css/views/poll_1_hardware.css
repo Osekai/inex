@@ -1,7 +1,7 @@
 .poll-header {
     img {
         width: 100%;
-        border-radius: 32px;
+        border-radius: calc(var(--border-radius) * 2.2857);
         margin-bottom: 30px;
     }
     h1 {
@@ -40,7 +40,7 @@
             flex-direction: column;
             background: var(--col-l2);
             outline: 1px solid var(--col-l5);
-            border-radius: 20px;
+            border-radius: calc(var(--border-radius) * 1.4286);
             overflow: hidden;
             .orderablelist-outer {
                 padding: 10px;
@@ -71,10 +71,10 @@
     display: flex;
     align-items: center;
     background: var(--col-l3);
-    border-radius: 8px;
+    border-radius: calc(var(--border-radius) * 0.5714);
     margin: 5px 0px;
     input {
-        border-radius: 8px;
+        border-radius: calc(var(--border-radius) * 0.5714);
         background: var(--col-l4);
     }
 }

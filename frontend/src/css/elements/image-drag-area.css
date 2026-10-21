@@ -1,7 +1,7 @@
 image-drag-area {
     width: 100%;
     min-height: 200px;
-    border-radius: 25px;
+    border-radius: calc(var(--border-radius) * 1.7857);
     border: 4px dashed var(--col-l3);
     display: flex;
     align-items: center;
@@ -47,7 +47,7 @@ image-drag-area .hover-overlay {
     height: 100%;
     left: 0;
     top: 0;
-    border-radius: 25px;
+    border-radius: calc(var(--border-radius) * 1.7857);
     opacity: 0;
     pointer-events: none;
     display: flex;

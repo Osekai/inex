@@ -68,7 +68,7 @@
 
     code {
         padding: 2px 6px;
-        border-radius: 6px;
+        border-radius: calc(var(--border-radius) * 0.4286);
         background: var(--col-l3);
         font-size: 14px;
     }

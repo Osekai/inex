@@ -125,14 +125,14 @@ body {
             content: "";
             position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
-            border-radius: 32px;
+            border-radius: calc(var(--border-radius) * 2.2857);
             background: linear-gradient(to left, #fff, #000);
             mix-blend-mode: overlay;
             opacity: 0.4;
             pointer-events: none;
         }
         box-shadow: 2px 2px 180px hsl(var(--hue), 60%, 50%) inset;
-        border-radius: 32px;
+        border-radius: calc(var(--border-radius) * 2.2857);
     }
     .app.big {
         margin-left: -40px;
@@ -147,7 +147,7 @@ body {
         >img {
             height: 340px;
             transform: perspective(1000px) rotateY(20deg) scale(1.03);
-            border-radius: 12px;
+            border-radius: var(--border-radius);
             outline: 2px solid var(--col-l3);
             margin-left: 20px;
         }
@@ -185,7 +185,7 @@ body {
             flex-direction: column;
             >img {
                 width: 100%;
-                border-radius: 12px;
+                border-radius: var(--border-radius);
             }
             padding: 30px;
 

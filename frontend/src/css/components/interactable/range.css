@@ -1,7 +1,7 @@
 .slider-with-input {
     display: flex;
     align-items: stretch;
-    border-radius: 12px;
+    border-radius: var(--border-radius);
     background: var(--col-l2);
     padding: 2px;
     gap: 2px;
@@ -23,7 +23,7 @@
 }
 
 .slider {
-    border-radius: 10px;
+    border-radius: calc(var(--border-radius) * 0.7143);
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
@@ -41,7 +41,7 @@
 
 
 .slider::-moz-range-progress {
-    border-radius: 10px 0px 0px 10px;
+    border-radius: calc(var(--border-radius) * 0.7143) 0px 0px calc(var(--border-radius) * 0.7143);
     background: linear-gradient(45deg,
         color-mix(in srgb, var(--col-sat-1) 50%, transparent),
         color-mix(in srgb, var(--col-sat-3) 50%, transparent));

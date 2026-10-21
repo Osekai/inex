@@ -52,7 +52,7 @@ class Visits
         if (!Session::LoggedIn()) return new Response(false, "Not logged in");
         $visitorId = Session::UserData()['id'];
 
-        $rows = Connection::execSelect("SELECT v.Visited_User_ID AS User_ID, r.Name, MAX(v.Date) AS Last_Visited FROM Profiles_Visits v
+        $rows = Connection::execSelect("SELECT v.Visited_User_ID AS User_ID, r.Name, MAX(v.Date) AS Last_Visited, UNIX_TIMESTAMP(MAX(v.Date)) AS Last_Visited_Unix FROM Profiles_Visits v
             LEFT JOIN Rankings_Users r ON r.ID = v.Visited_User_ID
             WHERE v.Visitor_User_ID = ?
             GROUP BY v.Visited_User_ID, r.Name

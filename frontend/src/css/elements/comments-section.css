@@ -177,7 +177,7 @@ comments-section {
 .comment-input {
     display: flex;
     align-items: stretch;
-    border-radius: 25px;
+    border-radius: calc(var(--border-radius) * 1.7857);
     overflow: hidden;
 }
 .comment-input .input {

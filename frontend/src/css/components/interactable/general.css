@@ -62,7 +62,7 @@
     position: relative;
     background: var(--col-d0);
     border: 1px solid var(--col-l1);
-    border-radius: 3px;
+    border-radius: calc(var(--border-radius) * 0.2143);
     border-bottom: 3px solid var(--col-l3);
     transition: all 0.2s ease;
     outline: 0px solid var(--col-l5);
@@ -150,8 +150,8 @@
     width: 100%;
     height: 3px;
     background: var(--brand-accent);
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: calc(var(--border-radius) * 0.2857);
+    border-bottom-right-radius: calc(var(--border-radius) * 0.2857);
     transform: scaleX(0);
     transition: all 0.2s ease;
 }

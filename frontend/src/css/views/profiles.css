@@ -46,7 +46,7 @@
 
     img {
         height: 200px;
-        border-radius: 20px;
+        border-radius: calc(var(--border-radius) * 1.5);
     }
 
     .name {
@@ -59,7 +59,7 @@
 
             img {
                 height: 32px;
-                border-radius: 8px;
+                border-radius: calc(var(--border-radius) / 2);
             }
 
             h1 {
@@ -102,7 +102,7 @@
             width: 300px;
             backdrop-filter: blur(10px);
             outline: color-mix(in srgb, var(--col-l6) 50%, transparent) solid 1px;
-            border-radius: 20px;
+            border-radius: calc(var(--border-radius) * 1.5);
 
             > div {
                 width: 100%;
@@ -194,7 +194,7 @@
 
         img {
             height: 16px;
-            border-radius: 6px;
+            border-radius: calc(var(--border-radius) * 0.4286);
         }
     }
 
@@ -219,7 +219,7 @@
     }
 
     &.panel-medals-outer {
-        border-radius: 20px;
+        border-radius: calc(var(--border-radius) * 1.5);
         border: 3px solid var(--maincol);
 
         h1 {
@@ -298,13 +298,15 @@
     justify-content: flex-start;
     height: 4px;
     position: relative;
+    corner-shape: round !important;
 
     > div {
+        corner-shape: round !important;
         background: var(--maincol);
         height: 7px;
         margin-top: -2px;
         z-index: 9;
-        border-radius: 9px;
+        border-radius: calc(var(--border-radius) * 0.6429);
         outline: 2px solid var(--col-l2);
         position: relative;
 
@@ -492,7 +494,7 @@
 
             img {
                 height: 30px;
-                border-radius: 10px;
+                border-radius: calc(var(--border-radius) * 0.7143);
             }
 
             i, img {
@@ -709,7 +711,7 @@
     .user-header {
         img {
             height: 90px;
-            border-radius: 14px;
+            border-radius: var(--border-radius);
         }
 
         .name > div {
@@ -717,7 +719,7 @@
 
             img {
                 height: 20px;
-                border-radius: 4px;
+                border-radius: calc(var(--border-radius) * 0.2857);
             }
 
             h1 {
