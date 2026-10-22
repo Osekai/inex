@@ -5,7 +5,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/frontend/dist/pb-<?= Site::$profiles_banner->content['Theme']['Key'] ?>.css">
+    <link rel="stylesheet" href="/frontend/dist/pb-<?= Site::$profiles_banner->content['Theme']['Key'] ?>.css?<?= ApplicationVersion::revision() ?>">
     <style id="dyn-theme">
         :root {
         <?= \Data\Profiles\Banners::$themeParser->css ?>
@@ -22,7 +22,7 @@
     <?= $page; ?>
 </div>
 </body>
-<script src="/frontend/dist/pb-<?= Site::$profiles_banner->content['Theme']['Key'] ?>.bundle.js"></script>
+<script src="/frontend/dist/pb-<?= Site::$profiles_banner->content['Theme']['Key'] ?>.bundle.js?<?= ApplicationVersion::revision() ?>"></script>
 <style>
     * {
         padding: 0;
