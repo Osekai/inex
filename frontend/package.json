@@ -12,6 +12,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "icons": "node scripts/icons.js",
+    "licences": "node scripts/licences.js",
     "dev": "node scripts/dev.js"
   },
   "keywords": [],

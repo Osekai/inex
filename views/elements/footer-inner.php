@@ -20,6 +20,7 @@
                 <a href="/legal/privacy">Privacy Policy</a>
                 <a href="/legal/contact">Contact Us</a>
                 <a href="/guidelines">Community Guidelines</a>
+                <a href="/legal/licences">Licences</a>
             </div>
             <div>
                 <a href="https://github.com/osekai/inex">Source Code</a>

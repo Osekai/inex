@@ -68,6 +68,12 @@ $router->get('/profiles/banner/([^/]+)/html', function ($id) {
         echo $result['html'];
     }
 });
+$router->get('/profiles/me', function () {
+    if (!\Database\Session::LoggedIn()) {
+        General::Redirect("/login");
+    }
+    General::Redirect("/profiles/" . \Database\Session::UserData()['id']);
+});
 $router->get('/profiles/([^/]+)/([^/]+)', function ($user, $gamemode) {
     DrawViewWithTemplate("profiles", "page", $user, $gamemode);
 });
@@ -140,8 +146,81 @@ $router->get('/legal/contact', function () {
 });
 
 
+$router->get('/legal/licences', function () {
+    DrawViewWithTemplate("licences", "page");
+});
+
+
 $router->get('/guidelines', function () {
     DrawViewWithTemplate("communityguidelines", "page");
+});
+
+
+$router->get('/omh/retro_achiever', function () {
+    DrawViewWithTemplate("retro_achiever", "none");
+});
+
+
+$router->get('/sitemap.xml', function () {
+    // ported from anthera: routing/frontend.php
+    header('Content-Type: application/xml; charset=utf-8');
+    $cache = \Database\Memcache::get("sitemap");
+    if ($cache !== false && $cache !== "") {
+        echo $cache;
+        exit;
+    }
+
+    function addUrl($loc, $lastmod = null, $priority = '0.5', $changefreq = 'daily')
+    {
+        $loc = URL . $loc;
+
+        $url = '<url>';
+        $url .= '<loc>' . htmlspecialchars($loc, ENT_QUOTES | ENT_XML1) . '</loc>';
+        if ($lastmod) {
+            $url .= '<lastmod>' . date('Y-m-d', strtotime($lastmod)) . '</lastmod>';
+        }
+        $url .= '<changefreq>' . htmlspecialchars($changefreq, ENT_QUOTES | ENT_XML1) . '</changefreq>';
+        $url .= '<priority>' . htmlspecialchars($priority, ENT_QUOTES | ENT_XML1) . '</priority>';
+        $url .= '</url>';
+        return $url;
+    }
+
+    $output = '<?xml version="1.0" encoding="UTF-8"?>';
+    $output .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+    $output .= addUrl('/', null, '1.0', 'daily');
+
+    $output .= addUrl('/medals', null, '0.9', 'daily');
+    $output .= addUrl('/badges', null, '0.9', 'daily');
+    $output .= addUrl('/rankings', null, '0.9', 'daily');
+    $output .= addUrl('/profiles', null, '0.8', 'daily');
+
+    $output .= addUrl('/omh/retro_achiever', null, '0.4', 'monthly');
+    $output .= addUrl('/guidelines', null, '0.3', 'yearly');
+    $output .= addUrl('/legal/licences', null, '0.2', 'yearly');
+    $output .= addUrl('/legal/privacy', null, '0.2', 'yearly');
+    $output .= addUrl('/legal/contact', null, '0.2', 'yearly');
+
+    $medals = \Data\Medals::GetAll()->content;
+    foreach ($medals as $medal) {
+        $output .= addUrl('/medals/' . rawurlencode($medal['Name']), null, '0.8', 'weekly');
+    }
+
+    $badges = \Data\Badges::GetAll()->content;
+    foreach ($badges as $badge) {
+        $output .= addUrl('/badges/' . rawurlencode($badge['Name']), null, '0.1', 'weekly');
+    }
+
+    // keep in sync with types in frontend/src/js/views/rankings/RankingsUtils.js
+    $rankings = ["medals_users", "medals_rarity", "pp", "level", "accuracy", "replays", "mapsets", "subscribers", "badges", "playtime"];
+    foreach ($rankings as $ranking) {
+        $output .= addUrl('/rankings/' . $ranking, null, '0.7', 'daily');
+    }
+
+    $output .= '</urlset>';
+
+    echo $output;
+    \Database\Memcache::set("sitemap", $output, 86400);
 });
 
 

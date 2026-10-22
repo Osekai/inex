@@ -283,7 +283,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 })
 
-if (loggedIn) {
+// standalone pages (template "none") have no navbar
+if (loggedIn && document.getElementById("roles") != null) {
     var roles = userData.Roles;
     for (var role of roles) {
         document.getElementById("roles").appendChild(RoleBadge(role));
@@ -351,7 +352,9 @@ function InitializeAlerts() {
 
 InitializeAlerts();
 
-new Navbar();
+if (document.querySelector(".navbar") != null) {
+    new Navbar();
+}
 
 if (window.be.dev) {
     let socket = io("http://localhost:35569", {});

@@ -7,3 +7,4 @@ cert
 frontend/configuration/
 frontend/configuration/*
 frontend/rev.txt
+frontend/licences.json

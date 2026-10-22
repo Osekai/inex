@@ -1,0 +1,49 @@
+.licences {
+    display: flex;
+    flex-direction: column;
+}
+
+.licence {
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding-left: 10px;
+    margin-top: 26px;
+
+    > div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    h3 {
+        position: relative;
+
+        a {
+            color: inherit;
+            text-decoration: underline;
+        }
+
+        span {
+            margin-left: 12px;
+            font-weight: 400;
+            opacity: 0.6;
+        }
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: 9px;
+            left: -14px;
+            width: 8px;
+            height: 8px;
+            background: currentColor;
+        }
+    }
+
+    p {
+        margin-top: 12px;
+        line-height: 1.2;
+        opacity: 0.8;
+    }
+}
