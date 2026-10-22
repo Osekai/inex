@@ -221,6 +221,7 @@ HTML
         Connection::execOperation("INSERT INTO Profiles_Banners (User_ID, Name, Theme_Key, Settings) VALUES (?, ?, ?, '{}')",
             "iss", [$userId, $theme['Name'], $theme['Key']]);
         $id = Connection::getConnection()->insert_id;
+        IO::Send("/banner/" . $userId . "/" . $id . "/invalidate", [], "imagepier");
 
         return new Response(true, "ok", ["ID" => $id]);
     }
@@ -234,6 +235,7 @@ HTML
         if (!is_numeric($id)) return new Response(false, "Invalid banner");
 
         Connection::execOperation("DELETE FROM Profiles_Banners WHERE ID = ? AND User_ID = ?", "ii", [$id, $userId]);
+        IO::Send("/banner/" . $userId . "/" . $id . "/invalidate", [], "imagepier");
 
         return new Response(true, "ok");
     }
@@ -353,7 +355,7 @@ HTML
         Connection::execOperation("UPDATE Profiles_Banners SET Name = ?, Theme_Key = ?, Settings = ?, Gamemode = ? WHERE ID = ? AND User_ID = ?",
             "ssssii", [$name, $theme['Key'], json_encode((object)$themeSettings), $gamemode, $id, $userId]);
 
-        IO::Send("/banner/" . $id . "/invalidate", [], "imagepier");
+        IO::Send("/banner/" . $userId . "/" . $id . "/invalidate", [], "imagepier");
 
         return new Response(true, "ok", $settingErrors);
     }
