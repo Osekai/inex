@@ -1,0 +1,10 @@
+{
+  "key": "404",
+  "name": "404",
+  "category": "System",
+  "resolution": [
+    1400,
+    250
+  ],
+  "hidden": true
+}

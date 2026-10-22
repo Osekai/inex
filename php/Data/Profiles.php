@@ -33,6 +33,10 @@ class Profiles
         // the osu api gives back a non array when the user is missing
         if(!is_array($user)) return new Response(false, "User not found");
 
+        // which mode the statistics are for, goals need it for country rank
+        $user['Statistics_Mode'] = $gamemode;
+        if ($gamemode == "") $user['Statistics_Mode'] = $user['playmode'];
+
         $x = new Timings("profiles_medals");
         $medals = Medals::GetAll()->content;
         $x->finish();

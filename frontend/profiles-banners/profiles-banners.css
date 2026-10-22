@@ -16,3 +16,9 @@ html {
         background: transparent;
     }
 }
+
+
+body, html {
+    background: transparent !important;
+    background-color: tranparent !important;
+}

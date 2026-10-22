@@ -46,12 +46,12 @@ class Goals
                 "Icon" => "icon-goals-country-rank",
                 "Lower_Is_Better" => true,
                 "Max" => 10000000,
-                "api" => function ($user, $stats) {
-                    return $stats['country_rank'] ?? null;
+                "api" => function ($user, $stats, $mode) {
+                    // the per mode stats don't have country rank, only the mode the profile was fetched for does
+                    if ($mode !== null && $mode !== ($user['Statistics_Mode'] ?? null)) return null;
+                    return $user['statistics']['country_rank'] ?? null;
                 },
-                "rankings" => function ($row, $mode) {
-                    return $row['Rank_Country_' . $mode] ?? null;
-                },
+                "rankings" => null, // osu doesn't send it in bulk, so it's not in the table
             ],
             "medals" => [
                 "Name" => "Medals",
@@ -240,7 +240,7 @@ class Goals
                     $stats = $osuUser['statistics_rulesets'][$mode] ?? null;
                 }
 
-                $current = $types[$goal['Type']]['api']($osuUser, $stats);
+                $current = $types[$goal['Type']]['api']($osuUser, $stats, $mode);
             }
 
             $goal = Goals::Check($goal, $current);

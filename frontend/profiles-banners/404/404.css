@@ -1,0 +1,69 @@
+html .banner {
+    width: 1400bpx;
+    height: 250bpx;
+    overflow: hidden;
+    border-radius: 16bpx;
+    background-color: #1d0c12;
+    background-image: linear-gradient(to right, rgba(247, 37, 133, 0.267), rgba(181, 23, 158, 0));
+    color: #f8edf0;
+}
+
+.not-found {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 80bpx;
+
+    .texts {
+        display: flex;
+        flex-direction: column;
+        gap: 10bpx;
+        max-width: 1000bpx;
+    }
+
+    .code {
+        font-size: 36bpx;
+        font-weight: 100;
+        line-height: 1;
+        color: #ff1463;
+    }
+
+    h1 {
+        font-size: 48bpx;
+        font-weight: 200;
+        line-height: 1.1;
+    }
+
+    .sub {
+        font-size: 22bpx;
+        font-weight: 200;
+        font-style: italic;
+        opacity: 0.6;
+    }
+}
+
+.watermark {
+    position: absolute;
+    right: 48bpx;
+    bottom: 32bpx;
+    display: flex;
+    align-items: center;
+    gap: 12bpx;
+    opacity: 0.6;
+
+    img {
+        height: 30bpx;
+        width: auto;
+    }
+
+    p {
+        font-size: 20bpx;
+        font-weight: 300;
+        white-space: nowrap;
+    }
+
+    span {
+        margin-inline-start: 8bpx;
+        opacity: 0.6;
+    }
+}

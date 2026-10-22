@@ -2,6 +2,7 @@
 
 namespace Data\Profiles;
 
+use Ampra\IO;
 use API\Response;
 use Data\Profiles;
 use Database\Connection;
@@ -39,10 +40,44 @@ class Banners
         return new Response(true, "ok", $data);
     }
 
-    static function RenderBanner($id) {
+    static function RenderBanner($id, $userCheck = null) {
+        if($id == 0 && $userCheck !== null) {
+            // return user's only first banner
+            $banners = Connection::execSelect("SELECT ID FROM Profiles_Banners WHERE User_ID = ?", "i", [$userCheck]);
+            if (count($banners) == 0) return new Response(false, "not found");
+            $id = $banners[0]['ID'];
+        }
         $bannerData = Banners::GetBanner($id);
-        if ($bannerData === null) return "unknown banner?";
+        if ($bannerData === null) return new Response(false, "not found");
+        if($userCheck !== null) {
+            if($bannerData->content['User_ID'] != $userCheck) return new Response(false, "not found");
+        }
         return Banners::RenderBannerData($bannerData);
+    }
+
+    // the hidden "404" theme, shown by the /html route when there's no banner
+    static function RenderNotFound() {
+        $theme = Connection::execSelect("SELECT * FROM Profiles_Banners_Themes WHERE `Key` = ?", "s", ["404"]);
+        if (count($theme) == 0) return "404 theme missing";
+        $theme = $theme[0];
+        $theme['Settings'] = json_decode($theme['Settings'], true);
+
+        $data = [
+            "ID" => null,
+            "User_ID" => 0,
+            "Name" => "Not found",
+            "Theme_Key" => $theme['Key'],
+            "Settings" => (object)[],
+            "Gamemode" => "",
+            // the renderer reads these, there's no real user here
+            "User" => [
+                "User" => ["id" => 0, "playmode" => "osu"],
+                "Statistics" => ["Medals" => ["Percentage" => 0]],
+            ],
+            "Theme" => $theme,
+        ];
+
+        return Banners::RenderBannerData(new Response(true, "ok", $data));
     }
 
     // renders a theme for the logged in user, settings come from ?override like anthera's me pages
@@ -167,7 +202,7 @@ HTML
 
     static function GetTheme($key)
     {
-        $theme = Connection::execSelect("SELECT * FROM Profiles_Banners_Themes WHERE `Key` = ?", "s", [$key]);
+        $theme = Connection::execSelect("SELECT * FROM Profiles_Banners_Themes WHERE `Key` = ? AND Hidden = 0", "s", [$key]);
         if (count($theme) == 0) return null;
         $theme = $theme[0];
         $theme['Settings'] = json_decode($theme['Settings'], true);
@@ -318,12 +353,14 @@ HTML
         Connection::execOperation("UPDATE Profiles_Banners SET Name = ?, Theme_Key = ?, Settings = ?, Gamemode = ? WHERE ID = ? AND User_ID = ?",
             "ssssii", [$name, $theme['Key'], json_encode((object)$themeSettings), $gamemode, $id, $userId]);
 
+        IO::Send("/banner/" . $id . "/invalidate", [], "imagepier");
+
         return new Response(true, "ok", $settingErrors);
     }
 
     public static function AllThemes()
     {
-        $data = Connection::execSimpleSelect("SELECT * FROM Profiles_Banners_Themes");
+        $data = Connection::execSimpleSelect("SELECT * FROM Profiles_Banners_Themes WHERE Hidden = 0");
         foreach ($data as &$d) {
             $d['Settings'] = json_decode($d['Settings'], true);
         }

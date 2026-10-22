@@ -155,7 +155,7 @@ export class BannerEditor {
     }
 
     GetLink() {
-        return "https://banners.osekai.net/" + this.banner.User_ID + "/" + this.banner.ID + ".png";
+        return "https://imagepier.osekai.net/banner/" + this.banner.User_ID + "/" + this.banner.ID + ".png";
     }
 
     SetChangesMade(value = true) {

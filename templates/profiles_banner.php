@@ -23,4 +23,15 @@
 </div>
 </body>
 <script src="/frontend/dist/pb-<?= Site::$profiles_banner->content['Theme']['Key'] ?>.bundle.js"></script>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: 'Outfit', sans-serif;
+    }
+    body, html {
+        background: transparent !important;
+    }
+</style>
 </html>

@@ -58,8 +58,15 @@ $router->get('/profiles/banner/preview/([^/]+)', function ($key) {
     echo is_array($result) ? $result['html'] : $result;
 });
 $router->get('/profiles/banner/([^/]+)/html', function ($id) {
-    $result = Banners::RenderBanner($id);
-    echo is_array($result) ? $result['html'] : $result;
+    $result = Banners::RenderBanner($id, $_GET['userCheck'] ?? null);
+    if($result->success === false) {
+        header("HTTP/1.1 404 Not Found");
+        $notFound = Banners::RenderNotFound();
+        echo is_array($notFound) ? $notFound['html'] : $notFound;
+        exit;
+    } else {
+        echo $result['html'];
+    }
 });
 $router->get('/profiles/([^/]+)/([^/]+)', function ($user, $gamemode) {
     DrawViewWithTemplate("profiles", "page", $user, $gamemode);

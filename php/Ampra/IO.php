@@ -8,6 +8,7 @@ class IO
 {
     static $services = [
         "ampra" => "127.0.0.1:13416",
+        "imagepier" => "127.0.0.1:13426",
     ];
 
     static function Send($url, $params, $service = "ampra", $getResponse = false)
