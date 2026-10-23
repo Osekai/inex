@@ -4,6 +4,7 @@
 
 .medals-unachieved .panel-header searchable-dropdown {
     min-width: 190px;
+    z-index: 2;
 }
 
 .medals-unachieved-list {
