@@ -44,7 +44,7 @@ use Data\Home\Member;
             <h1>Osekai <strong>Medals</strong></h1>
             <p langkey="home/explore.medals.h1">Explore solutions, leave comments, and suggest beatmaps on every medal
                 across osu!, all in one place!</p>
-            <a href="/medals" class="button" langkey="home/explore.medals.cta">Explore Medals</a>
+            <a href="/medals" class="button" langkey="home/explore.medals.cta">Explore the Medals</a>
         </div>
     </div>
     <div class="app big rankings col-reset">
@@ -53,7 +53,7 @@ use Data\Home\Member;
             <h1>Osekai <strong>Rankings</strong></h1>
             <p langkey="home/explore.rankings.h1">Explore interactive player rankings across medals, mapping, all-mode
                 pp, and more</p>
-            <a href="/rankings" class="button" langkey="home/explore.rankings.cta">Explore Rankings</a>
+            <a href="/rankings" class="button" langkey="home/explore.rankings.cta">Explore osu!'s rankings</a>
         </div>
     </div>
     <div class="app big badges col-reset">
@@ -63,7 +63,19 @@ use Data\Home\Member;
             <p langkey="home/explore.badges.h1">Check out every badge across the entirety of osu!, along with which
                 players have them, and when they got
                 them!</p>
-            <a href="/badges" class="button" langkey="home/explore.badges.cta">Explore Badges</a>
+            <a href="/badges" class="button" langkey="home/explore.badges.cta">Explore the badges of osu!</a>
+        </div>
+    </div>
+
+    <div class="app big profiles col-reset">
+        <img src="/public/img/home/apps/profiles.png">
+        <div>
+            <h1>Osekai <strong>Profiles</strong></h1>
+            <p langkey="home/explore.profiles.h1">Get in-depth information about your osu! profile, map out your
+                past in a timeline, and create future
+                goals!</p>
+            <a href="/profiles" class="button" langkey="home/explore.profiles.cta">Visit
+                Profiles!</a>
         </div>
     </div>
 </div>
@@ -78,17 +90,6 @@ use Data\Home\Member;
                     now!</p>
                 <a href="https://osekai.net/snapshots" class="button" langkey="home/explore.snapshots.cta">Explore
                     Snapshots</a>
-            </div>
-        </div>
-        <div class="app classic profiles col-reset">
-            <img src="/public/img/home/apps/profiles.png">
-            <div>
-                <h1>Osekai <strong>Profiles</strong></h1>
-                <p langkey="home/explore.profiles.h1">Get in-depth information about your osu! profile, map out your
-                    past in a timeline, and create future
-                    goals!</p>
-                <a href="https://osekai.net/profiles" class="button" langkey="home/explore.profiles.cta">Explore
-                    Profiles</a>
             </div>
         </div>
     </div>
