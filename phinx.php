@@ -1,6 +1,6 @@
 <?php
-include("config.php");
-include("autoload.php");
+include_once("config.php");
+include_once("autoload.php");
 require __DIR__ . '/vendor/autoload.php';
 
 return
