@@ -9,12 +9,12 @@ So far, this is the status of the rewrites to Inex:
    - Medals has been fully rolled out to all users!
 - ### 🟢 Rankings
    - Rankings has been completed!
-- ### 🔴 Profiles
-    - Relies on Rankings
+- ### 🟢 Profiles
+    - Profiles is done!
 - ### 🟢 Badges
     - Badges have been completed!
 - ### 🔴 Snapshots
-    - Big undertaking, not there yet!
+    - Next up.
 
 <br>
 
