@@ -46,7 +46,10 @@ class Bio
         // only worth posting when there's something new to read
         if ($bio !== null && $bio !== $previous) {
             \Ampra\IO::Send("/profile-bio", [
-                "user" => Session::UserData(),
+                "user" => [
+                    "id" => Session::UserData()['id'],
+                    "username" => Session::UserData()['username'],
+                ],
                 "bio" => $bio,
                 "url" => "/profiles/" . $userId
             ]);

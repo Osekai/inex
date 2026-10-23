@@ -46,7 +46,10 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
 
         IO::Send("/comment", [
             "comment" => $comment,
-            "user" => Session::UserData(),
+            "user" => [
+                "id" => Session::UserData()['id'],
+                "username" => Session::UserData()['username'],
+            ],
             "url" => $table === "Medals_Data" ? "/medals/" . $id : "/profiles/" . $id,
             "title" => $title
         ]);

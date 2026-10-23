@@ -23,7 +23,8 @@ export default class IO {
         const app = express();
 
         app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({ extended: true }));
+        // php sends the whole osu user object, which goes way past the default 1000 params / 100kb
+        app.use(bodyParser.urlencoded({ extended: true, parameterLimit: 10000, limit: "1mb" }));
 
         // async wrapper to catch errors in async route handlers
         function asyncHandler(fn) {
