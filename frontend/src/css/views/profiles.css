@@ -182,6 +182,7 @@
         &.otab-hidden {
             opacity: 0;
             transform: translateY(10px);
+            pointer-events: none;
         }
     }
 
