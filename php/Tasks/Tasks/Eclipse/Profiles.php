@@ -34,7 +34,7 @@ class Profiles extends EclipseTask
         $this->table('Profiles_Timeline')->truncate();
         $this->table('Profiles_Visits')->truncate();
         // votes first, they're found through the comments
-        Connection::execOperation("DELETE FROM Common_Votes WHERE Target_Table = 'Common_Comments' AND Target_ID IN (SELECT ID FROM Common_Comments WHERE Target_Table = 'Profiles_Data')");
+        Connection::execSimpleOperation("DELETE FROM Common_Votes WHERE Target_Table = 'Common_Comments' AND Target_ID IN (SELECT ID FROM Common_Comments WHERE Target_Table = 'Profiles_Data')");
         Connection::execOperation("DELETE FROM Common_Comments WHERE Target_Table = ?", "s", ["Profiles_Data"]);
 
         $this->transferGoals();
