@@ -53,9 +53,14 @@ if(!file_exists(".env")) {
     \DX\Setup::PrintError(".env file not found!", "Please copy .env.example to .env and fill in the required values.");
 }
 include("config.php");
-if (DATABASE_HOSTNAME === null) {
+if (DATABASE_HOSTNAME === null || DATABASE_HOSTNAME == "") {
     \DX\Setup::PrintError(".env is invalid.", "Something in .env doesn't seem right - make sure it matches the example!");
 }
+if (!defined("USING_NEW_CONFIG")) {
+    \DX\Setup::PrintError("Config is using the old config.php style!", "Please migrate to a .env file");
+}
+
+
 $s->finish();
 
 $s = new \Debug\Timings("general");
