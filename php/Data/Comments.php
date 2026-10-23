@@ -48,7 +48,7 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
         ]);
 
 
-        return new Response(true, "", self::Get($id, $table, $replyingTo, $text)->content[0]);
+        return new Response(true, "", self::Get($id, $table, $replyingTo, $comment['ID'])->content[0]);
     }
 
     public static function GetOne($id)
@@ -73,7 +73,7 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
 
 
         if ($single !== null) {
-            $types .= "s";
+            $types .= "i";
             $values[] = $single;
         }
         if ($parent != null) {
@@ -107,7 +107,7 @@ LEFT JOIN Rankings_Users ON Rankings_Users.ID = Common_Comments.User_ID
 WHERE Common_Comments.Target_ID = ? 
 AND Common_Comments.Deleted = 0
 AND Common_Comments.Target_Table = ? " .
-            ($single == null ? "" : "AND Common_Comments.Text = ? ") .
+            ($single == null ? "" : "AND Common_Comments.ID = ? ") .
             "AND Common_Comments.Parent_Comment_ID " .
             ($parent == null ? "IS NULL" : "= ?") . " 
 GROUP BY Common_Comments.ID 
