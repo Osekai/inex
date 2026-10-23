@@ -444,7 +444,7 @@ class Profiles {
         // 10 rarest the user has, rarest first
         let rarestMedals = profile.Medals
             .filter(medal => medal.Obtained)
-            .sort((a, b) => a.Frequency - b.Frequency)
+            .sort((a, b) => a.Count_Achieved_By - b.Count_Achieved_By)
             .slice(0, 10);
 
         Profiles.El("[pr-el=medals-rarest-list]", (el) => {
