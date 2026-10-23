@@ -326,7 +326,7 @@ class Profiles {
             let outer = D2.Div("panel-stats panel-medals-outer " + stats.Quick.Club.cssClass, () => {
                 D2.Image("rank-image", "/public/img/clubs/" + stats.Quick.Club.rank + ".png", "medal")
                 D2.Text("p", "Medals");
-                D2.StyledText("h1", `<strong>${stats.Quick.Club.rank}% Club</strong>`);
+                D2.StyledText("h1", `<strong>${stats.Quick.Club.name}</strong>`);
                 if (profile.InRankingState && Profiles.RankIsAccurate(stats.Ranks.Global)) {
                     D2.StyledText("h2", `<strong>#${formatNumber(stats.Ranks.Global)}</strong> Global`)
                     D2.StyledText("h3", `<strong>#${formatNumber(stats.Ranks.Country)}</strong> Country`);
