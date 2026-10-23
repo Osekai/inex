@@ -5,17 +5,18 @@ import('../src/index').catch(function (e) {
     console.warn("index failed to load in banner", e);
 });
 
+if (1 == 0) {
+    let socket = io("http://localhost:35569", {});
+    socket.connect();
 
-let socket = io("http://localhost:35569", {});
-socket.connect();
+    socket.on("css_reload", () => {
+        location.reload();
+    });
 
-socket.on("css_reload", () => {
-    location.reload();
-});
-
-socket.on("js_reload", () => {
-    location.reload();
-});
+    socket.on("js_reload", () => {
+        location.reload();
+    });
+}
 
 // live updates from the editor, ported from anthera's theme.update (frontend/src/js/views/me_edit.js)
 // only does css variables, anything that changes classes gets a full reload instead
