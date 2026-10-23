@@ -29,7 +29,7 @@ use Data\Home\Member;
             unmaintainable, and in
             such a
             state we felt a rewrite was worth the effort!</p>
-        <p langkey="home/welcome.p3">We're hoping to bring over Snapshots and Profiles soon, but we don't feel right
+        <p langkey="home/welcome.p3">We're hoping to bring over Snapshots soon, but we don't feel right
             doing it
             without doing it
             properly, so it'll be a little while longer for those!</p>
@@ -193,12 +193,12 @@ use Data\Home\Member;
             <?php
             foreach ($legacyDonators as $donator) {
                 ?>
-            <a class="donator-card" href="/profiles/<?= $donator[0] ?>">
-                <img src="https://a.ppy.sh/<?= $donator[0] ?>" loading="lazy">
-                <h1><?= $donator[1] ?></h1>
-                <p>€<?= $donator[2] ?></p>
-            </a>
-            <?php
+                <a class="donator-card" href="/profiles/<?= $donator[0] ?>">
+                    <img src="https://a.ppy.sh/<?= $donator[0] ?>" loading="lazy">
+                    <h1><?= $donator[1] ?></h1>
+                    <p>€<?= $donator[2] ?></p>
+                </a>
+                <?php
             }
             ?>
         </div>
