@@ -42,25 +42,54 @@ class Banners extends EclipseTask
         }
 
         if ($banner['CustomStyle'] == "solid" && $banner['CustomSolid']) {
-            return [
-                "backgroundType" => "gradient",
-                "backgroundGradient" => [$banner['CustomSolid'], $banner['CustomSolid']],
-                "backgroundGradientAngle" => 0,
-            ];
+            $solid = self::toHex($banner['CustomSolid']);
+            if ($solid !== null) {
+                return [
+                    "backgroundType" => "gradient",
+                    "backgroundGradient" => [$solid, $solid],
+                    "backgroundGradientAngle" => 0,
+                ];
+            }
         }
 
         if ($banner['CustomStyle'] == "gradient" && $banner['CustomGradient']) {
             $gradient = json_decode($banner['CustomGradient'], true);
             if (is_array($gradient) && count($gradient) >= 2) {
-                return [
-                    "backgroundType" => "gradient",
-                    "backgroundGradient" => [$gradient[0], $gradient[1]],
-                    "backgroundGradientAngle" => (int)($gradient[2] ?? 90),
-                ];
+                $from = self::toHex($gradient[0]);
+                $to = self::toHex($gradient[1]);
+                if ($from !== null && $to !== null) {
+                    return [
+                        "backgroundType" => "gradient",
+                        "backgroundGradient" => [$from, $to],
+                        "backgroundGradientAngle" => (int)($gradient[2] ?? 90),
+                    ];
+                }
             }
         }
 
         // custom images were never finished in eclipse
         return ["backgroundType" => "club"];
+    }
+
+    // eclipse saved colours as "220,73,233", inex wants "#dc49e9"
+    private static function toHex($colour): ?string
+    {
+        if (!is_string($colour)) return null;
+
+        $colour = trim($colour);
+        if (preg_match('/^#?([0-9a-f]{6})$/i', $colour, $match)) {
+            return "#" . strtolower($match[1]);
+        }
+
+        if (!preg_match_all('/\d+/', $colour, $matches) || count($matches[0]) < 3) {
+            return null;
+        }
+
+        $hex = "#";
+        for ($i = 0; $i < 3; $i++) {
+            $value = min(255, (int)$matches[0][$i]);
+            $hex .= sprintf("%02x", $value);
+        }
+        return $hex;
     }
 }

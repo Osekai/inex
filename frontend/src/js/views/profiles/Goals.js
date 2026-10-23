@@ -9,10 +9,10 @@ const WELCOME_TITLE = "Welcome to Goals";
 const WELCOME_BODY = "Goals are a way to keep track of what you're working towards in osu!, from medal counts and pp to badges and rank. Pick a goal type, set a target and hit add, and we'll keep your progress updated and mark it complete once you get there!";
 
 const MODES = [
-    {"Key": "osu", "Name": "osu!"},
-    {"Key": "taiko", "Name": "osu!taiko"},
-    {"Key": "catch", "Name": "osu!catch"},
-    {"Key": "mania", "Name": "osu!mania"},
+    {"Key": "osu", "Name": "osu!", "Short": "standard"},
+    {"Key": "taiko", "Name": "osu!taiko", "Short": "taiko"},
+    {"Key": "catch", "Name": "osu!catch", "Short": "catch"},
+    {"Key": "mania", "Name": "osu!mania", "Short": "mania"},
 ];
 
 export default class Goals {
@@ -75,6 +75,12 @@ export default class Goals {
     getModeName(key) {
         let mode = MODES.find(m => m.Key == key);
         if (mode) return mode.Name;
+        return key;
+    }
+
+    getModeShort(key) {
+        let mode = MODES.find(m => m.Key == key);
+        if (mode) return mode.Short;
         return key;
     }
 
@@ -153,6 +159,7 @@ export default class Goals {
                     if (goal.Gamemode !== null) {
                         let mode = D2.Div("goal-mode-tag", () => {
                             D2.Custom("i", "icon-gamemode-" + goal.Gamemode);
+                            D2.Text("p", this.getModeShort(goal.Gamemode));
                         });
                         mode.setAttribute("tooltip", this.getModeName(goal.Gamemode));
                     }
@@ -176,7 +183,19 @@ export default class Goals {
                     // a finished goal counts as hitting its target
                     let current = goal.Current_Value;
                     if (complete) current = goal.Value;
-                    D2.Text("p", this.format(current) + "/" + this.format(goal.Value));
+
+                    // ranks count down, so "50/25" reads wrong, show where they are and where they're going instead
+                    if (type.Lower_Is_Better) {
+                        if (complete) {
+                            D2.Text("p", "#" + this.format(goal.Value));
+                        } else {
+                            D2.StyledText("p", "#" + this.format(current) + " <span>→</span> #" + this.format(goal.Value));
+                        }
+                    } else if (goal.Type == "medals-percent") {
+                        D2.Text("p", this.format(current) + "%/" + this.format(goal.Value) + "%");
+                    } else {
+                        D2.Text("p", this.format(current) + "/" + this.format(goal.Value));
+                    }
                 });
             });
 
