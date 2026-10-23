@@ -3,9 +3,9 @@
 use Database\Session;
 
 if (!FEATURE_FLAGS['profiles']) {
-    // we're off for now
-    header("Location: https://osekai.net/profiles");
-    exit;
+
+    echo "Coming Soon!";
+    return;
 }
 if (isset($_GET['username'])) {
     $user = \API\Osu\User::GetUser($_GET['username']);

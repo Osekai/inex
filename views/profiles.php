@@ -1,7 +1,7 @@
 <?php
 if (!FEATURE_FLAGS['profiles']) {
-    header("Location: https://osekai.net/profiles?user=" . $args[0]);
-    exit;
+    echo "Coming Soon!";
+    return;
 }
 
 // same request the api would do, the js reads it from the const
