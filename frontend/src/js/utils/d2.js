@@ -391,10 +391,11 @@ export class D2 {
         return date.toLocaleString(undefined, options);
     }
 
-    static MedalIcon(src, fancy = false) {
+    static MedalIcon(src, fancy = false, image = false) {
         const el = document.createElement("medal-icon");
-        // fancy goes first, otherwise the icon loads twice
+        // fancy and image go first, otherwise the icon loads twice
         if (fancy) el.setAttribute("fancy", "true");
+        if (image) el.setAttribute("image", "true");
         el.setAttribute("src", src);
         if (D2._currentParent) D2._currentParent.appendChild(el);
         return el;

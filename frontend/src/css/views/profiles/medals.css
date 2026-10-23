@@ -89,10 +89,71 @@
     }
 }
 
+.medals-rarest-carousel {
+    position: relative;
+
+    --fade-left: 0px;
+    --fade-right: 0px;
+
+    &.can-prev {
+        --fade-left: 70px;
+    }
+
+    &.can-next {
+        --fade-right: 70px;
+    }
+
+    &:hover {
+        &.can-prev .medals-rarest-arrow.prev, &.can-next .medals-rarest-arrow.next {
+            opacity: 1;
+            pointer-events: all;
+        }
+    }
+}
+
+.medals-rarest-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: 90px;
+    background: var(--col-l5);
+    color: inherit;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%);
+    transition: opacity 0.15s ease, background 0.1s ease;
+
+    &.prev {
+        left: -6px;
+    }
+
+    &.next {
+        right: -6px;
+    }
+
+    &:hover {
+        background: var(--col-l6);
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
 .medals-rarest-scroller {
     margin: 0 -20px;
     overflow: hidden;
     cursor: grab;
+    mask-image: linear-gradient(to right, transparent, #000 var(--fade-left), #000 calc(100% - var(--fade-right)), transparent);
 
     &:active {
         cursor: grabbing;

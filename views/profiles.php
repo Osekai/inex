@@ -206,8 +206,12 @@ if ($profileResponse->success) {
                 <div class="medals-favourite">
                     <div class="medals-rarest">
                         <p><i data-lucide="gem"></i> Rarest Medals</p>
-                        <div class="medals-rarest-scroller">
-                            <div class="medals-rarest-track" pr-el="medals-rarest-list"></div>
+                        <div class="medals-rarest-carousel" pr-el="medals-rarest-carousel">
+                            <button class="medals-rarest-arrow prev" pr-el="medals-rarest-prev"><i data-lucide="chevron-left"></i></button>
+                            <div class="medals-rarest-scroller">
+                                <div class="medals-rarest-track" pr-el="medals-rarest-list"></div>
+                            </div>
+                            <button class="medals-rarest-arrow next" pr-el="medals-rarest-next"><i data-lucide="chevron-right"></i></button>
                         </div>
                     </div>
                     <div class="medals-favourite-outer" pr-el="medal-favourite"></div>

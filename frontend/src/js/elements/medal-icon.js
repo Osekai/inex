@@ -9,19 +9,38 @@ class MedalIcon extends HTMLElement {
     base;
     icon;
     fancy = false;
+    image = false;
 
     constructor() {
         super();
     }
 
     static get observedAttributes() {
-        return ["src", "fancy"];
+        return ["src", "fancy", "image"];
     }
 
     async load(key) {
         if (!key) return;
         if (key.endsWith(".png")) key = key.substring(0, key.length - 4);
         this.innerHTML = "";
+
+        // one prebuilt png instead of a base plus an inline svg, much lighter when there's lots on a page
+        if (this.image) {
+            let image = D2.Image("base", "/assets/medals/client/" + key + ".png", null, "medal");
+            this.base = image;
+            let imageWrapper = document.createElement("div");
+            imageWrapper.classList.add("base-wrapper");
+            imageWrapper.appendChild(image);
+            this.appendChild(imageWrapper);
+
+            if (image.complete) {
+                this.dispatchEvent(new Event("load"));
+            } else {
+                image.addEventListener("load", () => this.dispatchEvent(new Event("load")), { once: true });
+                image.addEventListener("error", () => this.dispatchEvent(new Event("load")), { once: true });
+            }
+            return;
+        }
 
         const iconData = await MedalIcons.GetIconWithBase(key);
 
@@ -131,6 +150,10 @@ class MedalIcon extends HTMLElement {
         }
         if (name === "fancy") {
             this.fancy = newValue == "true";
+            this.load(this.getAttribute("src"));
+        }
+        if (name === "image") {
+            this.image = newValue == "true";
             this.load(this.getAttribute("src"));
         }
     }

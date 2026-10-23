@@ -97,7 +97,7 @@ export default class MedalsUnachieved {
         let progress = Math.min(1, current / next.Target);
 
         let row = D2.DivLink("/medals/" + next.Medal.Medal_ID, "medals-unachieved-milestone", () => {
-            D2.MedalIcon(next.Medal.Link);
+            D2.MedalIcon(next.Medal.Link, false, true);
             D2.Div("medals-unachieved-milestone-main", () => {
                 D2.Div("medals-unachieved-milestone-top", () => {
                     if (next.Previous !== null) {
@@ -186,7 +186,7 @@ export default class MedalsUnachieved {
                             D2.Div("medals-unachieved-grid", () => {
                                 for (let medal of group[mode]) {
                                     let link = D2.DivLink("/medals/" + medal.Medal_ID, "medals-unachieved-medal", () => {
-                                        D2.MedalIcon(medal.Link);
+                                        D2.MedalIcon(medal.Link, false, true);
                                     });
                                     link.setAttribute("tooltip", this.medalTooltip(medal));
                                 }
@@ -219,7 +219,7 @@ export default class MedalsUnachieved {
             if (mode == "fruits") mode = "catch";
 
             let row = D2.DivLink("/medals/" + medal.Medal_ID, "medals-unachieved-row", () => {
-                D2.MedalIcon(medal.Link);
+                D2.MedalIcon(medal.Link, false, true);
                 D2.Div("medals-unachieved-row-text", () => {
                     D2.Text("h3", medal.Name);
                     D2.StyledText("p", `<i class="icon-gamemode-${mode}"></i> ${medal.Grouping}`);

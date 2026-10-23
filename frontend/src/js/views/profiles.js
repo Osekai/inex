@@ -451,7 +451,7 @@ class Profiles {
             el.innerHTML = "";
             for (let medal of rarestMedals) {
                 let item = D2.DivLink("/medals/" + medal.Medal_ID, "medals-rarest-item", () => {
-                    D2.MedalIcon(medal.Link);
+                    D2.MedalIcon(medal.Link, false, true);
                     D2.Text("h3", medal.Name);
                     D2.StyledText("p", `<strong>${Math.round(medal.Frequency * 100 * 10000) / 10000}%</strong> of users`);
                     D2.Text("small", formatNumber(medal.Count_Achieved_By) + " users");
@@ -465,10 +465,31 @@ class Profiles {
             // drag to scroll, the track is the embla container
             // axis lock so vertical drags scroll the page and horizontal ones stay on the carousel
             el.parentElement.setAttribute("data-axis-lock", "");
-            EmblaCarousel(el.parentElement, {
+            let embla = EmblaCarousel(el.parentElement, {
                 "dragFree": true,
                 "align": "start",
                 "containScroll": "trimSnaps"
+            });
+
+            // fades and arrows only show on a side that has more to scroll to
+            let carousel = document.querySelector("[pr-el=medals-rarest-carousel]");
+            let updateEdges = () => {
+                let canScroll = embla.scrollSnapList().length > 1;
+                let progress = embla.scrollProgress();
+                carousel.classList.toggle("can-prev", canScroll && progress > 0.01);
+                carousel.classList.toggle("can-next", canScroll && progress < 0.99);
+            };
+            embla.on("init", updateEdges);
+            embla.on("reInit", updateEdges);
+            embla.on("scroll", updateEdges);
+            embla.on("resize", updateEdges);
+            updateEdges();
+
+            document.querySelector("[pr-el=medals-rarest-prev]").addEventListener("click", () => {
+                embla.scrollPrev();
+            });
+            document.querySelector("[pr-el=medals-rarest-next]").addEventListener("click", () => {
+                embla.scrollNext();
             });
         });
 
@@ -564,7 +585,7 @@ class Profiles {
             let card = D2.DivLink("/medals/" + medal.Medal_ID, "medal-favourite-card", () => {
                 D2.StyledText("p", `<i data-lucide="star"></i> Favourite Medal`);
                 D2.Div("medal-favourite-body", () => {
-                    D2.MedalIcon(medal.Link);
+                    D2.MedalIcon(medal.Link, false, true);
                     D2.Div("medal-favourite-text", () => {
                         D2.Text("h1", medal.Name);
                         D2.StyledText("h4", `<strong>${Math.round(medal.Frequency * 100 * 10000) / 10000}%</strong> of users · ${formatNumber(medal.Count_Achieved_By)} users`);

@@ -201,7 +201,7 @@ export default class MedalHistory {
 
                 let medal = event.Medal;
                 let link = D2.DivLink("/medals/" + medal.Medal_ID, "medal-history-medal", () => {
-                    D2.MedalIcon(medal.Link);
+                    D2.MedalIcon(medal.Link, false, true);
                 });
                 link.setAttribute("tooltip", this.medalTooltip(medal));
                 grid.appendChild(link);
@@ -230,7 +230,7 @@ export default class MedalHistory {
             let stack = D2.Div("medal-history-stack", () => {
                 for (let medal of release.Medals.slice(0, STACK_LIMIT)) {
                     let icon = D2.Div("medal-history-stack-icon", () => {
-                        D2.MedalIcon(medal.Link);
+                        D2.MedalIcon(medal.Link, false, true);
                     });
                     if (!medal.Obtained) icon.classList.add("missing");
                     icon.setAttribute("tooltip", medal.Name);

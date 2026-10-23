@@ -77,7 +77,7 @@ export function OpenFavouriteMedalPicker(profile, onSaved) {
                             D2.Div("medal-picker-grid", () => {
                                 for (let medal of group[mode]) {
                                     let button = D2.Div("medal-picker-medal", () => {
-                                        D2.MedalIcon(medal.Link);
+                                        D2.MedalIcon(medal.Link, false, true);
                                     });
                                     button.setAttribute("tooltip", medal.Name);
                                     button.searchText = (medal.Name + " " + (medal.Description ?? "")).toLowerCase();
