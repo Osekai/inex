@@ -2,7 +2,7 @@
 
 use Database\Session;
 
-if (INSTANCE !== "dev") {
+if (!FEATURE_FLAGS['profiles']) {
     // we're off for now
     header("Location: https://osekai.net/profiles");
     exit;

@@ -186,6 +186,23 @@ body {
     }
 }
 
+.navbar-dev-button {
+    background: #e5484d;
+    color: #fff;
+}
+
+.navbar-dev-login {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+
+    .navbar-pfp-dropdown-item {
+        margin: 0;
+        width: 100%;
+    }
+}
+
 .navbar-right-button:hover {
 
 }

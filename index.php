@@ -49,14 +49,12 @@ include("error.php");
 $s->finish();
 
 $s = new \Debug\Timings("config");
-if(!file_exists("config.php")) {
-    \DX\Setup::PrintError("Config file not found!", "Please copy config.example.php to config.php and fill in the required values.");
+if(!file_exists(".env")) {
+    \DX\Setup::PrintError(".env file not found!", "Please copy .env.example to .env and fill in the required values.");
 }
 include("config.php");
-try {
-    $temp = DATABASE_HOSTNAME;
-} catch (\Error $e) {
-    \DX\Setup::PrintError("config.php is invalid.", "Something in config.php doesn't seem right - make sure it matches the example!");
+if (DATABASE_HOSTNAME === null) {
+    \DX\Setup::PrintError(".env is invalid.", "Something in .env doesn't seem right - make sure it matches the example!");
 }
 $s->finish();
 

@@ -2,6 +2,7 @@
 
 namespace Oauth {
 
+    use Ampra\IO;
     use Data;
     use Database;
     use General;
@@ -64,11 +65,37 @@ namespace Oauth {
             return json_decode($response, true);
         }
 
+        // dev only, pretends osu sent us back this user
+        public static function GetDevUserData($id)
+        {
+            if (!DEV) {
+                die("not in dev mode");
+            }
+
+            $userdata = \API\Osu\User::GetUser((int)$id);
+            if (!is_array($userdata)) {
+                die("couldn't get that user - " . $userdata);
+            }
+
+            // wipe them so they get the first time experience again
+            if (isset($_GET['fresh'])) {
+                Database\Connection::execOperation("DELETE FROM System_Users WHERE User_ID = ?", "i", [$userdata['id']]);
+                Database\Connection::execOperation("DELETE FROM System_Users_Settings WHERE User_ID = ?", "i", [$userdata['id']]);
+                Database\Connection::execOperation("DELETE FROM Rankings_Users WHERE ID = ?", "i", [$userdata['id']]);
+            }
+
+            return $userdata;
+        }
+
         public static function FrontendLogin()
         {
-            $token = Oauth\Login::GetAccessToken($_GET['code']);
+            if (DEV && isset($_GET['devid'])) {
+                $userdata = Oauth\Login::GetDevUserData($_GET['devid']);
+            } else {
+                $token = Oauth\Login::GetAccessToken($_GET['code']);
 
-            $userdata = Oauth\Login::GetUserData($token);
+                $userdata = Oauth\Login::GetUserData($token);
+            }
 
             if($userdata == null) {
                 echo "oh no";
@@ -79,6 +106,9 @@ namespace Oauth {
             if(count($member) == 0) {
                 Database\Connection::execOperation("REPLACE INTO `System_Users` (`User_ID`, `Name`, `Joined_Date`)
 VALUES (?, ?, now());", "is", [$userdata['id'], $userdata['username']]);
+
+                // brand new, get scripts26 to grab their data straight away
+                IO::Send("/queue/addUser", ["id" => $userdata['id']], "scripts26");
             }
 
             Database\Session::Login($userdata['id']);

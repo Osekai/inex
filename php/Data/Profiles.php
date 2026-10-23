@@ -119,6 +119,7 @@ class Profiles
         $osekaiUser = Connection::execSelect("
         SELECT
     u.*,
+    u.ID AS Rankings_ID,
     r.Rank_Medals_Global,
     r.Rank_Medals_Country,
     r.Rank_PP_Total_Global,
@@ -129,7 +130,8 @@ class Profiles
     COALESCE(s.Stats_Vote_Count, 0)    AS Stats_Vote_Count,
     COALESCE(s.Stats_Beatmap_Count, 0) AS Stats_Beatmap_Count,
     Joined_At
-FROM Rankings_Users u
+FROM (SELECT ? AS User_ID) base
+LEFT JOIN Rankings_Users u ON u.ID = base.User_ID
 LEFT JOIN (
     SELECT
         ru.ID,
@@ -151,7 +153,7 @@ LEFT JOIN (
     FROM Rankings_Users ru
     LEFT JOIN Medals_Data md ON md.Medal_ID = ru.Rarest_Medal_ID
     WHERE ru.Is_Restricted = 0
-) AS r ON r.ID = u.ID
+) AS r ON r.ID = base.User_ID
 LEFT JOIN (
     SELECT
         User_ID,
@@ -160,8 +162,7 @@ LEFT JOIN (
         (SELECT COUNT(*) FROM Medals_Beatmaps WHERE Medals_Beatmaps.Beatmap_Submitted_User_ID = x.User_ID) AS Stats_Beatmap_Count,
         (SELECT System_Users.Joined_Date FROM System_Users WHERE System_Users.User_ID = x.User_ID) AS Joined_At
     FROM (SELECT ? AS User_ID) x
-) AS s ON s.User_ID = u.ID
-WHERE u.ID = ?;
+) AS s ON s.User_ID = base.User_ID;
 ", "ii", [$id, $id])[0];
 
         foreach($medals as &$medal) {
@@ -177,6 +178,8 @@ WHERE u.ID = ?;
 
         $data = [
             "User" => $user,
+            // false until scripts26 has added them to Rankings_Users, the frontend hides anything that needs it
+            "InRankingState" => $osekaiUser['Rankings_ID'] !== null,
             "Medals" => $medals,
             "Osekai" => [
                 "Statistics" => [

@@ -46,6 +46,7 @@
     "jfcherng/php-diff": "v6.x-dev",
     "ext-zlib": "*",
     "ext-pdo": "*",
-    "league/commonmark": "^2.9@dev"
+    "league/commonmark": "^2.9@dev",
+    "vlucas/phpdotenv": "^5.6"
   }
 }

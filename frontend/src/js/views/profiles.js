@@ -31,6 +31,9 @@ import {formatNumber} from "../utils/numbers";
 
 class Profiles {
 
+    // we only track ~80k users, so ranks past this get inaccurate
+    static RANK_CUTOFF = 10000;
+
     profile = null;
     gamemode = null;
     constructor() {
@@ -42,6 +45,38 @@ class Profiles {
     Am_User() {
         if (!loggedIn) return false;
         return userData.id == this.profile.User.id;
+    }
+
+    static RankIsAccurate(rank) {
+        if (rank == null) return false;
+        return rank <= Profiles.RANK_CUTOFF;
+    }
+
+    // shows the rank, or a dash if the global rank isn't trustworthy
+    static BlankRank(globalRank, rank) {
+        if (!Profiles.RankIsAccurate(globalRank) || rank == null) return "–";
+        return formatNumber(rank);
+    }
+
+    // why a rank isn't shown, or null if it's fine
+    static RankUnconfirmedReason(profile, globalRank) {
+        if (!profile.InRankingState) return "We're still grabbing this player's data from osu!, check back in a few minutes";
+        if (globalRank == null) return "This player isn't ranked here";
+        if (!Profiles.RankIsAccurate(globalRank)) return "We only track around 80k players, so ranks past #" + formatNumber(Profiles.RANK_CUTOFF) + " aren't accurate";
+        return null;
+    }
+
+    // grays out and explains a rank we can't stand behind
+    static MarkRank(el, profile, globalRank) {
+        let reason = Profiles.RankUnconfirmedReason(profile, globalRank);
+        if (reason == null) return;
+        el.classList.add("rank-unconfirmed");
+        el.setAttribute("tooltip", reason);
+    }
+
+    static BlankValue(value, decimals = 0) {
+        if (value == null) return "–";
+        return formatNumber(value, decimals);
     }
 
     static El(sel, cb) {
@@ -80,6 +115,7 @@ class Profiles {
 
         this.gamemode = currentGamemode;
 
+        this.Render_RankingWarning();
         this.Render_Header();
         this.Render_PanelAllMode();
         this.Render_PanelMedals();
@@ -102,6 +138,17 @@ class Profiles {
 
         document.getElementById("profiles-loader").classList.add("hidden");
         document.getElementById("profile-outer").classList.remove("hidden");
+    }
+
+    // not in Rankings_Users yet, only worth telling the person it belongs to
+    Render_RankingWarning() {
+        Profiles.El("[pr-el=ranking-warning]", (el) => {
+            if (!this.profile.InRankingState && this.Am_User()) {
+                el.classList.remove("hidden");
+            } else {
+                el.classList.add("hidden");
+            }
+        });
     }
 
     Render_Header() {
@@ -190,7 +237,6 @@ class Profiles {
         let profile = this.profile;
 
         Profiles.El("[pr-el=panel-allmode]", (el) => {
-            // we don't have this data yet
             let outer = D2.Div("panel-stats panel-allmode-outer", () => {
                 D2.Div("toolbar-area", () => {
                     D2.Text("p", "All-Mode");
@@ -206,21 +252,29 @@ class Profiles {
                 let stats = profile.Statistics.AllMode;
                 D2.Div("cunt", () => {
                     D2.CustomPlus("div", "mainarea", {"otab-name": "stdev"}, () => {
-                        D2.StyledText("h1", `<strong>#${stats.Stdev.Global}</strong> Global`);
-                        let country = D2.StyledText("h3", `<strong>#${stats.Stdev.Country}</strong> Country`);
+                        let stdevGlobal = Profiles.BlankRank(stats.Stdev.Global, stats.Stdev.Global);
+                        let stdevCountry = Profiles.BlankRank(stats.Stdev.Global, stats.Stdev.Country);
+                        let global = D2.StyledText("h1", `<strong>#${stdevGlobal}</strong> Global`);
+                        let country = D2.StyledText("h3", `<strong>#${stdevCountry}</strong> Country`);
+                        Profiles.MarkRank(global, profile, stats.Stdev.Global);
+                        Profiles.MarkRank(country, profile, stats.Stdev.Global);
                         country.prepend(D2.Image("flag", "/assets/flags/4x3/" + profile.User.country.code.toLowerCase() + ".svg"))
                         D2.Div("footerarea", () => {
-                            D2.StyledText("p", `<strong>${stats.Stdev.PP}</strong>spp`);
-                            D2.StyledText("p", `<strong>${stats.Stdev.Accuracy}%</strong> acc`);
+                            D2.StyledText("p", `<strong>${Profiles.BlankValue(stats.Stdev.PP)}</strong>spp`);
+                            D2.StyledText("p", `<strong>${Profiles.BlankValue(stats.Stdev.Accuracy)}%</strong> acc`);
                         })
                     })
                     D2.CustomPlus("div", "mainarea", {"otab-name": "total"}, () => {
-                        D2.StyledText("h1", `<strong>#${formatNumber(stats.Total.Global)}</strong> Global`);
-                        let country = D2.StyledText("h3", `<strong>#${formatNumber(stats.Total.Country)}</strong> Country`);
+                        let totalGlobal = Profiles.BlankRank(stats.Total.Global, stats.Total.Global);
+                        let totalCountry = Profiles.BlankRank(stats.Total.Global, stats.Total.Country);
+                        let global = D2.StyledText("h1", `<strong>#${totalGlobal}</strong> Global`);
+                        let country = D2.StyledText("h3", `<strong>#${totalCountry}</strong> Country`);
+                        Profiles.MarkRank(global, profile, stats.Total.Global);
+                        Profiles.MarkRank(country, profile, stats.Total.Global);
                         country.prepend(D2.Image("flag", "/assets/flags/4x3/" + profile.User.country.code.toLowerCase() + ".svg"))
                         D2.Div("footerarea", () => {
-                            D2.StyledText("p", `<strong>${formatNumber(stats.Total.PP, 2)}</strong>pp`);
-                            D2.StyledText("p", `<strong>${formatNumber(stats.Total.Accuracy, 2)}%</strong> acc`);
+                            D2.StyledText("p", `<strong>${Profiles.BlankValue(stats.Total.PP, 2)}</strong>pp`);
+                            D2.StyledText("p", `<strong>${Profiles.BlankValue(stats.Total.Accuracy, 2)}%</strong> acc`);
                         })
                     })
                 })
@@ -261,9 +315,10 @@ class Profiles {
                 D2.Image("rank-image", "/public/img/clubs/" + stats.Quick.Club.rank + ".png", "medal")
                 D2.Text("p", "Medals");
                 D2.StyledText("h1", `<strong>${stats.Quick.Club.rank}% Club</strong>`);
-                // we don't have this data yet
-                D2.StyledText("h2", `<strong>#${formatNumber(stats.Ranks.Global)}</strong> Global`)
-                let country = D2.StyledText("h3", `<strong>#${formatNumber(stats.Ranks.Country)}</strong> Country`);
+                if (profile.InRankingState && Profiles.RankIsAccurate(stats.Ranks.Global)) {
+                    D2.StyledText("h2", `<strong>#${formatNumber(stats.Ranks.Global)}</strong> Global`)
+                    D2.StyledText("h3", `<strong>#${formatNumber(stats.Ranks.Country)}</strong> Country`);
+                }
                 D2.Div("footerarea", () => {
                     D2.StyledText("p", `<strong>${formatNumber(stats.TotalAchieved)} medals</strong> (${stats.Quick.Percentage}%)`);
                     // TODO: progress bar
@@ -354,6 +409,13 @@ class Profiles {
         });
 
 
+        Profiles.El("[pr-el=medals-ranks]", (el) => {
+            if (profile.InRankingState && Profiles.RankIsAccurate(stats.Ranks.Global)) {
+                el.classList.remove("hidden");
+            } else {
+                el.classList.add("hidden");
+            }
+        });
         Profiles.El("[pr-el=medals-global-rank]", (el) => {
             el.innerText = "#" + formatNumber(stats.Ranks.Global);
         });

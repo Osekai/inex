@@ -4,7 +4,6 @@ const dotenv = require('dotenv');
 const mysql = require("mysql2/promise");
 const {resolve} = require("path");
 const bodyParser = require("express");
-const {execFileSync} = require("child_process");
 
 const app = express();
 const PORT = 13426;
@@ -12,21 +11,10 @@ const PORT = 13426;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+dotenv.config({path: resolve('../../.env')});
+const config = process.env; // Parse the JSON output
 
-// asks php for the instance url so it always matches config.php
-function GetBaseUrl() {
-    var configPath = resolve(__dirname, "../../config.php");
-    try {
-        var output = execFileSync("php", ["-r", '$_SERVER = []; require $argv[1]; echo URL;', configPath]);
-        console.log("got URL from config.php", output.toString().trim());
-        return output.toString().trim();
-    } catch (error) {
-        console.log("couldn't read URL from config.php, using the default", error.message);
-        return "http://127.0.0.1:8000";
-    }
-}
-
-const BASE_URL = GetBaseUrl();
+const BASE_URL = config.URL;
 console.log("rendering banners from", BASE_URL);
 
 

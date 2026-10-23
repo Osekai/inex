@@ -39,24 +39,24 @@ Composer should warn you about any missing ones, remember to run `composer insta
 ---
 
 ## Config setup
-Before getting started, copy the `config.example.php` file to `config.php`.
+Before getting started, copy the `.env.example` file to `.env`.
 
 ##### Oauth Setup
 - Set the URL to something reasonable (i'd recommend `http://127.0.0.1:8000`)
 - Go to https://osu.ppy.sh/home/account/edit, scroll to the bottom, and click "New OAuth Application" - set the application name to anything, and then in the application callback URLs, put in `http://127.0.0.1:8000/oauth`, then click "Create"
-- it'll give you a Client ID and Client Secret, paste these into the fields in the config.php (do not touch the REDIRECT_URI!)
+- it'll give you a Client ID and Client Secret, paste these into the fields in the .env (do not touch the REDIRECT_URI!)
 
 #####  Database Setup
 - Using any database management tool, create a new database - this can be called anything but remember it!
 - You can create a new user with full permissions on the database, or you can use the root user
-- Paste the database details into the config.php, keep the `hostname` to localhost unless you know what you're doing!
+- Paste the database details into the .env, keep the `hostname` to localhost unless you know what you're doing!
 - When finished, run `php vendor/bin/phinx migrate` to create the tables - remember to run this whenever there are new schema changes!
 
 Note: the `ETI_` prefixed database credentials are used for legacy Eclipse database support to transfer data, you can leave these blank.
 
 
 ##### Other values
-**Webhooks**: Webhooks are not required to run INEX, but if you want to test/develop moderation features, you'll have to hook these up - just create a webhook inside a discord channel anywhere and paste the URL into the config.
+**Webhooks**: Webhooks are not required to run INEX, but if you want to test/develop moderation features, you'll have to hook these up - just create a webhook inside a discord channel anywhere and paste the URL into the .env.
 **S3**: S3 is currently not used anywhere in INEX, so feel free to leave the fields blank - we're leaving it in case we need it one day!
 **Memcached**: If you're not using memcached, make sure to set `USE_MEMCACHE` to `false`!
 **Github API**: The Github API key is used for fetching the latest release of INEX for production releases - you should leave this blank.

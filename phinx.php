@@ -1,5 +1,8 @@
 <?php
 include("config.php");
+include("autoload.php");
+require __DIR__ . '/vendor/autoload.php';
+
 return
 [
     'paths' => [

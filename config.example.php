@@ -43,3 +43,9 @@ const S3_URL_PATH = "";
 
 
 const USE_AMPRA = false;
+
+const SCRIPTS_API_URL = "http://127.0.0.1:3000/";
+// where inex talks to scripts26 server side, host:port
+const SCRIPTS26_ADDRESS = "127.0.0.1:3000";
+// scripts26's ADMIN_PASSWORD
+const SCRIPTS26_PASSWORD = "";

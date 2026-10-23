@@ -187,7 +187,9 @@ class Medals
                 [$userid]
         );
         if (count($rankingUser) === 0) {
-            return new Response(false, "You're not in the rankings yet, add yourself and check back in a few days!");
+            // scripts26 picks them up from here
+            Rankings::AddUser($userid);
+            return new Response(false, "We're adding you to the rankings now, check back in a few minutes!");
         }
         $rankingUser = $rankingUser[0];
 

@@ -68,6 +68,29 @@ use Database\Session; ?>
             <div class="navbar-pfp-container">
 
                 <?php
+                if (DEV) {
+                    ?>
+                    <a class="navbar-right-button navbar-dev-button" tooltip="log in as other user"
+                       dropdown-button="dev-login-dropdown">
+                        <i data-lucide="user-cog"></i>
+                    </a>
+                    <div dropdown-mode="legacy" dropdown="dev-login-dropdown"
+                         class="navbar-pfp-dropdown navbar-pfp-dropdown-hidden">
+                        <h1>Log in as other user</h1>
+                        <form action="/oauth" method="get" class="navbar-dev-login">
+                            <input class="input" type="number" name="devid" placeholder="osu! user id" required>
+                            <label class="navbar-pfp-dropdown-item">
+                                <input class="checkbox" type="checkbox" name="fresh">
+                                Fresh user (wipes their data)
+                            </label>
+                            <button class="button" type="submit">Log in</button>
+                        </form>
+                    </div>
+                    <?php
+                }
+                ?>
+
+                <?php
                 if (Session::LoggedIn()) {
                     ?>
 
