@@ -65,6 +65,11 @@
             h1 {
                 font-size: 38px;
             }
+
+            .groups {
+                display: flex;
+                gap: 4px;
+            }
         }
 
         > span {
@@ -407,6 +412,7 @@
 
     > * {
         flex: 1;
+        min-width: 0;
 
         &.left {
             max-width: 500px;

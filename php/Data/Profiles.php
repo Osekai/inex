@@ -129,7 +129,8 @@ class Profiles
     COALESCE(s.Stats_Comment_Count, 0) AS Stats_Comment_Count,
     COALESCE(s.Stats_Vote_Count, 0)    AS Stats_Vote_Count,
     COALESCE(s.Stats_Beatmap_Count, 0) AS Stats_Beatmap_Count,
-    Joined_At
+    Joined_At,
+    Roles
 FROM (SELECT ? AS User_ID) base
 LEFT JOIN Rankings_Users u ON u.ID = base.User_ID
 LEFT JOIN (
@@ -160,7 +161,8 @@ LEFT JOIN (
         (SELECT COUNT(*) FROM Common_Comments WHERE Common_Comments.User_ID = x.User_ID)  AS Stats_Comment_Count,
         (SELECT COUNT(*) FROM Common_Votes    WHERE Common_Votes.User_ID    = x.User_ID)  AS Stats_Vote_Count,
         (SELECT COUNT(*) FROM Medals_Beatmaps WHERE Medals_Beatmaps.Beatmap_Submitted_User_ID = x.User_ID) AS Stats_Beatmap_Count,
-        (SELECT System_Users.Joined_Date FROM System_Users WHERE System_Users.User_ID = x.User_ID) AS Joined_At
+        (SELECT System_Users.Joined_Date FROM System_Users WHERE System_Users.User_ID = x.User_ID) AS Joined_At,
+        (SELECT GROUP_CONCAT(DISTINCT System_Roles_Assignments.Role_ID SEPARATOR ',') FROM System_Roles_Assignments WHERE System_Roles_Assignments.User_ID = x.User_ID) AS Roles
     FROM (SELECT ? AS User_ID) x
 ) AS s ON s.User_ID = base.User_ID;
 ", "ii", [$id, $id])[0];
@@ -192,6 +194,7 @@ LEFT JOIN (
                     ]
                 ],
                 "Joined" => $osekaiUser['Joined_At'],
+                "Roles" => $osekaiUser['Roles'],
             ],
             "Graphs" => [
                 "MedalPercentageOverTime" => [

@@ -27,6 +27,8 @@ import {OpenFavouriteMedalPicker} from "./profiles/FavouriteMedalPicker";
 import Bio from "./profiles/Bio";
 import "../../css/views/profiles/bio.css";
 import {formatNumber} from "../utils/numbers";
+import {RoleBadge} from "../utils/dom";
+import {CommaSeparatedRolesToRoleArray} from "../utils/groups";
 
 
 class Profiles {
@@ -179,6 +181,16 @@ class Profiles {
         });
         Profiles.El("[pr-el=username]", (el) => {
             el.innerText = profile.User.username;
+        });
+        Profiles.El("[pr-el=roles]", (el) => {
+            if (!profile.Osekai || profile.Osekai.Roles == null) {
+                el.classList.add("hidden");
+                return;
+            }
+            var groups = CommaSeparatedRolesToRoleArray(profile.Osekai.Roles);
+            for (var group of groups) {
+                el.append(RoleBadge(group));
+            }
         });
         Profiles.El("[pr-el=flag]", (el) => {
             if (!profile.User.country) {

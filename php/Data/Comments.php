@@ -22,6 +22,10 @@ class Comments
 
         if (\CheckTargetValidity::Check($table, $id) == null) return new Response(false, "invalid_id");
 
+        if (!is_string($text)) return new Response(false, "invalid_text");
+        $text = \Sanitize::String($text, true);
+        if (trim($text) == "") return new Response(false, "empty");
+
         Connection::execOperation("INSERT INTO `Common_Comments` (`Target_ID`, `Target_Table`, `User_ID`, `Parent_Comment_ID`, `Text`, `Date`, `Is_Pinned`)
 VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()['id'], $replyingTo, $text]);
 
@@ -55,7 +59,7 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
     {
         $comment = Connection::execSelect("SELECT * FROM Common_Comments WHERE ID = ? AND Deleted = 0", "i", [$id]);
         if (count($comment) > 0) {
-            $comment[0]['Text'] = \Sanitize::HTML($comment[0]['Text'], true);
+            $comment[0]['Text'] = \Sanitize::HTML(\Sanitize::String($comment[0]['Text'], true), true);
             return $comment[0];
         }
         return null;
@@ -116,7 +120,7 @@ ORDER BY Is_Pinned DESC, VoteCount DESC, Replies DESC";
 
         $data = Connection::execSelect($query, $types, $values);
         foreach ($data as &$d) {
-            $d['Text'] = \Sanitize::HTML($d['Text'], true);
+            $d['Text'] = \Sanitize::HTML(\Sanitize::String($d['Text'], true), true);
         }
         return new Response(true, "ok", $data);
     }

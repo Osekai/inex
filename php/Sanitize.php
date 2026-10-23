@@ -12,7 +12,7 @@ class Sanitize {
         return $purifier->purify($string);
     }
 
-    public static function String(string $string)
+    public static function String(string $string, $allowNewlines = false)
     {
         // List of bad characters to remove
         $bad_characters = [
@@ -55,7 +55,16 @@ class Sanitize {
             "\x1E",         // Record Separator
             "\x1F",         // Unit Separator
             "\x7F",         // Delete (DEL)
+            "\xE1\x85\x9F", // Hangul Choseong Filler
+            "\xE1\x85\xA0", // Hangul Jungseong Filler
+            "\xE3\x85\xA4", // Hangul Filler
+            "\xEF\xBE\xA0", // Halfwidth Hangul Filler
         ];
+
+        // multiline text like markdown needs its line feeds and tabs
+        if ($allowNewlines) {
+            $bad_characters = array_values(array_diff($bad_characters, ["\x0D\x0A", "\x0A", "\x09"]));
+        }
 
 
         $filtered_string = preg_replace('/[' . preg_quote(implode('', $bad_characters), '/') . ']/u', '', $string);

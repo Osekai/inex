@@ -21,6 +21,7 @@ class Bio
     public static function Render($markdown)
     {
         if ($markdown == "") return "";
+        $markdown = \Sanitize::String($markdown, true);
         return \Markdown::Parse($markdown, true);
     }
 
@@ -31,7 +32,7 @@ class Bio
         $userId = Session::UserData()['id'];
 
         if (!is_string($bio)) return new Response(false, "Invalid bio");
-        $bio = trim($bio);
+        $bio = trim(\Sanitize::String($bio, true));
         if (mb_strlen($bio) > self::MAX_LENGTH) return new Response(false, "Your bio can be at most " . self::MAX_LENGTH . " characters");
 
         $previous = self::Get($userId);

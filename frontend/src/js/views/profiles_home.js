@@ -14,37 +14,18 @@ let timer = null;
 let searchId = 0;
 
 function userRow(id, name, extra, rank = null) {
-    let row = document.createElement("a");
-    row.className = "profile-row";
-    row.href = "/profiles/" + id;
-
-    if (rank !== null) {
-        let number = document.createElement("span");
-        number.className = "profile-row-rank";
-        number.innerText = "#" + rank;
-        row.appendChild(number);
-    }
-
-    let img = document.createElement("img");
-    img.src = "https://a.ppy.sh/" + id;
-    row.appendChild(img);
-
-    let text = document.createElement("p");
-    text.innerText = name;
-    row.appendChild(text);
-
-    let small = document.createElement("small");
-    small.innerText = extra;
-    row.appendChild(small);
-
-    return row;
+    return D2.DivLink("/profiles/" + id, "profile-row", () => {
+        if (rank !== null) {
+            D2.Text("span", "#" + rank, "profile-row-rank");
+        }
+        D2.Image("", "https://a.ppy.sh/" + id);
+        D2.Text("p", name);
+        D2.Text("small", extra);
+    });
 }
 
 function message(text) {
-    let p = document.createElement("p");
-    p.className = "profile-search-message";
-    p.innerText = text;
-    return p;
+    return D2.Text("p", text, "profile-search-message");
 }
 
 function hideResults() {
@@ -109,12 +90,16 @@ async function fillList(attr, url, extra) {
     }
 
     for (let user of response.content) {
-        list.appendChild(userRow(user.User_ID, user.Name ?? ("User " + user.User_ID), extra(user)));
+        let extraText = "";
+        if (extra) {
+            extraText = extra(user);
+        }
+        list.appendChild(userRow(user.User_ID, user.Name ?? ("User " + user.User_ID), extraText));
     }
 }
 
-fillList("most-viewed", "/api/profiles/visits/most?days=14", (user) => user.Visits + " views");
-fillList("recently-viewed", "/api/profiles/visits/recent", (user) => D2.TimeRelative(new Date(user.Last_Visited_Unix * 1000)));
+fillList("most-viewed", "/api/profiles/visits/most?days=14");
+fillList("recently-viewed", "/api/profiles/visits/recent");
 
 // the leaderboard, mode "" is all mode and only matters for pp
 let leaderboardType = "pp";

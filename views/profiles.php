@@ -52,6 +52,7 @@ if ($profileResponse->success) {
                 <div>
                     <img id="user-flag" pr-el="flag">
                     <h1 pr-el="username">USERNAME</h1>
+                    <div class="groups" pr-el="roles"></div>
                 </div>
                 <span><i pr-el="gamemode-icon" class="icon-gamemode-osu"></i> #<span pr-el="gamemode-rank">00000</span> Global</span>
             </div>
