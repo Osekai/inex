@@ -119,7 +119,7 @@ class Profiles
         $osekaiUser = Connection::execSelect("
         SELECT
     u.*,
-    u.ID AS Rankings_ID,
+    u.Join_Date AS Rankings_Join_Date,
     r.Rank_Medals_Global,
     r.Rank_Medals_Country,
     r.Rank_PP_Total_Global,
@@ -178,8 +178,8 @@ LEFT JOIN (
 
         $data = [
             "User" => $user,
-            // false until scripts26 has added them to Rankings_Users, the frontend hides anything that needs it
-            "InRankingState" => $osekaiUser['Rankings_ID'] !== null,
+            // false until scripts26 has filled in their Rankings_Users row, the frontend hides anything that needs it
+            "InRankingState" => $osekaiUser['Rankings_Join_Date'] !== null,
             "Medals" => $medals,
             "Osekai" => [
                 "Statistics" => [

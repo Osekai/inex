@@ -14,6 +14,9 @@ class Profiles extends EclipseTask
 {
     private const CHUNK_SIZE = 1000;
 
+    // eclipse comment id -> inex comment id, filled by transferComments for transferCommentVotes
+    private array $commentIds = [];
+
     public function Run(): void
     {
         // goals already there means this has run before (or inex is live), so don't wipe it by accident
@@ -30,12 +33,16 @@ class Profiles extends EclipseTask
         $this->table('Profiles_Goals')->truncate();
         $this->table('Profiles_Timeline')->truncate();
         $this->table('Profiles_Visits')->truncate();
+        // votes first, they're found through the comments
+        Connection::execOperation("DELETE FROM Common_Votes WHERE Target_Table = 'Common_Comments' AND Target_ID IN (SELECT ID FROM Common_Comments WHERE Target_Table = 'Profiles_Data')");
         Connection::execOperation("DELETE FROM Common_Comments WHERE Target_Table = ?", "s", ["Profiles_Data"]);
 
         $this->transferGoals();
         $this->transferTimeline();
         $this->transferVisits();
         $this->transferComments();
+        $this->transferCommentVotes();
+        $this->transferBanners();
     }
 
     private function transferGoals(): void
@@ -138,6 +145,8 @@ class Profiles extends EclipseTask
                 $parent = $comment['ParentComment'] + $offset;
             }
 
+            $this->commentIds[$comment['ID']] = $comment['ID'] + $offset;
+
             $data[] = [
                 "ID" => $comment['ID'] + $offset,
                 "Target_ID" => $comment['ProfileID'],
@@ -152,6 +161,54 @@ class Profiles extends EclipseTask
 
         $this->insertChunked('Common_Comments', $data);
         echo "comments: transferred " . count($data) . PHP_EOL;
+    }
+
+    // only votes on profile comments, Eclipse.Votes would wipe everything else
+    private function transferCommentVotes(): void
+    {
+        // type 0 is beatmaps, everything else is comments
+        $votes = $this->eclipse_db->execSimpleSelect("SELECT * FROM Votes WHERE Type <> 0");
+
+        $data = [];
+        $seen = [];
+        foreach ($votes as $vote) {
+            if (!isset($this->commentIds[$vote['ObjectID']])) continue;
+
+            $commentId = $this->commentIds[$vote['ObjectID']];
+            $key = $commentId . "|" . $vote['UserID'];
+            if (isset($seen[$key])) continue;
+            $seen[$key] = true;
+
+            $data[] = [
+                "Target_ID" => $commentId,
+                "Target_Table" => "Common_Comments",
+                "User_ID" => $vote['UserID'],
+            ];
+        }
+
+        $this->insertChunked('Common_Votes', $data);
+        echo "comment votes: transferred " . count($data) . PHP_EOL;
+    }
+
+    // same as Eclipse.Banners, only clears out banners imported before
+    private function transferBanners(): void
+    {
+        Connection::execOperation("DELETE FROM Profiles_Banners WHERE Theme_Key = 'eclipse' AND Name = ?", "s", [Banners::IMPORTED_NAME]);
+
+        $banners = $this->eclipse_db->execSimpleSelect("SELECT * FROM ProfilesBanners");
+
+        $data = [];
+        foreach ($banners as $banner) {
+            $data[] = [
+                "User_ID" => $banner['UserID'],
+                "Name" => Banners::IMPORTED_NAME,
+                "Theme_Key" => "eclipse",
+                "Settings" => json_encode(Banners::convertSettings($banner)),
+            ];
+        }
+
+        $this->insertChunked('Profiles_Banners', $data);
+        echo "banners: transferred " . count($data) . PHP_EOL;
     }
 
     // join dates come from the rankings table, users without one skip the join check

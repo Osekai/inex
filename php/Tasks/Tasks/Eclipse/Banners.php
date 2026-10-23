@@ -23,7 +23,7 @@ class Banners extends EclipseTask
                 "User_ID" => $banner['UserID'],
                 "Name" => Banners::IMPORTED_NAME,
                 "Theme_Key" => "eclipse",
-                "Settings" => json_encode($this->convertSettings($banner)),
+                "Settings" => json_encode(Banners::convertSettings($banner)),
             ];
         }
 
@@ -34,7 +34,8 @@ class Banners extends EclipseTask
     }
 
     // custom gradient / solid -> the gradient background, every preset style -> club
-    private function convertSettings(array $banner): array
+    // public so Eclipse.Profiles can reuse it
+    public static function convertSettings(array $banner): array
     {
         if ($banner['Background'] != "custom") {
             return ["backgroundType" => "club"];

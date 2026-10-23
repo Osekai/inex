@@ -3,13 +3,8 @@
 use Database\Session;
 
 if (!FEATURE_FLAGS['profiles']) {
-
     echo "Coming Soon!";
     return;
-}
-if (isset($_GET['username'])) {
-    $user = \API\Osu\User::GetUser($_GET['username']);
-    header("Location: /profiles/" . $user['id']);
 }
 
 \Site\Embed::SetTitle("Osekai Profiles");
@@ -54,9 +49,8 @@ if (isset($_GET['username'])) {
             <h1>Find a Profile</h1>
             <div class="divider"></div>
             <div class="profile-search">
-                <form action="/profiles/" autocomplete="off">
-                    <input class="input" type="text" name="username" placeholder="Search for a user..." pr-el="search-input">
-                </form>
+                <input class="input" type="text" name="username" placeholder="Search for a user..."
+                       pr-el="search-input">
                 <div class="profile-search-results hidden" pr-el="search-results"></div>
             </div>
         </div>
