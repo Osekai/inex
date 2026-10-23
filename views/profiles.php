@@ -45,7 +45,7 @@ if ($profileResponse->success) {
 <div otab-container="page" otab-no-replace otab-animate otab-default="profile" id="profile-outer" class="hidden" no-url-replace>
 
     <div class="page-container-inner">
-        <warning pr-el="ranking-warning" class="hidden">Your profile isn't ready yet! We're still grabbing your data from osu!, so some stats are hidden for now. Check back in 1-10 minutes.</warning>
+        <warning pr-el="ranking-warning" class="hidden">We're still preparing your profile so a few features may be unavailable, check back in a few minutes!</warning>
         <div class="user-header">
             <img id="user-pfp" pr-el="pfp">
             <div class="name">

@@ -23,7 +23,7 @@ if (isset($_GET['username'])) {
             <img src="/public/img/branding/app/profiles.svg">
             <h2>Welcome to</h2>
             <h1>Osekai Profiles!</h1>
-            <p>Stats, medals, goals, a timeline and more, for every osu! player. Currently in beta!</p>
+            <p>An in-depth look at your osu! profile, with medals, timeline, goals, and more - now on INEX!</p>
         </div>
 
         <?php
@@ -87,26 +87,6 @@ if (isset($_GET['username'])) {
             </div>
             <div class="profile-list leaderboard" pr-el="leaderboard"></div>
         </div>
-        <div class="panel">
-            <h1>Known Issues</h1>
-            <div class="divider"></div>
-            <ul class="markdown" style="margin-left: 15px;">
-                <li>Custom banner URLs are not yet viewable and instead just hit a 404. This will be fixed for
-                    release.
-                </li>
-                <li>Embeds when sending on Discord are blank (show as 404)</li>
-            </ul>
-        </div>
-        <div class="panel">
-            <h1>Intentional Changes</h1>
-            <div class="divider"></div>
-            <ul class="markdown" style="margin-left: 15px;">
-                <li>Generic data such as rank graph, rank info, and other user data from osu! is intentionally
-                    ommitted
-                </li>
-            </ul>
-        </div>
-        <h3>Any problems? Report them in the inex channel on Discord</h3>
     </div>
 </div>
 

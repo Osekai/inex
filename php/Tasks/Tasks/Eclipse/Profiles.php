@@ -127,14 +127,23 @@ class Profiles extends EclipseTask
     {
         $comments = $this->eclipse_db->execSimpleSelect("SELECT * FROM Comments WHERE ProfileID IS NOT NULL");
 
+        // eclipse ids can clash with comments made on inex, so shift them all past the current highest id
+        // parents get shifted the same way so replies stay attached
+        $offset = (int)Connection::execSimpleSelect("SELECT COALESCE(MAX(ID), 0) AS Max_ID FROM Common_Comments")[0]['Max_ID'];
+
         $data = [];
         foreach ($comments as $comment) {
+            $parent = $comment['ParentComment'];
+            if (!empty($comment['ParentComment'])) {
+                $parent = $comment['ParentComment'] + $offset;
+            }
+
             $data[] = [
-                "ID" => $comment['ID'],
+                "ID" => $comment['ID'] + $offset,
                 "Target_ID" => $comment['ProfileID'],
                 "Target_Table" => "Profiles_Data",
                 "User_ID" => $comment['UserID'],
-                "Parent_Comment_ID" => $comment['ParentComment'],
+                "Parent_Comment_ID" => $parent,
                 "Text" => $comment['PostText'],
                 "Date" => $comment['PostDate'],
                 "Is_Pinned" => $comment['Pinned'],

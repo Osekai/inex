@@ -256,7 +256,7 @@ export default class Timeline {
         if (this.entries.length == 0) {
             this.els.detail.appendChild(D2.Div("timeline-empty", () => {
                 if (this.main.Am_User()) {
-                    D2.Text("p", "Nothing on your timeline yet, click anywhere on the line to add a moment!");
+                    D2.Text("p", "You don't have any items on your timeline yet, click anywhere along it to add one!");
                 } else {
                     D2.Text("p", "This user hasn't added anything to their timeline yet.");
                 }
