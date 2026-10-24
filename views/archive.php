@@ -34,7 +34,7 @@ if (count($groups->content) > 0) {
 }
 
 if(FEATURE_FLAGS['archive'] == false && $can_edit == false) {
-    General::Redirect("https://osekai.net/archive");
+    General::Redirect("https://osekai.net/snapshots");
 }
 ?>
 <script>
