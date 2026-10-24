@@ -1,11 +1,11 @@
 <?php
 
-namespace Data\Snapshots;
+namespace Data\Archive;
 
 use API\Response;
 use AWS\S3;
 use Data\OsekaiUsers;
-use Data\Snapshots;
+use Data\Archive;
 use Database\Connection;
 use Database\Session;
 use Image\GetImage;
@@ -42,8 +42,8 @@ class Screenshots
 
     public static function DeleteFiles($screenshot)
     {
-        S3::deleteFile(GetImage::SnapshotScreenshotObject("full", $screenshot, true));
-        S3::deleteFile(GetImage::SnapshotScreenshotObject("thumb", $screenshot, true));
+        S3::deleteFile(GetImage::ArchiveScreenshotObject("full", $screenshot, true));
+        S3::deleteFile(GetImage::ArchiveScreenshotObject("thumb", $screenshot, true));
     }
 
     // $_file is either an uploaded file or a local path (migrations use paths), same as anthera's ItemImages::Create
@@ -102,10 +102,10 @@ class Screenshots
         $full = Transform::ImageToPng($image);
         $thumb = Transform::ImageToPng(Transform::Resize($image, Screenshots::THUMB_HEIGHT, "height"));
 
-        S3::uploadFile($full, GetImage::SnapshotScreenshotObject("full", $screenshot, true), "image/png");
-        S3::uploadFile($thumb, GetImage::SnapshotScreenshotObject("thumb", $screenshot, true), "image/png");
+        S3::uploadFile($full, GetImage::ArchiveScreenshotObject("full", $screenshot, true), "image/png");
+        S3::uploadFile($thumb, GetImage::ArchiveScreenshotObject("thumb", $screenshot, true), "image/png");
 
-        return Snapshots::Get($versionId);
+        return Archive::Get($versionId);
     }
 
     public static function Edit($id, $gameScreen): Response
@@ -122,7 +122,7 @@ class Screenshots
 
         Connection::execOperation("UPDATE Snapshots_Versions_Screenshots SET Game_Screen = ? WHERE ID = ?", "si", [$gameScreen, $id]);
 
-        return Snapshots::Get($screenshot[0]['Version_ID']);
+        return Archive::Get($screenshot[0]['Version_ID']);
     }
 
     // $ids is every screenshot id for the version, in the new order
@@ -140,7 +140,7 @@ class Screenshots
             $order++;
         }
 
-        return Snapshots::Get($versionId);
+        return Archive::Get($versionId);
     }
 
     public static function Remove($id): Response
@@ -156,6 +156,6 @@ class Screenshots
         Screenshots::DeleteFiles($screenshot);
         Connection::execOperation("DELETE FROM Snapshots_Versions_Screenshots WHERE ID = ?", "i", [$id]);
 
-        return Snapshots::Get($screenshot['Version_ID']);
+        return Archive::Get($screenshot['Version_ID']);
     }
 }

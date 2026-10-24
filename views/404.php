@@ -46,6 +46,7 @@
             <a href="/badges" class="button big">badges</a>
             <a href="/rankings" class="button big">rankings</a>
             <a href="/profiles" class="button big">profiles</a>
+            <a href="/archive" class="button big">archive</a>
         </div>
     </div>
     <div class="right">

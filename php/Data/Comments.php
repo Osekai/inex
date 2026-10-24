@@ -45,7 +45,7 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
         }
         if($table === "Snapshots_Versions") {
             $version = Connection::execSelect("SELECT Version FROM Snapshots_Versions WHERE ID = ?", "i", [$id]);
-            $title = count($version) > 0 ? $version[0]['Version'] : "a snapshot";
+            $title = count($version) > 0 ? $version[0]['Version'] : "a version on Archive";
         }
         if($table === "Profiles_Data") {
             // not everyone is in our database, so fall back to something generic
@@ -70,7 +70,7 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
     public static function TargetUrl($table, $id)
     {
         if ($table === "Medals_Data") return "/medals/" . $id;
-        if ($table === "Snapshots_Versions") return "/snapshots/" . $id;
+        if ($table === "Snapshots_Versions") return "/archive/" . $id;
         return "/profiles/" . $id;
     }
 

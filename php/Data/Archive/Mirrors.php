@@ -1,10 +1,10 @@
 <?php
 
-namespace Data\Snapshots;
+namespace Data\Archive;
 
 use API\Response;
 use Data\OsekaiUsers;
-use Data\Snapshots;
+use Data\Archive;
 use Database\Connection;
 use Database\Session;
 
@@ -28,7 +28,7 @@ class Mirrors
 
         Connection::execOperation("INSERT INTO Snapshots_Versions_Download_Mirrors (Version_ID, Name, URL) VALUES (?, ?, ?)", "iss", [$versionId, $name, $url]);
 
-        return Snapshots::Get($versionId);
+        return Archive::Get($versionId);
     }
 
     public static function Remove($id): Response
@@ -42,6 +42,6 @@ class Mirrors
 
         Connection::execOperation("DELETE FROM Snapshots_Versions_Download_Mirrors WHERE ID = ?", "i", [$id]);
 
-        return Snapshots::Get($mirror[0]['Version_ID']);
+        return Archive::Get($mirror[0]['Version_ID']);
     }
 }

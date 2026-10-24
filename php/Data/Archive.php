@@ -7,7 +7,7 @@ use AWS\S3;
 use Database\Connection;
 use Image\GetImage;
 
-class Snapshots
+class Archive
 {
     public static function DownloadPath($version, $format = null): string
     {
@@ -32,7 +32,7 @@ class Snapshots
     public static function GetAll(): Response
     {
         $published = "WHERE v.Published = 1";
-        if (Snapshots::CanSeeUnpublished()) {
+        if (Archive::CanSeeUnpublished()) {
             $published = "";
         }
 
@@ -49,7 +49,7 @@ class Snapshots
         foreach ($versions as &$version) {
             $version['Thumbnail'] = null;
             if ($version['Thumbnail_ID'] != null) {
-                $version['Thumbnail'] = GetImage::SnapshotScreenshot("thumb", $version['Thumbnail_ID'], $version['ID']);
+                $version['Thumbnail'] = GetImage::ArchiveScreenshot("thumb", $version['Thumbnail_ID'], $version['ID']);
             }
         }
         unset($version);
@@ -64,12 +64,12 @@ class Snapshots
         $version = Connection::execSelect("SELECT v.*, u.Name AS Archiver_Name FROM Snapshots_Versions v LEFT JOIN Rankings_Users u ON u.ID = v.Meta_Archiver_ID WHERE v.ID = ?", "i", [$id]);
         if (count($version) == 0) return new Response(false, "Version not found");
         $version = $version[0];
-        if ($version['Published'] != 1 && !Snapshots::CanSeeUnpublished()) return new Response(false, "Version not found");
+        if ($version['Published'] != 1 && !Archive::CanSeeUnpublished()) return new Response(false, "Version not found");
 
         $screenshots = Connection::execSelect("SELECT * FROM Snapshots_Versions_Screenshots WHERE Version_ID = ? ORDER BY `Order` ASC", "i", [$id]);
         foreach ($screenshots as &$screenshot) {
-            $screenshot['Thumb'] = GetImage::SnapshotScreenshotObject("thumb", $screenshot);
-            $screenshot['Full'] = GetImage::SnapshotScreenshotObject("full", $screenshot);
+            $screenshot['Thumb'] = GetImage::ArchiveScreenshotObject("thumb", $screenshot);
+            $screenshot['Full'] = GetImage::ArchiveScreenshotObject("full", $screenshot);
         }
         unset($screenshot);
 
@@ -77,7 +77,7 @@ class Snapshots
         $version['Mirrors'] = Connection::execSelect("SELECT * FROM Snapshots_Versions_Download_Mirrors WHERE Version_ID = ? ORDER BY ID ASC", "i", [$id]);
         $version['Download'] = null;
         if ($version['File_Format'] != null) {
-            $version['Download'] = S3::getUrl(Snapshots::DownloadPath($version));
+            $version['Download'] = S3::getUrl(Archive::DownloadPath($version));
         }
 
         return new Response(true, "Success", $version);

@@ -1,4 +1,4 @@
-import {SnapshotsData} from "./SnapshotsData";
+import {ArchiveData} from "./ArchiveData";
 import {D2} from "../../utils/d2";
 import {marked} from "marked";
 import EmblaCarousel from "embla-carousel";
@@ -6,7 +6,7 @@ import Autoplay from "embla-carousel-autoplay";
 import Lightbox from "../../ui/lightbox";
 import {Dropdown} from "../../ui/dropdown";
 
-export class SnapshotsUI {
+export class ArchiveUI {
     static ShowPage(page) {
         let container = document.querySelector("[otab-container='page']");
         // otabs might not be loaded yet, the default is what it'll pick up when it is
@@ -41,7 +41,7 @@ export class SnapshotsUI {
         document.getElementById("version_name").innerText = version.Meta_Name ?? "";
         this.SetHidden("version_name", version.Meta_Name == null);
         document.getElementById("version_version").innerText = version.Version;
-        document.getElementById("version_release").innerText = "released " + D2.TimeFull(SnapshotsData.ReleaseDate(version), {style: "short"});
+        document.getElementById("version_release").innerText = "released " + D2.TimeFull(ArchiveData.ReleaseDate(version), {style: "short"});
         document.getElementById("version_views").innerText = version.Analytics_Views;
         document.getElementById("version_downloads").innerText = version.Analytics_Downloads;
 
@@ -68,11 +68,11 @@ export class SnapshotsUI {
 
     // shared with the editor's download panel
     static DownloadCard(full) {
-        return D2.Div("snapshots-download-card", () => {
+        return D2.Div("archive-download-card", () => {
             D2.LucideIcon("server");
             D2.Div("texts", () => {
                 D2.Text("h3", "Download from Osekai servers");
-                D2.Text("p", SnapshotsData.FormatSize(full.File_Size) + " · " + full.Version + "." + full.File_Format);
+                D2.Text("p", ArchiveData.FormatSize(full.File_Size) + " · " + full.Version + "." + full.File_Format);
             });
             let button = D2.DivLink(full.Download ?? "", "lumen-button", () => {
                 D2.LucideIcon("download");
@@ -80,7 +80,7 @@ export class SnapshotsUI {
             });
             button.target = "_blank";
             button.addEventListener("click", () => {
-                SnapshotsData.Record(full.ID, "download");
+                ArchiveData.Record(full.ID, "download");
             });
         });
     }
@@ -90,14 +90,14 @@ export class SnapshotsUI {
         let download = document.getElementById("version_download");
         download.innerHTML = "";
         if (full.Download != null) {
-            let button = D2.DivLink(full.Download, "snapshots-hero-download", () => {
+            let button = D2.DivLink(full.Download, "archive-hero-download", () => {
                 D2.LucideIcon("download");
                 D2.Text("span", "Download");
             });
             button.target = "_blank";
-            button.setAttribute("tooltip", SnapshotsData.FormatSize(full.File_Size) + " · " + full.Version + "." + full.File_Format);
+            button.setAttribute("tooltip", ArchiveData.FormatSize(full.File_Size) + " · " + full.Version + "." + full.File_Format);
             button.addEventListener("click", () => {
-                SnapshotsData.Record(full.ID, "download");
+                ArchiveData.Record(full.ID, "download");
             });
             download.appendChild(button);
         }
@@ -106,10 +106,10 @@ export class SnapshotsUI {
         let mirrors = document.getElementById("version_mirrors");
         mirrors.innerHTML = "";
         for (let mirror of full.Mirrors) {
-            let link = D2.Link(mirror.Name, "snapshots-mirror", mirror.URL);
+            let link = D2.Link(mirror.Name, "archive-mirror", mirror.URL);
             link.target = "_blank";
             link.addEventListener("click", () => {
-                SnapshotsData.Record(full.ID, "download");
+                ArchiveData.Record(full.ID, "download");
             });
             mirrors.appendChild(link);
         }
@@ -119,7 +119,7 @@ export class SnapshotsUI {
     // styled after eclipse's warnings
     // sits above the description, about the client not the archiver
     static Warning(title, description) {
-        return D2.Div("snapshots-warning-box", () => {
+        return D2.Div("archive-warning-box", () => {
             D2.Div("header", () => {
                 D2.LucideIcon("alert-triangle");
                 D2.Text("h3", title);
@@ -168,7 +168,7 @@ export class SnapshotsUI {
     // clicking the caption under the carousel lists every screenshot to jump to
     static LoadScreenJump(screenshots) {
         if (this.screenDropdownEl == null) {
-            this.screenDropdownEl = D2.Div("dropdown-content no-search snapshots-screen-dropdown", () => {
+            this.screenDropdownEl = D2.Div("dropdown-content no-search archive-screen-dropdown", () => {
                 D2.Div("dropdown-inner");
             });
             // lives next to its button, Dropdown moves it to body only while open
@@ -218,7 +218,7 @@ export class SnapshotsUI {
         }));
 
         screenshots.forEach((screenshot, index) => {
-            let slide = D2.Div("snapshots-carousel-slide", () => {
+            let slide = D2.Div("archive-carousel-slide", () => {
                 D2.Image("", screenshot.Thumb, null, screenshot.Game_Screen ?? "");
             });
             slide.addEventListener("click", () => {
@@ -238,14 +238,16 @@ export class SnapshotsUI {
 
         this.LoadScreenJump(screenshots);
 
-        let viewport = document.querySelector("#version_carousel .snapshots-carousel-viewport");
+        let viewport = document.querySelector("#version_carousel .archive-carousel-viewport");
+        // same as the profiles carousel, sideways drags stay on the carousel and vertical ones scroll the page
+        viewport.setAttribute("data-axis-lock", "");
         this.carousel = EmblaCarousel(viewport, {"loop": screenshots.length > 1, "align": "center"}, [
             Autoplay({"delay": 6000, "stopOnMouseEnter": true, "stopOnInteraction": false}),
         ]);
 
         let update = () => {
             let current = this.carousel.selectedScrollSnap();
-            container.querySelectorAll(".snapshots-carousel-slide").forEach((slide, index) => {
+            container.querySelectorAll(".archive-carousel-slide").forEach((slide, index) => {
                 slide.classList.toggle("active", index == current);
             });
             dots.querySelectorAll(".dot").forEach((dot, index) => {
@@ -263,7 +265,7 @@ export class SnapshotsUI {
         update();
 
         // scale/fade follow the actual scroll position every frame, based on embla's tween example
-        let imgs = Array.from(container.querySelectorAll(".snapshots-carousel-slide img"));
+        let imgs = Array.from(container.querySelectorAll(".archive-carousel-slide img"));
         let tween = () => {
             let engine = this.carousel.internalEngine();
             let progress = this.carousel.scrollProgress();
@@ -300,12 +302,12 @@ export class SnapshotsUI {
         document.getElementById("main-col").scrollTop = 0;
 
         if (record) {
-            SnapshotsData.Record(version.ID, "view");
+            ArchiveData.Record(version.ID, "view");
         }
 
-        let full = await SnapshotsData.GetFull(version.ID);
+        let full = await ArchiveData.GetFull(version.ID);
         // they clicked something else while it was loading
-        if (SnapshotsData.CurrentVersion != version.ID) return;
+        if (ArchiveData.CurrentVersion != version.ID) return;
         if (full == null) return;
 
         this.Fill(full);

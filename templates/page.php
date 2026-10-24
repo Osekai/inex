@@ -6,6 +6,7 @@ $nav = [
     '/badges' => ['label' => 'badges', 'icon' => '/public/img/branding/app/badges.svg'],
     '/rankings' => ['label' => 'rankings', 'icon' => '/public/img/branding/app/rankings.svg'],
     '/profiles' => ['label' => 'profiles', 'icon' => '/public/img/branding/app/profiles.svg'],
+    '/archive' => ['label' => 'archive', 'icon' => '/public/img/branding/app/snapshots.svg'],
 ];
 
 $current = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') ?: '/';
@@ -15,7 +16,7 @@ foreach ($nav as $url => $item) {
     if ($active) {
         $nav[$url]['active'] = true;
         $nav[$url]['icon'] = str_replace('app', 'app-fill', $item['icon']);
-    }
+    }   
 }
 
 

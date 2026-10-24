@@ -41,7 +41,7 @@ const MAIN_MENU_PHRASES = [
     "join osu! chat",
 ];
 
-export class SnapshotsOCR {
+export class ArchiveOCR {
     static MAX_WORKERS = 4;
     static scheduler = null;
 
@@ -160,7 +160,7 @@ export class SnapshotsOCR {
         let guess = this.Classify(text);
 
         // so we can tune the rules when it gets things wrong
-        console.log("[snapshots ocr] screenshot " + screenshot.ID + " -> " + (guess ?? "no idea"), {
+        console.log("[archive ocr] screenshot " + screenshot.ID + " -> " + (guess ?? "no idea"), {
             "screenshot": screenshot,
             "guess": guess,
             "confidence": result.data.confidence,

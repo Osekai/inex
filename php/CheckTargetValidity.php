@@ -19,7 +19,7 @@ class CheckTargetValidity
         }
         if ($target == "Snapshots_Versions") {
             // Get already hides unpublished ones from non-admins
-            if (!Data\Snapshots::Get($id)->success) return false;
+            if (!Data\Archive::Get($id)->success) return false;
         }
         if ($target == "Custom") {
             if($id > 10) return false;

@@ -1,11 +1,11 @@
 <?php
 
-namespace Data\Snapshots;
+namespace Data\Archive;
 
 use API\Response;
 use AWS\S3;
 use Data\OsekaiUsers;
-use Data\Snapshots;
+use Data\Archive;
 use Database\Connection;
 use Database\Session;
 
@@ -91,7 +91,7 @@ class Versions
         );
         $id = Connection::getConnection()->insert_id;
 
-        return Snapshots::Get($id);
+        return Archive::Get($id);
     }
 
     public static function Edit($id, $data): Response
@@ -112,8 +112,8 @@ class Versions
 
         // the download is named after the version, so it has to move with it
         if ($current['Version'] !== $clean['Version'] && $current['File_Format'] != null) {
-            $oldPath = Snapshots::DownloadPath($current);
-            $newPath = Snapshots::DownloadPath(["ID" => $id, "Version" => $clean['Version']]);
+            $oldPath = Archive::DownloadPath($current);
+            $newPath = Archive::DownloadPath(["ID" => $id, "Version" => $clean['Version']]);
             if (S3::fileExists($oldPath)) {
                 S3::copyFile($oldPath, $newPath);
                 S3::deleteFile($oldPath);
@@ -126,7 +126,7 @@ class Versions
             [$clean['Version'], $clean['Release_Date'], $clean['Group_ID'], $clean['Flag_Auto_Updates'], $clean['Flag_Requires_Server'], $clean['Meta_Name'], $clean['Meta_Archiver_ID'], $clean['Meta_Description'], $clean['Meta_Extra_Info'], $clean['Meta_Video'], $id]
         );
 
-        return Snapshots::Get($id);
+        return Archive::Get($id);
     }
 
     // $_file is either an uploaded file or a local path (migrations use paths), same as anthera's ItemImages::Create
@@ -157,12 +157,12 @@ class Versions
 
         // stream it so a 200mb client doesn't end up in memory
         $stream = fopen($file['tmp_name'], "rb");
-        S3::uploadFile($stream, Snapshots::DownloadPath($version, "zip"), "application/zip");
+        S3::uploadFile($stream, Archive::DownloadPath($version, "zip"), "application/zip");
         if (is_resource($stream)) fclose($stream);
 
         Connection::execOperation("UPDATE Snapshots_Versions SET File_Format = ?, File_Size = ? WHERE ID = ?", "sii", ["zip", $size, $id]);
 
-        return Snapshots::Get($id);
+        return Archive::Get($id);
     }
 
     public static function Publish($id, $published): Response
@@ -174,7 +174,7 @@ class Versions
         $published = Versions::Flag($published);
         Connection::execOperation("UPDATE Snapshots_Versions SET Published = ? WHERE ID = ?", "ii", [$published, $id]);
 
-        return Snapshots::Get($id);
+        return Archive::Get($id);
     }
 
     public static function Delete($id): Response
@@ -193,7 +193,7 @@ class Versions
             Screenshots::DeleteFiles($screenshot);
         }
         if ($version['File_Format'] != null) {
-            S3::deleteFile(Snapshots::DownloadPath($version));
+            S3::deleteFile(Archive::DownloadPath($version));
         }
 
         // votes first, they're found through the comments (same as Eclipse.Profiles)

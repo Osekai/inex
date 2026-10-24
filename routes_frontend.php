@@ -111,15 +111,15 @@ $router->get('/logout', function () {
     General::Redirect("/");
 });
 
-$router->get('/snapshots', function () {
-    DrawViewWithTemplate("snapshots", "page");
+$router->get('/archive', function () {
+    DrawViewWithTemplate("archive", "page");
 });
-$router->get('/snapshots/([0-9]+)', function ($id) {
-    DrawViewWithTemplate("snapshots", "page", $id);
+$router->get('/archive/([0-9]+)', function ($id) {
+    DrawViewWithTemplate("archive", "page", $id);
 });
-$router->get('/snapshots/admin', function () {
+$router->get('/archive/admin', function () {
     if (!\Data\OsekaiUsers::HasPermission("snapshots.admin")) exit;
-    DrawViewWithTemplate("snapshots_admin", "page");
+    DrawViewWithTemplate("archive_admin", "page");
 });
 
 

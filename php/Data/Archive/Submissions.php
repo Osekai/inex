@@ -1,6 +1,6 @@
 <?php
 
-namespace Data\Snapshots;
+namespace Data\Archive;
 
 use API\Response;
 use Data\OsekaiUsers;

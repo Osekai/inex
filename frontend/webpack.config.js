@@ -113,7 +113,7 @@ function GenerateConfig() {
                     sideEffects: false
                 },
                 {
-                    // ocr files for snapshots, loaded on demand so keep their real names
+                    // ocr files for archive, loaded on demand so keep their real names
                     test: /([\\/]worker\.min\.js|tesseract-core.*\.wasm\.js|eng\.traineddata\.gz)$/,
                     include: [
                         path.resolve(__dirname, "node_modules/tesseract.js"),

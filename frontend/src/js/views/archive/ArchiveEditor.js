@@ -1,4 +1,4 @@
-import {SnapshotsData} from "./SnapshotsData";
+import {ArchiveData} from "./ArchiveData";
 import {D2} from "../../utils/d2";
 import {DoRequest, DoRequestWithFile, DoRequestWithLoader} from "../../utils/requests";
 import {PermissionChecker} from "../../utils/permissionChecker";
@@ -6,15 +6,15 @@ import {PushToast} from "../../ui/toasts";
 import {Modal, ModalButton, ModalIcon, Overlay} from "../../ui/overlay";
 import {LoaderOverlay} from "../../ui/loader-overlay";
 import "../../elements/searchable-dropdown";
-import {SnapshotsOCR} from "./SnapshotsOCR";
-import {SnapshotsUI} from "./SnapshotsUI";
+import {ArchiveOCR} from "./ArchiveOCR";
+import {ArchiveUI} from "./ArchiveUI";
 import {InputTextarea} from "../../utils/dom";
 import {getParam, removeParam} from "../../utils/urlQuery";
 
-export class SnapshotsEditor {
+export class ArchiveEditor {
     static GameScreens = null;
     static LegacyFile = null;
-    // snapshots.js hooks in here to re-render everything else
+    // archive.js hooks in here to re-render everything else
     static OnChanged = null;
     static OnDeleted = null;
 
@@ -28,7 +28,7 @@ export class SnapshotsEditor {
         }
 
         if (this.GameScreens == null) {
-            this.GameScreens = (await DoRequest("GET", "/api/snapshots/screenshots/gamescreens"))['content'];
+            this.GameScreens = (await DoRequest("GET", "/api/archive/screenshots/gamescreens"))['content'];
         }
 
         this.Render(full);
@@ -40,7 +40,7 @@ export class SnapshotsEditor {
             PushToast({theme: "error", content: resp.message});
             return false;
         }
-        await SnapshotsData.Refresh(resp.content);
+        await ArchiveData.Refresh(resp.content);
         if (panel != null) this.RenderPanel(panel, resp.content);
         if (this.OnChanged != null) this.OnChanged(resp.content);
         return true;
@@ -124,7 +124,7 @@ export class SnapshotsEditor {
         for (let screenshot of screenshots) {
             let chosen = await new Promise((resolve) => {
                 let overlay;
-                let modal = D2.Div("basic-modal snapshots-gamescreen-modal", () => {
+                let modal = D2.Div("basic-modal archive-gamescreen-modal", () => {
                     D2.Image("", screenshot.Thumb);
                     D2.Text("h1", "What's this screen?");
                     D2.Div("buttons", () => {
@@ -147,14 +147,14 @@ export class SnapshotsEditor {
             });
 
             if (chosen != null) {
-                await DoRequest("POST", `/api/snapshots/screenshots/${screenshot.ID}/edit`, {"game_screen": chosen});
+                await DoRequest("POST", `/api/archive/screenshots/${screenshot.ID}/edit`, {"game_screen": chosen});
             }
         }
     }
 
     // same markup as the checkboxes in test.php
     static Checkbox(label, checked) {
-        let id = "snapshots-checkbox-" + Math.random().toString(36).slice(2);
+        let id = "archive-checkbox-" + Math.random().toString(36).slice(2);
         let input;
         D2.Div("toggle-text", () => {
             input = D2.CustomPlus("input", "checkbox", {"type": "checkbox", "id": id});
@@ -203,8 +203,8 @@ export class SnapshotsEditor {
             }
 
             if (this.LegacyFile != null && this.LegacyFile.ID == full.ID && full.File_Format == null) {
-                D2.Div("snapshots-warning", () => {
-                    D2.Div("snapshots-warning-header", () => {
+                D2.Div("archive-warning", () => {
+                    D2.Div("archive-warning-header", () => {
                         D2.LucideIcon("alert-triangle");
                         D2.Text("h3", "This version wasn't a .zip on eclipse");
                     });
@@ -214,7 +214,7 @@ export class SnapshotsEditor {
                 });
             }
 
-            D2.Div("snapshots-editor-buttons", () => {
+            D2.Div("archive-editor-buttons", () => {
                 if (PermissionChecker("snapshots.admin.version.publish")) {
                     let text = "Publish";
                     if (full.Published == 1) text = "Unpublish";
@@ -222,7 +222,7 @@ export class SnapshotsEditor {
                     publish.addEventListener("click", async () => {
                         let published = 1;
                         if (full.Published == 1) published = 0;
-                        let resp = await DoRequestWithLoader("POST", `/api/snapshots/${full.ID}/publish`, {"published": published}, "Saving");
+                        let resp = await DoRequestWithLoader("POST", `/api/archive/${full.ID}/publish`, {"published": published}, "Saving");
                         await this.Changed(resp, "status");
                     });
                 }
@@ -232,13 +232,13 @@ export class SnapshotsEditor {
                     del.addEventListener("click", () => {
                         let modal = new Modal("Delete " + full.Version + "?", "This removes the version, its screenshots and its file. This cannot be undone!", [
                             new ModalButton("Delete", async () => {
-                                let resp = await DoRequestWithLoader("POST", `/api/snapshots/${full.ID}/delete`, {}, "Deleting");
+                                let resp = await DoRequestWithLoader("POST", `/api/archive/${full.ID}/delete`, {}, "Deleting");
                                 modal.overlay.remove();
                                 if (!resp.success) {
                                     PushToast({theme: "error", content: resp.message});
                                     return;
                                 }
-                                await SnapshotsData.Refresh();
+                                await ArchiveData.Refresh();
                                 if (this.OnDeleted != null) this.OnDeleted();
                             }),
                             new ModalButton("Cancel", () => {
@@ -253,12 +253,12 @@ export class SnapshotsEditor {
 
     static RenderDetails(full) {
         let inputs = {};
-        let groups = SnapshotsData.GetGroupsSync().map(group => ({"name": group.Group_Name, "value": group.ID}));
+        let groups = ArchiveData.GetGroupsSync().map(group => ({"name": group.Group_Name, "value": group.ID}));
 
         return this.Panel("Details", () => {
             D2.Div("form", () => {
                 // related inputs side by side, like the medal admin panel
-                D2.Div("snapshots-editor-row", () => {
+                D2.Div("archive-editor-row", () => {
                     this.Field("Version", () => {
                         inputs.Version = D2.Input("", "text", full.Version);
                     });
@@ -266,7 +266,7 @@ export class SnapshotsEditor {
                         inputs.Release_Date = D2.Input("", "date", full.Release_Date);
                     });
                 });
-                D2.Div("snapshots-editor-row", () => {
+                D2.Div("archive-editor-row", () => {
                     this.Field("Name", () => {
                         inputs.Meta_Name = D2.Input("", "text", full.Meta_Name ?? "");
                     });
@@ -274,7 +274,7 @@ export class SnapshotsEditor {
                         inputs.Group_ID = this.Dropdown(groups, full.Group_ID);
                     });
                 });
-                D2.Div("snapshots-editor-row", () => {
+                D2.Div("archive-editor-row", () => {
                     this.Field("Archiver (osu! user ID)", () => {
                         inputs.Meta_Archiver_ID = D2.Input("", "number", full.Meta_Archiver_ID ?? "");
                     });
@@ -285,7 +285,7 @@ export class SnapshotsEditor {
 
                 // same code field as the medal solution editor, supports <solution-note> etc
                 let description = InputTextarea("Description", "code", full.Meta_Description ?? "");
-                description.element.classList.add("snapshots-editor-code");
+                description.element.classList.add("archive-editor-code");
                 D2._currentParent.appendChild(description.element);
                 inputs.Meta_Description = {
                     get value() {
@@ -295,7 +295,7 @@ export class SnapshotsEditor {
                 // no ui for this anymore, extra info goes in the description as <solution-note extra>
                 inputs.Meta_Extra_Info = {"value": full.Meta_Extra_Info ?? ""};
 
-                D2.Div("snapshots-editor-row", () => {
+                D2.Div("archive-editor-row", () => {
                     inputs.Flag_Auto_Updates = this.Checkbox("Automatically updates", full.Flag_Auto_Updates);
                     inputs.Flag_Requires_Server = this.Checkbox("Requires a private server", full.Flag_Requires_Server);
                 });
@@ -312,7 +312,7 @@ export class SnapshotsEditor {
                         data[key] = inputs[key].value;
                     }
                 }
-                let resp = await DoRequestWithLoader("POST", `/api/snapshots/${full.ID}/edit`, data, "Saving");
+                let resp = await DoRequestWithLoader("POST", `/api/archive/${full.ID}/edit`, data, "Saving");
                 if (await this.Changed(resp)) {
                     PushToast({theme: "success", content: "Saved!"});
                 }
@@ -324,12 +324,12 @@ export class SnapshotsEditor {
         return this.Panel("File", () => {
             // current file first, then the drop area to replace it
             if (full.Download != null) {
-                SnapshotsUI.DownloadCard(full);
+                ArchiveUI.DownloadCard(full);
             }
 
             let title, subtitle;
             let area = this.DragArea(false, () => {
-                D2.Div("center snapshots-file-area", () => {
+                D2.Div("center archive-file-area", () => {
                     D2.LucideIcon("file-archive");
                     D2.Div("texts", () => {
                         if (full.File_Format != null) {
@@ -352,7 +352,7 @@ export class SnapshotsEditor {
                 if (area.files.length == 0) return;
                 let file = area.files[0];
                 title.innerText = file.name;
-                let resp = await DoRequestWithFile("POST", `/api/snapshots/${full.ID}/upload`, {"file": file}, {
+                let resp = await DoRequestWithFile("POST", `/api/archive/${full.ID}/upload`, {"file": file}, {
                     onProgress: (fraction) => {
                         subtitle.innerText = "Uploading... " + Math.round(fraction * 100) + "%";
                     }
@@ -369,14 +369,14 @@ export class SnapshotsEditor {
             let ids = full.Screenshots.map(screenshot => screenshot.ID);
             let moved = ids.splice(from, 1)[0];
             ids.splice(to, 0, moved);
-            let resp = await DoRequest("POST", `/api/snapshots/${full.ID}/screenshots/reorder`, {"ids": JSON.stringify(ids)});
+            let resp = await DoRequest("POST", `/api/archive/${full.ID}/screenshots/reorder`, {"ids": JSON.stringify(ids)});
             await this.Changed(resp, "screenshots");
         };
 
         return this.Panel("Screenshots", () => {
-            D2.Div("snapshots-editor-screenshots", () => {
+            D2.Div("archive-editor-screenshots", () => {
                 full.Screenshots.forEach((screenshot, index) => {
-                    D2.Div("snapshots-editor-screenshot", () => {
+                    D2.Div("archive-editor-screenshot", () => {
                         D2.Div("image", () => {
                             D2.Image("", screenshot.Thumb);
 
@@ -393,14 +393,14 @@ export class SnapshotsEditor {
                             D2.Div("controls right", () => {
                                 let del = D2.IconOnlyButton("trash");
                                 del.addEventListener("click", async () => {
-                                    let resp = await DoRequest("POST", `/api/snapshots/screenshots/${screenshot.ID}/delete`);
+                                    let resp = await DoRequest("POST", `/api/archive/screenshots/${screenshot.ID}/delete`);
                                     await this.Changed(resp, "screenshots");
                                 });
                             });
                         });
 
                         this.Dropdown(screens, screenshot.Game_Screen, true, async (value) => {
-                            let resp = await DoRequest("POST", `/api/snapshots/screenshots/${screenshot.ID}/edit`, {"game_screen": value});
+                            let resp = await DoRequest("POST", `/api/archive/screenshots/${screenshot.ID}/edit`, {"game_screen": value});
                             await this.Changed(resp);
                         });
                     });
@@ -416,7 +416,7 @@ export class SnapshotsEditor {
                 // one at a time, same as the api expects
                 let resp = null;
                 for (let file of area.files) {
-                    resp = await DoRequestWithFile("POST", `/api/snapshots/${full.ID}/screenshots/add`, {"file": file, "game_screen": ""});
+                    resp = await DoRequestWithFile("POST", `/api/archive/${full.ID}/screenshots/add`, {"file": file, "game_screen": ""});
                     if (!resp.success) break;
                 }
                 loader.overlay.remove();
@@ -427,7 +427,7 @@ export class SnapshotsEditor {
 
                 let added = resp.content.Screenshots.filter(screenshot => !before.includes(screenshot.ID));
                 await this.AskGameScreens(added);
-                let fresh = await DoRequest("GET", `/api/snapshots/${full.ID}`);
+                let fresh = await DoRequest("GET", `/api/archive/${full.ID}`);
                 await this.Changed(fresh, "screenshots");
             });
         }, () => {
@@ -441,7 +441,7 @@ export class SnapshotsEditor {
                 let guessed = 0;
                 try {
                     guess.innerText = "Guessing 0/" + todo.length + "...";
-                    let screens = await SnapshotsOCR.GuessAll(todo, (done) => {
+                    let screens = await ArchiveOCR.GuessAll(todo, (done) => {
                         guess.innerText = "Guessing " + done + "/" + todo.length + "...";
                     });
                     for (let i = 0; i < todo.length; i++) {
@@ -449,16 +449,16 @@ export class SnapshotsEditor {
                         if (screens[i] == null) continue;
                         guessed++;
                         if (screens[i] == todo[i].Game_Screen) continue;
-                        await DoRequest("POST", `/api/snapshots/screenshots/${todo[i].ID}/edit`, {"game_screen": screens[i]});
+                        await DoRequest("POST", `/api/archive/screenshots/${todo[i].ID}/edit`, {"game_screen": screens[i]});
                     }
                 } catch (e) {
-                    console.error("[snapshots ocr]", e);
+                    console.error("[archive ocr]", e);
                     PushToast({theme: "error", content: "OCR failed, check the console"});
                 }
-                await SnapshotsOCR.Terminate();
+                await ArchiveOCR.Terminate();
 
                 PushToast({theme: "success", content: "Guessed " + guessed + " of " + todo.length + " screenshots"});
-                let fresh = await DoRequest("GET", `/api/snapshots/${full.ID}`);
+                let fresh = await DoRequest("GET", `/api/archive/${full.ID}`);
                 await this.Changed(fresh, "screenshots");
             });
         });
@@ -466,14 +466,14 @@ export class SnapshotsEditor {
 
     static RenderMirrors(full) {
         return this.Panel("Mirrors", () => {
-            D2.Div("snapshots-editor-mirrors", () => {
+            D2.Div("archive-editor-mirrors", () => {
                 for (let mirror of full.Mirrors) {
-                    D2.Div("snapshots-editor-mirror", () => {
+                    D2.Div("archive-editor-mirror", () => {
                         let link = D2.Link(mirror.Name, "", mirror.URL);
                         link.target = "_blank";
                         let del = D2.IconOnlyButton("trash");
                         del.addEventListener("click", async () => {
-                            let resp = await DoRequest("POST", `/api/snapshots/mirrors/${mirror.ID}/delete`);
+                            let resp = await DoRequest("POST", `/api/archive/mirrors/${mirror.ID}/delete`);
                             await this.Changed(resp, "mirrors");
                         });
                     });
@@ -491,7 +491,7 @@ export class SnapshotsEditor {
             });
             let add = D2.Text("button", "Add Mirror", "lumen-button");
             add.addEventListener("click", async () => {
-                let resp = await DoRequest("POST", `/api/snapshots/${full.ID}/mirrors/add`, {"name": name.value, "url": url.value});
+                let resp = await DoRequest("POST", `/api/archive/${full.ID}/mirrors/add`, {"name": name.value, "url": url.value});
                 await this.Changed(resp, "mirrors");
             });
         });

@@ -1,10 +1,10 @@
 <?php
 
-namespace Data\Snapshots;
+namespace Data\Archive;
 
 use API\Response;
 use Data\OsekaiUsers;
-use Data\Snapshots;
+use Data\Archive;
 use Database\Connection;
 use Database\Session;
 
@@ -49,7 +49,7 @@ class Migrate
 
     static function TempPath($name)
     {
-        return sys_get_temp_dir() . "/snapshots_migrate_" . bin2hex(random_bytes(6)) . "_" . basename($name);
+        return sys_get_temp_dir() . "/archive_migrate_" . bin2hex(random_bytes(6)) . "_" . basename($name);
     }
 
     // a couple of old versions have stray spaces or an osu! prefix

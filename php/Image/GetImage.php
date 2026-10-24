@@ -13,7 +13,7 @@ class GetImage
      * @param int $versionID ID of the version it belongs to
      * @return string
      */
-    public static function SnapshotScreenshot(string $size, int $screenshotID, int $versionID, $returnOnlyPath = false): string
+    public static function ArchiveScreenshot(string $size, int $screenshotID, int $versionID, $returnOnlyPath = false): string
     {
         $available_sizes = ["full", "thumb"];
         if (!in_array($size, $available_sizes)) $size = "thumb";
@@ -26,9 +26,9 @@ class GetImage
         return S3::getUrl($path);
     }
 
-    public static function SnapshotScreenshotObject(string $size, $screenshot, $returnOnlyPath = false)
+    public static function ArchiveScreenshotObject(string $size, $screenshot, $returnOnlyPath = false)
     {
         if (!isset($screenshot)) return null;
-        return self::SnapshotScreenshot($size, $screenshot['ID'], $screenshot['Version_ID'], $returnOnlyPath);
+        return self::ArchiveScreenshot($size, $screenshot['ID'], $screenshot['Version_ID'], $returnOnlyPath);
     }
 }

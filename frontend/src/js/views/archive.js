@@ -1,16 +1,17 @@
-import "../../css/views/snapshots.css";
+import "../../css/views/archive.css";
 // <solution-note> and friends, same as medal solutions
 import "./medals/SolutionElements.js";
 
 import {getSections, setSections} from "../utils/urlQuery";
-import {SnapshotsData} from "./snapshots/SnapshotsData";
-import {SnapshotsUI} from "./snapshots/SnapshotsUI";
-import {SnapshotsSidebar} from "./snapshots/ui/SnapshotsSidebar";
-import {SnapshotsEditor} from "./snapshots/SnapshotsEditor";
-import {SnapshotsSubmit} from "./snapshots/SnapshotsSubmit";
+import {ArchiveData} from "./archive/ArchiveData";
+import {ArchiveUI} from "./archive/ArchiveUI";
+import {ArchiveSidebar} from "./archive/ui/ArchiveSidebar";
+import {ArchiveEditor} from "./archive/ArchiveEditor";
+import {ArchiveSubmit} from "./archive/ArchiveSubmit";
+import {ArchiveHome} from "./archive/ArchiveHome";
 
 function GetVersionFromUrl() {
-    let sections = getSections(`/snapshots/{version}`);
+    let sections = getSections(`/archive/{version}`);
     let id = null;
     if (sections != null) {
         id = sections['version'];
@@ -25,11 +26,11 @@ document.getElementById("back").addEventListener("click", () => {
 // sidebar toolbar and homepage both have one, logged out they're links to /login instead
 for (let button of document.querySelectorAll("button[submit-version]")) {
     button.addEventListener("click", () => {
-        SnapshotsSubmit.Open();
+        ArchiveSubmit.Open();
     });
 }
 
-document.getElementById("snapshots_home").addEventListener("click", () => {
+document.getElementById("archive_home").addEventListener("click", () => {
     SetVersion("", true);
 });
 
@@ -45,57 +46,58 @@ window.addEventListener("popstate", () => {
  */
 export function SetVersion(id, setUrl = false, scrollTo = false) {
     if (id == null || id === "" || id === "undefined") {
-        SnapshotsData.CurrentVersion = null;
-        SnapshotsUI.ShowHome();
+        ArchiveData.CurrentVersion = null;
+        ArchiveUI.ShowHome();
         if (sidebar != null) sidebar.SetActive(null);
-        if (setUrl) setSections(`/snapshots/{version}`, {"version": ""});
+        if (setUrl) setSections(`/archive/{version}`, {"version": ""});
         return;
     }
 
-    let version = SnapshotsData.GetVersionFromID(id);
+    let version = ArchiveData.GetVersionFromID(id);
     if (version == null) {
         SetVersion("", setUrl);
         return;
     }
 
     if (setUrl) {
-        setSections(`/snapshots/{version}`, {"version": version.ID});
+        setSections(`/archive/{version}`, {"version": version.ID});
     }
 
-    SnapshotsData.CurrentVersion = version.ID;
+    ArchiveData.CurrentVersion = version.ID;
     if (sidebar != null) {
         sidebar.SetActive(version.ID);
         if (scrollTo) sidebar.ScrollTo(version.ID);
     }
-    SnapshotsUI.LoadVersion(version);
+    ArchiveUI.LoadVersion(version);
 }
 
 var sidebar = null;
 
-SnapshotsUI.OnFullLoaded = (full) => {
-    SnapshotsEditor.Load(full);
+ArchiveUI.OnFullLoaded = (full) => {
+    ArchiveEditor.Load(full);
 };
 
 // admin changed something, redraw with the fresh data
-SnapshotsEditor.OnChanged = (full) => {
+ArchiveEditor.OnChanged = (full) => {
     sidebar.RenderAll();
-    let version = SnapshotsData.GetVersionFromID(full.ID);
+    let version = ArchiveData.GetVersionFromID(full.ID);
     if (version != null) {
-        SnapshotsUI.Refresh(version, full);
+        ArchiveUI.Refresh(version, full);
     }
 };
 
-SnapshotsEditor.OnDeleted = () => {
+ArchiveEditor.OnDeleted = () => {
     sidebar.RenderAll();
     SetVersion("", true);
 };
 
 async function Load() {
-    await SnapshotsData.GetVersions();
-    await SnapshotsData.GetGroups();
+    await ArchiveData.GetVersions();
+    await ArchiveData.GetGroups();
 
-    sidebar = new SnapshotsSidebar();
+    sidebar = new ArchiveSidebar();
     sidebar.LoadSidebar();
+    ArchiveHome.Load();
 
     GetVersionFromUrl();
 }

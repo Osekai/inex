@@ -1,6 +1,6 @@
 import {DoRequest} from "../../utils/requests";
 
-export class SnapshotsData {
+export class ArchiveData {
     static Versions = null;
     static Groups = null;
     static Full = {};
@@ -8,10 +8,10 @@ export class SnapshotsData {
 
     static async GetVersions() {
         if (this.Versions == null) {
-            if (typeof (snapshots_preload) !== "undefined") {
-                this.Versions = snapshots_preload['content'];
+            if (typeof (archive_preload) !== "undefined") {
+                this.Versions = archive_preload['content'];
             } else {
-                this.Versions = (await DoRequest("GET", "/api/snapshots/all"))['content'];
+                this.Versions = (await DoRequest("GET", "/api/archive/all"))['content'];
             }
         }
         return this.Versions;
@@ -19,10 +19,10 @@ export class SnapshotsData {
 
     static async GetGroups() {
         if (this.Groups == null) {
-            if (typeof (snapshots_groups_preload) !== "undefined") {
-                this.Groups = snapshots_groups_preload['content'];
+            if (typeof (archive_groups_preload) !== "undefined") {
+                this.Groups = archive_groups_preload['content'];
             } else {
-                this.Groups = (await DoRequest("GET", "/api/snapshots/groups"))['content'];
+                this.Groups = (await DoRequest("GET", "/api/archive/groups"))['content'];
             }
         }
         return this.Groups;
@@ -30,7 +30,7 @@ export class SnapshotsData {
 
     // after an admin changes something, the preload is stale
     static async Refresh(full = null) {
-        this.Versions = (await DoRequest("GET", "/api/snapshots/all"))['content'];
+        this.Versions = (await DoRequest("GET", "/api/archive/all"))['content'];
         if (full != null) {
             this.Full[full.ID] = full;
         }
@@ -75,7 +75,7 @@ export class SnapshotsData {
     static async GetFull(id) {
         if (this.Full[id] != null) return this.Full[id];
 
-        let resp = await DoRequest("GET", `/api/snapshots/${id}`);
+        let resp = await DoRequest("GET", `/api/archive/${id}`);
         if (!resp.success) return null;
 
         this.Full[id] = resp.content;
@@ -83,7 +83,7 @@ export class SnapshotsData {
     }
 
     static Record(id, type) {
-        DoRequest("POST", `/api/snapshots/${id}/record/${type}`);
+        DoRequest("POST", `/api/archive/${id}/record/${type}`);
     }
 
     // release dates are plain dates, so keep them local or they shift a day in some timezones

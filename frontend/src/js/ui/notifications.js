@@ -62,14 +62,14 @@ var types = {
     "comment": new Type("comment", {
         "medals": String("$USER commented on a medal", "$TITLE"),
         "users": String("$USER commented on your profile"),
-        "snapshots": String("$USER commented on a snapshot", "$TITLE"),
+        "snapshots": String("$USER commented on a version on Archive", "$TITLE"),
     }, "message-square", 278),
     "reply": new Type("reply", {
         "medals": String("$USER replied to your comment", "on $TITLE"),
         "users": String("$USER replied to $COMMENT_OWNER", "on $TITLEPLURAL profile", (n) => ({
             "$COMMENT_OWNER": n.Ref_Comments_Reply_Data?.User_ID === userData.id ? "your comment" : "a comment"
         })),
-        "snapshots": String("$USER replied to your comment", "on $TITLE"),
+        "snapshots": String("$USER replied to your comment", "on $TITLE on Archive"),
     }, "messages-square", 331),
 }
 
@@ -114,7 +114,7 @@ function GenerateNotification(raw) {
             break;
         case "snapshots":
             title = n.Ref_Snapshots_Data.Version;
-            link = `/snapshots/${n.Ref_Snapshots}`;
+            link = `/archive/${n.Ref_Snapshots}`;
             break;
         case "users":
             title = n.Ref_Users_Data.Name;
