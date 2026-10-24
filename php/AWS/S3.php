@@ -4,7 +4,6 @@ namespace AWS {
 
     use Aws;
     use Aws\S3\ObjectUploader;
-    use Encryption;
 
     class S3
     {
@@ -29,16 +28,20 @@ namespace AWS {
             $this->client = new Aws\S3\S3Client($options);
         }
 
-        public static function uploadFile($file, $path)
+        // $file can be a string or a stream (fopen), use a stream for big files so they don't sit in memory
+        public static function uploadFile($file, $path, $contentType = null)
         {
-            if (USE_IMG_ENCRYPTION) {
-                $file = Encryption::EncryptString($file, IMG_ENCRYPTION_KEY);
+            $options = [];
+            if ($contentType != null) {
+                $options['params'] = ['ContentType' => $contentType];
             }
             $uploader = new ObjectUploader(
                 self::getInstance()->client,
                 BUCKET_NAME,
                 $path,
-                $file
+                $file,
+                'private',
+                $options
             );
             $result = $uploader->upload();
             if ($result["@metadata"]["statusCode"] != '200') {
@@ -74,23 +77,32 @@ namespace AWS {
                 'Prefix' => $sourceFolder,
             ]);
 
+            $deleteKeys = [];
+
             foreach ($objects['Contents'] as $object) {
                 $sourceKey = $object['Key'];
-
                 $destinationKey = str_replace($sourceFolder, $destinationFolder, $sourceKey);
 
+                // copy
                 self::getInstance()->client->copyObject([
                     'Bucket' => BUCKET_NAME,
                     'CopySource' => BUCKET_NAME . '/' . $sourceKey,
                     'Key' => $destinationKey,
                 ]);
 
-                self::getInstance()->client->deleteObject([
+                $deleteKeys[] = ['Key' => $sourceKey];
+            }
+
+            // delete all at once in batches of 1000 (S3 limit)
+            $chunks = array_chunk($deleteKeys, 1000);
+            foreach ($chunks as $chunk) {
+                self::getInstance()->client->deleteObjects([
                     'Bucket' => BUCKET_NAME,
-                    'Key' => $sourceKey,
+                    'Delete' => ['Objects' => $chunk],
                 ]);
             }
         }
+
 
         public static function copyFile(string $sourcePath, string $destinationPath)
         {
@@ -99,6 +111,51 @@ namespace AWS {
                 'CopySource' => BUCKET_NAME . '/' . $sourcePath,
                 'Key' => $destinationPath,
             ]);
+        }
+
+        public static function deleteFile(string $path)
+        {
+            self::getInstance()->client->deleteObject([
+                'Bucket' => BUCKET_NAME,
+                'Key' => $path,
+            ]);
+        }
+
+        public static function fileExists(string $path): bool
+        {
+            return self::getInstance()->client->doesObjectExistV2(BUCKET_NAME, $path);
+        }
+
+        public static function getUrl(string $path): string
+        {
+            return S3_URL_PATH . $path;
+        }
+
+        public static function deleteFolder(string $old_path)
+        {
+            $old_path = rtrim($old_path, '/') . '/';
+
+            $objects = self::getInstance()->client->listObjectsV2([
+                'Bucket' => BUCKET_NAME,
+                'Prefix' => $old_path,
+                'MaxKeys' => 11 // request just enough to detect if >10
+            ]);
+
+            if (empty($objects['Contents'])) {
+                return;
+            }
+
+            if (count($objects['Contents']) > 10) {
+                trigger_error("Folder has more than 10 items, delete aborted", E_USER_WARNING);
+                return;
+            }
+
+            foreach ($objects['Contents'] as $object) {
+                self::getInstance()->client->deleteObject([
+                    'Bucket' => BUCKET_NAME,
+                    'Key' => $object['Key'],
+                ]);
+            }
         }
     }
 }

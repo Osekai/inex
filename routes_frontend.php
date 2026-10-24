@@ -112,19 +112,14 @@ $router->get('/logout', function () {
 });
 
 $router->get('/snapshots', function () {
-
+    DrawViewWithTemplate("snapshots", "page");
 });
-$router->get('/snapshots/all', function () {
+$router->get('/snapshots/([0-9]+)', function ($id) {
+    DrawViewWithTemplate("snapshots", "page", $id);
+});
+$router->get('/snapshots/admin', function () {
     if (!\Data\OsekaiUsers::HasPermission("snapshots.admin")) exit;
     DrawViewWithTemplate("snapshots_admin", "page");
-});
-$router->get('/snapshots/upload', function () {
-    if (!\Data\OsekaiUsers::HasPermission("snapshots.admin.upload")) exit;
-    DrawViewWithTemplate("snapshots_admin_upload", "page");
-});
-$router->get('/snapshots/edit/([^/]+)', function ($ver) {
-    if (!\Data\OsekaiUsers::HasPermission("snapshots.admin.edit")) exit;
-    DrawViewWithTemplate("snapshots_admin_ver", "page", $ver);
 });
 
 

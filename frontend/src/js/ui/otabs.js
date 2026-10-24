@@ -79,6 +79,16 @@ function otabFadeIn(tab, duration) {
     tab._otabInTimer = setTimeout(() => tab.classList.remove("otab-animate-in"), duration);
 }
 
+// the container an otab element belongs to, so nested containers don't steal each other's tabs.
+// buttons can point at an outer container with otab-button-container="name"
+function otabOwner(el) {
+    if (el.hasAttribute("otab-button-container")) {
+        let name = el.getAttribute("otab-button-container");
+        return el.closest(`[otab-container="${name}"]`);
+    }
+    return el.parentElement.closest("[otab-container]");
+}
+
 export function LoadOTabs() {
     let pageOpenEvent = new Event("page-open");
     let oTabContainers = document.querySelectorAll("[otab-container]");
@@ -90,8 +100,8 @@ export function LoadOTabs() {
         oTabContainer.setAttribute("loaded", "ok");
 
         let pushHistory = false;
-        let oTabs = oTabContainer.querySelectorAll("[otab-name]");
-        let oTabButtons = oTabContainer.querySelectorAll("[otab-button]");
+        let oTabs = Array.from(oTabContainer.querySelectorAll("[otab-name]")).filter(tab => otabOwner(tab) === oTabContainer);
+        let oTabButtons = Array.from(oTabContainer.querySelectorAll("[otab-button]")).filter(button => otabOwner(button) === oTabContainer);
         let last_tab = "";
 
         let delay = 0;
@@ -143,15 +153,17 @@ export function LoadOTabs() {
                 if (isTarget) {
                     // might still be fading out if they flicked straight back to it
                     otabClearGhost(tab);
+                    // switching to the tab that's already open shouldn't animate
+                    const fade = animate && last_tab !== tabName;
                     if(delay !== 0) {
                         setTimeout(() => {
                             tab.classList.remove("otab-hidden");
-                            if (animate) otabFadeIn(tab, animDuration);
+                            if (fade) otabFadeIn(tab, animDuration);
                         }, delay);
                     } else {
                         // avoids slight visual flash when changing tabs :)
                         tab.classList.remove("otab-hidden");
-                        if (animate) otabFadeIn(tab, animDuration);
+                        if (fade) otabFadeIn(tab, animDuration);
                     }
                     if (tab.getAttribute("otab-callback")) {
                         let cb = window[tab.getAttribute("otab-callback")];
@@ -190,7 +202,6 @@ export function LoadOTabs() {
         oTabContainer.switch = switchTab;
 
         for (let oTabButton of oTabButtons) {
-            if (oTabButton.closest("[otab-container]") !== oTabContainer) continue;
             if (oTabContainer.getAttribute("otab-no-replace") == null) {
                 oTabButton.innerHTML = oTabButton.getAttribute("otab-button");
             }

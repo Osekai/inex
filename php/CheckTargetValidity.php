@@ -17,6 +17,10 @@ class CheckTargetValidity
             $medal = MedalsBeatmaps::GetOneBeatmap($id);
             if ($medal == null) return false;
         }
+        if ($target == "Snapshots_Versions") {
+            // Get already hides unpublished ones from non-admins
+            if (!Data\Snapshots::Get($id)->success) return false;
+        }
         if ($target == "Custom") {
             if($id > 10) return false;
         }

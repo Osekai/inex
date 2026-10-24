@@ -47,6 +47,7 @@
     "ext-zlib": "*",
     "ext-pdo": "*",
     "league/commonmark": "^2.9@dev",
-    "vlucas/phpdotenv": "^5.6"
+    "vlucas/phpdotenv": "^5.6",
+    "aws/aws-sdk-php": "v4.x-dev"
   }
 }

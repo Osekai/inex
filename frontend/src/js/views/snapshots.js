@@ -1,0 +1,103 @@
+import "../../css/views/snapshots.css";
+// <solution-note> and friends, same as medal solutions
+import "./medals/SolutionElements.js";
+
+import {getSections, setSections} from "../utils/urlQuery";
+import {SnapshotsData} from "./snapshots/SnapshotsData";
+import {SnapshotsUI} from "./snapshots/SnapshotsUI";
+import {SnapshotsSidebar} from "./snapshots/ui/SnapshotsSidebar";
+import {SnapshotsEditor} from "./snapshots/SnapshotsEditor";
+import {SnapshotsSubmit} from "./snapshots/SnapshotsSubmit";
+
+function GetVersionFromUrl() {
+    let sections = getSections(`/snapshots/{version}`);
+    let id = null;
+    if (sections != null) {
+        id = sections['version'];
+    }
+    SetVersion(id, false, true);
+}
+
+document.getElementById("back").addEventListener("click", () => {
+    SetVersion("", true);
+});
+
+// sidebar toolbar and homepage both have one, logged out they're links to /login instead
+for (let button of document.querySelectorAll("button[submit-version]")) {
+    button.addEventListener("click", () => {
+        SnapshotsSubmit.Open();
+    });
+}
+
+document.getElementById("snapshots_home").addEventListener("click", () => {
+    SetVersion("", true);
+});
+
+window.addEventListener("popstate", () => {
+    GetVersionFromUrl();
+});
+
+/**
+ * Sets the version on the page
+ * @param id : number Version ID, empty for the homepage
+ * @param setUrl : boolean Should we update the URL? this manages history, too.
+ * @param scrollTo : boolean Scroll the sidebar to the version
+ */
+export function SetVersion(id, setUrl = false, scrollTo = false) {
+    if (id == null || id === "" || id === "undefined") {
+        SnapshotsData.CurrentVersion = null;
+        SnapshotsUI.ShowHome();
+        if (sidebar != null) sidebar.SetActive(null);
+        if (setUrl) setSections(`/snapshots/{version}`, {"version": ""});
+        return;
+    }
+
+    let version = SnapshotsData.GetVersionFromID(id);
+    if (version == null) {
+        SetVersion("", setUrl);
+        return;
+    }
+
+    if (setUrl) {
+        setSections(`/snapshots/{version}`, {"version": version.ID});
+    }
+
+    SnapshotsData.CurrentVersion = version.ID;
+    if (sidebar != null) {
+        sidebar.SetActive(version.ID);
+        if (scrollTo) sidebar.ScrollTo(version.ID);
+    }
+    SnapshotsUI.LoadVersion(version);
+}
+
+var sidebar = null;
+
+SnapshotsUI.OnFullLoaded = (full) => {
+    SnapshotsEditor.Load(full);
+};
+
+// admin changed something, redraw with the fresh data
+SnapshotsEditor.OnChanged = (full) => {
+    sidebar.RenderAll();
+    let version = SnapshotsData.GetVersionFromID(full.ID);
+    if (version != null) {
+        SnapshotsUI.Refresh(version, full);
+    }
+};
+
+SnapshotsEditor.OnDeleted = () => {
+    sidebar.RenderAll();
+    SetVersion("", true);
+};
+
+async function Load() {
+    await SnapshotsData.GetVersions();
+    await SnapshotsData.GetGroups();
+
+    sidebar = new SnapshotsSidebar();
+    sidebar.LoadSidebar();
+
+    GetVersionFromUrl();
+}
+
+Load();

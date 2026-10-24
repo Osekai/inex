@@ -56,6 +56,11 @@ export class Note extends HTMLElement {
             tooltip = "Advice"
             this.style.setProperty("--background", "#39FFA0");
         }
+        if(this.hasAttribute("extra")) {
+            icon = LucideIcon("info");
+            tooltip = "Extra Info"
+            this.style.setProperty("--background", "#66b3ff");
+        }
         if(this.hasAttribute("important")) {
             icon = LucideIcon("siren");
             tooltip = "Important"

@@ -17,7 +17,7 @@ class Comments
     {
         if (!Session::LoggedIn()) return new Response(false, "logged out");
 
-        $valid_tables = ["Medals_Data", "Profiles_Data", "Custom"];
+        $valid_tables = ["Medals_Data", "Profiles_Data", "Snapshots_Versions", "Custom"];
         if (!in_array($table, $valid_tables)) return new Response(false, "invalid_table");
 
         if (\CheckTargetValidity::Check($table, $id) == null) return new Response(false, "invalid_id");
@@ -30,13 +30,22 @@ class Comments
 VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()['id'], $replyingTo, $text]);
 
         $comment = Connection::execSimpleSelect("SELECT * FROM `Common_Comments` WHERE ID = LAST_INSERT_ID()")[0];
-        (new Comment($comment, $table === "Medals_Data" ? "medals" : "user"))->Send();
+        $reftype = "user";
+        if ($table === "Medals_Data") $reftype = "medals";
+        if ($table === "Snapshots_Versions") $reftype = "snapshots";
+        if ($table !== "Custom") {
+            (new Comment($comment, $reftype))->Send();
+        }
 
         $title = "";
 
         if($table === "Medals_Data") {
             $medal = Medals::Get($id);
             $title = $medal['Name'];
+        }
+        if($table === "Snapshots_Versions") {
+            $version = Connection::execSelect("SELECT Version FROM Snapshots_Versions WHERE ID = ?", "i", [$id]);
+            $title = count($version) > 0 ? $version[0]['Version'] : "a snapshot";
         }
         if($table === "Profiles_Data") {
             // not everyone is in our database, so fall back to something generic
@@ -50,12 +59,19 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
                 "id" => Session::UserData()['id'],
                 "username" => Session::UserData()['username'],
             ],
-            "url" => $table === "Medals_Data" ? "/medals/" . $id : "/profiles/" . $id,
+            "url" => Comments::TargetUrl($table, $id),
             "title" => $title
         ]);
 
 
         return new Response(true, "", self::Get($id, $table, $replyingTo, $comment['ID'])->content[0]);
+    }
+
+    public static function TargetUrl($table, $id)
+    {
+        if ($table === "Medals_Data") return "/medals/" . $id;
+        if ($table === "Snapshots_Versions") return "/snapshots/" . $id;
+        return "/profiles/" . $id;
     }
 
     public static function GetOne($id)
@@ -70,7 +86,7 @@ VALUES (?, ?, ?, ?, ?, now(), '0');", "isiis", [$id, $table, Session::UserData()
 
     public static function Get(mixed $id, mixed $table, $parent = null, $single = null)
     {
-        $valid_tables = ["Medals_Data", "Profiles_Data"];
+        $valid_tables = ["Medals_Data", "Profiles_Data", "Snapshots_Versions"];
         if (!in_array($table, $valid_tables)) return new Response(false, "invalid_table");
 
         if (\CheckTargetValidity::Check($table, $id) == null) return new Response(false, "invalid_id");

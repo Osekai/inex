@@ -112,6 +112,19 @@ function GenerateConfig() {
                     include: path.resolve(__dirname, "node_modules/lucide"),
                     sideEffects: false
                 },
+                {
+                    // ocr files for snapshots, loaded on demand so keep their real names
+                    test: /([\\/]worker\.min\.js|tesseract-core.*\.wasm\.js|eng\.traineddata\.gz)$/,
+                    include: [
+                        path.resolve(__dirname, "node_modules/tesseract.js"),
+                        path.resolve(__dirname, "node_modules/tesseract.js-core"),
+                        path.resolve(__dirname, "node_modules/@tesseract.js-data"),
+                    ],
+                    type: 'asset/resource',
+                    generator: {
+                        filename: 'tesseract/[name][ext]'
+                    }
+                },
             ]
         },
         optimization: isProduction ? {

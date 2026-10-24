@@ -3,6 +3,7 @@
 namespace Image {
     class Transform
     {
+        // pretty much all of this is pulled directly from anthera
         public static function ImageToJpeg($image, $quality, $addBackground = true)
         {
             // If addBackground is true, add a black background to the image
@@ -20,6 +21,84 @@ namespace Image {
             ob_end_clean();
 
             return $imageData;
+        }
+
+        public static function ImageToPng($image, $compression = 6)
+        {
+            imagesavealpha($image, true);
+
+            ob_start();
+            imagepng($image, null, $compression);
+            $imageData = ob_get_contents();
+            ob_end_clean();
+
+            return $imageData;
+        }
+
+        public static function Blur($sourceImage, $radius = 100)
+        {
+            $width = imagesx($sourceImage);
+            $height = imagesy($sourceImage);
+
+            // work at reduced res, radius scales with it
+            $scale = max(1, $radius / 16);
+            $w = max(16, (int)($width / $scale));
+            $h = max(16, (int)($height / $scale));
+            $r = max(1, (int)($radius / $scale));
+
+            $small = imagecreatetruecolor($w, $h);
+            imagecopyresampled($small, $sourceImage, 0, 0, 0, 0, $w, $h, $width, $height);
+
+            // build 1d kernel
+            $sigma = $r / 2;
+            $kernel = [];
+            $sum = 0;
+            for ($i = -$r; $i <= $r; $i++) {
+                $v = exp(-($i * $i) / (2 * $sigma * $sigma));
+                $kernel[$i + $r] = $v;
+                $sum += $v;
+            }
+            foreach ($kernel as $k => $v) $kernel[$k] = $v / $sum;
+
+            $small = self::ConvolvePass($small, $kernel, $r, true);
+            $small = self::ConvolvePass($small, $kernel, $r, false);
+
+            $result = imagecreatetruecolor($width, $height);
+            imagecopyresampled($result, $small, 0, 0, 0, 0, $width, $height, $w, $h);
+            imagedestroy($small);
+
+            return $result;
+        }
+
+        private static function ConvolvePass($img, $kernel, $r, $horizontal)
+        {
+            $w = imagesx($img);
+            $h = imagesy($img);
+            $out = imagecreatetruecolor($w, $h);
+
+            for ($y = 0; $y < $h; $y++) {
+                for ($x = 0; $x < $w; $x++) {
+                    $cr = $cg = $cb = 0;
+                    for ($i = -$r; $i <= $r; $i++) {
+                        $sx = $horizontal ? min($w - 1, max(0, $x + $i)) : $x;
+                        $sy = $horizontal ? $y : min($h - 1, max(0, $y + $i));
+                        $c = imagecolorat($img, $sx, $sy);
+                        $k = $kernel[$i + $r];
+                        $cr += (($c >> 16) & 0xFF) * $k;
+                        $cg += (($c >> 8) & 0xFF) * $k;
+                        $cb += ($c & 0xFF) * $k;
+                    }
+                    imagesetpixel($out, $x, $y, imagecolorallocate($out, (int)$cr, (int)$cg, (int)$cb));
+                }
+            }
+
+            imagedestroy($img);
+            return $out;
+        }
+
+        public static function BlurStr($sourceImage, $radius = 10, $quality = -1)
+        {
+            return self::ImageToJpeg(self::Blur($sourceImage, $radius*4), $quality);
         }
 
         public static function GetResizeBounds($size, $direction, $sourceWidth, $sourceHeight)

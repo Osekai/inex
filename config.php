@@ -64,7 +64,8 @@ define("SCRIPTS26_ADDRESS", env('SCRIPTS26_ADDRESS'));
 define("SCRIPTS26_PASSWORD", env('SCRIPTS26_PASSWORD'));
 
 define("FEATURE_FLAGS", [
-    "profiles" => env('FEATUREFLAG_PROFILES', false)
+    "profiles" => env('FEATUREFLAG_PROFILES', false),
+    "snapshots" => env('FEATUREFLAG_SNAPSHOTS', false),
 ]);
 
 define("USING_NEW_CONFIG", true);

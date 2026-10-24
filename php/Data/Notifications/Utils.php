@@ -13,14 +13,15 @@ class Utils
         $recipients = array_unique(is_array($to) ? $to : [$to]);
 
         foreach ($recipients as $to_i) {
-            Connection::execOperation("INSERT INTO `Notifications` (`SenderID`, `ReceiverID`, `Type`, `Ref_Users`, `Ref_Medals`, `Ref_Comments`, `Ref_Comments_Reply`, `Date`, `Read`, `Dismissed`)
-    VALUES (?, ?, ?, ?, ?, ?, ?, now(), '0', '0')", "iisiiii", [$from, $to_i, $type->type, $ref->users, $ref->medals, $ref->comments, $ref->comments_reply]);
+            Connection::execOperation("INSERT INTO `Notifications` (`SenderID`, `ReceiverID`, `Type`, `Ref_Users`, `Ref_Medals`, `Ref_Snapshots`, `Ref_Comments`, `Ref_Comments_Reply`, `Date`, `Read`, `Dismissed`)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, now(), '0', '0')", "iisiiiii", [$from, $to_i, $type->type, $ref->users, $ref->medals, $ref->snapshots, $ref->comments, $ref->comments_reply]);
         }
     }
 
     static function CleanNotif($item) {
         $item['Ref_Users_Data'] = json_decode($item['Ref_Users_Data'], true);
         $item['Ref_Medals_Data'] = json_decode($item['Ref_Medals_Data'], true);
+        $item['Ref_Snapshots_Data'] = json_decode($item['Ref_Snapshots_Data'], true);
         $item['Ref_Comments_Data'] = json_decode($item['Ref_Comments_Data'], true);
         $item['SenderData'] = json_decode($item['SenderData'], true);
         $item['Ref_Comments_Reply_Data'] = json_decode($item['Ref_Comments_Reply_Data'], true);

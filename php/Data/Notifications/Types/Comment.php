@@ -19,6 +19,9 @@ class Comment extends NotificationType
             case "medals":
                 $this->ref->medals = $comment['Target_ID'];
                 break;
+            case "snapshots":
+                $this->ref->snapshots = $comment['Target_ID'];
+                break;
             case "user":
                 $this->to = [$comment['Target_ID']];
                 $this->ref->users = $comment['Target_ID'];

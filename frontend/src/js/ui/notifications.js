@@ -62,18 +62,21 @@ var types = {
     "comment": new Type("comment", {
         "medals": String("$USER commented on a medal", "$TITLE"),
         "users": String("$USER commented on your profile"),
+        "snapshots": String("$USER commented on a snapshot", "$TITLE"),
     }, "message-square", 278),
     "reply": new Type("reply", {
         "medals": String("$USER replied to your comment", "on $TITLE"),
         "users": String("$USER replied to $COMMENT_OWNER", "on $TITLEPLURAL profile", (n) => ({
             "$COMMENT_OWNER": n.Ref_Comments_Reply_Data?.User_ID === userData.id ? "your comment" : "a comment"
         })),
+        "snapshots": String("$USER replied to your comment", "on $TITLE"),
     }, "messages-square", 331),
 }
 
 function ParseNotification(n) {
     if (typeof n.SenderData === "string") n.SenderData = JSON.parse(n.SenderData);
     if (typeof n.Ref_Medals_Data === "string") n.Ref_Medals_Data = JSON.parse(n.Ref_Medals_Data);
+    if (typeof n.Ref_Snapshots_Data === "string") n.Ref_Snapshots_Data = JSON.parse(n.Ref_Snapshots_Data);
     if (typeof n.Ref_Users_Data === "string") n.Ref_Users_Data = JSON.parse(n.Ref_Users_Data);
     if (typeof n.Ref_Comments_Data === "string") n.Ref_Comments_Data = JSON.parse(n.Ref_Comments_Data);
     if (typeof n.Ref_Comments_Reply_Data === "string") n.Ref_Comments_Reply_Data = JSON.parse(n.Ref_Comments_Reply_Data);
@@ -85,6 +88,7 @@ function GenerateNotification(raw) {
 
     var reftype = "";
     if (n.Ref_Medals != null) reftype = "medals";
+    else if (n.Ref_Snapshots != null) reftype = "snapshots";
     else if (n.Ref_Users != null) reftype = "users";
 
     if (typeof (types[n.Type]) == "undefined") {
@@ -107,6 +111,10 @@ function GenerateNotification(raw) {
         case "medals":
             title = n.Ref_Medals_Data.Name;
             link = `/medals/${n.Ref_Medals}`;
+            break;
+        case "snapshots":
+            title = n.Ref_Snapshots_Data.Version;
+            link = `/snapshots/${n.Ref_Snapshots}`;
             break;
         case "users":
             title = n.Ref_Users_Data.Name;

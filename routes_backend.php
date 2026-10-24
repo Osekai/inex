@@ -318,6 +318,74 @@ $router->all("/api/profiles/([^/]+)", function ($id) {
 
 
 
+/// =====================
+/// Snapshots
+/// =====================
+
+$router->get("/api/snapshots/all", function () {
+    echo \Data\Snapshots::GetAll()->ReturnJson();
+});
+$router->get("/api/snapshots/groups", function () {
+    echo \Data\Snapshots::GetGroups()->ReturnJson();
+});
+$router->get("/api/snapshots/screenshots/gamescreens", function () {
+    echo \Data\Snapshots\Screenshots::GameScreens()->ReturnJson();
+});
+$router->get("/api/snapshots/admin/legacy", function () {
+    echo \Data\Snapshots\Migrate::GetLegacy()->ReturnJson();
+});
+$router->post("/api/snapshots/admin/migrate/([^/]+)", function ($id) {
+    echo \Data\Snapshots\Migrate::Migrate($id)->ReturnJson();
+});
+$router->get("/api/snapshots/admin/submissions", function () {
+    echo \Data\Snapshots\Submissions::GetAll()->ReturnJson();
+});
+$router->post("/api/snapshots/admin/submissions/([^/]+)/status", function ($id) {
+    echo \Data\Snapshots\Submissions::SetStatus($id, $_POST['status'] ?? '')->ReturnJson();
+});
+$router->post("/api/snapshots/submit", function () {
+    echo \Data\Snapshots\Submissions::Submit($_POST['title'] ?? '', $_POST['description'] ?? '', $_POST['link'] ?? '')->ReturnJson();
+});
+$router->post("/api/snapshots/create", function () {
+    echo \Data\Snapshots\Versions::Create($_POST)->ReturnJson();
+});
+$router->post("/api/snapshots/screenshots/([^/]+)/edit", function ($id) {
+    echo \Data\Snapshots\Screenshots::Edit($id, $_POST['game_screen'] ?? '')->ReturnJson();
+});
+$router->post("/api/snapshots/screenshots/([^/]+)/delete", function ($id) {
+    echo \Data\Snapshots\Screenshots::Remove($id)->ReturnJson();
+});
+$router->post("/api/snapshots/mirrors/([^/]+)/delete", function ($id) {
+    echo \Data\Snapshots\Mirrors::Remove($id)->ReturnJson();
+});
+$router->post("/api/snapshots/([^/]+)/edit", function ($id) {
+    echo \Data\Snapshots\Versions::Edit($id, $_POST)->ReturnJson();
+});
+$router->post("/api/snapshots/([^/]+)/upload", function ($id) {
+    echo \Data\Snapshots\Versions::UploadFile($id, $_FILES['file'] ?? null)->ReturnJson();
+});
+$router->post("/api/snapshots/([^/]+)/publish", function ($id) {
+    echo \Data\Snapshots\Versions::Publish($id, $_POST['published'] ?? 0)->ReturnJson();
+});
+$router->post("/api/snapshots/([^/]+)/delete", function ($id) {
+    echo \Data\Snapshots\Versions::Delete($id)->ReturnJson();
+});
+$router->post("/api/snapshots/([^/]+)/screenshots/add", function ($id) {
+    echo \Data\Snapshots\Screenshots::Add($id, $_FILES['file'] ?? null, $_POST['game_screen'] ?? '')->ReturnJson();
+});
+$router->post("/api/snapshots/([^/]+)/screenshots/reorder", function ($id) {
+    echo \Data\Snapshots\Screenshots::Reorder($id, json_decode($_POST['ids'] ?? '', true))->ReturnJson();
+});
+$router->post("/api/snapshots/([^/]+)/mirrors/add", function ($id) {
+    echo \Data\Snapshots\Mirrors::Add($id, $_POST['name'] ?? '', $_POST['url'] ?? '')->ReturnJson();
+});
+$router->post("/api/snapshots/([^/]+)/record/([^/]+)", function ($id, $type) {
+    echo \Data\Snapshots::Record($id, $type)->ReturnJson();
+});
+$router->get("/api/snapshots/([^/]+)", function ($id) {
+    echo \Data\Snapshots::Get($id)->ReturnJson();
+});
+
 $router->all("/api/notifications", function () {
     echo Data\Notifications\Utils::Get(50, $_POST['offset'])->ReturnJson();
 });
