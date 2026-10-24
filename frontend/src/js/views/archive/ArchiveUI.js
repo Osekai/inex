@@ -331,6 +331,16 @@ export class ArchiveUI {
         document.getElementById("version_description").innerHTML = marked.parse(description);
         this.SetHidden("version_description_panel", description == "");
 
+        let changelog = full.Meta_Changelog_Notes ?? "";
+        document.getElementById("version_changelog").innerHTML = marked.parse(changelog);
+        let changelogLink = document.getElementById("version_changelog_link");
+        if (full.Meta_Changelog_Link != null) {
+            changelogLink.href = full.Meta_Changelog_Link;
+        }
+        this.SetHidden("version_changelog_link", full.Meta_Changelog_Link == null);
+        this.SetHidden("version_changelog", changelog == "");
+        this.SetHidden("version_changelog_panel", changelog == "" && full.Meta_Changelog_Link == null);
+
         let video = document.getElementById("version_video");
         video.innerHTML = "";
         if (full.Meta_Video != null) {

@@ -55,6 +55,7 @@ export class ArchiveEditor {
         let fresh = null;
         if (name == "status") fresh = this.RenderStatus(full);
         if (name == "details") fresh = this.RenderDetails(full);
+        if (name == "changelog") fresh = this.RenderChangelog(full);
         if (name == "file") fresh = this.RenderFile(full);
         if (name == "screenshots") fresh = this.RenderScreenshots(full);
         if (name == "mirrors") fresh = this.RenderMirrors(full);
@@ -188,6 +189,7 @@ export class ArchiveEditor {
         this.panels = {};
         // left: details + screenshots, right: status, file, mirrors
         if (PermissionChecker("snapshots.admin.version.edit")) this.panels.details = left.appendChild(this.RenderDetails(full));
+        if (PermissionChecker("snapshots.admin.version.edit")) this.panels.changelog = left.appendChild(this.RenderChangelog(full));
         if (PermissionChecker("snapshots.admin.version.screenshots")) this.panels.screenshots = left.appendChild(this.RenderScreenshots(full));
         this.panels.status = right.appendChild(this.RenderStatus(full));
         if (PermissionChecker("snapshots.admin.version.upload")) this.panels.file = right.appendChild(this.RenderFile(full));
@@ -316,6 +318,29 @@ export class ArchiveEditor {
                 if (await this.Changed(resp)) {
                     PushToast({theme: "success", content: "Saved!"});
                 }
+            });
+        });
+    }
+
+    static RenderChangelog(full) {
+        return this.Panel("Changelog", () => {
+            D2.Div("form", () => {
+                let link;
+                this.Field("Link (osu! changelog page)", () => {
+                    link = D2.Input("", "text", full.Meta_Changelog_Link ?? "");
+                });
+
+                let notes = InputTextarea("Notes", "code", full.Meta_Changelog_Notes ?? "");
+                notes.element.classList.add("archive-editor-code");
+                D2._currentParent.appendChild(notes.element);
+
+                let save = D2.Text("button", "Save", "lumen-button");
+                save.addEventListener("click", async () => {
+                    let resp = await DoRequestWithLoader("POST", `/api/archive/${full.ID}/changelog`, {"Meta_Changelog_Notes": notes.value(), "Meta_Changelog_Link": link.value}, "Saving");
+                    if (await this.Changed(resp)) {
+                        PushToast({theme: "success", content: "Saved!"});
+                    }
+                });
             });
         });
     }

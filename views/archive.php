@@ -183,6 +183,14 @@ if(FEATURE_FLAGS['archive'] == false && $can_edit == false) {
                             <div class="divider"></div>
                             <div class="archive-description" id="version_description"></div>
                         </div>
+                        <div class="panel" id="version_changelog_panel">
+                            <div class="panel-header">
+                                <h1>Changelog</h1>
+                                <a id="version_changelog_link" class="button cta pill-button" target="_blank">View on osu!</a>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="archive-description" id="version_changelog"></div>
+                        </div>
                         <div class="panel" id="version_mirrors_outer">
                             <div class="panel-header">
                                 <h1>Mirrors</h1>

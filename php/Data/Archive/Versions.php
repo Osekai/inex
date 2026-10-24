@@ -94,6 +94,27 @@ class Versions
         return Archive::Get($id);
     }
 
+    public static function Changelog($id, $data): Response
+    {
+        if (!Session::LoggedIn()) return new Response(false, "Not logged in");
+        if (!OsekaiUsers::HasPermission("snapshots.admin.version.edit")) return new Response(false, "You can't do that");
+        if (!is_numeric($id)) return new Response(false, "Invalid version");
+
+        $current = Connection::execSelect("SELECT ID FROM Snapshots_Versions WHERE ID = ?", "i", [$id]);
+        if (count($current) == 0) return new Response(false, "Version not found");
+
+        $notes = trim($data['Meta_Changelog_Notes'] ?? "");
+        if ($notes === "") $notes = null;
+
+        $link = trim($data['Meta_Changelog_Link'] ?? "");
+        if ($link === "") $link = null;
+        if ($link !== null && (mb_strlen($link) > 255 || !preg_match('/^https:\/\/osu\.ppy\.sh\//', $link))) return new Response(false, "Invalid changelog link (has to be an osu.ppy.sh link)");
+
+        Connection::execOperation("UPDATE Snapshots_Versions SET Meta_Changelog_Notes = ?, Meta_Changelog_Link = ? WHERE ID = ?", "ssi", [$notes, $link, $id]);
+
+        return Archive::Get($id);
+    }
+
     public static function Edit($id, $data): Response
     {
         if (!Session::LoggedIn()) return new Response(false, "Not logged in");

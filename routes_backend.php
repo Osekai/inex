@@ -370,6 +370,9 @@ $router->post("/api/archive/mirrors/([^/]+)/delete", function ($id) {
 $router->post("/api/archive/([^/]+)/edit", function ($id) {
     echo \Data\Archive\Versions::Edit($id, $_POST)->ReturnJson();
 });
+$router->post("/api/archive/([^/]+)/changelog", function ($id) {
+    echo \Data\Archive\Versions::Changelog($id, $_POST)->ReturnJson();
+});
 $router->post("/api/archive/([^/]+)/upload", function ($id) {
     echo \Data\Archive\Versions::UploadFile($id, $_FILES['file'] ?? null)->ReturnJson();
 });
