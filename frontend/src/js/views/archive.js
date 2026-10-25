@@ -73,6 +73,10 @@ export function SetVersion(id, setUrl = false, scrollTo = false) {
 
 var sidebar = null;
 
+ArchiveUI.OnVersionLink = (id) => {
+    SetVersion(id, true, true);
+};
+
 ArchiveUI.OnFullLoaded = (full) => {
     ArchiveEditor.Load(full);
 };

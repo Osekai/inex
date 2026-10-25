@@ -5,7 +5,6 @@ import EmblaCarousel from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Lightbox from "../../ui/lightbox";
 import {Dropdown} from "../../ui/dropdown";
-import {ArchiveHome} from "./ArchiveHome";
 
 export class ArchiveUI {
     static ShowPage(page) {
@@ -185,11 +184,18 @@ export class ArchiveUI {
 
         if (full.Changelog_Previous != null) {
             let previous = full.Changelog_Previous;
-            container.appendChild(ArchiveHome.VersionLink(previous, "archive-changelog-previous", () => {
+            let link = D2.DivLink("/archive/" + previous.ID, "archive-changelog-previous", () => {
                 D2.LucideIcon("history");
                 D2.Text("span", "Previous archived version: " + previous.Version);
                 D2.LucideIcon("arrow-right");
-            }));
+            });
+            link.addEventListener("click", (e) => {
+                if (this.OnVersionLink == null) return;
+                if (e.ctrlKey || e.metaKey || e.button == 1) return;
+                e.preventDefault();
+                this.OnVersionLink(previous.ID);
+            });
+            container.appendChild(link);
         }
 
         this.SetHidden("version_changelog_entries", container.children.length == 0);
@@ -413,4 +419,6 @@ export class ArchiveUI {
 
     // the editor hooks in here
     static OnFullLoaded = null;
+    // archive.js hooks in here, the admin page also loads this file so it can't import SetVersion
+    static OnVersionLink = null;
 }
