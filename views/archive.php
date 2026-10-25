@@ -190,6 +190,7 @@ if(FEATURE_FLAGS['archive'] == false && $can_edit == false) {
                             </div>
                             <div class="divider"></div>
                             <div class="archive-description" id="version_changelog"></div>
+                            <div class="archive-changelog" id="version_changelog_entries"></div>
                         </div>
                         <div class="panel" id="version_mirrors_outer">
                             <div class="panel-header">

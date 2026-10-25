@@ -1,6 +1,7 @@
 import "../../css/views/archive_admin.css";
 
 import {D2} from "../utils/d2";
+import {UTCify} from "../utils/time";
 import {DoRequest, DoRequestWithLoader} from "../utils/requests";
 import {PushToast} from "../ui/toasts";
 import {CenteredLoader} from "../utils/loaderUtils";
@@ -139,7 +140,7 @@ function RenderSubmissions(outer, submissions) {
             D2.Div("info", () => {
                 D2.Text("h1", submission.Title);
                 let by = submission.Username ?? ("#" + submission.User_ID);
-                D2.Text("p", "by " + by + " · " + D2.TimeFull(submission.Date, {style: "short"}) + " · " + STATUS_NAMES[submission.Status]);
+                D2.Text("p", "by " + by + " · " + D2.TimeFull(UTCify(submission.Date), {style: "short"}) + " · " + STATUS_NAMES[submission.Status]);
                 if (submission.Description != null) D2.Text("p", submission.Description, "description");
                 let link = D2.Link(submission.Link, "", submission.Link);
                 link.target = "_blank";
@@ -193,7 +194,7 @@ function RenderFeatured(outer, features) {
                 D2.Text("h1", (feature.Meta_Name ?? "") + " " + (feature.Version ?? "(deleted version)"));
                 let status = "ended";
                 if (feature.Active == 1) status = "active";
-                D2.Text("p", status + " · until " + D2.TimeFull(feature.End_Date, {style: "short"}) + " · by " + (feature.Created_By_Name ?? ("#" + feature.Created_By)));
+                D2.Text("p", status + " · until " + D2.TimeFull(UTCify(feature.End_Date), {style: "short"}) + " · by " + (feature.Created_By_Name ?? ("#" + feature.Created_By)));
                 D2.Text("p", feature.Description, "description");
             });
             if (feature.Active == 1) {

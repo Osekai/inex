@@ -1,6 +1,7 @@
 import {ArchiveData} from "./ArchiveData";
 import {SetVersion} from "../archive";
 import {D2} from "../../utils/d2";
+import {UTCify} from "../../utils/time";
 import {marked} from "marked";
 import EmblaCarousel from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
@@ -84,7 +85,7 @@ export class ArchiveHome {
         let outer = document.getElementById("home_recent");
         outer.innerHTML = "";
         for (let version of versions.slice(0, 8)) {
-            outer.appendChild(this.Row(version, D2.TimeRelative(version.Meta_Archival_Date)));
+            outer.appendChild(this.Row(version, D2.TimeRelative(UTCify(version.Meta_Archival_Date))));
         }
         this.SetHidden("home_recent_panel", versions.length == 0);
     }

@@ -80,7 +80,41 @@ class Archive
             $version['Download'] = S3::getUrl(Archive::DownloadPath($version));
         }
 
+        [$version['Changelog'], $version['Changelog_Previous']] = Archive::Changelog($version);
+
         return new Response(true, "Success", $version);
+    }
+
+    // every official changelog entry back to the previous version we have, that day included
+    public static function Changelog($version): array
+    {
+        $publishedOnly = "AND Published = 1";
+        if (Archive::CanSeeUnpublished()) $publishedOnly = "";
+
+        $previous = Connection::execSelect(
+            "SELECT ID, Version, Release_Date, Meta_Name FROM Snapshots_Versions
+             WHERE (Release_Date < ? OR (Release_Date = ? AND ID < ?)) $publishedOnly
+             ORDER BY Release_Date DESC, ID DESC LIMIT 1",
+            "ssi",
+            [$version['Release_Date'], $version['Release_Date'], $version['ID']]
+        );
+
+        if (count($previous) == 0) {
+            $entries = Connection::execSelect(
+                "SELECT * FROM Snapshots_Changelog WHERE Branch = 'master' AND Date <= ? ORDER BY Date DESC, ID DESC",
+                "s",
+                [$version['Release_Date']]
+            );
+            return [$entries, null];
+        }
+
+        $previous = $previous[0];
+        $entries = Connection::execSelect(
+            "SELECT * FROM Snapshots_Changelog WHERE Branch = 'master' AND Date <= ? AND Date >= ? ORDER BY Date DESC, ID DESC",
+            "ss",
+            [$version['Release_Date'], $previous['Release_Date']]
+        );
+        return [$entries, $previous];
     }
 
     // same as eclipse, just a counter

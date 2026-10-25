@@ -3,6 +3,7 @@ import '../../css/elements/comments-section.css'
 import {DoRequest} from "../utils/requests";
 import {Button, Div, Image, LucideIcon, RoleBadge, Text} from "../utils/dom";
 import {D2} from "../utils/d2";
+import {UTCify} from "../utils/time";
 import bbCodeParser from 'js-bbcode-parser';
 import {createDropdown} from "../ui/ultra-dropdown";
 import {reportOverlay} from "../ui/reportOverlay";
@@ -141,8 +142,9 @@ class CommentsSection extends HTMLElement {
             name.appendChild(groupsDiv);
         }
 
-        const commentDate = Text("h3", D2.TimeRelative(comment.Date));
-        commentDate.setAttribute("tooltip", D2.TimeFull(comment.Date, {time: "minutes"}));
+        const postedAt = UTCify(comment.Date);
+        const commentDate = Text("h3", D2.TimeRelative(postedAt));
+        commentDate.setAttribute("tooltip", D2.TimeFull(postedAt, {time: "minutes"}));
         name.appendChild(commentDate);
 
         var content = Div("div", "content");
@@ -393,7 +395,7 @@ class CommentsSection extends HTMLElement {
         "date": {
             "name": "Date Posted",
             "icon": "calendar",
-            "order": (a, b) => new Date(b.Date) - new Date(a.Date) // Sort by Date in descending order
+            "order": (a, b) => UTCify(b.Date) - UTCify(a.Date) // Sort by Date in descending order
         }
     };
     sortType = "upvotes";

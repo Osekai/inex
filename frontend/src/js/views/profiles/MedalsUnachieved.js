@@ -1,4 +1,5 @@
 import {D2} from "../../utils/d2";
+import {UTCify} from "../../utils/time";
 import {formatNumber} from "../../utils/numbers";
 import {GamemodeToName} from "../../utils/osu/gamemode";
 import {categorize, MODE_ORDER} from "./FavouriteMedalPicker";
@@ -227,7 +228,7 @@ export default class MedalsUnachieved {
                 D2.Div("medals-unachieved-row-stat", () => {
                     if (this.sort == "newest") {
                         if (medal.Date_Released) {
-                            D2.Text("h3", D2.TimeRelative(new Date(medal.Date_Released)));
+                            D2.Text("h3", D2.TimeRelative(UTCify(medal.Date_Released)));
                             D2.Text("p", "released");
                         } else {
                             D2.Text("h3", "Unknown");

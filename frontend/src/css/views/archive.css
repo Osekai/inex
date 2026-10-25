@@ -709,6 +709,89 @@ body {
                 gap: 10px;
             }
         }
+        .archive-changelog {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 12px;
+            max-height: 600px;
+            overflow-y: auto;
+            .archive-changelog-day {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                h3 {
+                    font-size: 13px;
+                    font-weight: 500;
+                    color: var(--col-text-l2);
+                    margin-bottom: 2px;
+                }
+            }
+            .archive-changelog-entry {
+                --type: var(--col-text-l2);
+                display: flex;
+                align-items: flex-start;
+                gap: 8px;
+                font-size: 13px;
+                svg {
+                    flex-shrink: 0;
+                    height: 14px;
+                    width: 14px;
+                    margin-top: 2px;
+                    color: var(--type);
+                }
+                &.type-add {
+                    --type: #66d17a;
+                }
+                &.type-fix {
+                    --type: #66b3ff;
+                }
+                &.type-remove {
+                    --type: #ff6e5e;
+                }
+                &.type-important {
+                    --type: #ffc04d;
+                }
+                .archive-changelog-text {
+                    flex: 1;
+                    p {
+                        display: inline;
+                    }
+                }
+                .archive-changelog-area {
+                    font-size: 11px;
+                    padding: 1px 6px;
+                    margin-right: 6px;
+                    border-radius: 999px;
+                    background: var(--col-l2);
+                    color: var(--col-text-l2);
+                }
+                .archive-changelog-author {
+                    font-size: 11px;
+                    color: var(--col-text-l3);
+                }
+            }
+            .archive-changelog-previous {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 14px;
+                border-radius: var(--border-radius);
+                background: var(--col-l2);
+                font-size: 13px;
+                cursor: pointer;
+                span {
+                    flex: 1;
+                }
+                svg {
+                    height: 16px;
+                    width: 16px;
+                }
+                &:hover {
+                    background: var(--col-l3);
+                }
+            }
+        }
         .archive-warnings {
             display: flex;
             flex-direction: column;

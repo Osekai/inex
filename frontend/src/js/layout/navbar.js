@@ -129,8 +129,8 @@ export class Process {
             console.log("HIII :3");
             let state = await DoRequest("GET", window.be.SCRIPTS_API_URL + "queue/user/" + userData.id);
             console.log(state);
-            const start = new Date(state.data.lastProcessed).getTime();
-            const end = new Date(state.data.estimatedNext).getTime();
+            const start = UTCify(state.data.lastProcessed).getTime();
+            const end = UTCify(state.data.estimatedNext).getTime();
 
             let percent = Math.min(Math.max((Date.now() - start) / (end - start) * 100, 0), 100);
             if(percent > 99) percent = 99;

@@ -5,6 +5,7 @@ import EmblaCarousel from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Lightbox from "../../ui/lightbox";
 import {Dropdown} from "../../ui/dropdown";
+import {ArchiveHome} from "./ArchiveHome";
 
 export class ArchiveUI {
     static ShowPage(page) {
@@ -140,6 +141,58 @@ export class ArchiveUI {
         }
 
         this.SetHidden("version_warnings", warnings.children.length == 0);
+    }
+
+    static CHANGELOG_ICONS = {
+        "add": "plus",
+        "fix": "wrench",
+        "remove": "minus",
+        "important": "alert-triangle",
+    };
+
+    // grouped by day, newest first, ends on the previous version we have
+    static LoadChangelog(full) {
+        let container = document.getElementById("version_changelog_entries");
+        container.innerHTML = "";
+
+        let days = [];
+        for (let entry of full.Changelog) {
+            let last = days[days.length - 1];
+            if (last == null || last.date != entry.Date) {
+                last = {"date": entry.Date, "entries": []};
+                days.push(last);
+            }
+            last.entries.push(entry);
+        }
+
+        for (let day of days) {
+            container.appendChild(D2.Div("archive-changelog-day", () => {
+                D2.Text("h3", D2.TimeFull(new Date(day.date + "T00:00:00"), {style: "short"}));
+                for (let entry of day.entries) {
+                    D2.Div("archive-changelog-entry type-" + entry.Type, () => {
+                        let icon = this.CHANGELOG_ICONS[entry.Type];
+                        if (icon == null) icon = "dot";
+                        D2.LucideIcon(icon);
+                        D2.Div("archive-changelog-text", () => {
+                            if (entry.Area != null) D2.Text("span", entry.Area, "archive-changelog-area");
+                            D2.Text("p", entry.Text);
+                        });
+                        if (entry.Author != null) D2.Text("span", entry.Author, "archive-changelog-author");
+                    });
+                }
+            }));
+        }
+
+        if (full.Changelog_Previous != null) {
+            let previous = full.Changelog_Previous;
+            container.appendChild(ArchiveHome.VersionLink(previous, "archive-changelog-previous", () => {
+                D2.LucideIcon("history");
+                D2.Text("span", "Previous archived version: " + previous.Version);
+                D2.LucideIcon("arrow-right");
+            }));
+        }
+
+        this.SetHidden("version_changelog_entries", container.children.length == 0);
     }
 
     static carousel = null;
@@ -339,7 +392,9 @@ export class ArchiveUI {
         }
         this.SetHidden("version_changelog_link", full.Meta_Changelog_Link == null);
         this.SetHidden("version_changelog", changelog == "");
-        this.SetHidden("version_changelog_panel", changelog == "" && full.Meta_Changelog_Link == null);
+        this.LoadChangelog(full);
+        let hasEntries = full.Changelog.length > 0 || full.Changelog_Previous != null;
+        this.SetHidden("version_changelog_panel", changelog == "" && full.Meta_Changelog_Link == null && !hasEntries);
 
         let video = document.getElementById("version_video");
         video.innerHTML = "";
