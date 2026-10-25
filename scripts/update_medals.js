@@ -1,6 +1,6 @@
 import sharp from 'sharp';
-import { readdir, readFile, writeFile, rm } from 'fs/promises';
-import { mkdirSync, readdirSync, createWriteStream } from 'fs';
+import { appendFile, readdir, readFile, writeFile, rm } from 'fs/promises';
+import { mkdirSync, readdirSync, createWriteStream, existsSync } from 'fs';
 import { basename, extname, join } from 'path';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
@@ -12,6 +12,7 @@ import * as path from "node:path";
 
 const execFileAsync = promisify(execFile);
 const MEDALS_DIR = '../assets/osu/assets/medals';
+const REV_PATH = '../frontend/rev.txt';
 const SUBMODULE_DIR = '../assets/osu';
 const BASE_DIR = `${MEDALS_DIR}/base`;
 const OUTPUT_DIR = '../assets/medals';
@@ -73,6 +74,11 @@ async function buildMedalsJson() {
     const outPath = '../assets/medals.json';
     const gzPath = `${outPath}.gz`;
 
+    let oldJson = '';
+    if (existsSync(outPath)) {
+        oldJson = await readFile(outPath, 'utf8');
+    }
+
     await writeFile(outPath, json);
 
     await pipeline(
@@ -82,6 +88,12 @@ async function buildMedalsJson() {
     );
 
     console.log(`Written to ${outPath} and ${gzPath}`);
+
+    if (json != oldJson) {
+        // medals changed, bump the revision so cached medals.json.gz urls change
+        await appendFile(REV_PATH, 'a');
+        console.log('Bumped revision in frontend/rev.txt');
+    }
 }
 await buildMedalsJson();
 

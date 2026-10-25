@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import { readdir, readFile, writeFile } from 'fs/promises';
+import { appendFile, readdir, readFile, writeFile } from 'fs/promises';
 import { createWriteStream, existsSync, mkdirSync } from 'fs';
 import { basename, dirname, extname, join } from 'path';
 import { execFile } from 'child_process';
@@ -22,6 +22,7 @@ const CLIENT_DIR = `${OUTPUT_DIR}/client`;
 const WEB_DIR = `${OUTPUT_DIR}/web`;
 const BASES_DIR = `${OUTPUT_DIR}/bases`;
 const JSON_PATH = '../assets/medals.json';
+const REV_PATH = '../frontend/rev.txt';
 const colours = ['purple', 'pink', 'red', 'bronze', 'silver', 'gold', 'blue', 'grey', 'green'];
 const offset = { left: 10, top: 4 };
 
@@ -38,7 +39,8 @@ if (!process.argv.includes('--no-pull')) {
     }
 }
 
-const medalsJson = JSON.parse(await readFile(JSON_PATH, 'utf8'));
+const oldJson = await readFile(JSON_PATH, 'utf8');
+const medalsJson = JSON.parse(oldJson);
 
 // find svgs that aren't in medals.json yet
 const missing = [];
@@ -102,5 +104,11 @@ await pipeline(
     createGzip(),
     createWriteStream(`${JSON_PATH}.gz`)
 );
+
+if (json != oldJson) {
+    // medals changed, bump the revision so cached medals.json.gz urls change
+    await appendFile(REV_PATH, 'a');
+    console.log('Bumped revision in frontend/rev.txt');
+}
 
 console.log(`Added ${missing.length} medal(s), updated medals.json and medals.json.gz`);

@@ -9,7 +9,7 @@ export class MedalIcons {
         if (MedalIcons._iconsPromise != null) return MedalIcons._iconsPromise;
 
         MedalIcons._iconsPromise = (async () => {
-            const response = await fetch("/assets/medals.json.gz");
+            const response = await fetch("/assets/medals.json.gz?v=" + window.be.revision);
             const ds = new DecompressionStream("gzip");
             const text = await new Response(response.body.pipeThrough(ds)).text();
             return MedalIcons.icons = JSON.parse(text);

@@ -28,6 +28,7 @@ if (Site::$base_loaded == false) {
         const medals = <?= json_encode(\Data\Medals::GetAll()) ?>;
 
         window.be.SCRIPTS_API_URL = '<?= SCRIPTS_API_URL ?>';
+        window.be.revision = '<?= trim(ApplicationVersion::revision()) ?>';
         window.be.dev = <?= INSTANCE == "dev" ? "true" : "false" ?>
     </script>
 
