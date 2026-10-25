@@ -1,6 +1,6 @@
 import sharp from 'sharp';
 import { readdir, readFile, writeFile } from 'fs/promises';
-import { createWriteStream } from 'fs';
+import { createWriteStream, existsSync, mkdirSync } from 'fs';
 import { basename, dirname, extname, join } from 'path';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
@@ -13,7 +13,9 @@ import { fileURLToPath } from 'url';
 process.chdir(dirname(fileURLToPath(import.meta.url)));
 
 const execFileAsync = promisify(execFile);
-const MEDALS_DIR = '../assets/osu/assets/medals';
+const REPO_URL = 'https://github.com/ppy/osu-resources';
+const CACHE_DIR = '.cache/osu-resources';
+const MEDALS_DIR = `${CACHE_DIR}/assets/medals`;
 const BASE_DIR = `${MEDALS_DIR}/base`;
 const OUTPUT_DIR = '../assets/medals';
 const CLIENT_DIR = `${OUTPUT_DIR}/client`;
@@ -25,8 +27,15 @@ const offset = { left: 10, top: 4 };
 
 // usage: node add_medals.js [--no-pull]
 if (!process.argv.includes('--no-pull')) {
-    console.log('Pulling latest osu-resources');
-    await execFileAsync('git', ['submodule', 'update', '--init', '--remote', 'assets/osu'], { cwd: '..' });
+    console.log('Pulling latest osu-resources (medals only)');
+    if (!existsSync(`${CACHE_DIR}/.git`)) {
+        mkdirSync(CACHE_DIR, { recursive: true });
+        await execFileAsync('git', ['clone', '--depth', '1', '--filter=blob:none', '--sparse', REPO_URL, CACHE_DIR]);
+        await execFileAsync('git', ['sparse-checkout', 'set', 'assets/medals'], { cwd: CACHE_DIR });
+    } else {
+        await execFileAsync('git', ['fetch', '--depth', '1', 'origin', 'master'], { cwd: CACHE_DIR });
+        await execFileAsync('git', ['reset', '--hard', 'FETCH_HEAD'], { cwd: CACHE_DIR });
+    }
 }
 
 const medalsJson = JSON.parse(await readFile(JSON_PATH, 'utf8'));

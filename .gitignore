@@ -7,3 +7,7 @@ frontend/configuration/
 frontend/configuration/*
 frontend/rev.txt
 frontend/licences.json
+
+scripts/.cache
+
+scripts/.cache
