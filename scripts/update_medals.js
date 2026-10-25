@@ -36,7 +36,7 @@ async function inkscapeExport(svgPath, outPath, tag) {
 }
 
 console.log("Updating submodule")
-let git = await execFileAsync('git', ['submodule', 'update', '--init', '--recursive'], { cwd: SUBMODULE_DIR });
+let git = await execFileAsync('git', ['submodule', 'update', '--init', '--remote', 'assets/osu'], { cwd: '..' });
 console.log(git.stdout)
 console.log("Updating medal comb data");
 

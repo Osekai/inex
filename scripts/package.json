@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "update_medals.js",
   "scripts": {
+    "medals": "node add_medals.js",
+    "medals:full": "node update_medals.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
