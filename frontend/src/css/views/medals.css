@@ -924,6 +924,11 @@ body {
                 }
             }
         }
+
+        .extrainfo-empty {
+            padding: 14px;
+            opacity: 0.7;
+        }
     }
 }
 

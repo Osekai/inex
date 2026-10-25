@@ -43,6 +43,8 @@ export class Graph {
             .map(d => ({ raw: d, ts: new Date(d.date).getTime(), value: this.getValue(d) }))
             .sort((a, b) => a.ts - b.ts);
 
+        if (this.data.length === 0) return this;
+
         this.minTs = this.data[0].ts;
         this.maxTs = this.data[this.data.length - 1].ts;
         this.minVal = Math.min(...this.data.map(d => d.value));

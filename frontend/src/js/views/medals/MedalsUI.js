@@ -297,7 +297,10 @@ export class MedalsUI {
         for (let adopt of extraData.content.Graphs.Adoption) {
             if (adopt.Total > maxAdoption) maxAdoption = adopt.Total;
         }
-        let offset = medal.Count_Achieved_By / maxAdoption;
+        let offset = 0;
+        if (maxAdoption > 0) {
+            offset = medal.Count_Achieved_By / maxAdoption;
+        }
 
         for (let adopt of extraData.content.Graphs.Adoption) {
             adoptionData.push({
@@ -306,12 +309,14 @@ export class MedalsUI {
                 earned: Math.round(adopt.Users_Earned * offset)
             })
         }
-        MedalsUI.extra_AdoptionGraph = new Graph(adoptionGraphContainer);
-
-
-        MedalsUI.extra_AdoptionGraph.renderTooltip = d => `<small>${d.date}</small><h1>${d.value} users (+${d.earned})</h1>`;
-        MedalsUI.extra_AdoptionGraph.H = 150;
-        MedalsUI.extra_AdoptionGraph.load(adoptionData);
+        if (adoptionData.length > 0) {
+            MedalsUI.extra_AdoptionGraph = new Graph(adoptionGraphContainer);
+            MedalsUI.extra_AdoptionGraph.renderTooltip = d => `<small>${d.date}</small><h1>${d.value} users (+${d.earned})</h1>`;
+            MedalsUI.extra_AdoptionGraph.H = 150;
+            MedalsUI.extra_AdoptionGraph.load(adoptionData);
+        } else {
+            adoptionGraphContainer.appendChild(D2.Text("p", "We don't know anyone who's achieved this medal yet, check back later!", "extrainfo-empty"));
+        }
 
         document.getElementById("medal_adoption_users").innerText = medal.Count_Achieved_By;
 
@@ -342,6 +347,12 @@ export class MedalsUI {
         for (let owner of extraData.content.Owners) {
             let panel = ownerPanel(owner);
             list.appendChild(panel);
+        }
+
+        if (extraData.content.Owners.length === 0) {
+            list.appendChild(D2.Text("p", "Nobody on Osekai has this medal yet, check back later!", "extrainfo-empty"));
+            document.getElementById("extra-loader").classList.add("hidden");
+            return;
         }
 
         let loadMore = D2.Button("Load More", "cta");
